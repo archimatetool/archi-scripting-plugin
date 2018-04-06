@@ -1,0 +1,26 @@
+/*
+ * Open a model from file and query the ArchimateModelProxy object
+ */
+function main() {
+ 
+    // Replace this with your own path to a model
+    var filePath = "C:\\projekts\\archi\\code\\archi-models\\Archisurance\\Archisurance.archimate";
+
+    // Open the model and get the ArchimateModelProxy object
+    var modelProxy = ArchimateModelScriptUtils.openModel(filePath);
+
+    console.show();
+
+    console.println("Opened model: " + modelProxy.getFile());
+    console.println("Purpose of model: " + modelProxy.getPurpose());
+  
+    console.println("Elements in model:");
+    console.println("--------");
+
+    elements = modelProxy.getAllElements();
+  
+    for each(var element in elements.toArray()) {
+        console.println(element.getName());
+    } 
+  
+}

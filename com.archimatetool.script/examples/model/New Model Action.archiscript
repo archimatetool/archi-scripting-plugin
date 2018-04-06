@@ -1,0 +1,10 @@
+/*
+ * New Model Action Example
+ * Shows how to call the run() method of an Action
+ */
+function main() {
+
+    action = new Packages.com.archimatetool.editor.actions.NewArchimateModelAction();
+    action.run();
+
+}

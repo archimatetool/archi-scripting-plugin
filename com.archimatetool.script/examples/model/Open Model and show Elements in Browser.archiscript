@@ -1,0 +1,26 @@
+/*
+ * Open a model from file and display the elements as HTML in a Browser
+ */
+function main() {
+ 
+    // Replace this with your own path to a model
+    var filePath = "C:\\projekts\\archi\\code\\archi-models\\Archisurance\\Archisurance.archimate";
+
+    var modelProxy = ArchimateModelScriptUtils.openModel(filePath);
+
+    var elements = modelProxy.getAllElements();
+
+    var text = "<html><body><table>";
+
+    text += "<th>Elements</th>";
+
+    for each(var element in elements.toArray()) {
+        text += "<tr><td style='border:1px solid black;'>" + element.getName() + "</td></tr>";
+    } 
+
+    text += "</table></body></html>";
+
+    var browser = Browser.newInstance();
+    browser.open();
+    browser.setText(text);
+}

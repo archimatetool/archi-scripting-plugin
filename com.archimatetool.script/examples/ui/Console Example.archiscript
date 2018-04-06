@@ -1,0 +1,29 @@
+/*
+ * console: is the name of the Archi Script console
+ * Supported functions are:
+ *
+ * console.show()
+ * console.hide()
+ * console.println(String)
+ * console.print(String)
+ * console.setText(String)
+ * console.clear()
+ * console.setTextColor(red, green, blue)
+ *
+ */
+function main() {
+
+    console.show();
+
+    console.setTextColor(255, 0, 0);
+    console.println("Hello World in Red!");
+
+    console.setTextColor(0, 255, 0);
+    console.println("Hello World in Green!");
+
+    console.setTextColor(0, 0, 255);
+    console.println("Hello World in Blue!");
+
+    console.setDefaultTextColor();
+    
+}

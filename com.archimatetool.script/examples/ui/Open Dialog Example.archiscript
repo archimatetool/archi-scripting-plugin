@@ -1,0 +1,9 @@
+/*
+ * Open a Model from a Dialog
+ */
+function main() {
+
+    dialog = new Packages.com.archimatetool.editor.actions.OpenModelAction(window);
+    dialog.run();
+
+}

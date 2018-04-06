@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Archi Scripting
+Bundle-SymbolicName: com.archimatetool.script;singleton:=true
+Bundle-Localization: plugin
+Bundle-Version: 0.1.0.qualifier
+Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.help.ui,
+ com.archimatetool.editor,
+ com.archimatetool.help,
+ org.eclipse.core.resources,
+ com.archimatetool.editor.browser
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Activator: com.archimatetool.script.ArchiScriptPlugin
+Export-Package: com.archimatetool.script,
+ com.archimatetool.script.dom,
+ com.archimatetool.script.dom.model,
+ com.archimatetool.script.dom.utils,
+ com.archimatetool.script.views.console,
+ com.archimatetool.script.views.file,
+ com.archimatetool.script.views.scripts
+Automatic-Module-Name: com.archimatetool.script

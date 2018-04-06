@@ -1,0 +1,38 @@
+/*
+ * Create a new model and add a Business Actor
+ */
+function main() {
+    var model = createNewModel("Test Model");
+
+    var actor = createNewBusinessActor("Oscar", model);
+    var businessFolder = model.getFolder(com.archimatetool.model.FolderType.BUSINESS);
+    businessFolder.getElements().add(actor);
+
+    console.show();
+    console.println("Created model: " + model);
+  
+    console.println("Elements in model:");
+
+    var elements = businessFolder.getElements();
+    for each(var element in elements.toArray()) {
+        console.println(element.getName());
+    }
+    
+    console.println("--------");
+
+    console.println("Opening model in tree...");
+    var modelProxy = ArchimateModelScriptUtils.openModel(model);
+}
+
+function createNewModel(name) {
+    var model = com.archimatetool.model.IArchimateFactory.eINSTANCE.createArchimateModel();
+    model.setDefaults();
+    model.setName(name);
+    return model;
+}
+
+function createNewBusinessActor(name) {
+    var actor = com.archimatetool.model.IArchimateFactory.eINSTANCE.createBusinessActor();
+    actor.setName(name);
+    return actor;
+}

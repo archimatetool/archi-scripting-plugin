@@ -1,0 +1,7 @@
+/*
+ * New Archi Script
+ */
+ 
+function main() {
+    console.println("New Archi Script");  
+}
