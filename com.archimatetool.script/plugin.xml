@@ -42,6 +42,18 @@
             </separator>
          </toolbar>
       </menuContribution>
+      <menuContribution
+            allPopups="true"
+            locationURI="popup:com.archimatetool.editor.treeModelView?before=start_properties">
+         <menu
+               id="com.archimatetool.script.menu"
+               label="Scripts">
+            <dynamic
+                  class="com.archimatetool.script.ScriptsContextMenuContributionItem"
+                  id="com.archimatetool.script.menu">
+            </dynamic>
+         </menu>
+      </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.views">
