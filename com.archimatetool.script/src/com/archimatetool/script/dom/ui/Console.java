@@ -3,9 +3,10 @@
  * are made available under the terms of the License
  * which accompanies this distribution in the file LICENSE.txt
  */
-package com.archimatetool.script.dom.utils;
+package com.archimatetool.script.dom.ui;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.services.ViewManager;
@@ -27,14 +28,18 @@ public class Console {
      * Ensure that the Console is visible
      */
     public void show() {
-        ViewManager.showViewPart(ConsoleView.ID, true);
+        if(PlatformUI.isWorkbenchRunning()) {
+            ViewManager.showViewPart(ConsoleView.ID, true);
+        }
     }
     
     /**
      * Hide the Console
      */
     public void hide() {
-        ViewManager.hideViewPart(ConsoleView.ID);
+        if(PlatformUI.isWorkbenchRunning()) {
+            ViewManager.hideViewPart(ConsoleView.ID);
+        }
     }
     
     public void setText(String text) {
@@ -42,6 +47,9 @@ public class Console {
         if(viewer != null) {
             viewer.setTextColor(currentColor);
             viewer.setText(text);
+        }
+        else {
+            System.out.println(text);
         }
     }
     
@@ -54,6 +62,9 @@ public class Console {
         if(viewer != null) {
             viewer.setTextColor(currentColor);
             viewer.append(text);
+        }
+        else {
+            System.out.print(text);
         }
     }
     
@@ -81,6 +92,10 @@ public class Console {
     }
     
     private ConsoleView findConsoleViewer() {
-        return (ConsoleView)ViewManager.findViewPart(ConsoleView.ID);
+        if(PlatformUI.isWorkbenchRunning()) {
+            return (ConsoleView)ViewManager.findViewPart(ConsoleView.ID);
+        }
+        
+        return null;
     }
 }

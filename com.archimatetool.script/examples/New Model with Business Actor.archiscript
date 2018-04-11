@@ -21,7 +21,7 @@ function main() {
     console.println("--------");
 
     console.println("Opening model in tree...");
-    var modelProxy = ArchimateModelScriptUtils.openModel(model);
+    var modelProxy = UI.openModel(model);
 }
 
 function createNewModel(name) {

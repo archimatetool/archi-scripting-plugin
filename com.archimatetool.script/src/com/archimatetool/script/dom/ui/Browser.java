@@ -3,7 +3,7 @@
  * are made available under the terms of the License
  * which accompanies this distribution in the file LICENSE.txt
  */
-package com.archimatetool.script.dom.utils;
+package com.archimatetool.script.dom.ui;
 
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -11,6 +11,7 @@ import org.eclipse.ui.PlatformUI;
 import com.archimatetool.editor.browser.BrowserEditorInput;
 import com.archimatetool.editor.browser.IBrowserEditor;
 import com.archimatetool.editor.ui.services.EditorManager;
+import com.archimatetool.script.dom.utils.Messages;
 
 
 /**
@@ -65,6 +66,10 @@ public class Browser {
     }
     
     private void createBrowserEditor(String url, String title) {
+        if(!PlatformUI.isWorkbenchRunning()) {
+            return;
+        }
+        
         BrowserEditorInput input = new BrowserEditorInput(url, title);
         
         if(fBrowserEditor == null) {

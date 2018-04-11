@@ -98,19 +98,19 @@
    <extension
          point="com.archimatetool.script.dom">
       <dom
-            class="com.archimatetool.script.dom.utils.Browser"
+            class="com.archimatetool.script.dom.ui.Browser"
             id="com.archimatetool.script.browser"
             variableName="Browser">
       </dom>
       <dom
-            class="com.archimatetool.script.dom.utils.Console"
+            class="com.archimatetool.script.dom.ui.Console"
             id="com.archimatetool.script.console"
             variableName="console">
       </dom>
       <dom
-            class="com.archimatetool.script.dom.model.ArchimateModelScriptUtils"
-            id="com.archimatetool.script.archimatemodelscriptutils"
-            variableName="ArchimateModelScriptUtils">
+            class="com.archimatetool.script.dom.model.A"
+            id="com.archimatetool.script.A"
+            variableName="A">
       </dom>
       <dom
             class="com.archimatetool.script.dom.utils.ScriptUtils"

@@ -18,14 +18,14 @@ import junit.framework.JUnit4TestAdapter;
 
 
 /**
- * ArchimateModelScriptUtilsDOMFactoryTests
+ * ADOMFactoryTests
  * 
  * @author Phillip Beauvoir
  */
-public class ArchimateModelScriptUtilsDOMFactoryTests {
+public class ADOMFactoryTests {
     
     public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ArchimateModelScriptUtilsDOMFactoryTests.class);
+        return new JUnit4TestAdapter(ADOMFactoryTests.class);
     }
     
     @Before
@@ -38,9 +38,9 @@ public class ArchimateModelScriptUtilsDOMFactoryTests {
     
     @Test
     public void getDOMroot_ReturnsCorrectObject() throws Exception {
-        Object domObject = DomExtensionHelper.getDomObject("com.archimatetool.script.archimatemodelscriptutils"); //$NON-NLS-1$
+        Object domObject = DomExtensionHelper.getDomObject("com.archimatetool.script.A"); //$NON-NLS-1$
         assertNotNull(domObject);
-        assertTrue(domObject instanceof ArchimateModelScriptUtils);
+        assertTrue(domObject instanceof A);
     }
 
 }

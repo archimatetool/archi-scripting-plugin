@@ -13,11 +13,11 @@ import com.archimatetool.model.IArchimateElement;
  * 
  * @author Phillip Beauvoir
  */
-public class ArchimateElementProxy {
+public class AElement {
     
     private IArchimateElement fElement;
 
-	public ArchimateElementProxy(IArchimateElement element) {
+	public AElement(IArchimateElement element) {
 	    fElement = element;
     }
 

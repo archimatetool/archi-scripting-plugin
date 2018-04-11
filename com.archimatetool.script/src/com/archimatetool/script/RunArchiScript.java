@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
+import com.archimatetool.script.views.console.ConsoleOutput;
 
 
 /**
@@ -81,8 +82,10 @@ public class RunArchiScript {
      * Standard Eclipse Global Variables such as the window and workbench are registered
      */
     private void defineStandardGlobalVariables(ScriptEngine engine) {
-        engine.put("window", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
-        engine.put("workbench", PlatformUI.getWorkbench()); //$NON-NLS-1$
+        if(PlatformUI.isWorkbenchRunning()) {
+            engine.put("window", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
+            engine.put("workbench", PlatformUI.getWorkbench()); //$NON-NLS-1$
+        }
     }
 
     /**

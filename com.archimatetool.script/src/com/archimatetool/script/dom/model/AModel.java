@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateModel;
 
@@ -21,11 +22,15 @@ import com.archimatetool.model.IArchimateModel;
  * 
  * @author Phillip Beauvoir
  */
-public class ArchimateModelProxy {
+public class AModel {
     
     private IArchimateModel fModel;
+    
+    public AModel(File file) {
+        fModel = IEditorModelManager.INSTANCE.loadModel(file, false);
+    }
 
-	public ArchimateModelProxy(IArchimateModel model) {
+	public AModel(IArchimateModel model) {
 	    fModel = model;
     }
 
@@ -37,16 +42,17 @@ public class ArchimateModelProxy {
         return fModel.getFile();
     }
 
-    public List<ArchimateElementProxy> getAllElements() {
-        List<ArchimateElementProxy> elements = new ArrayList<ArchimateElementProxy>();
+    public List<AElement> getAllElements() {
+        List<AElement> elements = new ArrayList<AElement>();
         
         for(Iterator<EObject> iter = fModel.eAllContents(); iter.hasNext();) {
             EObject element = iter.next();
             if(element instanceof IArchimateElement) {
-                elements.add(new ArchimateElementProxy((IArchimateElement)element));
+                elements.add(new AElement((IArchimateElement)element));
             }
         }
 
         return elements;
     }
+    
 }

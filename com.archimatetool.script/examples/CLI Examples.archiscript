@@ -1,0 +1,25 @@
+/*
+ * Create a new model and add a Business Actor
+ */
+function main() {
+
+    // Replace this with your own path to a model
+    var filePath = "C:\\projekts\\archi\\code\\archi-models\\Archisurance\\Archisurance.archimate";
+
+    // Open the model and get the model proxy object
+    var modelProxy = A.openModel(filePath);
+
+    console.println("Opened model: " + modelProxy.getFile());
+    console.println("Purpose of model: " + modelProxy.getPurpose());
+  
+    console.println("Elements in model:");
+    console.println("--------");
+
+    elements = modelProxy.getAllElements();
+  
+    for each(var element in elements) {
+        console.println(element.getName());
+    } 
+
+}
+

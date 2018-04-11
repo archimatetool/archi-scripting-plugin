@@ -3,17 +3,17 @@
  * are made available under the terms of the License
  * which accompanies this distribution in the file LICENSE.txt
  */
-package com.archimatetool.script;
+package com.archimatetool.script.views.console;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.services.ViewManager;
-import com.archimatetool.script.views.console.ConsoleView;
 
 
 /**
@@ -80,7 +80,11 @@ public class ConsoleOutput {
      * @return The Console Viewer if it is active, else null
      */
     private static ConsoleView findConsoleViewer() {
-        return (ConsoleView)ViewManager.findViewPart(ConsoleView.ID);
+        if(PlatformUI.isWorkbenchRunning()) {
+            return (ConsoleView)ViewManager.findViewPart(ConsoleView.ID);
+        }
+        
+        return null;
     }
 
     /**

@@ -6,8 +6,8 @@ function main() {
     // Replace this with your own path to a model
     var filePath = "C:\\projekts\\archi\\code\\archi-models\\Archisurance\\Archisurance.archimate";
 
-    // Open the model and get the ArchimateModelProxy object
-    var modelProxy = ArchimateModelScriptUtils.openModel(filePath);
+    // Open the model in the UI and get the model proxy object
+    var modelProxy = UI.openModel(filePath);
 
     console.show();
 
@@ -19,7 +19,7 @@ function main() {
 
     elements = modelProxy.getAllElements();
   
-    for each(var element in elements.toArray()) {
+    for each(var element in elements) {
         console.println(element.getName());
     } 
   

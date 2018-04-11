@@ -6,7 +6,7 @@
 package com.archimatetool.script;
 
 
-import com.archimatetool.script.dom.model.ArchimateModelScriptUtilsDOMFactoryTests;
+import com.archimatetool.script.dom.model.ADOMFactoryTests;
 
 import junit.framework.TestSuite;
 
@@ -16,7 +16,7 @@ public class AllTests {
     public static junit.framework.Test suite() {
 		TestSuite suite = new TestSuite("com.archimatetool.script");
 
-		suite.addTest(ArchimateModelScriptUtilsDOMFactoryTests.suite());
+		suite.addTest(ADOMFactoryTests.suite());
 		
         return suite;
 	}

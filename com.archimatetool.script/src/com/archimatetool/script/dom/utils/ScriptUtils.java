@@ -12,7 +12,7 @@ import java.io.IOException;
 
 
 /**
- * Represents the UI dom object
+ * Represents the Script Utils dom object
  */
 public class ScriptUtils {
     

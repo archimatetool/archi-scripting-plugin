@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="com.archimatetool.commandline.commandlineProvider">
+      <commandlineProvider
+            class="com.archimatetool.script.commandline.RunScriptProvider"
+            description="Run an Archi Script File"
+            id="com.archimatetool.script.commandlineRunScript"
+            name="Run an Archi Script File">
+      </commandlineProvider>
+   </extension>
+
+</plugin>
