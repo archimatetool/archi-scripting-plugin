@@ -11,13 +11,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
-
-import com.archimatetool.editor.views.tree.ITreeModelView;
 
 
 /**
@@ -29,8 +25,6 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
     
     private MenuManager menuManager;
     
-    private ISelectionService selectionService;
-
     public ScriptsContextMenuContributionItem() {
     }
 
@@ -69,18 +63,14 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
                 menuManager.add(new Action(file.getName()) {
                     @Override
                     public void run() {
-                        System.out.println("Running " + file.getName() + " on selection: " + getCurrentSelection());
+                        RunArchiScript script = new RunArchiScript(file);
+                        script.run();
                     }
                 });
             }
         }
     }
     
-    private ISelection getCurrentSelection() {
-        return selectionService.getSelection(ITreeModelView.ID);
-    }
-
     public void initialize(IServiceLocator serviceLocator) {
-        this.selectionService = serviceLocator.getService(ISelectionService.class);;
     }
 }

@@ -58,7 +58,7 @@ extends AbstractFileView {
         super.makeActions();
         
         // Run
-        fActionRun = new RunScriptAction(getViewSite().getWorkbenchWindow());
+        fActionRun = new RunScriptAction();
         fActionRun.setEnabled(false);
         
         // Script

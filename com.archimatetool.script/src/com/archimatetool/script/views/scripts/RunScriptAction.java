@@ -8,7 +8,6 @@ package com.archimatetool.script.views.scripts;
 import java.io.File;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.ui.IWorkbenchWindow;
 
 import com.archimatetool.script.IArchiScriptImages;
 import com.archimatetool.script.RunArchiScript;
@@ -19,11 +18,9 @@ import com.archimatetool.script.RunArchiScript;
  */
 public class RunScriptAction extends Action {
 
-    private IWorkbenchWindow fWindow;
     private File fFile;
 
-    public RunScriptAction(IWorkbenchWindow window) {
-        fWindow = window;
+    public RunScriptAction() {
         setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_RUN_16));
         setText(Messages.RunScriptAction_0);
         setToolTipText(Messages.RunScriptAction_1);
@@ -37,7 +34,7 @@ public class RunScriptAction extends Action {
     @Override
     public void run() {
         if(isEnabled()) {
-            RunArchiScript script = new RunArchiScript(fFile, fWindow);
+            RunArchiScript script = new RunArchiScript(fFile);
             script.run();
         }
     }

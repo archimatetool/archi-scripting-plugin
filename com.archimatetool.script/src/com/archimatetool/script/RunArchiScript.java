@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
@@ -29,11 +28,9 @@ import com.archimatetool.script.dom.IArchiScriptDOMFactory;
  * Script Runner
  */
 public class RunArchiScript {
-	IWorkbenchWindow window;
-	File file;
+	private File file;
 
-	public RunArchiScript(File file, IWorkbenchWindow window) {
-		this.window = window;
+	public RunArchiScript(File file) {
 		this.file = file;
 	}
 	
@@ -84,7 +81,7 @@ public class RunArchiScript {
      * Standard Eclipse Global Variables such as the window and workbench are registered
      */
     private void defineStandardGlobalVariables(ScriptEngine engine) {
-        engine.put("window", window); //$NON-NLS-1$
+        engine.put("window", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
         engine.put("workbench", PlatformUI.getWorkbench()); //$NON-NLS-1$
     }
 

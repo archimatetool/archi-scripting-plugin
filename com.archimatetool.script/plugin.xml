@@ -117,6 +117,11 @@
             id="com.archimatetool.script.utils"
             variableName="ScriptUtils">
       </dom>
+      <dom
+            class="com.archimatetool.script.dom.ui.UI"
+            id="com.archimatetool.script.ui"
+            variableName="UI">
+      </dom>
    </extension>
 
 </plugin>
