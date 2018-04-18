@@ -34,5 +34,7 @@ implements IPreferenceConstants {
 		else if(PlatformUtils.isLinux()) {
             store.setDefault(PREFS_EDITOR, "gedit"); //$NON-NLS-1$
         }
+		
+		store.setDefault(PREFS_DOUBLE_CLICK_BEHAVIOUR, 0);
     }
 }

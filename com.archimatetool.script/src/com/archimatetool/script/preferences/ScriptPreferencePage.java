@@ -14,6 +14,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -43,6 +44,14 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     private static final String HELP_ID = "com.archimatetool.script.prefs"; //$NON-NLS-1$
     
     private Text fEditorPathTextField;
+    
+    private Combo fDoubleClickBehaviourCombo;
+    
+    String[] DOUBLE_CLICK_BEHAVIOURS = {
+            Messages.ScriptPreferencePage_4,
+            Messages.ScriptPreferencePage_5,
+            Messages.ScriptPreferencePage_6
+    };
     
 	public ScriptPreferencePage() {
 		setPreferenceStore(ArchiScriptPlugin.INSTANCE.getPreferenceStore());
@@ -84,6 +93,14 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
             }
         });
         
+        // Double-click behaviour
+        label = new Label(settingsGroup, SWT.NULL);
+        label.setText(Messages.ScriptPreferencePage_7);
+        fDoubleClickBehaviourCombo = new Combo(settingsGroup, SWT.READ_ONLY);
+        fDoubleClickBehaviourCombo.setItems(DOUBLE_CLICK_BEHAVIOURS);
+        gd = new GridData(GridData.FILL_HORIZONTAL);
+        fDoubleClickBehaviourCombo.setLayoutData(gd);
+        
         setValues();
         
         return client;
@@ -101,11 +118,13 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
 
     private void setValues() {
         fEditorPathTextField.setText(getPreferenceStore().getString(PREFS_EDITOR));
+        fDoubleClickBehaviourCombo.select(getPreferenceStore().getInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));      
     }
     
     @Override
     public boolean performOk() {
         getPreferenceStore().setValue(PREFS_EDITOR, fEditorPathTextField.getText());
+        getPreferenceStore().setValue(PREFS_DOUBLE_CLICK_BEHAVIOUR, fDoubleClickBehaviourCombo.getSelectionIndex());
         
         return true;
     }
@@ -113,6 +132,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     @Override
     protected void performDefaults() {
         fEditorPathTextField.setText(getPreferenceStore().getDefaultString(PREFS_EDITOR));
+        fDoubleClickBehaviourCombo.select(getPreferenceStore().getDefaultInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
     }
     
     public void init(IWorkbench workbench) {

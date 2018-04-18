@@ -115,7 +115,19 @@ extends AbstractFileView {
     
     @Override
     protected void handleDoubleClickAction() {
-        fActionRun.run();
+        int option = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_DOUBLE_CLICK_BEHAVIOUR);
+        switch(option) {
+            case 0:
+                fActionRun.run();
+                break;
+
+            case 1:
+                handleEditAction();
+                break;
+                
+            default:
+                break;
+        }
     }
     
     @Override
