@@ -123,5 +123,19 @@
             variableName="UI">
       </dom>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.archimatetool.script.preferences.ScriptPreferencePage"
+            id="com.archimatetool.script.preferences.ScriptPreferencePage"
+            name="Scripting">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.archimatetool.script.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>

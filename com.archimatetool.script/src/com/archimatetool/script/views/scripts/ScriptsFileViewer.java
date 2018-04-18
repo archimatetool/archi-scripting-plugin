@@ -28,7 +28,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
+import com.archimatetool.editor.utils.PlatformUtils;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
+import com.archimatetool.script.preferences.IPreferenceConstants;
 import com.archimatetool.script.views.file.AbstractFileView;
 import com.archimatetool.script.views.file.NewFileDialog;
 import com.archimatetool.script.views.file.PathEditorInput;
@@ -120,17 +123,36 @@ extends AbstractFileView {
         File file = (File)((IStructuredSelection)getViewer().getSelection()).getFirstElement();
 
         if(file != null && !file.isDirectory() && file.exists()) {
-            IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
-            IWorkbenchPage page = window.getActivePage();
-            PathEditorInput input = new PathEditorInput(file);
-            
-            try {
-                page.openEditor(input, IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-                // Internal Editor
-                //page.openEditor(input, ScriptTextEditor.ID);
+            String editor = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_EDITOR);
+            if(StringUtils.isSet(editor)) {
+                try {
+                    // Windows / Linux
+                    String[] paths = new String[] { editor, file.getAbsolutePath() };
+                    
+                    // Mac
+                    if(PlatformUtils.isMac()) {
+                        paths = new String[] { "open", "-a", editor, file.getAbsolutePath() }; //$NON-NLS-1$ //$NON-NLS-2$
+                    }
+                    
+                    Runtime.getRuntime().exec(paths);
+                }
+                catch(IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-            catch(PartInitException ex) {
-                ex.printStackTrace();
+            else {
+                IWorkbenchWindow window = getViewSite().getWorkbenchWindow();
+                IWorkbenchPage page = window.getActivePage();
+                PathEditorInput input = new PathEditorInput(file);
+                
+                try {
+                    page.openEditor(input, IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
+                    // Internal Editor
+                    //page.openEditor(input, ScriptTextEditor.ID);
+                }
+                catch(PartInitException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
