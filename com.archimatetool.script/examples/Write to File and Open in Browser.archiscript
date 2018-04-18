@@ -4,7 +4,7 @@
 function main() {
 
     // Replace this with your file name and path
-    var file = "C:\\test.html";
+    var file = "C:\\temp\\test.html";
     
     var text = "<html><body>Hello World</body></html>";
     

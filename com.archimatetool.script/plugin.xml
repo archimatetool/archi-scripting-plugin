@@ -98,6 +98,16 @@
    <extension
          point="com.archimatetool.script.dom">
       <dom
+            class="com.archimatetool.script.dom.model.Selection"
+            id="com.archimatetool.script.selection"
+            variableName="selection">
+      </dom>
+      <dom
+            class="com.archimatetool.script.dom.model.Model"
+            id="com.archimatetool.script.model"
+            variableName="model">
+      </dom>
+      <dom
             class="com.archimatetool.script.dom.ui.Browser"
             id="com.archimatetool.script.browser"
             variableName="Browser">
@@ -108,19 +118,9 @@
             variableName="console">
       </dom>
       <dom
-            class="com.archimatetool.script.dom.model.A"
-            id="com.archimatetool.script.A"
-            variableName="A">
-      </dom>
-      <dom
             class="com.archimatetool.script.dom.utils.ScriptUtils"
             id="com.archimatetool.script.utils"
             variableName="ScriptUtils">
-      </dom>
-      <dom
-            class="com.archimatetool.script.dom.ui.UI"
-            id="com.archimatetool.script.ui"
-            variableName="UI">
       </dom>
    </extension>
    <extension

@@ -6,17 +6,15 @@ function main() {
     // Replace this with your own path to a model
     var filePath = "C:\\projekts\\archi\\code\\archi-models\\Archisurance\\Archisurance.archimate";
 
-    var modelProxy = UI.openModel(filePath);
-
-    var elements = modelProxy.getAllElements();
+    $(model).load(filePath);
 
     var text = "<html><body><table>";
 
     text += "<th>Elements</th>";
 
-    for each(var element in elements.toArray()) {
+    $("elements").forEach(function(element) {
         text += "<tr><td style='border:1px solid black;'>" + element.getName() + "</td></tr>";
-    } 
+    }); 
 
     text += "</table></body></html>";
 

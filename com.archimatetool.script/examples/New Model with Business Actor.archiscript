@@ -2,33 +2,36 @@
  * Create a new model and add a Business Actor
  */
 function main() {
-    var model = createNewModel("Test Model");
+    var myModel = createNewModel("Test Model");
 
-    var actor = createNewBusinessActor("Oscar", model);
-    var businessFolder = model.getFolder(com.archimatetool.model.FolderType.BUSINESS);
+    var actor = createNewBusinessActor("Oscar", myModel);
+    var businessFolder = myModel.getFolder(com.archimatetool.model.FolderType.BUSINESS);
     businessFolder.getElements().add(actor);
 
     console.show();
-    console.println("Created model: " + model);
+    console.println("Created model: " + myModel);
   
     console.println("Elements in model:");
 
     var elements = businessFolder.getElements();
-    for each(var element in elements.toArray()) {
-        console.println(element.getName());
-    }
     
+    elements.forEach(function(element) {
+        console.println(element.getName());
+    });
+   
     console.println("--------");
 
     console.println("Opening model in tree...");
-    var modelProxy = UI.openModel(model);
+    
+    $(model).setModel(myModel);
+    $(model).openInUI();
 }
 
 function createNewModel(name) {
-    var model = com.archimatetool.model.IArchimateFactory.eINSTANCE.createArchimateModel();
-    model.setDefaults();
-    model.setName(name);
-    return model;
+    var myModel = com.archimatetool.model.IArchimateFactory.eINSTANCE.createArchimateModel();
+    myModel.setDefaults();
+    myModel.setName(name);
+    return myModel;
 }
 
 function createNewBusinessActor(name) {

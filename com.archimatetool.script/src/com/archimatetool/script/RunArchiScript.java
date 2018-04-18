@@ -6,6 +6,7 @@
 package com.archimatetool.script;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -22,6 +23,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
+import com.archimatetool.script.dom.model.GlobalBinding;
 import com.archimatetool.script.views.console.ConsoleOutput;
 
 
@@ -53,15 +55,19 @@ public class RunArchiScript {
                 throw new ScriptException("Function main() is not defined in " + file.getPath()); //$NON-NLS-1$
             }
             
+            // Bind our class to the JS object
+            // see https://stackoverflow.com/questions/31236550/defining-a-default-global-java-object-to-nashorn-script-engine
+            
+            // get JavaScript "global" object
+            Object global = engine.eval("this"); //$NON-NLS-1$
+            // get JS "Object" constructor object
+            Object jsObject = engine.eval("Object"); //$NON-NLS-1$
+            ((Invocable)engine).invokeMethod(jsObject, "bindProperties", global, new GlobalBinding()); //$NON-NLS-1$
+            
+            // Invoke main() function
             ((Invocable)engine).invokeFunction("main"); //$NON-NLS-1$
         }
-        catch(IOException ex) {
-            error(ex, ex.toString());
-        }
-        catch(ScriptException ex) {
-            error(ex, ex.toString());
-        }
-        catch(NoSuchMethodException ex) {
+        catch(ScriptException | FileNotFoundException | NoSuchMethodException ex) {
             error(ex, ex.toString());
         }
         finally {

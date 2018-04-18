@@ -6,20 +6,16 @@ function main() {
     // Replace this with your own path to a model
     var filePath = "C:\\projekts\\archi\\code\\archi-models\\Archisurance\\Archisurance.archimate";
 
-    // Open the model and get the model proxy object
-    var modelProxy = A.openModel(filePath);
+    // Open the model
+    $(model).load(filePath);
 
-    console.println("Opened model: " + modelProxy.getFile());
-    console.println("Purpose of model: " + modelProxy.getPurpose());
+    console.println("Opened model: " + $(model));
   
     console.println("Elements in model:");
     console.println("--------");
 
-    elements = modelProxy.getAllElements();
-  
-    for each(var element in elements) {
+    $("elements").forEach(function(element) {
         console.println(element.getName());
-    } 
-
+    });
 }
 
