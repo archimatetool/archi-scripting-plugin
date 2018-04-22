@@ -26,7 +26,7 @@ public class Model implements IArchiScriptDOMFactory {
      * Use a static instance and bind it to "model".
      * Note that this cannot be re-bound during JS execution, but the underlying IArchimateModel can be changed.
      */
-    public static ArchimateModelProxy MODEL_INSTANCE;
+    static ArchimateModelProxy MODEL_INSTANCE;
     
     public Object getDOMroot() {
         // Default is null, no current model

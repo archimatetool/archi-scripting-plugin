@@ -10,6 +10,7 @@ import org.eclipse.emf.ecore.EObject;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
@@ -48,6 +49,15 @@ public class SelectorFilterFactory {
         }
         
         // All elements
+        else if(selector.equals("concepts")) { //$NON-NLS-1$
+            return new ISelectorFilter() {
+                public boolean accept(EObject object) {
+                    return object instanceof IArchimateConcept;
+                }
+            };
+        }
+        
+        // All elements
         else if(selector.equals("elements")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
@@ -56,6 +66,24 @@ public class SelectorFilterFactory {
             };
         }
         
+        // All relationships
+        else if(selector.equals("relations") || selector.equals("relationships")) { //$NON-NLS-1$ //$NON-NLS-2$
+            return new ISelectorFilter() {
+                public boolean accept(EObject object) {
+                    return object instanceof IArchimateRelationship;
+                }
+            };
+        }
+
+        // All views
+        else if(selector.equals("views")) { //$NON-NLS-1$
+            return new ISelectorFilter() {
+                public boolean accept(EObject object) {
+                    return object instanceof IDiagramModel;
+                }
+            };
+        }
+
         // Find single unique object by its ID
         else if(selector.startsWith("#") && selector.length() > 1) { //$NON-NLS-1$
             String id = selector.substring(1);

@@ -46,15 +46,6 @@ public class RunArchiScript {
         FileReader reader = null;
 
         try {
-            ConsoleOutput.start();
-            
-            reader = new FileReader(file);
-            engine.eval(reader);
-            
-            if(!"function".equals(engine.eval("typeof main"))) { //$NON-NLS-1$ //$NON-NLS-2$
-                throw new ScriptException("Function main() is not defined in " + file.getPath()); //$NON-NLS-1$
-            }
-            
             // Bind our class to the JS object
             // see https://stackoverflow.com/questions/31236550/defining-a-default-global-java-object-to-nashorn-script-engine
             
@@ -64,8 +55,16 @@ public class RunArchiScript {
             Object jsObject = engine.eval("Object"); //$NON-NLS-1$
             ((Invocable)engine).invokeMethod(jsObject, "bindProperties", global, new GlobalBinding()); //$NON-NLS-1$
             
-            // Invoke main() function
-            ((Invocable)engine).invokeFunction("main"); //$NON-NLS-1$
+            reader = new FileReader(file);
+
+            ConsoleOutput.start();
+            
+            engine.eval(reader);
+            
+            // If there is a "main" function invoke that
+            if("function".equals(engine.eval("typeof main"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                ((Invocable)engine).invokeFunction("main"); //$NON-NLS-1$
+            }
         }
         catch(ScriptException | FileNotFoundException | NoSuchMethodException ex) {
             error(ex, ex.toString());

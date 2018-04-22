@@ -5,14 +5,13 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.views.tree.ITreeModelView;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 
 /**
@@ -26,23 +25,22 @@ import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 public class Selection implements IArchiScriptDOMFactory {
 
     public Object getDOMroot() {
-        ISelection selection = null;
+        ExtendedCollection list = new ExtendedCollection();
         
         if(PlatformUI.isWorkbenchRunning()) {
-            selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
-        }
-        
-        List<EObject> list = new ExtendedCollection<EObject>();
-        
-        if(selection instanceof IStructuredSelection) {
-            for(Object o : ((IStructuredSelection)selection).toArray()) {
-                
-                if(o instanceof IAdaptable) {
-                    o = ((IAdaptable)o).getAdapter(EObject.class);
-                }
-                
-                if(o instanceof EObject) {
-                    list.add((EObject)o);
+            // For now just work with selections in the Model Tree
+            ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection(ITreeModelView.ID);
+            
+            if(selection instanceof IStructuredSelection) {
+                for(Object o : ((IStructuredSelection)selection).toArray()) {
+                    
+                    if(o instanceof IAdaptable) {
+                        o = ((IAdaptable)o).getAdapter(EObject.class);
+                    }
+                    
+                    if(o instanceof EObject) {
+                        list.add(new EObjectProxy((EObject)o));
+                    }
                 }
             }
         }

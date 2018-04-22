@@ -9,11 +9,16 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.IEditorModelManager;
+import com.archimatetool.model.IArchimateElement;
+import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.IFolder;
 import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
 /**
@@ -21,32 +26,46 @@ import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
  * 
  * @author Phillip Beauvoir
  */
-public class ArchimateModelProxy {
-    
-    private IArchimateModel fModel;
+public class ArchimateModelProxy extends EObjectProxy {
     
     public ArchimateModelProxy() {
     }
 
     public ArchimateModelProxy(IArchimateModel model) {
-        fModel = model;
+        super(model);
     }
 
-    public IArchimateModel getModel() {
-        return fModel;
+    public IArchimateModel getArchimateModel() {
+        return (IArchimateModel)getEObject();
     }
     
-    public void setModel(IArchimateModel model) {
-        fModel = model;
+    public void setArchimateModel(IArchimateModel model) {
+        setEObject(model);
+    }
+    
+    public void setPurpose(String purpose) {
+        attr(PURPOSE, purpose);
+    }
+    
+    public String getPurpose() {
+        return (String)attr(PURPOSE);
     }
     
     public ArchimateModelProxy load(String path) {
-        fModel = IEditorModelManager.INSTANCE.loadModel(new File(path), false);
+        setArchimateModel(IEditorModelManager.INSTANCE.loadModel(new File(path), false));
+        return this;
+    }
+    
+    public ArchimateModelProxy create(String modelName) {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        model.setDefaults();
+        model.setName(modelName);
+        setArchimateModel(model);
         return this;
     }
     
     public ArchimateModelProxy copy() {
-        return new ArchimateModelProxy(fModel);
+        return new ArchimateModelProxy(getArchimateModel());
     }
     
     public ArchimateModelProxy save(String path) {
@@ -61,16 +80,37 @@ public class ArchimateModelProxy {
         return this;
     }
     
-    public List<Object> addElement(String type, String name) {
-        // TODO
-        System.out.println("called addElement()");
-        return new ExtendedCollection<>();
+    public List<?> addElement(String type, String name) {
+        ExtendedCollection list = new ExtendedCollection();
+        
+        if(getArchimateModel() == null) {
+            return list;
+        }
+        
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(type);
+        
+        if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
+            IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
+            element.setName(name);
+            IFolder folder = getArchimateModel().getDefaultFolderForObject(element);
+            folder.getElements().add(element);
+            list.add(new EObjectProxy(element));
+        }
+        
+        return list;
     }
     
-    public List<Object> addRelationship(String type, String name, List<Object> source, List<Object> target) {
+    public List<?> addRelationship(String type, String name, List<Object> source, List<Object> target) {
+        ExtendedCollection list = new ExtendedCollection();
+        
+        if(getArchimateModel() == null) {
+            return list;
+        }
+        
         // TODO
-        System.out.println("called addRelationship()");
-        return new ExtendedCollection<>();
+        
+        
+        return list;
     }
     
     /**
@@ -80,16 +120,16 @@ public class ArchimateModelProxy {
      */
     public ArchimateModelProxy openInUI() {
         if(PlatformUI.isWorkbenchRunning()) {
-            IEditorModelManager.INSTANCE.openModel(fModel);
+            IEditorModelManager.INSTANCE.openModel(getArchimateModel());
         }
         
         return this;
     }
     
-    public List<Object> $(String selector) {
-        List<Object> list = new ExtendedCollection<Object>();
+    public List<?> $(String selector) {
+        ExtendedCollection list = new ExtendedCollection();
         
-        if(fModel == null) {
+        if(getArchimateModel() == null) {
             return list;
         }
         
@@ -99,11 +139,11 @@ public class ArchimateModelProxy {
         }
         
         // Iterate over all model contents and filter objects into the list
-        for(Iterator<EObject> iter = fModel.eAllContents(); iter.hasNext();) {
-            EObject object = iter.next();
+        for(Iterator<EObject> iter = getArchimateModel().eAllContents(); iter.hasNext();) {
+            EObject eObject = iter.next();
             
-            if(filter.accept(object)) {
-                list.add(object);
+            if(filter.accept(eObject)) {
+                list.add(new EObjectProxy(eObject));
                 
                 if(filter.isSingle()) {
                     return list;

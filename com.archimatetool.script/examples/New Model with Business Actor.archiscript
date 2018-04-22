@@ -2,40 +2,29 @@
  * Create a new model and add a Business Actor
  */
 function main() {
-    var myModel = createNewModel("Test Model");
-
-    var actor = createNewBusinessActor("Oscar", myModel);
-    var businessFolder = myModel.getFolder(com.archimatetool.model.FolderType.BUSINESS);
-    businessFolder.getElements().add(actor);
-
     console.show();
-    console.println("Created model: " + myModel);
+
+    $(model).create("Test Model");
+
+    console.println("Created model: " + $(model).name);
+    console.println("ID is: " + $(model).id);
   
+    var actor = $(model).addElement("BusinessActor", "Oscar");
+    console.println("Added new element: " + actor.val().name);
+
     console.println("Elements in model:");
 
-    var elements = businessFolder.getElements();
-    
-    elements.forEach(function(element) {
-        console.println(element.getName());
-    });
+    // Traditional JS
+    //$("elements").forEach(function(element) {
+    //    console.println(element.getName());
+    //});
    
-    console.println("--------");
-
+    // "for each" supported by Nashorn
+    for each(var element in $("elements")) {
+        console.println(element.getName());
+    }
+    
     console.println("Opening model in tree...");
     
-    $(model).setModel(myModel);
     $(model).openInUI();
-}
-
-function createNewModel(name) {
-    var myModel = com.archimatetool.model.IArchimateFactory.eINSTANCE.createArchimateModel();
-    myModel.setDefaults();
-    myModel.setName(name);
-    return myModel;
-}
-
-function createNewBusinessActor(name) {
-    var actor = com.archimatetool.model.IArchimateFactory.eINSTANCE.createBusinessActor();
-    actor.setName(name);
-    return actor;
 }

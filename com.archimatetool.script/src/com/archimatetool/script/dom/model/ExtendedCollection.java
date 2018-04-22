@@ -8,47 +8,59 @@ package com.archimatetool.script.dom.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.archimatetool.model.IDocumentable;
-import com.archimatetool.model.INameable;
-
 
 /**
  * Extended Collection
  * 
  * @author Phillip Beauvoir
  */
-public class ExtendedCollection<T> extends ArrayList<T> {
+public class ExtendedCollection extends ArrayList<EObjectProxy> implements IModelConstants {
     
     public ExtendedCollection() {
         super();
     }
     
-    public T val() {
+    public EObjectProxy val() {
         return isEmpty() ? null : get(0);
     }
     
-    public List<String> getName() {
-        List<String> list = new ArrayList<>();
+    public List<?> getId() {
+        return attr(ID);
+    }
+
+    public List<?> getName() {
+        return attr(NAME);
+    }
+    
+    public void setName(String name) {
+        attr(NAME, name);
+    }
+    
+    public List<?> getDocumentation() {
+        return attr(DOCUMENTATION);
+    }
+    
+    public void setDocumentation(String documentation) {
+        attr(DOCUMENTATION, documentation);
+    }
+    
+    public List<?> attr(String attribute) {
+        List<Object> list = new ArrayList<>();
         
-        for(T object : this) {
-            if(object instanceof INameable) {
-                list.add(((INameable)object).getName());
+        for(EObjectProxy object : this) {
+            Object attr = object.attr(attribute);
+            if(attr != null) {
+                list.add(attr);
             }
         }
         
         return list;
     }
-    
-    public List<String> getDocumentation() {
-        List<String> list = new ArrayList<>();
-        
-        for(T object : this) {
-            if(object instanceof IDocumentable) {
-                list.add(((IDocumentable)object).getDocumentation());
-            }
+
+    public void attr(String attribute, Object value) {
+        for(EObjectProxy object : this) {
+            object.attr(attribute, value);
         }
-        
-        return list;
     }
 
 }
