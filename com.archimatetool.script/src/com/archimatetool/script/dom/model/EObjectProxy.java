@@ -97,6 +97,14 @@ public abstract class EObjectProxy implements IModelConstants {
         return attr(NAME, name);
     }
     
+    public String getDocumentation() {
+        return (String)attr(DOCUMENTATION);
+    }
+    
+    public EObjectProxy setDocumentation(String documentation) {
+        return attr(DOCUMENTATION, documentation);
+    }
+    
     /**
      * @return class type of this object
      */
@@ -273,11 +281,11 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     protected boolean canReadAttr(String attribute) {
-        return ID.equals(attribute) || NAME.equals(attribute);
+        return ID.equals(attribute) || NAME.equals(attribute) || DOCUMENTATION.equals(attribute);
     }
 
     protected boolean canWriteAttr(String attribute) {
-        return NAME.equals(attribute);
+        return !ID.equals(attribute);
     }
 
     /**

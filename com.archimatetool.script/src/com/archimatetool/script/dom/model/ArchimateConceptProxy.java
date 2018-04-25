@@ -26,22 +26,4 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return (IArchimateConcept)super.getEObject();
     }
 
-    public String getDocumentation() {
-        return (String)attr(DOCUMENTATION);
-    }
-    
-    public ArchimateConceptProxy setDocumentation(String documentation) {
-        return (ArchimateConceptProxy)attr(DOCUMENTATION, documentation);
-    }
-    
-    @Override
-    protected boolean canReadAttr(String attribute) {
-        return super.canReadAttr(attribute) || DOCUMENTATION.equals(attribute);
-    }
-
-    @Override
-    protected boolean canWriteAttr(String attribute) {
-        return super.canReadAttr(attribute) || DOCUMENTATION.equals(attribute);
-    }
-
 }

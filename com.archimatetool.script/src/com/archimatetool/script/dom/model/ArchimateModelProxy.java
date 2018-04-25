@@ -71,12 +71,22 @@ public class ArchimateModelProxy extends EObjectProxy {
         }
     }
     
-    public void setPurpose(String purpose) {
-        attr(PURPOSE, purpose);
+    public EObjectProxy setPurpose(String purpose) {
+        return attr(PURPOSE, purpose);
     }
     
     public String getPurpose() {
         return (String)attr(PURPOSE);
+    }
+    
+    @Override
+    public EObjectProxy setDocumentation(String documentation) {
+        return setPurpose(documentation);
+    }
+    
+    @Override
+    public String getDocumentation() {
+        return getPurpose();
     }
     
     public ArchimateModelProxy load(String path) {
@@ -196,10 +206,5 @@ public class ArchimateModelProxy extends EObjectProxy {
     @Override
     protected boolean canReadAttr(String attribute) {
         return super.canReadAttr(attribute) || PURPOSE.equals(attribute);
-    }
-    
-    @Override
-    protected boolean canWriteAttr(String attribute) {
-        return super.canWriteAttr(attribute) || PURPOSE.equals(attribute);
     }
 }

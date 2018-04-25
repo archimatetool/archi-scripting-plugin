@@ -34,6 +34,6 @@ public class FolderProxy extends EObjectProxy {
             return false;
         }
         
-        return super.canReadAttr(attribute) || DOCUMENTATION.equals(attribute);
+        return super.canWriteAttr(attribute);
     }
 }
