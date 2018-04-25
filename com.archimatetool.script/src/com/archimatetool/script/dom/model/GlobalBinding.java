@@ -16,7 +16,7 @@ import java.util.List;
 public class GlobalBinding {
     
     public List<?> $() {
-        return Model.MODEL_INSTANCE.$("all"); //$NON-NLS-1$
+        return Model.MODEL_INSTANCE.$("*"); //$NON-NLS-1$
     }
     
     public Object $(Object object) {

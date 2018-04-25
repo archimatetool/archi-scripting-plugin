@@ -39,7 +39,10 @@ public class Selection implements IArchiScriptDOMFactory {
                     }
                     
                     if(o instanceof EObject) {
-                        list.add(new EObjectProxy((EObject)o));
+                        EObjectProxy proxy = EObjectProxy.get((EObject)o);
+                        if(proxy != null) {
+                            list.add(proxy);
+                        }
                     }
                 }
             }

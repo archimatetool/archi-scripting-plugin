@@ -40,7 +40,7 @@ public class SelectorFilterFactory {
         }
         
         // All concepts and views
-        if(selector.equals("all")) { //$NON-NLS-1$
+        if(selector.equals("*")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     return (object instanceof IArchimateConcept || object instanceof IDiagramModel);
@@ -48,7 +48,7 @@ public class SelectorFilterFactory {
             };
         }
         
-        // All elements
+        // All concepts
         else if(selector.equals("concepts")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
