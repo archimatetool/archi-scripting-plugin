@@ -118,7 +118,7 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
     /**
      * @param key
      * @return return an array of array containing the value of property named "key" for each object of the collection.
-     * This has to be an array of array because the property can appear more than once on a same object
+     * This has to be an array of array because the property can appear more than once on the same object
      */
     public List<List<String>> getPropertyValue(String key) {
         List<List<String>> list = new ArrayList<List<String>>();
@@ -128,6 +128,19 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
             if(!result.isEmpty()) {
                 list.add(result);
             }
+        }
+        
+        return list;
+    }
+
+    /**
+     * @return All Property pairs
+     */
+    public List<Property> getProperties() {
+        List<Property> list = new ArrayList<Property>();
+        
+        for(EObjectProxy object : this) {
+            list.addAll(object.getProperties());
         }
         
         return list;

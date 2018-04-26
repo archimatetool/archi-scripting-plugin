@@ -5,15 +5,9 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
@@ -24,7 +18,10 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDocumentable;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.model.IIdentifier;
+import com.archimatetool.model.INameable;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 
@@ -34,10 +31,6 @@ import com.archimatetool.model.IProperty;
  * @author Phillip Beauvoir
  */
 public abstract class EObjectProxy implements IModelConstants {
-    
-    // Keep a cache of PropertyDescriptors mapped to class of EObject for efficency
-    private static Map<Class<? extends EObject>, Map<String, PropertyDescriptor>> classTable =
-            new HashMap<Class<? extends EObject>, Map<String, PropertyDescriptor>>();
     
     private EObject fEObject;
     
@@ -194,7 +187,7 @@ public abstract class EObjectProxy implements IModelConstants {
     
     /**
      * @param key
-     * @return return an  containing the value of property named "key"
+     * @return a list containing the value of property named "key"
      */
     public List<String> getPropertyValue(String key) {
         List<String> list = new ArrayList<String>();
@@ -204,6 +197,21 @@ public abstract class EObjectProxy implements IModelConstants {
                 if(p.getKey().equals(key)) {
                     list.add(p.getValue());
                 }
+            }
+        }
+        
+        return list;
+    }
+    
+    /**
+     * @return All Property pairs
+     */
+    public List<Property> getProperties() {
+        List<Property> list = new ArrayList<Property>();
+        
+        if(getEObject() instanceof IProperties) {
+            for(IProperty p : ((IProperties)getEObject()).getProperties()) {
+                list.add(new Property(p.getKey(), p.getValue()));
             }
         }
         
@@ -245,73 +253,58 @@ public abstract class EObjectProxy implements IModelConstants {
     }
 
     public Object attr(String attribute) {
-        if(getEObject() == null || !canReadAttr(attribute)) {
-            return null;
+        switch(attribute) {
+            case ID:
+                return getEObject() instanceof IIdentifier ? ((IIdentifier)getEObject()).getId() : null;
+
+            case NAME:
+                return getEObject() instanceof INameable ? ((INameable)getEObject()).getName() : null;
+            
+            case DOCUMENTATION:
+                return getEObject() instanceof IDocumentable ? ((IDocumentable)getEObject()).getDocumentation() : null;
+
+            default:
+                return null;
         }
-        
-        PropertyDescriptor desc = getPropertyDescriptorForAttribute(attribute);
-        try {
-            if(desc != null) {
-                return desc.getReadMethod().invoke(getEObject());
-            }
-        }
-        catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            ex.printStackTrace();
-        }
-        
-        return null;
     }
     
     public EObjectProxy attr(String attribute, Object value) {
-        if(getEObject() == null || !canWriteAttr(attribute)) {
-            return this;
-        }
-        
-        PropertyDescriptor desc = getPropertyDescriptorForAttribute(attribute);
-        try {
-            if(desc != null) {
-                desc.getWriteMethod().invoke(getEObject(), value);
-            }
-        }
-        catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            ex.printStackTrace();
+        switch(attribute) {
+            case NAME:
+                if(getEObject() instanceof INameable) {
+                    ((INameable)getEObject()).setName((String)value);
+                }
+                break;
+            
+            case DOCUMENTATION:
+                if(getEObject() instanceof IDocumentable) {
+                    ((IDocumentable)getEObject()).setDocumentation((String)value);
+                }
+                break;
         }
         
         return this;
     }
     
-    protected boolean canReadAttr(String attribute) {
-        return ID.equals(attribute) || NAME.equals(attribute) || DOCUMENTATION.equals(attribute);
-    }
-
-    protected boolean canWriteAttr(String attribute) {
-        return !ID.equals(attribute);
-    }
-
-    /**
-     * @param attribute
-     * @return A PropertyDescriptor for an attribute
-     *         These are cached in a lookup table for speed
-     */
-    private PropertyDescriptor getPropertyDescriptorForAttribute(String attribute) {
-        Map<String, PropertyDescriptor> propertyDescriptorTable = classTable.get(getEObject().getClass());
-        
-        // Initialise with all getter and setter attributes for this class
-        if(propertyDescriptorTable == null) {
-            propertyDescriptorTable = new HashMap<String, PropertyDescriptor>();
-            
-            try {
-                for(PropertyDescriptor desc : Introspector.getBeanInfo(getEObject().getClass()).getPropertyDescriptors()) {
-                    propertyDescriptorTable.put(desc.getName(), desc);
-                }
-            }
-            catch(IllegalArgumentException | IntrospectionException ex) {
-                ex.printStackTrace();
-            }
-            
-            classTable.put(getEObject().getClass(), propertyDescriptorTable);
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {
+            return true;
         }
         
-        return propertyDescriptorTable.get(attribute);
+        if(!(obj instanceof EObjectProxy)) {
+            return false;
+        }
+        
+        if(getEObject() == null) {
+            return false;
+        }
+        
+        return getEObject() == ((EObjectProxy)obj).getEObject();
+    }
+    
+    @Override
+    public String toString() {
+        return getType() + ": " + getName(); //$NON-NLS-1$
     }
 }

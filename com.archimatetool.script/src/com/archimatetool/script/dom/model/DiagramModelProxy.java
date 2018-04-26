@@ -5,7 +5,15 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.Iterator;
+
+import org.eclipse.emf.ecore.EObject;
+
+import com.archimatetool.model.IArchimateConcept;
+import com.archimatetool.model.IArchimateElement;
+import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
 
 /**
  * DiagramModel wrapper proxy
@@ -26,4 +34,53 @@ public class DiagramModelProxy extends EObjectProxy {
         return (IDiagramModel)super.getEObject();
     }
     
+    public ExtendedCollection getConcepts() {
+        return getConcepts(IArchimateConcept.class);
+    }
+    
+    public ExtendedCollection getElements() {
+        return getConcepts(IArchimateElement.class);
+    }
+    
+    public ExtendedCollection getRelationships() {
+        return getConcepts(IArchimateRelationship.class);
+    }
+    
+    private ExtendedCollection getConcepts(Class<?> type) {
+        ExtendedCollection list = new ExtendedCollection();
+        
+        if(getEObject() == null) {
+            return list;
+        }
+        
+        for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
+            EObject eObject = iter.next();
+            
+            if(eObject instanceof IDiagramModelArchimateComponent) {
+                IArchimateConcept concept = ((IDiagramModelArchimateComponent)eObject).getArchimateConcept();
+                if(type.isInstance(concept)) {
+                    EObjectProxy proxy = EObjectProxy.get(concept);
+                    if(!list.contains(proxy)) {
+                        list.add(proxy);
+                    }
+                }
+            }
+        }
+        
+        return list;
+    }
+    
+    @Override
+    public Object attr(String attribute) {
+        switch(attribute) {
+            case "concepts": //$NON-NLS-1$
+                return getConcepts();
+            case "elements": //$NON-NLS-1$
+                return getElements();
+            case "relationships": //$NON-NLS-1$
+                return getRelationships();
+        }
+        
+        return super.attr(attribute);
+    }
 }

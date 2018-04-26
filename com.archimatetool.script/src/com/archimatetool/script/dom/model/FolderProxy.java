@@ -28,12 +28,12 @@ public class FolderProxy extends EObjectProxy {
     }
     
     @Override
-    protected boolean canWriteAttr(String attribute) {
+    public EObjectProxy attr(String attribute, Object value) {
         // Can only rename user folders
         if(NAME.equals(attribute) && getEObject().getType() != FolderType.USER) {
-            return false;
+            return this;
         }
         
-        return super.canWriteAttr(attribute);
+        return super.attr(attribute, value);
     }
 }

@@ -21,6 +21,7 @@ import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.ModelVersion;
 import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
@@ -41,12 +42,9 @@ public class ArchimateModelProxy extends EObjectProxy {
         super(model);
     }
 
-    public IArchimateModel getArchimateModel() {
-        return (IArchimateModel)getEObject();
-    }
-    
-    public void setArchimateModel(IArchimateModel model) {
-        setEObject(model);
+    @Override
+    protected IArchimateModel getEObject() {
+        return (IArchimateModel)super.getEObject();
     }
     
     @Override
@@ -54,16 +52,16 @@ public class ArchimateModelProxy extends EObjectProxy {
         super.setEObject(eObject);
         
         // If the model is loaded in the UI...
-        if(getArchimateModel() != null && IEditorModelManager.INSTANCE.isModelLoaded(getArchimateModel().getFile())) {
+        if(getEObject() != null && IEditorModelManager.INSTANCE.isModelLoaded(getEObject().getFile())) {
             // It's Dirty so throw exception
-            if(IEditorModelManager.INSTANCE.isModelDirty(getArchimateModel())) {
-                throw new RuntimeException(Messages.ArchimateModelProxy_0 + getArchimateModel().getFile());
+            if(IEditorModelManager.INSTANCE.isModelDirty(getEObject())) {
+                throw new RuntimeException(Messages.ArchimateModelProxy_0 + getEObject().getFile());
             }
             
             // Close model and add to the global list
             try {
-                IEditorModelManager.INSTANCE.closeModel(getArchimateModel());
-                CLOSED_MODELS.add(getArchimateModel());
+                IEditorModelManager.INSTANCE.closeModel(getEObject());
+                CLOSED_MODELS.add(getEObject());
             }
             catch(IOException ex) {
                 ex.printStackTrace();
@@ -90,7 +88,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy load(String path) {
-        setArchimateModel(IEditorModelManager.INSTANCE.loadModel(new File(path), false));
+        setEObject(IEditorModelManager.INSTANCE.loadModel(new File(path), false));
         return this;
     }
     
@@ -98,7 +96,7 @@ public class ArchimateModelProxy extends EObjectProxy {
         IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
         model.setDefaults();
         model.setName(modelName);
-        setArchimateModel(model);
+        setEObject(model);
         
         IArchiveManager archiveManager = IArchiveManager.FACTORY.createArchiveManager(model);
         model.setAdapter(IArchiveManager.class, archiveManager);
@@ -107,22 +105,22 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy copy() {
-        return new ArchimateModelProxy(getArchimateModel());
+        return new ArchimateModelProxy(getEObject());
     }
     
     public ArchimateModelProxy save(String path) throws IOException {
-        if(getArchimateModel() != null) {
+        if(getEObject() != null) {
             File file = new File(path);
-            getArchimateModel().setFile(file);
+            getEObject().setFile(file);
         }
 
         return save();
     }
     
     public ArchimateModelProxy save() throws IOException {
-        if(getArchimateModel() != null && getArchimateModel().getFile() != null) {
-            getArchimateModel().setVersion(ModelVersion.VERSION);
-            IArchiveManager archiveManager = (IArchiveManager)getArchimateModel().getAdapter(IArchiveManager.class);
+        if(getEObject() != null && getEObject().getFile() != null) {
+            getEObject().setVersion(ModelVersion.VERSION);
+            IArchiveManager archiveManager = (IArchiveManager)getEObject().getAdapter(IArchiveManager.class);
             archiveManager.saveModel();
         }
         
@@ -135,7 +133,7 @@ public class ArchimateModelProxy extends EObjectProxy {
      * @return The element
      */
     public EObjectProxy addElement(String type, String name) {
-        if(getArchimateModel() == null) {
+        if(getEObject() == null) {
             return null;
         }
         
@@ -143,7 +141,7 @@ public class ArchimateModelProxy extends EObjectProxy {
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
             element.setName(name);
-            IFolder folder = getArchimateModel().getDefaultFolderForObject(element);
+            IFolder folder = getEObject().getDefaultFolderForObject(element);
             folder.getElements().add(element);
             return EObjectProxy.get(element);
         }
@@ -151,13 +149,20 @@ public class ArchimateModelProxy extends EObjectProxy {
         return null;
     }
     
-    public EObjectProxy addRelationship(String type, String name, EObjectProxy source, EObjectProxy target) {
-        if(getArchimateModel() == null) {
+    public EObjectProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
+        if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
             return null;
         }
         
-        // TODO
-        
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(type);
+        if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateRelationship().isSuperTypeOf(eClass)) { // Check this is the correct type
+            IArchimateRelationship relationship = (IArchimateRelationship)IArchimateFactory.eINSTANCE.create(eClass);
+            relationship.setName(name);
+            relationship.connect(source.getEObject(), target.getEObject());
+            IFolder folder = getEObject().getDefaultFolderForObject(relationship);
+            folder.getElements().add(relationship);
+            return EObjectProxy.get(relationship);
+        }
         
         return null;
     }
@@ -169,7 +174,7 @@ public class ArchimateModelProxy extends EObjectProxy {
      */
     public ArchimateModelProxy openInUI() {
         if(PlatformUI.isWorkbenchRunning()) {
-            IEditorModelManager.INSTANCE.openModel(getArchimateModel());
+            IEditorModelManager.INSTANCE.openModel(getEObject());
         }
         
         return this;
@@ -178,7 +183,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     public List<?> $(String selector) {
         ExtendedCollection list = new ExtendedCollection();
         
-        if(getArchimateModel() == null) {
+        if(getEObject() == null) {
             return list;
         }
         
@@ -188,7 +193,7 @@ public class ArchimateModelProxy extends EObjectProxy {
         }
         
         // Iterate over all model contents and filter objects into the list
-        for(Iterator<EObject> iter = getArchimateModel().eAllContents(); iter.hasNext();) {
+        for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
             EObject eObject = iter.next();
             
             if(filter.accept(eObject)) {
@@ -204,7 +209,20 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     @Override
-    protected boolean canReadAttr(String attribute) {
-        return super.canReadAttr(attribute) || PURPOSE.equals(attribute);
+    public Object attr(String attribute) {
+        if(PURPOSE.equals(attribute) && getEObject() != null) {
+            return getEObject().getPurpose();
+        }
+        
+        return super.attr(attribute);
+    }
+    
+    @Override
+    public EObjectProxy attr(String attribute, Object value) {
+        if(PURPOSE.equals(attribute) && getEObject() != null) {
+            getEObject().setPurpose((String)value);
+        }
+        
+        return super.attr(attribute, value);
     }
 }

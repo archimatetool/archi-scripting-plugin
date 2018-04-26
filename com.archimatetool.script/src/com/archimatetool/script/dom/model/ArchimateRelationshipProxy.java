@@ -26,4 +26,24 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
         return (IArchimateRelationship)super.getEObject();
     }
 
+    public EObjectProxy getSource() {
+        return EObjectProxy.get(getEObject().getSource());
+    }
+    
+    public EObjectProxy getTarget() {
+        return EObjectProxy.get(getEObject().getTarget());
+    }
+
+    @Override
+    public Object attr(String attribute) {
+        switch(attribute) {
+            case "source": //$NON-NLS-1$
+                return getSource();
+            case "target": //$NON-NLS-1$
+                return getTarget();
+        }
+        
+        return super.attr(attribute);
+    }
+
 }

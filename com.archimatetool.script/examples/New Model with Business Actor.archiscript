@@ -10,7 +10,7 @@ function main() {
     console.println("ID is: " + $(model).id);
   
     var actor = $(model).addElement("BusinessActor", "Oscar");
-    console.println("Added new element: " + actor.val().name);
+    console.println("Added new element: " + actor.name);
 
     console.println("Elements in model:");
 
