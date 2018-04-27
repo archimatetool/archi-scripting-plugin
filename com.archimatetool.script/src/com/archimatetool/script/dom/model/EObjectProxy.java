@@ -5,7 +5,6 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -13,10 +12,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.ui.PlatformUI;
 
-import com.archimatetool.editor.model.IEditorModelManager;
-import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
@@ -36,11 +32,6 @@ import com.archimatetool.model.IProperty;
  * @author Phillip Beauvoir
  */
 public abstract class EObjectProxy implements IModelConstants {
-    
-    /**
-     * Static list of closed models in the UI
-     */
-    public static List<File> CLOSED_MODELS = new ArrayList<File>();
     
     private EObject fEObject;
     
@@ -137,7 +128,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     public EObjectProxy addProperty(String key, String value) {
-        checkModelInUI();
+        ModelHandler.checkModelAccess(getEObject());
         
         if(getEObject() instanceof IProperties && key != null && value != null) {
             // TODO use IArchimateFactory.eINSTANCE.createProperty(key, value);
@@ -157,7 +148,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     public EObjectProxy addOrUpdateProperty(String key, String value) {
-        checkModelInUI();
+        ModelHandler.checkModelAccess(getEObject());
         
         if(getEObject() instanceof IProperties && key != null && value != null) {
             boolean updated = false;
@@ -185,7 +176,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @return this
      */
     public EObjectProxy updateProperty(String key, String value) {
-        checkModelInUI();
+        ModelHandler.checkModelAccess(getEObject());
         
         if(getEObject() instanceof IProperties && key != null && value != null) {
             for(IProperty prop : ((IProperties)getEObject()).getProperties()) {
@@ -259,7 +250,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param key
      */
     public EObjectProxy removeProperty(String key, String value) {
-        checkModelInUI();
+        ModelHandler.checkModelAccess(getEObject());
         
         if(getEObject() instanceof IProperties) {
             List<IProperty> toRemove = new ArrayList<IProperty>();
@@ -299,7 +290,7 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     public EObjectProxy attr(String attribute, Object value) {
-        checkModelInUI();
+        ModelHandler.checkModelAccess(getEObject());
         
         switch(attribute) {
             case NAME:
@@ -316,34 +307,6 @@ public abstract class EObjectProxy implements IModelConstants {
         }
         
         return this;
-    }
-    
-    /**
-     * Check if the model is opened in the UI and try to unload it
-     */
-    protected void checkModelInUI() {
-        // Only if in UI
-        if(!PlatformUI.isWorkbenchRunning() || !(getEObject() instanceof IArchimateModelObject)) {
-            return;
-        }
-        
-        IArchimateModel model = ((IArchimateModelObject)getEObject()).getArchimateModel();
-        
-        // If the model is loaded in the UI...
-        if(model != null && IEditorModelManager.INSTANCE.isModelLoaded(model.getFile())) {
-            // It's Dirty so throw exception
-            if(IEditorModelManager.INSTANCE.isModelDirty(model)) {
-                throw new RuntimeException(Messages.EObjectProxy_0 + ": " + model.getFile()); //$NON-NLS-1$
-            }
-            
-            // Partially close the model so we can retain the ID Adapter and Archive Manager
-            EditorManager.closeDiagramEditors(model);
-            IEditorModelManager.INSTANCE.getModels().remove(model);
-            IEditorModelManager.INSTANCE.firePropertyChange(this, IEditorModelManager.PROPERTY_MODEL_REMOVED, null, model);
-
-            // And add to list
-            CLOSED_MODELS.add(model.getFile());
-        }
     }
     
     @Override

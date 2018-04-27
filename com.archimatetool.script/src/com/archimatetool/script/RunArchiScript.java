@@ -22,10 +22,9 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
-import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
-import com.archimatetool.script.dom.model.EObjectProxy;
 import com.archimatetool.script.dom.model.GlobalBinding;
+import com.archimatetool.script.dom.model.ModelHandler;
 import com.archimatetool.script.views.console.ConsoleOutput;
 
 
@@ -47,8 +46,6 @@ public class RunArchiScript {
         
         FileReader reader = null;
         
-        EObjectProxy.CLOSED_MODELS.clear();
-
         try {
             // Bind our global functions
             GlobalBinding.init(engine, file);
@@ -56,6 +53,9 @@ public class RunArchiScript {
             // Start the console
             ConsoleOutput.start();
             
+            // Initialise
+            ModelHandler.init();
+
             // Evaluate the script
             reader = new FileReader(file);
             engine.eval(reader);
@@ -80,10 +80,8 @@ public class RunArchiScript {
                 }
             }
             
-            // Re-open any closed models
-            for(File file : EObjectProxy.CLOSED_MODELS) {
-                IEditorModelManager.INSTANCE.openModel(file);
-            }
+            // Finalise
+            ModelHandler.finalise();
         }
 	}
 
