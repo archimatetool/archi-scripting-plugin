@@ -49,19 +49,14 @@ public class RunArchiScript {
         FileReader reader = null;
 
         try {
-            // Bind our class to the JS object
-            // see https://stackoverflow.com/questions/31236550/defining-a-default-global-java-object-to-nashorn-script-engine
+            // Bind our global functions
+            GlobalBinding.init(engine, file);
             
-            // get JavaScript "global" object
-            Object global = engine.eval("this"); //$NON-NLS-1$
-            // get JS "Object" constructor object
-            Object jsObject = engine.eval("Object"); //$NON-NLS-1$
-            ((Invocable)engine).invokeMethod(jsObject, "bindProperties", global, new GlobalBinding(engine, file)); //$NON-NLS-1$
-            
-            reader = new FileReader(file);
-
+            // Start the console
             ConsoleOutput.start();
             
+            // Evaluate the script
+            reader = new FileReader(file);
             engine.eval(reader);
             
             // If there is a "main" function invoke that
