@@ -89,7 +89,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy save(String path) throws IOException {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
         
         if(getEObject() != null) {
             File file = new File(path);
@@ -100,7 +100,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy save() throws IOException {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
         
         if(getEObject() != null && getEObject().getFile() != null) {
             getEObject().setVersion(ModelVersion.VERSION);
@@ -117,7 +117,7 @@ public class ArchimateModelProxy extends EObjectProxy {
      * @return The element
      */
     public EObjectProxy addElement(String type, String name) {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
         
         if(getEObject() == null) {
             return null;
@@ -136,7 +136,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public EObjectProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
         
         if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
             return null;
@@ -207,7 +207,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     @Override
     public EObjectProxy attr(String attribute, Object value) {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
 
         if(PURPOSE.equals(attribute) && getEObject() != null) {
             getEObject().setPurpose((String)value);

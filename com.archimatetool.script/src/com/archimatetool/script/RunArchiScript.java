@@ -80,8 +80,8 @@ public class RunArchiScript {
                 }
             }
             
-            // Finalise
-            ModelHandler.finalise();
+            // Re-open models if any were closed
+            ModelHandler.openModels();
         }
 	}
 

@@ -128,7 +128,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     public EObjectProxy addProperty(String key, String value) {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
         
         if(getEObject() instanceof IProperties && key != null && value != null) {
             // TODO use IArchimateFactory.eINSTANCE.createProperty(key, value);
@@ -148,7 +148,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     public EObjectProxy addOrUpdateProperty(String key, String value) {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
         
         if(getEObject() instanceof IProperties && key != null && value != null) {
             boolean updated = false;
@@ -176,7 +176,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @return this
      */
     public EObjectProxy updateProperty(String key, String value) {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
         
         if(getEObject() instanceof IProperties && key != null && value != null) {
             for(IProperty prop : ((IProperties)getEObject()).getProperties()) {
@@ -250,7 +250,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param key
      */
     public EObjectProxy removeProperty(String key, String value) {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
         
         if(getEObject() instanceof IProperties) {
             List<IProperty> toRemove = new ArrayList<IProperty>();
@@ -290,7 +290,7 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     public EObjectProxy attr(String attribute, Object value) {
-        ModelHandler.checkModelAccess(getEObject());
+        checkModelAccess();
         
         switch(attribute) {
             case NAME:
@@ -307,6 +307,13 @@ public abstract class EObjectProxy implements IModelConstants {
         }
         
         return this;
+    }
+    
+    /**
+     * Check model access
+     */
+    protected void checkModelAccess() {
+        ModelHandler.checkModelAccess(getEObject());
     }
     
     @Override
