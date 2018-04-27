@@ -46,6 +46,8 @@ public class RunArchiScript {
         defineExtensionGlobalVariables(engine);
         
         FileReader reader = null;
+        
+        EObjectProxy.CLOSED_MODELS.clear();
 
         try {
             // Bind our global functions

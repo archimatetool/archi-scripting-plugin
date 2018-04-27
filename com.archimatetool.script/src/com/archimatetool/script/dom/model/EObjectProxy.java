@@ -336,7 +336,7 @@ public abstract class EObjectProxy implements IModelConstants {
                 throw new RuntimeException(Messages.EObjectProxy_0 + ": " + model.getFile()); //$NON-NLS-1$
             }
             
-            // Close model 
+            // Partially close the model so we can retain the ID Adapter and Archive Manager
             EditorManager.closeDiagramEditors(model);
             IEditorModelManager.INSTANCE.getModels().remove(model);
             IEditorModelManager.INSTANCE.firePropertyChange(this, IEditorModelManager.PROPERTY_MODEL_REMOVED, null, model);
