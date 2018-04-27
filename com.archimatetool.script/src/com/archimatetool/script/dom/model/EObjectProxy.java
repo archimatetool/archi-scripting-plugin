@@ -88,6 +88,10 @@ public abstract class EObjectProxy implements IModelConstants {
         return fEObject;
     }
     
+    public boolean isSet() {
+        return getEObject() != null;
+    }
+    
     public String getId() {
         return (String)attr(ID);
     }
