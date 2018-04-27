@@ -56,7 +56,7 @@ public class RunArchiScript {
             Object global = engine.eval("this"); //$NON-NLS-1$
             // get JS "Object" constructor object
             Object jsObject = engine.eval("Object"); //$NON-NLS-1$
-            ((Invocable)engine).invokeMethod(jsObject, "bindProperties", global, new GlobalBinding()); //$NON-NLS-1$
+            ((Invocable)engine).invokeMethod(jsObject, "bindProperties", global, new GlobalBinding(engine, file)); //$NON-NLS-1$
             
             reader = new FileReader(file);
 
