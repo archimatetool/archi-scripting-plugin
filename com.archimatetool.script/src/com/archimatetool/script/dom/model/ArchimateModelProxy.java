@@ -44,6 +44,11 @@ public class ArchimateModelProxy extends EObjectProxy {
         return (IArchimateModel)super.getEObject();
     }
     
+    @Override
+    public ArchimateModelProxy getModel() {
+        return this;
+    }
+    
     public EObjectProxy setPurpose(String purpose) {
         return attr(PURPOSE, purpose);
     }

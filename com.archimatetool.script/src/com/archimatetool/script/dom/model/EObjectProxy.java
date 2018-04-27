@@ -92,6 +92,14 @@ public abstract class EObjectProxy implements IModelConstants {
         return getEObject() != null;
     }
     
+    public ArchimateModelProxy getModel() {
+        if(getEObject() instanceof IArchimateModelObject) {
+            return new ArchimateModelProxy(((IArchimateModelObject)getEObject()).getArchimateModel());
+        }
+        
+        return null;
+    }
+    
     public String getId() {
         return (String)attr(ID);
     }
