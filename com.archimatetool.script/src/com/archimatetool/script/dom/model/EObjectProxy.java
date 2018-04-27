@@ -102,7 +102,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @return class type of this object
      */
     public String getType() {
-        if(getEObject()!= null) {
+        if(getEObject() != null) {
             return getEObject().eClass().getName();
         }
         

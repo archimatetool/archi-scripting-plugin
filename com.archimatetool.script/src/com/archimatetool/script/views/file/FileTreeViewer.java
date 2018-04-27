@@ -55,7 +55,12 @@ public class FileTreeViewer extends TreeViewer {
         fRootFolder.mkdirs();
         setInput(fRootFolder);
         
-        expandToLevel(ALL_LEVELS);
+        //expandToLevel(ALL_LEVELS);
+    }
+    
+    public void setRootFolder(File rootFolder) {
+        fRootFolder = rootFolder;
+        setInput(fRootFolder);
     }
 
     /**

@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
@@ -43,6 +44,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     
     private static final String HELP_ID = "com.archimatetool.script.prefs"; //$NON-NLS-1$
     
+    private Text fScriptsFolderTextField;
     private Text fEditorPathTextField;
     
     private Combo fDoubleClickBehaviourCombo;
@@ -72,8 +74,29 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         gd.widthHint = 500;
         settingsGroup.setLayoutData(gd);
         
-        // Editor path
+        // Scripts folder location
         Label label = new Label(settingsGroup, SWT.NULL);
+        label.setText(Messages.ScriptPreferencePage_8 + ":"); //$NON-NLS-1$
+        
+        fScriptsFolderTextField = new Text(settingsGroup, SWT.BORDER | SWT.SINGLE);
+        fScriptsFolderTextField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        // Single text control so strip CRLFs
+        UIUtils.conformSingleTextControl(fScriptsFolderTextField);
+        
+        Button folderButton = new Button(settingsGroup, SWT.PUSH);
+        folderButton.setText(Messages.ScriptPreferencePage_2);
+        folderButton.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                String folderPath = chooseFolderPath();
+                if(folderPath != null) {
+                    fScriptsFolderTextField.setText(folderPath);
+                }
+            }
+        });
+
+        // Editor path
+        label = new Label(settingsGroup, SWT.NULL);
         label.setText(Messages.ScriptPreferencePage_1);
         
         fEditorPathTextField = new Text(settingsGroup, SWT.BORDER | SWT.SINGLE);
@@ -106,6 +129,17 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         return client;
     }
 
+    private String chooseFolderPath() {
+        DirectoryDialog dialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
+        dialog.setText(Messages.ScriptPreferencePage_8);
+        dialog.setMessage(Messages.ScriptPreferencePage_9);
+        File file = new File(fScriptsFolderTextField.getText());
+        if(file.exists()) {
+            dialog.setFilterPath(fScriptsFolderTextField.getText());
+        }
+        return dialog.open();
+    }
+
     private String chooseEditor() {
         FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
         dialog.setText(Messages.ScriptPreferencePage_3);
@@ -117,12 +151,14 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     }
 
     private void setValues() {
+        fScriptsFolderTextField.setText(getPreferenceStore().getString(PREFS_SCRIPTS_FOLDER));
         fEditorPathTextField.setText(getPreferenceStore().getString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));      
     }
     
     @Override
     public boolean performOk() {
+        getPreferenceStore().setValue(PREFS_SCRIPTS_FOLDER, fScriptsFolderTextField.getText());
         getPreferenceStore().setValue(PREFS_EDITOR, fEditorPathTextField.getText());
         getPreferenceStore().setValue(PREFS_DOUBLE_CLICK_BEHAVIOUR, fDoubleClickBehaviourCombo.getSelectionIndex());
         
@@ -131,6 +167,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     
     @Override
     protected void performDefaults() {
+        fScriptsFolderTextField.setText(getPreferenceStore().getDefaultString(PREFS_SCRIPTS_FOLDER));
         fEditorPathTextField.setText(getPreferenceStore().getDefaultString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getDefaultInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
     }

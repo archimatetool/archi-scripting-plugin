@@ -21,6 +21,10 @@ public class Messages extends NLS {
     public static String ScriptPreferencePage_6;
 
     public static String ScriptPreferencePage_7;
+
+    public static String ScriptPreferencePage_8;
+
+    public static String ScriptPreferencePage_9;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

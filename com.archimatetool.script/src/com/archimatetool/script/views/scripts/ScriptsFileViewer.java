@@ -18,6 +18,8 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -58,6 +60,19 @@ extends AbstractFileView implements ISelectionListener {
     // Current model in workbench
     private IArchimateModel fCurrentModel;
     
+    /**
+     * Application Preferences Listener
+     */
+    private IPropertyChangeListener prefsListener = new IPropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent event) {
+            if(IPreferenceConstants.PREFS_SCRIPTS_FOLDER.equals(event.getProperty())) {
+                handleRefreshAction();
+            }
+        }
+    };
+
+    
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
@@ -68,6 +83,9 @@ extends AbstractFileView implements ISelectionListener {
         // Initialise with whatever is selected in the workbench
         selectionChanged(getSite().getWorkbenchWindow().getPartService().getActivePart(),
                 getSite().getWorkbenchWindow().getSelectionService().getSelection());
+        
+        // Listen to Prefs
+        ArchiScriptPlugin.INSTANCE.getPreferenceStore().addPropertyChangeListener(prefsListener);
     }
     
     @Override
@@ -255,6 +273,9 @@ extends AbstractFileView implements ISelectionListener {
         
         // Unregister selection listener
         getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(this);
+        
+        // Unregister to Prefs
+        ArchiScriptPlugin.INSTANCE.getPreferenceStore().removePropertyChangeListener(prefsListener);
     }
 
     // =================================================================================

@@ -16,7 +16,8 @@ import com.archimatetool.script.dom.IArchiScriptDOMFactory;
  * Current model object
  * 
  * Represents the current model
- * If Archi is not running an empty collection is returned
+ * This can be the selected model in focus if run in the UI, or the current model if run from the ACLI
+ * It can be loaded from file, or created anew.
  * 
  * @author Phillip Beauvoir
  */

@@ -10,7 +10,8 @@ import java.io.File;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
-import com.archimatetool.editor.ArchiPlugin;
+import com.archimatetool.editor.utils.StringUtils;
+import com.archimatetool.script.preferences.IPreferenceConstants;
 
 
 
@@ -36,7 +37,19 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup {
      * @return The folder where we store user scripts
      */
     public File getUserScriptsFolder() {
-        return new File(ArchiPlugin.INSTANCE.getUserDataFolder(), "scripts"); //$NON-NLS-1$
+        // Get from preferences
+        String path = getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER);
+        
+        if(StringUtils.isSet(path)) {
+            File file = new File(path);
+            if(file.canWrite()) {
+                return file;
+            }
+        }
+        
+        // Default
+        path = getPreferenceStore().getDefaultString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER);
+        return new File(path);
     }
     
     public void earlyStartup() {

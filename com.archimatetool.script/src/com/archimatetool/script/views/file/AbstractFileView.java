@@ -27,7 +27,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
@@ -326,7 +325,7 @@ implements IContextProvider {
     /**
      * @return The Viewer
      */
-    public TreeViewer getViewer() {
+    public FileTreeViewer getViewer() {
         return fTreeViewer;
     }
     
@@ -367,6 +366,7 @@ implements IContextProvider {
      * Refresh event happened
      */
     protected void handleRefreshAction() {
+        getViewer().setRootFolder(getRootFolder());
         getViewer().refresh();
     }
     

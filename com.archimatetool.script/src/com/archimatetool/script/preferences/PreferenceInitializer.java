@@ -5,9 +5,12 @@
  */
 package com.archimatetool.script.preferences;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
+import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
 
@@ -36,5 +39,7 @@ implements IPreferenceConstants {
         }
 		
 		store.setDefault(PREFS_DOUBLE_CLICK_BEHAVIOUR, 0);
+		
+		store.setDefault(PREFS_SCRIPTS_FOLDER, new File(ArchiPlugin.INSTANCE.getUserDataFolder(), "scripts").getAbsolutePath()); //$NON-NLS-1$
     }
 }
