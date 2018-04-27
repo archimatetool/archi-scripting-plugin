@@ -5,6 +5,8 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -12,10 +14,13 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDocumentable;
@@ -31,6 +36,11 @@ import com.archimatetool.model.IProperty;
  * @author Phillip Beauvoir
  */
 public abstract class EObjectProxy implements IModelConstants {
+    
+    /**
+     * Static list of closed models in the UI
+     */
+    public static List<File> CLOSED_MODELS = new ArrayList<File>();
     
     private EObject fEObject;
     
@@ -115,6 +125,8 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     public EObjectProxy addProperty(String key, String value) {
+        checkModelInUI();
+        
         if(getEObject() instanceof IProperties && key != null && value != null) {
             // TODO use IArchimateFactory.eINSTANCE.createProperty(key, value);
             IProperty prop = IArchimateFactory.eINSTANCE.createProperty();
@@ -133,6 +145,8 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     public EObjectProxy addOrUpdateProperty(String key, String value) {
+        checkModelInUI();
+        
         if(getEObject() instanceof IProperties && key != null && value != null) {
             boolean updated = false;
             
@@ -159,6 +173,8 @@ public abstract class EObjectProxy implements IModelConstants {
      * @return this
      */
     public EObjectProxy updateProperty(String key, String value) {
+        checkModelInUI();
+        
         if(getEObject() instanceof IProperties && key != null && value != null) {
             for(IProperty prop : ((IProperties)getEObject()).getProperties()) {
                 if(prop.getKey().equals(key)) {
@@ -231,6 +247,8 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param key
      */
     public EObjectProxy removeProperty(String key, String value) {
+        checkModelInUI();
+        
         if(getEObject() instanceof IProperties) {
             List<IProperty> toRemove = new ArrayList<IProperty>();
             EList<IProperty> props = ((IProperties)getEObject()).getProperties();
@@ -269,6 +287,8 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     public EObjectProxy attr(String attribute, Object value) {
+        checkModelInUI();
+        
         switch(attribute) {
             case NAME:
                 if(getEObject() instanceof INameable) {
@@ -284,6 +304,35 @@ public abstract class EObjectProxy implements IModelConstants {
         }
         
         return this;
+    }
+    
+    /**
+     * Check if the model is opened in the UI and try to unload it
+     */
+    protected void checkModelInUI() {
+        // Only if in UI
+        if(!PlatformUI.isWorkbenchRunning() || !(getEObject() instanceof IArchimateModelObject)) {
+            return;
+        }
+        
+        IArchimateModel model = ((IArchimateModelObject)getEObject()).getArchimateModel();
+        
+        // If the model is loaded in the UI...
+        if(model != null && IEditorModelManager.INSTANCE.isModelLoaded(model.getFile())) {
+            // It's Dirty so throw exception
+            if(IEditorModelManager.INSTANCE.isModelDirty(model)) {
+                throw new RuntimeException(Messages.EObjectProxy_0 + ": " + model.getFile()); //$NON-NLS-1$
+            }
+            
+            // Close model and add to the global list
+            try {
+                IEditorModelManager.INSTANCE.closeModel(model);
+                CLOSED_MODELS.add(model.getFile());
+            }
+            catch(IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
     
     @Override

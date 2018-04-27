@@ -23,9 +23,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.IEditorModelManager;
-import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
-import com.archimatetool.script.dom.model.ArchimateModelProxy;
+import com.archimatetool.script.dom.model.EObjectProxy;
 import com.archimatetool.script.dom.model.GlobalBinding;
 import com.archimatetool.script.views.console.ConsoleOutput;
 
@@ -80,8 +79,8 @@ public class RunArchiScript {
             }
             
             // Re-open any closed models
-            for(IArchimateModel model : ArchimateModelProxy.CLOSED_MODELS) {
-                IEditorModelManager.INSTANCE.openModel(model);
+            for(File file : EObjectProxy.CLOSED_MODELS) {
+                IEditorModelManager.INSTANCE.openModel(file);
             }
         }
 	}

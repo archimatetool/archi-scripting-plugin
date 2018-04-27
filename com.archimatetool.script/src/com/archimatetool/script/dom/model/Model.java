@@ -9,6 +9,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.commandline.CommandLineState;
+import com.archimatetool.editor.views.tree.ITreeModelView;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 
@@ -35,7 +36,7 @@ public class Model implements IArchiScriptDOMFactory {
         
         // Get and wrap the currently selected model in the UI if there is one
         if(PlatformUI.isWorkbenchRunning()) {
-            IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart();
+            IWorkbenchPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ITreeModelView.ID);
             if(part != null) {
                 currentModel = part.getAdapter(IArchimateModel.class);
             }

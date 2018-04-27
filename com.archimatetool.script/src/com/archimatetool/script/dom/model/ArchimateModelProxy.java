@@ -7,7 +7,6 @@ package com.archimatetool.script.dom.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,8 +32,6 @@ import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
  */
 public class ArchimateModelProxy extends EObjectProxy {
     
-    public static List<IArchimateModel> CLOSED_MODELS = new ArrayList<IArchimateModel>();
-    
     public ArchimateModelProxy() {
     }
 
@@ -45,28 +42,6 @@ public class ArchimateModelProxy extends EObjectProxy {
     @Override
     protected IArchimateModel getEObject() {
         return (IArchimateModel)super.getEObject();
-    }
-    
-    @Override
-    protected void setEObject(EObject eObject) {
-        super.setEObject(eObject);
-        
-        // If the model is loaded in the UI...
-        if(getEObject() != null && IEditorModelManager.INSTANCE.isModelLoaded(getEObject().getFile())) {
-            // It's Dirty so throw exception
-            if(IEditorModelManager.INSTANCE.isModelDirty(getEObject())) {
-                throw new RuntimeException(Messages.ArchimateModelProxy_0 + getEObject().getFile());
-            }
-            
-            // Close model and add to the global list
-            try {
-                IEditorModelManager.INSTANCE.closeModel(getEObject());
-                CLOSED_MODELS.add(getEObject());
-            }
-            catch(IOException ex) {
-                ex.printStackTrace();
-            }
-        }
     }
     
     public EObjectProxy setPurpose(String purpose) {
@@ -88,7 +63,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy load(String path) {
-        setEObject(IEditorModelManager.INSTANCE.loadModel(new File(path), false));
+        setEObject(IEditorModelManager.INSTANCE.loadModel(new File(path)));
         return this;
     }
     
@@ -118,6 +93,8 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy save() throws IOException {
+        checkModelInUI();
+        
         if(getEObject() != null && getEObject().getFile() != null) {
             getEObject().setVersion(ModelVersion.VERSION);
             IArchiveManager archiveManager = (IArchiveManager)getEObject().getAdapter(IArchiveManager.class);
@@ -133,6 +110,8 @@ public class ArchimateModelProxy extends EObjectProxy {
      * @return The element
      */
     public EObjectProxy addElement(String type, String name) {
+        checkModelInUI();
+        
         if(getEObject() == null) {
             return null;
         }
@@ -150,6 +129,8 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public EObjectProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
+        checkModelInUI();
+        
         if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
             return null;
         }
@@ -219,8 +200,11 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     @Override
     public EObjectProxy attr(String attribute, Object value) {
+        checkModelInUI();
+
         if(PURPOSE.equals(attribute) && getEObject() != null) {
             getEObject().setPurpose((String)value);
+            return this;
         }
         
         return super.attr(attribute, value);

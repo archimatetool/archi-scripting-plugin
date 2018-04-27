@@ -26,16 +26,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorRegistry;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
 import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.editor.utils.StringUtils;
-import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 import com.archimatetool.script.views.file.AbstractFileView;
@@ -48,7 +45,7 @@ import com.archimatetool.script.views.file.PathEditorInput;
  * File Viewer ViewPart for viewing files in a given system folder.
  */
 public class ScriptsFileViewer
-extends AbstractFileView implements ISelectionListener {
+extends AbstractFileView  {
     
     public static String ID = ArchiScriptPlugin.PLUGIN_ID + ".scriptsView"; //$NON-NLS-1$
     public static String HELP_ID = ArchiScriptPlugin.PLUGIN_ID + ".scriptsViewHelp"; //$NON-NLS-1$
@@ -56,9 +53,6 @@ extends AbstractFileView implements ISelectionListener {
     RunScriptAction fActionRun;
     RestoreExampleScriptsAction fActionRestoreExamples;
     IAction fActionShowConsole;
-    
-    // Current model in workbench
-    private IArchimateModel fCurrentModel;
     
     /**
      * Application Preferences Listener
@@ -76,13 +70,6 @@ extends AbstractFileView implements ISelectionListener {
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
-        
-        // Listen to global selections to update the current model
-        getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
-        
-        // Initialise with whatever is selected in the workbench
-        selectionChanged(getSite().getWorkbenchWindow().getPartService().getActivePart(),
-                getSite().getWorkbenchWindow().getSelectionService().getSelection());
         
         // Listen to Prefs
         ArchiScriptPlugin.INSTANCE.getPreferenceStore().addPropertyChangeListener(prefsListener);
@@ -250,29 +237,9 @@ extends AbstractFileView implements ISelectionListener {
         }
     }
     
-    public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-        if(part == this || part == null) {
-            return;
-        }
-        
-        fCurrentModel = part.getAdapter(IArchimateModel.class);
-    }
-
-    @Override
-    public <T> T getAdapter(Class<T> adapter) {
-        if(adapter == IArchimateModel.class) {
-            return adapter.cast(fCurrentModel);
-        }
-        
-        return super.getAdapter(adapter);
-    }
-    
     @Override
     public void dispose() {
         super.dispose();
-        
-        // Unregister selection listener
-        getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(this);
         
         // Unregister to Prefs
         ArchiScriptPlugin.INSTANCE.getPreferenceStore().removePropertyChangeListener(prefsListener);
