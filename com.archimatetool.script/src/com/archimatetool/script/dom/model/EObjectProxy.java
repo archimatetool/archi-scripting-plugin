@@ -6,7 +6,6 @@
 package com.archimatetool.script.dom.model;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -17,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.IEditorModelManager;
+import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
@@ -328,14 +328,13 @@ public abstract class EObjectProxy implements IModelConstants {
                 throw new RuntimeException(Messages.EObjectProxy_0 + ": " + model.getFile()); //$NON-NLS-1$
             }
             
-            // Close model and add to the global list
-            try {
-                IEditorModelManager.INSTANCE.closeModel(model);
-                CLOSED_MODELS.add(model.getFile());
-            }
-            catch(IOException ex) {
-                ex.printStackTrace();
-            }
+            // Close model 
+            EditorManager.closeDiagramEditors(model);
+            IEditorModelManager.INSTANCE.getModels().remove(model);
+            IEditorModelManager.INSTANCE.firePropertyChange(this, IEditorModelManager.PROPERTY_MODEL_REMOVED, null, model);
+
+            // And add to list
+            CLOSED_MODELS.add(model.getFile());
         }
     }
     

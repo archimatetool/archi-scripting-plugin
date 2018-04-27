@@ -84,6 +84,8 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy save(String path) throws IOException {
+        checkModelInUI();
+        
         if(getEObject() != null) {
             File file = new File(path);
             getEObject().setFile(file);
