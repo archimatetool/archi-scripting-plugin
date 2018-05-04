@@ -19,6 +19,8 @@ import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateConnection;
+import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDocumentable;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
@@ -57,6 +59,14 @@ public abstract class EObjectProxy implements IModelConstants {
             return new DiagramModelProxy((IDiagramModel)eObject);
         }
         
+        if(eObject instanceof IDiagramModelArchimateObject) {
+            return new DiagramModelArchimateObjectProxy((IDiagramModelArchimateObject)eObject);
+        }
+        
+        if(eObject instanceof IDiagramModelArchimateConnection) {
+            return new DiagramModelArchimateConnectionProxy((IDiagramModelArchimateConnection)eObject);
+        }
+
         if(eObject instanceof IFolder) {
             return new FolderProxy((IFolder)eObject);
         }

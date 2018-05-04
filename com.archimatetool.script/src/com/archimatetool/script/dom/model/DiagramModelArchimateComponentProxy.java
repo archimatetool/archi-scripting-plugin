@@ -12,7 +12,7 @@ import com.archimatetool.model.IDiagramModelArchimateComponent;
  * 
  * @author Phillip Beauvoir
  */
-public class DiagramModelArchimateComponentProxy extends EObjectProxy {
+public abstract class DiagramModelArchimateComponentProxy extends EObjectProxy {
     
     public DiagramModelArchimateComponentProxy() {
     }
@@ -23,10 +23,12 @@ public class DiagramModelArchimateComponentProxy extends EObjectProxy {
     
     public DiagramModelArchimateComponentProxy setArchimateConcept(ArchimateConceptProxy concept) {
         checkModelAccess();
-        
         getEObject().setArchimateConcept(concept.getEObject());
-        
         return this;
+    }
+    
+    public ArchimateConceptProxy getArchimateConcept() {
+        return (ArchimateConceptProxy)EObjectProxy.get(getEObject().getArchimateConcept());
     }
     
     public DiagramModelProxy getDiagramModel() {
@@ -41,6 +43,8 @@ public class DiagramModelArchimateComponentProxy extends EObjectProxy {
     @Override
     public Object attr(String attribute) {
         switch(attribute) {
+            case "archimateConcept": //$NON-NLS-1$
+                return getArchimateConcept();
             case "diagramModel": //$NON-NLS-1$
                 return getDiagramModel();
         }
