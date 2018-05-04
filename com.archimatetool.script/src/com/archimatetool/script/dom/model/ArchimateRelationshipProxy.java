@@ -26,14 +26,26 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
         return (IArchimateRelationship)super.getEObject();
     }
 
-    public EObjectProxy getSource() {
-        return EObjectProxy.get(getEObject().getSource());
+    public ArchimateConceptProxy getSource() {
+        return (ArchimateConceptProxy)EObjectProxy.get(getEObject().getSource());
     }
     
-    public EObjectProxy getTarget() {
-        return EObjectProxy.get(getEObject().getTarget());
+    public ArchimateConceptProxy getTarget() {
+        return (ArchimateConceptProxy)EObjectProxy.get(getEObject().getTarget());
     }
-
+    
+    public ArchimateRelationshipProxy setSource(ArchimateConceptProxy source) {
+        checkModelAccess();
+        getEObject().setSource(source.getEObject());
+        return this;
+    }
+    
+    public ArchimateRelationshipProxy setTarget(ArchimateConceptProxy target) {
+        checkModelAccess();
+        getEObject().setTarget(target.getEObject());
+        return this;
+    }
+    
     @Override
     public Object attr(String attribute) {
         switch(attribute) {
@@ -46,4 +58,19 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
         return super.attr(attribute);
     }
 
+    @Override
+    public EObjectProxy attr(String attribute, Object value) {
+        switch(attribute) {
+            case "source": //$NON-NLS-1$
+                if(value instanceof ArchimateConceptProxy) {
+                    return setSource((ArchimateConceptProxy)value);
+                }
+            case "target": //$NON-NLS-1$
+                if(value instanceof ArchimateConceptProxy) {
+                    return setTarget((ArchimateConceptProxy)value);
+                }
+        }
+        
+        return super.attr(attribute, value);
+    }
 }

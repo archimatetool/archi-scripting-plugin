@@ -5,8 +5,12 @@
  */
 package com.archimatetool.script.dom.model;
 
+import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IFolder;
 
 /**
  * Archimate Concept wrapper proxy
@@ -27,6 +31,17 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return (IArchimateConcept)super.getEObject();
     }
 
+    public void delete() {
+        checkModelAccess();
+        
+        if(getSourceRelationships().isEmpty() && getTargetRelationships().isEmpty() && getDiagramComponentInstances().isEmpty()) {
+            ((IFolder)getEObject().eContainer()).getElements().remove(getEObject());
+        }
+        else {
+            throw new RuntimeException(Messages.ArchimateConceptProxy_0 + " " + this); //$NON-NLS-1$
+        }
+    }
+    
     public ExtendedCollection getSourceRelationships() {
         ExtendedCollection list = new ExtendedCollection();
         for(IArchimateRelationship r : getEObject().getSourceRelationships()) {
@@ -42,7 +57,19 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         }
         return list;
     }
-
+    
+    public ExtendedCollection getDiagramComponentInstances() {
+        ExtendedCollection list = new ExtendedCollection();
+        
+        for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
+            for(IDiagramModelArchimateComponent dmc : DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(dm, getEObject())) {
+                list.add(new DiagramModelArchimateComponentProxy(dmc));
+            }
+        }
+        
+        return list;
+    }
+    
     @Override
     public Object attr(String attribute) {
         switch(attribute) {
@@ -50,6 +77,8 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
                 return getSourceRelationships();
             case "targetRelationships": //$NON-NLS-1$
                 return getTargetRelationships();
+            case "diagramComponentInstances": //$NON-NLS-1$
+                return getDiagramComponentInstances();
         }
         
         return super.attr(attribute);
