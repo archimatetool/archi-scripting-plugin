@@ -5,7 +5,10 @@
  */
 package com.archimatetool.script.dom.model;
 
+import org.eclipse.osgi.util.NLS;
+
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.util.ArchimateModelUtils;
 
 /**
  * Archimate Relationship wrapper proxy
@@ -36,13 +39,27 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
     
     public ArchimateRelationshipProxy setSource(ArchimateConceptProxy source) {
         checkModelAccess();
+        
+        if(!ArchimateModelUtils.isValidRelationship(source.getEObject(), getEObject().getTarget(), getEObject().eClass())) {
+            throw new ArchiScriptException(NLS.bind(Messages.ArchimateRelationshipProxy_0,
+                    new Object[] { getEObject().eClass().getName(), source, getTarget() }));
+        }
+        
         getEObject().setSource(source.getEObject());
+
         return this;
     }
     
     public ArchimateRelationshipProxy setTarget(ArchimateConceptProxy target) {
         checkModelAccess();
+        
+        if(!ArchimateModelUtils.isValidRelationship(getEObject().getSource(), target.getEObject(), getEObject().eClass())) {
+            throw new ArchiScriptException(NLS.bind(Messages.ArchimateRelationshipProxy_1,
+                    new Object[] { getEObject().eClass().getName(), getSource(), target }));
+        }
+        
         getEObject().setTarget(target.getEObject());
+
         return this;
     }
     

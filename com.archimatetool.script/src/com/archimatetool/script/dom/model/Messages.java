@@ -8,6 +8,10 @@ public class Messages extends NLS {
 
     public static String ArchimateConceptProxy_0;
 
+    public static String ArchimateRelationshipProxy_0;
+
+    public static String ArchimateRelationshipProxy_1;
+
     public static String ModelHandler_0;
     static {
         // initialize resource bundle

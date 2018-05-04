@@ -51,7 +51,7 @@ public class ModelHandler {
         if(model != null && IEditorModelManager.INSTANCE.isModelLoaded(model.getFile())) {
             // It's Dirty so no access
             if(IEditorModelManager.INSTANCE.isModelDirty(model)) {
-                throw new RuntimeException(Messages.ModelHandler_0 + ": " + model.getFile()); //$NON-NLS-1$
+                throw new ArchiScriptException(Messages.ModelHandler_0 + ": " + model.getFile()); //$NON-NLS-1$
             }
             
             // (Partially) close the model so we can retain the ID Adapter and Archive Manager

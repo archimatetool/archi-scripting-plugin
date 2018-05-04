@@ -38,7 +38,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
             ((IFolder)getEObject().eContainer()).getElements().remove(getEObject());
         }
         else {
-            throw new RuntimeException(Messages.ArchimateConceptProxy_0 + " " + this); //$NON-NLS-1$
+            throw new ArchiScriptException(Messages.ArchimateConceptProxy_0 + " " + this); //$NON-NLS-1$
         }
     }
     
