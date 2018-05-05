@@ -38,9 +38,9 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         if(newElement != null) {
             newElement.setProperties(getProperties());
             
-            getSourceRelationships().setSource(newElement);
-            getTargetRelationships().setTarget(newElement);
-            getDiagramComponentInstances().setArchimateConcept(newElement);
+            getSourceRelationships().attr(SOURCE, newElement);
+            getTargetRelationships().attr(TARGET, newElement);
+            getDiagramComponentInstances().attr(ARCHIMATE_CONCEPT, newElement);
             
             delete();
         }

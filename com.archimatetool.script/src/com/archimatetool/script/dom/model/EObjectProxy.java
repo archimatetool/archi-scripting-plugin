@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
@@ -130,6 +131,13 @@ public abstract class EObjectProxy implements IModelConstants {
         }
         
         return null;
+    }
+    
+    /**
+     * Delete this
+     */
+    public void delete() {
+        throw new ArchiScriptException(NLS.bind(Messages.EObjectProxy_0, this));
     }
     
     /**

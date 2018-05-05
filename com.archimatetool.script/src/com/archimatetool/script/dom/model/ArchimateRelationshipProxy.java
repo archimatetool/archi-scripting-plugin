@@ -75,9 +75,9 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
         if(newRelationship != null) {
             newRelationship.setProperties(getProperties());
             
-            getSourceRelationships().setSource(newRelationship);
-            getTargetRelationships().setTarget(newRelationship);
-            getDiagramComponentInstances().setArchimateConcept(newRelationship);
+            getSourceRelationships().attr(SOURCE, newRelationship);
+            getTargetRelationships().attr(TARGET, newRelationship);
+            getDiagramComponentInstances().attr(ARCHIMATE_CONCEPT, newRelationship);
             
             getEObject().disconnect();
             delete();
@@ -89,9 +89,9 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
     @Override
     public Object attr(String attribute) {
         switch(attribute) {
-            case "source": //$NON-NLS-1$
+            case SOURCE:
                 return getSource();
-            case "target": //$NON-NLS-1$
+            case TARGET:
                 return getTarget();
         }
         
@@ -101,11 +101,11 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
     @Override
     public EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
-            case "source": //$NON-NLS-1$
+            case SOURCE:
                 if(value instanceof ArchimateConceptProxy) {
                     return setSource((ArchimateConceptProxy)value);
                 }
-            case "target": //$NON-NLS-1$
+            case TARGET:
                 if(value instanceof ArchimateConceptProxy) {
                     return setTarget((ArchimateConceptProxy)value);
                 }

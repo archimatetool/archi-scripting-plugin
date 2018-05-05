@@ -60,6 +60,15 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     }
     
     /**
+     * Delete all in collection
+     */
+    public void delete() {
+        for(EObjectProxy object : this) {
+            object.delete();
+        }
+    }
+    
+    /**
      * Add a property to this collection
      * @param key
      * @param value

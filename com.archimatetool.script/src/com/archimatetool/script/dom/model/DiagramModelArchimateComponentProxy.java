@@ -43,9 +43,9 @@ public abstract class DiagramModelArchimateComponentProxy extends EObjectProxy {
     @Override
     public Object attr(String attribute) {
         switch(attribute) {
-            case "archimateConcept": //$NON-NLS-1$
+            case ARCHIMATE_CONCEPT:
                 return getArchimateConcept();
-            case "diagramModel": //$NON-NLS-1$
+            case DIAGRAM_MODEL:
                 return getDiagramModel();
         }
         
@@ -55,7 +55,7 @@ public abstract class DiagramModelArchimateComponentProxy extends EObjectProxy {
     @Override
     public EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
-            case "archimateConcept": //$NON-NLS-1$
+            case ARCHIMATE_CONCEPT:
                 if(value instanceof ArchimateConceptProxy) {
                     return setArchimateConcept((ArchimateConceptProxy)value);
                 }

@@ -31,6 +31,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return (IArchimateConcept)super.getEObject();
     }
 
+    @Override
     public void delete() {
         checkModelAccess();
         
@@ -42,24 +43,24 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         }
     }
     
-    public ArchimateRelationshipProxyCollection getSourceRelationships() {
-        ArchimateRelationshipProxyCollection list = new ArchimateRelationshipProxyCollection();
+    public EObjectProxyCollection<ArchimateRelationshipProxy> getSourceRelationships() {
+        EObjectProxyCollection<ArchimateRelationshipProxy> list = new EObjectProxyCollection<ArchimateRelationshipProxy>();
         for(IArchimateRelationship r : getEObject().getSourceRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
         }
         return list;
     }
     
-    public ArchimateRelationshipProxyCollection getTargetRelationships() {
-        ArchimateRelationshipProxyCollection list = new ArchimateRelationshipProxyCollection();
+    public EObjectProxyCollection<ArchimateRelationshipProxy> getTargetRelationships() {
+        EObjectProxyCollection<ArchimateRelationshipProxy> list = new EObjectProxyCollection<ArchimateRelationshipProxy>();
         for(IArchimateRelationship r : getEObject().getTargetRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
         }
         return list;
     }
     
-    public DiagramModelArchimateComponentProxyCollection getDiagramComponentInstances() {
-        DiagramModelArchimateComponentProxyCollection list = new DiagramModelArchimateComponentProxyCollection();
+    public EObjectProxyCollection<DiagramModelArchimateComponentProxy> getDiagramComponentInstances() {
+        EObjectProxyCollection<DiagramModelArchimateComponentProxy> list = new EObjectProxyCollection<DiagramModelArchimateComponentProxy>();
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
             for(IDiagramModelArchimateComponent dmc : DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(dm, getEObject())) {
@@ -80,11 +81,11 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
     @Override
     public Object attr(String attribute) {
         switch(attribute) {
-            case "sourceRelationships": //$NON-NLS-1$
+            case SOURCE_RELATIONSHIPS:
                 return getSourceRelationships();
-            case "targetRelationships": //$NON-NLS-1$
+            case TARGET_RELATIONSHIPS:
                 return getTargetRelationships();
-            case "diagramComponentInstances": //$NON-NLS-1$
+            case DIAGRAM_COMPONENT_INSTANCES:
                 return getDiagramComponentInstances();
         }
         

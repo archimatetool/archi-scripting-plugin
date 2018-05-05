@@ -73,11 +73,11 @@ public class DiagramModelProxy extends EObjectProxy {
     @Override
     public Object attr(String attribute) {
         switch(attribute) {
-            case "concepts": //$NON-NLS-1$
+            case CONCEPTS:
                 return getConcepts();
-            case "elements": //$NON-NLS-1$
+            case ELEMENTS:
                 return getElements();
-            case "relationships": //$NON-NLS-1$
+            case RELATIONSHIPS:
                 return getRelationships();
         }
         
