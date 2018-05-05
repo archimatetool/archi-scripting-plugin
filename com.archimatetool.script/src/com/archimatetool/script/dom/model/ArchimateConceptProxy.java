@@ -42,24 +42,24 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         }
     }
     
-    public ExtendedCollection getSourceRelationships() {
-        ExtendedCollection list = new ExtendedCollection();
+    public EObjectProxyCollection getSourceRelationships() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getSourceRelationships()) {
             list.add(EObjectProxy.get(r));
         }
         return list;
     }
     
-    public ExtendedCollection getTargetRelationships() {
-        ExtendedCollection list = new ExtendedCollection();
+    public EObjectProxyCollection getTargetRelationships() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getTargetRelationships()) {
             list.add(EObjectProxy.get(r));
         }
         return list;
     }
     
-    public ExtendedCollection getDiagramComponentInstances() {
-        ExtendedCollection list = new ExtendedCollection();
+    public EObjectProxyCollection getDiagramComponentInstances() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
             for(IDiagramModelArchimateComponent dmc : DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(dm, getEObject())) {

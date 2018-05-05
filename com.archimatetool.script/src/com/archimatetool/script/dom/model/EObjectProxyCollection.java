@@ -12,13 +12,13 @@ import java.util.Set;
 
 
 /**
- * Extended Collection
+ * Extended Collection of EObjectProxy objects
  * 
  * @author Phillip Beauvoir
  */
-public class ExtendedCollection extends ArrayList<EObjectProxy> implements IModelConstants {
+public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements IModelConstants {
     
-    public ExtendedCollection() {
+    public EObjectProxyCollection() {
         super();
     }
     
@@ -34,7 +34,7 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
         return attr(NAME);
     }
     
-    public ExtendedCollection setName(String name) {
+    public EObjectProxyCollection setName(String name) {
         return attr(NAME, name);
     }
     
@@ -42,7 +42,7 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
         return attr(DOCUMENTATION);
     }
     
-    public ExtendedCollection setDocumentation(String documentation) {
+    public EObjectProxyCollection setDocumentation(String documentation) {
         return attr(DOCUMENTATION, documentation);
     }
     
@@ -64,7 +64,7 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
      * @param key
      * @param value
      */
-    public ExtendedCollection addProperty(String key, String value) {
+    public EObjectProxyCollection addProperty(String key, String value) {
         for(EObjectProxy object : this) {
             object.addProperty(key, value);
         }
@@ -79,7 +79,7 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
      * @param key
      * @param value
      */
-    public ExtendedCollection addOrUpdateProperty(String key, String value) {
+    public EObjectProxyCollection addOrUpdateProperty(String key, String value) {
         for(EObjectProxy object : this) {
             object.addOrUpdateProperty(key, value);
         }
@@ -94,7 +94,7 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
      * @param value
      * @return this
      */
-    public ExtendedCollection updateProperty(String key, String value) {
+    public EObjectProxyCollection updateProperty(String key, String value) {
         for(EObjectProxy object : this) {
             object.updateProperty(key, value);
         }
@@ -150,7 +150,7 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
      * Remove all instances of property "key" on each object of the collection. Returns the updated collection
      * @param key
      */
-    public ExtendedCollection removeProperty(String key) {
+    public EObjectProxyCollection removeProperty(String key) {
         for(EObjectProxy object : this) {
             object.removeProperty(key);
         }
@@ -163,7 +163,7 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
      * @param key
      * @param value
      */
-    public ExtendedCollection removeProperty(String key, String value) {
+    public EObjectProxyCollection removeProperty(String key, String value) {
         for(EObjectProxy object : this) {
             object.removeProperty(key, value);
         }
@@ -184,7 +184,7 @@ public class ExtendedCollection extends ArrayList<EObjectProxy> implements IMode
         return list;
     }
 
-    public ExtendedCollection attr(String attribute, Object value) {
+    public EObjectProxyCollection attr(String attribute, Object value) {
         for(EObjectProxy object : this) {
             object.attr(attribute, value);
         }

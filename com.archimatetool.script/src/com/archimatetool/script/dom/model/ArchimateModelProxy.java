@@ -169,7 +169,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public List<?> $(String selector) {
-        ExtendedCollection list = new ExtendedCollection();
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() == null) {
             return list;
