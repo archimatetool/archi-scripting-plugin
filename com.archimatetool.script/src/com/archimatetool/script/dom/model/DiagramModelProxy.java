@@ -34,20 +34,20 @@ public class DiagramModelProxy extends EObjectProxy {
         return (IDiagramModel)super.getEObject();
     }
     
-    public EObjectProxyCollection getConcepts() {
+    public EObjectProxyCollection<EObjectProxy> getConcepts() {
         return getConcepts(IArchimateConcept.class);
     }
     
-    public EObjectProxyCollection getElements() {
+    public EObjectProxyCollection<EObjectProxy> getElements() {
         return getConcepts(IArchimateElement.class);
     }
     
-    public EObjectProxyCollection getRelationships() {
+    public EObjectProxyCollection<EObjectProxy> getRelationships() {
         return getConcepts(IArchimateRelationship.class);
     }
     
-    private EObjectProxyCollection getConcepts(Class<?> type) {
-        EObjectProxyCollection list = new EObjectProxyCollection();
+    private EObjectProxyCollection<EObjectProxy> getConcepts(Class<?> type) {
+        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
         
         if(getEObject() == null) {
             return list;

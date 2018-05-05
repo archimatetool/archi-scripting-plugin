@@ -16,13 +16,13 @@ import java.util.Set;
  * 
  * @author Phillip Beauvoir
  */
-public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements IModelConstants {
+public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T> implements IModelConstants {
     
     public EObjectProxyCollection() {
         super();
     }
     
-    public EObjectProxy val() {
+    public T val() {
         return isEmpty() ? null : get(0);
     }
     
@@ -34,7 +34,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         return attr(NAME);
     }
     
-    public EObjectProxyCollection setName(String name) {
+    public EObjectProxyCollection<T> setName(String name) {
         return attr(NAME, name);
     }
     
@@ -42,7 +42,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         return attr(DOCUMENTATION);
     }
     
-    public EObjectProxyCollection setDocumentation(String documentation) {
+    public EObjectProxyCollection<T> setDocumentation(String documentation) {
         return attr(DOCUMENTATION, documentation);
     }
     
@@ -64,7 +64,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * @param key
      * @param value
      */
-    public EObjectProxyCollection addProperty(String key, String value) {
+    public EObjectProxyCollection<T> addProperty(String key, String value) {
         for(EObjectProxy object : this) {
             object.addProperty(key, value);
         }
@@ -79,7 +79,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * @param key
      * @param value
      */
-    public EObjectProxyCollection addOrUpdateProperty(String key, String value) {
+    public EObjectProxyCollection<T> addOrUpdateProperty(String key, String value) {
         for(EObjectProxy object : this) {
             object.addOrUpdateProperty(key, value);
         }
@@ -94,7 +94,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * @param value
      * @return this
      */
-    public EObjectProxyCollection updateProperty(String key, String value) {
+    public EObjectProxyCollection<T> updateProperty(String key, String value) {
         for(EObjectProxy object : this) {
             object.updateProperty(key, value);
         }
@@ -150,7 +150,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * Remove all instances of property "key" on each object of the collection. Returns the updated collection
      * @param key
      */
-    public EObjectProxyCollection removeProperty(String key) {
+    public EObjectProxyCollection<T> removeProperty(String key) {
         for(EObjectProxy object : this) {
             object.removeProperty(key);
         }
@@ -163,7 +163,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * @param key
      * @param value
      */
-    public EObjectProxyCollection removeProperty(String key, String value) {
+    public EObjectProxyCollection<T> removeProperty(String key, String value) {
         for(EObjectProxy object : this) {
             object.removeProperty(key, value);
         }
@@ -184,7 +184,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         return list;
     }
 
-    public EObjectProxyCollection attr(String attribute, Object value) {
+    public EObjectProxyCollection<T> attr(String attribute, Object value) {
         for(EObjectProxy object : this) {
             object.attr(attribute, value);
         }

@@ -42,28 +42,28 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         }
     }
     
-    public EObjectProxyCollection getSourceRelationships() {
-        EObjectProxyCollection list = new EObjectProxyCollection();
+    public ArchimateRelationshipProxyCollection getSourceRelationships() {
+        ArchimateRelationshipProxyCollection list = new ArchimateRelationshipProxyCollection();
         for(IArchimateRelationship r : getEObject().getSourceRelationships()) {
-            list.add(EObjectProxy.get(r));
+            list.add(new ArchimateRelationshipProxy(r));
         }
         return list;
     }
     
-    public EObjectProxyCollection getTargetRelationships() {
-        EObjectProxyCollection list = new EObjectProxyCollection();
+    public ArchimateRelationshipProxyCollection getTargetRelationships() {
+        ArchimateRelationshipProxyCollection list = new ArchimateRelationshipProxyCollection();
         for(IArchimateRelationship r : getEObject().getTargetRelationships()) {
-            list.add(EObjectProxy.get(r));
+            list.add(new ArchimateRelationshipProxy(r));
         }
         return list;
     }
     
-    public EObjectProxyCollection getDiagramComponentInstances() {
-        EObjectProxyCollection list = new EObjectProxyCollection();
+    public DiagramModelArchimateComponentProxyCollection getDiagramComponentInstances() {
+        DiagramModelArchimateComponentProxyCollection list = new DiagramModelArchimateComponentProxyCollection();
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
             for(IDiagramModelArchimateComponent dmc : DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(dm, getEObject())) {
-                list.add(EObjectProxy.get(dmc));
+                list.add((DiagramModelArchimateComponentProxy)EObjectProxy.get(dmc));
             }
         }
         

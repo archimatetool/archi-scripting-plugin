@@ -8,7 +8,6 @@ package com.archimatetool.script.dom.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -116,7 +115,7 @@ public class ArchimateModelProxy extends EObjectProxy {
      * @param name Name of element
      * @return The element
      */
-    public EObjectProxy addElement(String type, String name) {
+    public ArchimateElementProxy addElement(String type, String name) {
         checkModelAccess();
         
         if(getEObject() == null) {
@@ -129,13 +128,13 @@ public class ArchimateModelProxy extends EObjectProxy {
             element.setName(name);
             IFolder folder = getEObject().getDefaultFolderForObject(element);
             folder.getElements().add(element);
-            return EObjectProxy.get(element);
+            return new ArchimateElementProxy(element);
         }
         
         return null;
     }
     
-    public EObjectProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
+    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
         checkModelAccess();
         
         if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
@@ -149,7 +148,7 @@ public class ArchimateModelProxy extends EObjectProxy {
             relationship.connect(source.getEObject(), target.getEObject());
             IFolder folder = getEObject().getDefaultFolderForObject(relationship);
             folder.getElements().add(relationship);
-            return EObjectProxy.get(relationship);
+            return new ArchimateRelationshipProxy(relationship);
         }
         
         return null;
@@ -168,8 +167,8 @@ public class ArchimateModelProxy extends EObjectProxy {
         return this;
     }
     
-    public List<?> $(String selector) {
-        EObjectProxyCollection list = new EObjectProxyCollection();
+    public EObjectProxyCollection<EObjectProxy> $(String selector) {
+        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
         
         if(getEObject() == null) {
             return list;
