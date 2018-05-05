@@ -70,6 +70,13 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return list;
     }
     
+    /**
+     * Replace this concept with a new concept of class type, preserving all connecting relationships and diagram components
+     * @param type the Archimate type to replace with
+     * @return
+     */
+    public abstract ArchimateConceptProxy replace(String type);
+    
     @Override
     public Object attr(String attribute) {
         switch(attribute) {

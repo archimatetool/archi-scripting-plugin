@@ -68,6 +68,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
      * @param type the Archimate type to replace with
      * @return
      */
+    @Override
     public ArchimateRelationshipProxy replace(String type) {
         ArchimateRelationshipProxy newRelationship = getModel().addRelationship(type, getName(), getSource(), getTarget());
         

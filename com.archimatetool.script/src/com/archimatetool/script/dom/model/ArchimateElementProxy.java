@@ -31,6 +31,7 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
      * @param type the Archimate type to replace with
      * @return
      */
+    @Override
     public ArchimateElementProxy replace(String type) {
         ArchimateElementProxy newElement = getModel().addElement(type, getName());
         
