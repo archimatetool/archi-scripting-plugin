@@ -25,4 +25,25 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
     protected IArchimateElement getEObject() {
         return (IArchimateElement)super.getEObject();
     }
+    
+    /**
+     * Replace this element with a new element of class type, preserving all connecting relationships and diagram components
+     * @param type the Archimate type to replace with
+     * @return
+     */
+    public ArchimateElementProxy replace(String type) {
+        ArchimateElementProxy newElement = getModel().addElement(type, getName());
+        
+        if(newElement != null) {
+            newElement.setProperties(getProperties());
+            
+            getSourceRelationships().setSource(newElement);
+            getTargetRelationships().setTarget(newElement);
+            getDiagramComponentInstances().setArchimateConcept(newElement);
+            
+            delete();
+        }
+        
+        return newElement;
+    }
 }

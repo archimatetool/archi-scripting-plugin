@@ -63,6 +63,28 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
         return this;
     }
     
+    /**
+     * Replace this relationship with a new relationship of class type, preserving all connecting relationships and diagram components
+     * @param type the Archimate type to replace with
+     * @return
+     */
+    public ArchimateRelationshipProxy replace(String type) {
+        ArchimateRelationshipProxy newRelationship = getModel().addRelationship(type, getName(), getSource(), getTarget());
+        
+        if(newRelationship != null) {
+            newRelationship.setProperties(getProperties());
+            
+            getSourceRelationships().setSource(newRelationship);
+            getTargetRelationships().setTarget(newRelationship);
+            getDiagramComponentInstances().setArchimateConcept(newRelationship);
+            
+            getEObject().disconnect();
+            delete();
+        }
+        
+        return newRelationship;
+    }
+
     @Override
     public Object attr(String attribute) {
         switch(attribute) {

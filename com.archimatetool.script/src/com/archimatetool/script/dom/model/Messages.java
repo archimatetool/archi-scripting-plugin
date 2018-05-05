@@ -8,6 +8,10 @@ public class Messages extends NLS {
 
     public static String ArchimateConceptProxy_0;
 
+    public static String ArchimateModelProxy_0;
+
+    public static String ArchimateModelProxy_1;
+
     public static String ArchimateRelationshipProxy_0;
 
     public static String ArchimateRelationshipProxy_1;

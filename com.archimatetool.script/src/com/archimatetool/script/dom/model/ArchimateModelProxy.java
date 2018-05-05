@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.IArchiveManager;
@@ -131,7 +132,7 @@ public class ArchimateModelProxy extends EObjectProxy {
             return new ArchimateElementProxy(element);
         }
         
-        return null;
+        throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_0, type));
     }
     
     public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
@@ -151,7 +152,7 @@ public class ArchimateModelProxy extends EObjectProxy {
             return new ArchimateRelationshipProxy(relationship);
         }
         
-        return null;
+        throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_1, type));
     }
     
     /**

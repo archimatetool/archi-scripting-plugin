@@ -248,6 +248,22 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     /**
+     * Replace the properties list 
+     * @param properties
+     */
+    public void setProperties(List<Property> properties) {
+        if(getEObject() instanceof IProperties) {
+            // clear
+            ((IProperties)getEObject()).getProperties().clear();
+            
+            // add new ones
+            properties.forEach(p -> {
+                addProperty(p.getKey(), p.getValue());
+            });
+        }
+    }
+    
+    /**
      * Remove all instances of property "key" 
      * @param key
      */
