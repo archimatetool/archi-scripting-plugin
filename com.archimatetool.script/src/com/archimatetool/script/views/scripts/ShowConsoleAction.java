@@ -17,7 +17,7 @@ import com.archimatetool.script.views.console.ConsoleView;
 public class ShowConsoleAction extends Action {
 
     public ShowConsoleAction() {
-        setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_CONSOLE_16));
+        setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_CONSOLE));
         setText(Messages.ShowConsoleAction_0);
         setToolTipText(Messages.ShowConsoleAction_0);
     }

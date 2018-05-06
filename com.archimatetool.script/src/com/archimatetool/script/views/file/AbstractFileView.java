@@ -148,7 +148,7 @@ implements IContextProvider {
             {
                 setText(Messages.AbstractFileView_4);
                 setToolTipText(Messages.AbstractFileView_4);
-                setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_REFRESH_16));
+                setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_REFRESH));
                 setActionDefinitionId("org.eclipse.ui.file.refresh"); //$NON-NLS-1$
             }
             
@@ -197,7 +197,7 @@ implements IContextProvider {
             {
                 setText(Messages.AbstractFileView_9);
                 setToolTipText(Messages.AbstractFileView_10);
-                setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_EDIT_16));
+                setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_EDIT));
                 setEnabled(false);
             }
             

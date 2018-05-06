@@ -42,7 +42,7 @@ extends ViewPart {
         
         fActionClear = new Action() {
             {
-                setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_CLEAR_CONSOLE_16));
+                setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_CLEAR_CONSOLE));
                 setText(Messages.ConsoleView_0);
                 setToolTipText(Messages.ConsoleView_0);
             }

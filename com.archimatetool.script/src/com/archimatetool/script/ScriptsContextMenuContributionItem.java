@@ -15,6 +15,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 
+import com.archimatetool.editor.utils.FileUtils;
+
 
 /**
  * Contribute Menu Items to context menu
@@ -60,7 +62,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
                 fillItems(subMenu, file.listFiles());
             }
             else {
-                menuManager.add(new Action(file.getName()) {
+                menuManager.add(new Action(FileUtils.getFileNameWithoutExtension(file), IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_SCRIPT)) {
                     @Override
                     public void run() {
                         RunArchiScript script = new RunArchiScript(file);

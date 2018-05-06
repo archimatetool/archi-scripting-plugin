@@ -21,7 +21,7 @@ public class RunScriptAction extends Action {
     private File fFile;
 
     public RunScriptAction() {
-        setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_RUN_16));
+        setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_RUN));
         setText(Messages.RunScriptAction_0);
         setToolTipText(Messages.RunScriptAction_1);
     }

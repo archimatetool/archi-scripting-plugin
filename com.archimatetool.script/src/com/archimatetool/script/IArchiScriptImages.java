@@ -21,11 +21,12 @@ public interface IArchiScriptImages {
 
     String IMGPATH = "img/"; //$NON-NLS-1$
     
-    String ICON_CLEAR_CONSOLE_16 = IMGPATH + "clear.png"; //$NON-NLS-1$
-    String ICON_CONSOLE_16 = IMGPATH + "console_view.png"; //$NON-NLS-1$
-    String ICON_EDIT_16 = IMGPATH + "edit.png"; //$NON-NLS-1$
-    String ICON_EXAMPLES_16 = IMGPATH + "examples.png"; //$NON-NLS-1$
-    String ICON_REFRESH_16 = IMGPATH + "refresh.png"; //$NON-NLS-1$
-    String ICON_RUN_16 = IMGPATH + "run_exc.png"; //$NON-NLS-1$
+    String ICON_CLEAR_CONSOLE = IMGPATH + "clear.png"; //$NON-NLS-1$
+    String ICON_CONSOLE = IMGPATH + "console_view.png"; //$NON-NLS-1$
+    String ICON_EDIT = IMGPATH + "edit.png"; //$NON-NLS-1$
+    String ICON_EXAMPLES = IMGPATH + "examples.png"; //$NON-NLS-1$
+    String ICON_REFRESH = IMGPATH + "refresh.png"; //$NON-NLS-1$
+    String ICON_RUN = IMGPATH + "run_exc.png"; //$NON-NLS-1$
+    String ICON_SCRIPT = IMGPATH + "script.png"; //$NON-NLS-1$
     
 }

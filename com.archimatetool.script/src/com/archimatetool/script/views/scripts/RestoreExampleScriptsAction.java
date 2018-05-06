@@ -31,7 +31,7 @@ public class RestoreExampleScriptsAction extends Action {
         fViewer = viewer;
         setText(Messages.RestoreExampleScriptsAction_0);
         setToolTipText(Messages.RestoreExampleScriptsAction_1);
-        setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_EXAMPLES_16));
+        setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_EXAMPLES));
     }
 
     @Override
