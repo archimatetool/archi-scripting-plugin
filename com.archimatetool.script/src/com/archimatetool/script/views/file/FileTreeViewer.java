@@ -7,15 +7,22 @@ package com.archimatetool.script.views.file;
 
 import java.io.File;
 
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditor;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
+import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
@@ -28,16 +35,6 @@ public class FileTreeViewer extends TreeViewer {
      * The Root Folder we are exploring
      */
     private File fRootFolder;
-    
-    /**
-     * Refresh timer
-     */
-    private Runnable fTimer;
-    
-    /**
-     * Refresh timer interval of 5 seconds
-     */
-    static int TIMERDELAY = 5000;
     
     /**
      * Constructor
@@ -67,8 +64,6 @@ public class FileTreeViewer extends TreeViewer {
      * Set things up.
      */
     protected void setup() {
-        setupRefreshTimer();
-        
         // Sort folders first, files second, alphabetical
         setComparator(new ViewerComparator() {
             @Override
@@ -80,22 +75,52 @@ public class FileTreeViewer extends TreeViewer {
             	return 0;
             }
         });
-    }
-    
-    /**
-     * Set up the Refresh timer
-     */
-    protected void setupRefreshTimer() {
-        fTimer = new Runnable() {
-            public void run() { 
-                if(!getTree().isDisposed()) { // this is important!
-                    refresh();
-                    Display.getDefault().timerExec(TIMERDELAY, this);  // run again
+        
+        // Cell Editor
+        TreeTextCellEditor cellEditor = new TreeTextCellEditor(getTree());
+        setColumnProperties(new String[]{ "col1" }); //$NON-NLS-1$
+        setCellEditors(new CellEditor[]{ cellEditor });
+        
+        // Edit cell programmatically, not on mouse click
+        TreeViewerEditor.create(this, new ColumnViewerEditorActivationStrategy(this){
+            @Override
+            protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
+                return event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
+            }  
+            
+        }, ColumnViewerEditor.DEFAULT);
+        
+        setCellEditors(new CellEditor[]{ cellEditor });
+        
+        setCellModifier(new ICellModifier() {
+            @Override
+            public void modify(Object element, String property, Object value) {
+                if(element instanceof TreeItem) {
+                    Object data = ((TreeItem)element).getData();
+                    if(data instanceof File) {
+                        File renamedFile = new File(((File)data).getParent(), (String)value);
+                        boolean ok = ((File)data).renameTo((renamedFile));
+                        if(ok) {
+                            refresh();
+                            setSelection(new StructuredSelection(renamedFile));
+                        }
+                    }
                 }
             }
-        };
-        
-        Display.getDefault().timerExec(TIMERDELAY, fTimer);
+            
+            @Override
+            public Object getValue(Object element, String property) {
+                if(element instanceof File) {
+                    return ((File)element).getName();
+                }
+                return null;
+            }
+            
+            @Override
+            public boolean canModify(Object element, String property) {
+                return true;
+            }
+        });
     }
     
     /* 
@@ -120,10 +145,6 @@ public class FileTreeViewer extends TreeViewer {
      * Dispose of stuff
      */
     public void dispose() {
-        if(fTimer != null) {
-            Display.getDefault().timerExec(-1, fTimer);
-            fTimer = null;
-        }
     }
     
     // ===============================================================================================

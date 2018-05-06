@@ -185,7 +185,10 @@ implements IContextProvider {
             
             @Override
             public void run() {
-                handleRenameAction();
+                File file = (File)((IStructuredSelection)getViewer().getSelection()).getFirstElement();
+                if(file != null && file.exists()) {
+                    getViewer().editElement(file, 0);
+                }
             }
         };
         
@@ -370,27 +373,6 @@ implements IContextProvider {
         getViewer().refresh();
     }
     
-    /**
-     * Rename event happened
-     */
-    protected void handleRenameAction() {
-        File file = (File)((IStructuredSelection)getViewer().getSelection()).getFirstElement();
-
-        if(file != null && file.exists()) {
-            RenameFileDialog dialog = new RenameFileDialog(getViewSite().getShell(), file);
-            if(dialog.open()) {
-                File newFile = dialog.getRenamedFile();
-                if(newFile != null) {
-                    boolean ok = file.renameTo(newFile);
-                    if(ok) {
-                        getViewer().refresh();
-                        getViewer().setSelection(new StructuredSelection(newFile));
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * Delete event happened
      */
