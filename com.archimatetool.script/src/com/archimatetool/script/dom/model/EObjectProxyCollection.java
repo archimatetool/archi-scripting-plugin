@@ -69,6 +69,20 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     }
     
     /**
+     * Invoke a function (method) with parameters
+     * @param methodName
+     * @param args
+     * @return
+     */
+    public Object invoke(String methodName, Object... args) {
+        for(EObjectProxy object : this) {
+            object.invoke(methodName, args);
+        }
+        
+        return this;
+    }
+
+    /**
      * Add a property to this collection
      * @param key
      * @param value

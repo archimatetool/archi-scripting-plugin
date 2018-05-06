@@ -141,6 +141,25 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     /**
+     * Invoke a function (method) with parameters
+     * @param methodName
+     * @param args
+     * @return
+     */
+    public Object invoke(String methodName, Object... args) {
+        switch(methodName) {
+            case "delete": //$NON-NLS-1$
+                delete();
+                break;
+
+            default:
+                break;
+        }
+        
+        return this;
+    }
+    
+    /**
      * Add a property to this object
      * @param key
      * @param value
@@ -310,6 +329,9 @@ public abstract class EObjectProxy implements IModelConstants {
     public Object attr(String attribute) {
         switch(attribute) {
             case ID:
+                return getType();
+
+            case TYPE:
                 return getEObject() instanceof IIdentifier ? ((IIdentifier)getEObject()).getId() : null;
 
             case NAME:

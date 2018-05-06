@@ -16,6 +16,7 @@ public interface IModelConstants {
     String NAME = "name"; //$NON-NLS-1$
     String DOCUMENTATION = "documentation"; //$NON-NLS-1$
     String PURPOSE = "purpose"; //$NON-NLS-1$
+    String TYPE = "type"; //$NON-NLS-1$
     
     String ARCHIMATE_CONCEPT = "archimateConcept"; //$NON-NLS-1$
     String DIAGRAM_MODEL = "diagramModel"; //$NON-NLS-1$
