@@ -168,6 +168,10 @@ public class ArchimateModelProxy extends EObjectProxy {
         return this;
     }
     
+    public EObjectProxyCollection<EObjectProxy> $() {
+        return $(""); //$NON-NLS-1$
+    }
+    
     public EObjectProxyCollection<EObjectProxy> $(String selector) {
         EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
         

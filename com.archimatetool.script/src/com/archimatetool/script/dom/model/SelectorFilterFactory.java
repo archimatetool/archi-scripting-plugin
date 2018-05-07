@@ -12,6 +12,7 @@ import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
 
@@ -37,6 +38,15 @@ public class SelectorFilterFactory {
     public ISelectorFilter getFilter(String selector) {
         if(selector == null) {
             return null;
+        }
+        
+        // All
+        if(selector.equals("")) { //$NON-NLS-1$
+            return new ISelectorFilter() {
+                public boolean accept(EObject object) {
+                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
+                }
+            };
         }
         
         // All concepts and views

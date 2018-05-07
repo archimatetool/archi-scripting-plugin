@@ -62,10 +62,12 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     /**
      * Delete all in collection
      */
-    public void delete() {
+    public EObjectProxyCollection<T> delete() {
         for(EObjectProxy object : this) {
             object.delete();
         }
+        
+        return this;
     }
     
     /**
