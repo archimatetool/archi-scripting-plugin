@@ -82,12 +82,12 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return list;
     }
     
-    public EObjectProxyCollection<DiagramModelArchimateComponentProxy> getDiagramComponentInstances() {
-        EObjectProxyCollection<DiagramModelArchimateComponentProxy> list = new EObjectProxyCollection<DiagramModelArchimateComponentProxy>();
+    public EObjectProxyCollection<DiagramModelComponentProxy> getDiagramComponentInstances() {
+        EObjectProxyCollection<DiagramModelComponentProxy> list = new EObjectProxyCollection<DiagramModelComponentProxy>();
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
             for(IDiagramModelArchimateComponent dmc : DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(dm, getEObject())) {
-                list.add((DiagramModelArchimateComponentProxy)EObjectProxy.get(dmc));
+                list.add((DiagramModelComponentProxy)EObjectProxy.get(dmc));
             }
         }
         

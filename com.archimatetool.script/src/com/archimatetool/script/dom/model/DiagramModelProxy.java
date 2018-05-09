@@ -14,6 +14,7 @@ import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IDiagramModelObject;
 
 /**
  * DiagramModel wrapper proxy
@@ -22,9 +23,6 @@ import com.archimatetool.model.IDiagramModelArchimateComponent;
  */
 public class DiagramModelProxy extends EObjectProxy {
     
-    public DiagramModelProxy() {
-    }
-    
     public DiagramModelProxy(IDiagramModel dm) {
         super(dm);
     }
@@ -32,6 +30,23 @@ public class DiagramModelProxy extends EObjectProxy {
     @Override
     protected IDiagramModel getEObject() {
         return (IDiagramModel)super.getEObject();
+    }
+    
+    /**
+     * @return child node diagram objects of this diagram model
+     */
+    public EObjectProxyCollection<DiagramModelObjectProxy> getChildren() {
+        EObjectProxyCollection<DiagramModelObjectProxy> list = new EObjectProxyCollection<DiagramModelObjectProxy>();
+        
+        if(getEObject() == null) {
+            return list;
+        }
+        
+        for(IDiagramModelObject dmo : getEObject().getChildren()) {
+            list.add(new DiagramModelObjectProxy(dmo));
+        }
+        
+        return list;
     }
     
     public EObjectProxyCollection<EObjectProxy> getConcepts() {
@@ -73,6 +88,8 @@ public class DiagramModelProxy extends EObjectProxy {
     @Override
     public Object attr(String attribute) {
         switch(attribute) {
+            case CHILDREN:
+                return getChildren();
             case CONCEPTS:
                 return getConcepts();
             case ELEMENTS:
