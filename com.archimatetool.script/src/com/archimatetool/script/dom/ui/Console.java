@@ -56,6 +56,10 @@ public class Console {
     public void println(String text) {
         print(text + "\n"); //$NON-NLS-1$
     }
+    
+    public void log(String text) {
+        print(text + "\n"); //$NON-NLS-1$
+    }
 
     public void print(String text) {
         ConsoleView viewer = findConsoleViewer();
