@@ -118,9 +118,9 @@
             variableName="console">
       </dom>
       <dom
-            class="com.archimatetool.script.dom.utils.ScriptUtils"
-            id="com.archimatetool.script.utils"
-            variableName="ScriptUtils">
+            class="com.archimatetool.script.dom.model.jArchiUtils"
+            id="com.archimatetool.script.jarchi"
+            variableName="jArchiUtils">
       </dom>
    </extension>
    <extension
