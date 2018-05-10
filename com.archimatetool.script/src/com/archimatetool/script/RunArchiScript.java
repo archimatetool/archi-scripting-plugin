@@ -50,6 +50,9 @@ public class RunArchiScript {
             // Bind our global functions
             GlobalBinding.init(engine, file);
             
+            // TODO: Should be replaced by an "init.js" file
+            engine.eval("$ = jArchi;"); //$NON-NLS-1$
+            
             // Start the console
             ConsoleOutput.start();
             

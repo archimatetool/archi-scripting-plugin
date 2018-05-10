@@ -43,11 +43,11 @@ public class GlobalBinding {
         this.engine = engine;
     }
 
-    public List<?> $() {
+    public List<?> jArchi() {
         return Model.MODEL_INSTANCE.$(""); //$NON-NLS-1$
     }
     
-    public Object $(Object object) {
+    public Object jArchi(Object object) {
         // String is a selector on the model, so return a collection
         if(object instanceof String) {
             return Model.MODEL_INSTANCE.$((String)object);
