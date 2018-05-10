@@ -26,11 +26,11 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         return isEmpty() ? null : get(0);
     }
     
-    public List<Object> getId() {
+    public Object getId() {
         return attr(ID);
     }
 
-    public List<Object> getName() {
+    public Object getName() {
         return attr(NAME);
     }
     
@@ -38,7 +38,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         return attr(NAME, name);
     }
     
-    public List<Object> getDocumentation() {
+    public Object getDocumentation() {
         return attr(DOCUMENTATION);
     }
     
@@ -196,17 +196,8 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         return this;
     }
 
-    public List<Object> attr(String attribute) {
-        List<Object> list = new ArrayList<>();
-        
-        for(EObjectProxy object : this) {
-            Object attr = object.attr(attribute);
-            if(attr != null) {
-                list.add(attr);
-            }
-        }
-        
-        return list;
+    public Object attr(String attribute) {
+    	return isEmpty() ? null : get(0).attr(attribute);
     }
 
     public EObjectProxyCollection<T> attr(String attribute, Object value) {

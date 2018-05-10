@@ -328,10 +328,10 @@ public abstract class EObjectProxy implements IModelConstants {
 
     public Object attr(String attribute) {
         switch(attribute) {
-            case ID:
+            case TYPE:
                 return getType();
 
-            case TYPE:
+            case ID:
                 return getEObject() instanceof IIdentifier ? ((IIdentifier)getEObject()).getId() : null;
 
             case NAME:
