@@ -44,7 +44,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     /**
      * @return child node diagram objects of this diagram object (if any)
      */
-    public EObjectProxyCollection<DiagramModelObjectProxy> getChildren() {
+    @Override
+    public EObjectProxyCollection<DiagramModelObjectProxy> children() {
         EObjectProxyCollection<DiagramModelObjectProxy> list = new EObjectProxyCollection<DiagramModelObjectProxy>();
         
         if(getEObject() instanceof IDiagramModelContainer) {
@@ -60,7 +61,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     public Object attr(String attribute) {
         switch(attribute) {
             case CHILDREN:
-                return getChildren();
+                return children();
             case BOUNDS:
                 return getBounds();
             case FILL_COLOR:

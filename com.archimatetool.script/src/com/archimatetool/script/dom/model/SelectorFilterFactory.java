@@ -12,6 +12,7 @@ import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
@@ -44,6 +45,7 @@ public class SelectorFilterFactory {
         if(selector.equals("")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
+                    object = getReferencedConcept(object);
                     return (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
                 }
             };
@@ -100,6 +102,7 @@ public class SelectorFilterFactory {
             
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
+                    object = getReferencedConcept(object);
                     return object instanceof IIdentifier && id.equals(((IIdentifier)object).getId());
                 }
                 
@@ -115,6 +118,7 @@ public class SelectorFilterFactory {
             
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
+                    object = getReferencedConcept(object);
                     return (object instanceof IArchimateConcept || object instanceof IDiagramModel)
                             && name.equals(((INameable)object).getName());
                 }
@@ -130,6 +134,7 @@ public class SelectorFilterFactory {
 
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
+                    object = getReferencedConcept(object);
                     return object.eClass().getName().equals(s[0]) &&
                             ((INameable)object).getName().equals(s[1]) &&
                             (object instanceof IArchimateConcept || object instanceof IDiagramModel);
@@ -141,6 +146,7 @@ public class SelectorFilterFactory {
         else if(IArchimatePackage.eINSTANCE.getEClassifier(selector) != null) {
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
+                    object = getReferencedConcept(object);
                     return object.eClass().getName().equals(selector) &&
                             (object instanceof IArchimateConcept || object instanceof IDiagramModel);
                 }
@@ -148,5 +154,13 @@ public class SelectorFilterFactory {
         }
 
         return null;
+    }
+    
+    private EObject getReferencedConcept(EObject object) {
+        if(object instanceof IDiagramModelArchimateComponent) {
+            return ((IDiagramModelArchimateComponent)object).getArchimateConcept();
+        }
+        
+        return object;
     }
 }

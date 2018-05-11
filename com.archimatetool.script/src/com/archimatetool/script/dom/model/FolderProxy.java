@@ -5,6 +5,8 @@
  */
 package com.archimatetool.script.dom.model;
 
+import org.eclipse.emf.ecore.EObject;
+
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IFolder;
 
@@ -25,6 +27,21 @@ public class FolderProxy extends EObjectProxy {
     @Override
     protected IFolder getEObject() {
         return (IFolder)super.getEObject();
+    }
+    
+    @Override
+    public EObjectProxyCollection<EObjectProxy> children() {
+        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+        
+        for(IFolder folder : getEObject().getFolders()) {
+            list.add(EObjectProxy.get(folder));
+        }
+
+        for(EObject eObject : getEObject().getElements()) {
+            list.add(EObjectProxy.get(eObject));
+        }
+        
+        return list;
     }
     
     @Override

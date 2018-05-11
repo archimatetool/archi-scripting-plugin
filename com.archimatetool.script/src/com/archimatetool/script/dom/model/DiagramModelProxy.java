@@ -35,7 +35,8 @@ public class DiagramModelProxy extends EObjectProxy {
     /**
      * @return child node diagram objects of this diagram model
      */
-    public EObjectProxyCollection<DiagramModelObjectProxy> getChildren() {
+    @Override
+    public EObjectProxyCollection<DiagramModelObjectProxy> children() {
         EObjectProxyCollection<DiagramModelObjectProxy> list = new EObjectProxyCollection<DiagramModelObjectProxy>();
         
         if(getEObject() == null) {
@@ -89,7 +90,7 @@ public class DiagramModelProxy extends EObjectProxy {
     public Object attr(String attribute) {
         switch(attribute) {
             case CHILDREN:
-                return getChildren();
+                return children();
             case CONCEPTS:
                 return getConcepts();
             case ELEMENTS:

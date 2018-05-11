@@ -85,6 +85,30 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     }
 
     /**
+     * @return children as collection. Default is an empty list
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> children() {
+        return children(null);
+    }
+    
+    /**
+     * @return children with selector as collection. Default is an empty list
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> children(String selector) {
+        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
+        
+        for(EObjectProxy object : this) {
+            for(EObjectProxy child : selector == null ? object.children() : object.children(selector)) {
+                if(!list.contains(child)) {
+                    list.add(child);
+                }
+            }
+        }
+        
+        return list;
+    }
+    
+    /**
      * Add a property to this collection
      * @param key
      * @param value

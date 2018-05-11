@@ -28,6 +28,7 @@ import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
+import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
 /**
  * Abstract EObject wrapper proxy
@@ -157,6 +158,33 @@ public abstract class EObjectProxy implements IModelConstants {
         }
         
         return this;
+    }
+    
+    /**
+     * @return children as collection. Default is an empty list
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> children() {
+        return new EObjectProxyCollection<EObjectProxy>();
+    }
+    
+    /**
+     * @return children with selector as collection.
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> children(String selector) {
+        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+        
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
+        if(filter == null) {
+            return list;
+        }
+        
+        for(EObjectProxy object : children()) {
+            if(filter.accept(object.getEObject())) {
+                list.add(object);
+            }
+        }
+        
+        return list;
     }
     
     /**
@@ -339,6 +367,9 @@ public abstract class EObjectProxy implements IModelConstants {
             
             case DOCUMENTATION:
                 return getEObject() instanceof IDocumentable ? ((IDocumentable)getEObject()).getDocumentation() : null;
+                
+            case CHILDREN:
+                return children();
 
             default:
                 return null;
