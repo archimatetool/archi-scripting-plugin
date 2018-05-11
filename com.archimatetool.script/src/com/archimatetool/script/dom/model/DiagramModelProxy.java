@@ -14,6 +14,7 @@ import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
 
 /**
@@ -36,15 +37,24 @@ public class DiagramModelProxy extends EObjectProxy {
      * @return child node diagram objects of this diagram model
      */
     @Override
-    public EObjectProxyCollection<DiagramModelObjectProxy> children() {
-        EObjectProxyCollection<DiagramModelObjectProxy> list = new EObjectProxyCollection<DiagramModelObjectProxy>();
+    public EObjectProxyCollection<DiagramModelComponentProxy> children() {
+        EObjectProxyCollection<DiagramModelComponentProxy> list = new EObjectProxyCollection<DiagramModelComponentProxy>();
         
         if(getEObject() == null) {
             return list;
         }
         
+        // Immediate children IDiagramModelObject
         for(IDiagramModelObject dmo : getEObject().getChildren()) {
             list.add(new DiagramModelObjectProxy(dmo));
+        }
+        
+        // All connections
+        for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
+            EObject eObject = iter.next();
+            if(eObject instanceof IDiagramModelConnection) {
+                list.add(new DiagramModelConnectionProxy((IDiagramModelConnection)eObject));
+            }
         }
         
         return list;
