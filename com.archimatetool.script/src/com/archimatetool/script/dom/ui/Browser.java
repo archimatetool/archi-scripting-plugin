@@ -11,7 +11,6 @@ import org.eclipse.ui.PlatformUI;
 import com.archimatetool.editor.browser.BrowserEditorInput;
 import com.archimatetool.editor.browser.IBrowserEditor;
 import com.archimatetool.editor.ui.services.EditorManager;
-import com.archimatetool.script.dom.utils.Messages;
 
 
 /**

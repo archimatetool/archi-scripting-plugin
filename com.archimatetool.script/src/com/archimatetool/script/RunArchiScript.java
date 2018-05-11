@@ -41,50 +41,37 @@ public class RunArchiScript {
 	public void run() {
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript"); //$NON-NLS-1$
         
-        defineStandardGlobalVariables(engine);
+        defineGlobalVariables(engine);
         defineExtensionGlobalVariables(engine);
         
-        FileReader reader = null;
-        
         try {
-            // Bind our global variables
-        	engine.put("__JARCHI_FILE__", file.getAbsolutePath());  //$NON-NLS
-        	engine.put("__JARCHI_DIR__", file.getParent());  //$NON-NLS
-        	
-            // Initialize jArchi using the provided init.js script
-        	URL initURL = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("js/init.js"); //$NON-NLS
-        	InputStreamReader initReader = new InputStreamReader(initURL.openStream());
-            engine.eval(initReader);
-        	
             // Start the console
             ConsoleOutput.start();
             
-            // Initialise
+            // Initialize jArchi using the provided init.js script
+            URL initURL = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("js/init.js"); //$NON-NLS-1$
+            try(InputStreamReader initReader = new InputStreamReader(initURL.openStream());) {
+                engine.eval(initReader);
+            }
+        	
+            // Initialise ModelHandler
             ModelHandler.init();
 
             // Evaluate the script
-            reader = new FileReader(file);
-            engine.eval(reader);
+            try(FileReader reader = new FileReader(file)) {
+                engine.eval(reader);
+            }
             
             // If there is a "main" function invoke that
             if("function".equals(engine.eval("typeof main"))) { //$NON-NLS-1$ //$NON-NLS-2$
                 ((Invocable)engine).invokeFunction("main"); //$NON-NLS-1$
             }
         }
-        catch(ScriptException | IOException | NoSuchMethodException  ex) {
+        catch(ScriptException | IOException | NoSuchMethodException ex) {
             error(ex, ex.toString());
         }
         finally {
             ConsoleOutput.end();
-            
-            if(reader != null) {
-                try {
-                    reader.close();
-                }
-                catch(IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
             
             // Re-open models if any were closed
             ModelHandler.openModels();
@@ -92,9 +79,14 @@ public class RunArchiScript {
 	}
 
     /**
-     * Standard Eclipse Global Variables such as the window and workbench are registered
+     * Global Variables
      */
-    private void defineStandardGlobalVariables(ScriptEngine engine) {
+    private void defineGlobalVariables(ScriptEngine engine) {
+        // Bind our global variables
+        engine.put("__JARCHI_FILE__", file.getAbsolutePath()); //$NON-NLS-1$
+        engine.put("__JARCHI_DIR__", file.getParent());  //$NON-NLS-1$
+        
+        // Eclipse ones - not sure we need these
         if(PlatformUI.isWorkbenchRunning()) {
             engine.put("window", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
             engine.put("workbench", PlatformUI.getWorkbench()); //$NON-NLS-1$

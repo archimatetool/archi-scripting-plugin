@@ -34,7 +34,7 @@ public class ModelHandler {
     }
     
     public static void openModels() {
-    	if (closedModels != null) {
+    	if(closedModels != null) {
 	        for(File file : closedModels) {
 	            IEditorModelManager.INSTANCE.openModel(file);
 	        }
@@ -61,7 +61,7 @@ public class ModelHandler {
             IEditorModelManager.INSTANCE.getModels().remove(model);
             IEditorModelManager.INSTANCE.firePropertyChange(IEditorModelManager.INSTANCE, IEditorModelManager.PROPERTY_MODEL_REMOVED, null, model);
 
-            // And add to the list of files that will be re-opend in finalise()
+            // And add to the list of files that will be re-opened in finalise()
             if(!closedModels.contains(model.getFile())) {
                 closedModels.add(model.getFile());
             }

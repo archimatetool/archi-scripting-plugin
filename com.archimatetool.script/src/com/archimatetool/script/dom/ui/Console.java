@@ -58,7 +58,7 @@ public class Console {
     }
     
     public void log(String text) {
-        print(text + "\n"); //$NON-NLS-1$
+        println(text);
     }
 
     public void print(String text) {

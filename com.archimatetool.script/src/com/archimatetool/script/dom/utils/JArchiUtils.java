@@ -3,7 +3,7 @@
  * are made available under the terms of the License
  * which accompanies this distribution in the file LICENSE.txt
  */
-package com.archimatetool.script.dom.model;
+package com.archimatetool.script.dom.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,11 +12,11 @@ import java.io.OutputStreamWriter;
 import java.util.Base64;
 
 /**
- * jArchi
+ * JArchiUtils
  * 
- * @author Phillip Beauvoir
+ * @author jbsarrodie
  */
-public class jArchiUtils{
+public class JArchiUtils{
     /**
      * Write text to file (using UTF-8)
      * @param path

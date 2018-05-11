@@ -118,8 +118,8 @@
             variableName="console">
       </dom>
       <dom
-            class="com.archimatetool.script.dom.model.jArchiUtils"
-            id="com.archimatetool.script.jarchi"
+            class="com.archimatetool.script.dom.utils.JArchiUtils"
+            id="com.archimatetool.script.jarchiUtils"
             variableName="jArchiUtils">
       </dom>
    </extension>
