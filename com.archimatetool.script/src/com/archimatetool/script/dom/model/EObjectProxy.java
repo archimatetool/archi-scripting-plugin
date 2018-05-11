@@ -188,6 +188,13 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     /**
+     * @return parent of this object. Default is the eContainer
+     */
+    public EObjectProxy parent() {
+        return getEObject() == null ? null : EObjectProxy.get(getEObject().eContainer());
+    }
+    
+    /**
      * Add a property to this object
      * @param key
      * @param value

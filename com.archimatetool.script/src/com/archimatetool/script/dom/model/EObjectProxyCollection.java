@@ -16,6 +16,11 @@ import java.util.Set;
  * 
  * @author Phillip Beauvoir
  */
+/**
+ * Description
+ * 
+ * @author Phillip Beauvoir
+ */
 public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T> implements IModelConstants {
     
     public EObjectProxyCollection() {
@@ -102,6 +107,21 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
                 if(!list.contains(child)) {
                     list.add(child);
                 }
+            }
+        }
+        
+        return list;
+    }
+    
+    /**
+     * @return parent
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> parent() {
+        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
+        
+        for(EObjectProxy object : this) {
+            if(object.parent() != null) {
+                list.add(object.parent());
             }
         }
         
