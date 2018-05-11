@@ -37,7 +37,8 @@ public class RestoreExampleScriptsAction extends Action {
     @Override
     public void run() {
         try {
-            for(Enumeration<URL> enm = ArchiScriptPlugin.INSTANCE.getBundle().findEntries("examples", "*.archiscript", true); enm.hasMoreElements();) {  //$NON-NLS-1$//$NON-NLS-2$
+            for(Enumeration<URL> enm = ArchiScriptPlugin.INSTANCE.getBundle().findEntries("examples", //$NON-NLS-1$
+                    ArchiScriptPlugin.SCRIPT_WILDCARD_EXTENSION, true); enm.hasMoreElements();) {
                 URL url = enm.nextElement();
                 
                 File filePath = new File(ArchiScriptPlugin.INSTANCE.getUserScriptsFolder(), url.getPath());

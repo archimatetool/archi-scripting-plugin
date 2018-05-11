@@ -24,6 +24,9 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup {
 
     public static final String PLUGIN_ID = "com.archimatetool.script"; //$NON-NLS-1$
     
+    public static final String SCRIPT_EXTENSION = ".ajs";  //$NON-NLS-1$
+    public static final String SCRIPT_WILDCARD_EXTENSION = "*.ajs";  //$NON-NLS-1$
+    
     /**
      * The shared instance
      */

@@ -209,14 +209,14 @@ extends AbstractFileView  {
         
         if(parent.exists()) {
             NewFileDialog dialog = new NewFileDialog(getViewSite().getShell(), parent);
-            dialog.setDefaultExtension(".archiscript"); //$NON-NLS-1$
+            dialog.setDefaultExtension(ArchiScriptPlugin.SCRIPT_EXTENSION);
             
             if(dialog.open()) {
                 File newFile = dialog.getFile();
                 if(newFile != null) {
                     // Copy new template file over
                     try {
-                        URL urlNewFile = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("templates/new.archiscript"); //$NON-NLS-1$
+                        URL urlNewFile = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("templates/new.ajs"); //$NON-NLS-1$
                         InputStream in = urlNewFile.openStream();
                         Files.copy(in, newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                         in.close();
