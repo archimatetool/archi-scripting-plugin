@@ -34,9 +34,11 @@ public class ModelHandler {
     }
     
     public static void openModels() {
-        for(File file : closedModels) {
-            IEditorModelManager.INSTANCE.openModel(file);
-        }
+    	if (closedModels != null) {
+	        for(File file : closedModels) {
+	            IEditorModelManager.INSTANCE.openModel(file);
+	        }
+    	}
     }
     
     public static void checkModelAccess(EObject eObject) {

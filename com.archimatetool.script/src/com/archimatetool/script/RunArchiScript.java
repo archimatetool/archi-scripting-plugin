@@ -6,9 +6,10 @@
 package com.archimatetool.script;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -23,7 +24,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
-import com.archimatetool.script.dom.model.GlobalBinding;
 import com.archimatetool.script.dom.model.ModelHandler;
 import com.archimatetool.script.views.console.ConsoleOutput;
 
@@ -47,12 +47,15 @@ public class RunArchiScript {
         FileReader reader = null;
         
         try {
-            // Bind our global functions
-            GlobalBinding.init(engine, file);
-            
-            // TODO: Should be replaced by an "init.js" file
-            engine.eval("$ = jArchi;"); //$NON-NLS-1$
-            
+            // Bind our global variables
+        	engine.put("__JARCHI_FILE__", file.getAbsolutePath());  //$NON-NLS
+        	engine.put("__JARCHI_DIR__", file.getParent());  //$NON-NLS
+        	
+            // Initialize jArchi using the provided init.js script
+        	URL initURL = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("js/init.js"); //$NON-NLS
+        	InputStreamReader initReader = new InputStreamReader(initURL.openStream());
+            engine.eval(initReader);
+        	
             // Start the console
             ConsoleOutput.start();
             
@@ -68,7 +71,7 @@ public class RunArchiScript {
                 ((Invocable)engine).invokeFunction("main"); //$NON-NLS-1$
             }
         }
-        catch(ScriptException | FileNotFoundException | NoSuchMethodException ex) {
+        catch(ScriptException | IOException | NoSuchMethodException  ex) {
             error(ex, ex.toString());
         }
         finally {
