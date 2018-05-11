@@ -18,8 +18,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: com.archimatetool.script.ArchiScriptPlugin
 Export-Package: com.archimatetool.script,
  com.archimatetool.script.dom,
+ com.archimatetool.script.dom.jarchi,
  com.archimatetool.script.dom.model,
- com.archimatetool.script.dom.utils,
  com.archimatetool.script.views.console,
  com.archimatetool.script.views.file,
  com.archimatetool.script.views.scripts

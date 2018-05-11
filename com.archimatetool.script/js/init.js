@@ -5,7 +5,7 @@ function jArchi (obj) {
 		return model.find(obj || "");
 }
 
-jArchi.fs = jArchiUtils;
+jArchi.fs = jArchiFS;
 jArchi.__FILE__ = __JARCHI_FILE__;
 jArchi.__DIR__ = __JARCHI_DIR__;
 

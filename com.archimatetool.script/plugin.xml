@@ -118,9 +118,9 @@
             variableName="console">
       </dom>
       <dom
-            class="com.archimatetool.script.dom.utils.JArchiUtils"
-            id="com.archimatetool.script.jarchiUtils"
-            variableName="jArchiUtils">
+            class="com.archimatetool.script.dom.jarchi.FS"
+            id="com.archimatetool.script.jArchiFS"
+            variableName="jArchiFS">
       </dom>
    </extension>
    <extension
