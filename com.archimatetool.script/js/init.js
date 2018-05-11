@@ -13,9 +13,9 @@ $ = jArchi;
 
 function include(path) {
 	var File = Java.type("java.io.File");
-	var pathFile = new File(jArchi.__DIR__ + File.separator + path);
+	var pathFile = new File(jArchi.__DIR__, path);
 	if (pathFile.isFile())
-		load(jArchi.__DIR__ + File.separator + path);
+		load(pathFile);
 	else
 		load(path);
 }
