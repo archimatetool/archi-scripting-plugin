@@ -149,99 +149,75 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     }
     
     /**
-     * Add a property to this collection
-     * @param key
-     * @param value
+     * Return the list of properties' key for the first object in the collection
+     * @return
      */
-    public EObjectProxyCollection<T> addProperty(String key, String value) {
-        for(EObjectProxy object : this) {
-            object.addProperty(key, value);
-        }
-        
-        return this;
+    public Set<String> prop() {
+    	return isEmpty() ? null : val().prop();
     }
     
     /**
-     * Add the property only if it doesn't already exists, or update it if it does.
-     * If an object already has multiple properties matching the name, all of them are updated.
-     * Returns the updated collection
-     * @param key
-     * @param value
+     * Return a property value of the first object in the collection.
+     * If multiple properties exist with the same key, then return only the first one.
+     * @param propKey
+     * @return
      */
-    public EObjectProxyCollection<T> addOrUpdateProperty(String key, String value) {
-        for(EObjectProxy object : this) {
-            object.addOrUpdateProperty(key, value);
-        }
-        
-        return this;
-    }
-
-    /**
-     * Update the property with new value
-     * If this object already has multiple properties matching the key, all of them are updated.
-     * @param key
-     * @param value
-     * @return this
-     */
-    public EObjectProxyCollection<T> updateProperty(String key, String value) {
-        for(EObjectProxy object : this) {
-            object.updateProperty(key, value);
-        }
-        
-        return this;
-    }
-
-    /**
-     * @return an array of strings containing the list of properties keys. A key appears only once (duplicates are removed)
-     */
-    public Set<String> getPropertyKey() {
-        Set<String> list = new LinkedHashSet<String>();
-        
-        for(EObjectProxy object : this) {
-            list.addAll(object.getPropertyKey());
-        }
-        
-        return list;
+    public String prop(String propKey) {
+    	return isEmpty() ? null : val().prop(propKey);
     }
     
     /**
-     * @param key
-     * @return return an array of array containing the value of property named "key" for each object of the collection.
-     * This has to be an array of array because the property can appear more than once on the same object
+     * Return a property value of the first object in the collection.
+     * If multiple properties exist with the same key, then return only
+     * the first one (if duplicate=false) or an array with all values
+     * (if duplicate=true).
+     * @param propKey
+     * @param allowDuplicate
+     * @return
      */
-    public List<List<String>> getPropertyValue(String key) {
-        List<List<String>> list = new ArrayList<List<String>>();
-        
-        for(EObjectProxy object : this) {
-            List<String> result = object.getPropertyValue(key);
-            if(!result.isEmpty()) {
-                list.add(result);
-            }
-        }
-        
-        return list;
+    public Object prop(String propKey, boolean allowDuplicate) {
+    	return isEmpty() ? null : val().prop(propKey, allowDuplicate);
+    }
+    
+    /**
+     * Sets a property for every objects.
+     * Property is updated if it already exists.
+     * @param propKey
+     * @param propValue
+     * @return
+     */
+    public EObjectProxyCollection<T> prop(String propKey, String propValue) {
+	    for(EObjectProxy object : this) {
+	        object.prop(propKey, propValue);
+	    }
+	    
+	    return this;
     }
 
     /**
-     * @return All Property pairs
+     * Sets a property for every objects.
+     * Property is updated if it already exists (if duplicate=false)
+     * or added anyway (if duplicate=true).
+     * @param propKey
+     * @param propValue
+     * @param allowDuplicate
+     * @return
      */
-    public List<Property> getProperties() {
-        List<Property> list = new ArrayList<Property>();
-        
-        for(EObjectProxy object : this) {
-            list.addAll(object.getProperties());
-        }
-        
-        return list;
+    public EObjectProxyCollection<T> prop(String propKey, String propValue, boolean allowDuplicate) {
+	    for(EObjectProxy object : this) {
+	        object.prop(propKey, propValue, allowDuplicate);
+	    }
+	    
+	    return this;
     }
 
     /**
      * Remove all instances of property "key" on each object of the collection. Returns the updated collection
      * @param key
      */
-    public EObjectProxyCollection<T> removeProperty(String key) {
+    public EObjectProxyCollection<T> removeProp(String key) {
         for(EObjectProxy object : this) {
-            object.removeProperty(key);
+            object.removeProp(key);
         }
         
         return this;
@@ -252,16 +228,16 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param key
      * @param value
      */
-    public EObjectProxyCollection<T> removeProperty(String key, String value) {
+    public EObjectProxyCollection<T> removeProp(String key, String value) {
         for(EObjectProxy object : this) {
-            object.removeProperty(key, value);
+            object.removeProp(key, value);
         }
         
         return this;
     }
 
     public Object attr(String attribute) {
-    	return isEmpty() ? null : get(0).attr(attribute);
+    	return isEmpty() ? null : val().attr(attribute);
     }
 
     public EObjectProxyCollection<T> attr(String attribute, Object value) {

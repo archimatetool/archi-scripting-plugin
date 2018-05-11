@@ -258,6 +258,68 @@ public abstract class EObjectProxy implements IModelConstants {
      */
     public EObjectProxy parent() {
         return getEObject() == null ? null : EObjectProxy.get(getEObject().eContainer());
+	}
+
+	/*
+     * Return the list of properties' key
+     * @return
+     */
+    public Set<String> prop() {
+    	return getPropertyKey();
+    }
+    
+    /**
+     * Return a property value.
+     * If multiple properties exist with the same key, then return only the first one.
+     * @param propKey
+     * @return
+     */
+    public String prop(String propKey) {
+    	return (String) prop(propKey, false);
+    }
+    
+    /**
+     * Return a property value.
+     * If multiple properties exist with the same key, then return only
+     * the first one (if duplicate=false) or an array with all values
+     * (if duplicate=true).
+     * @param propKey
+     * @param allowDuplicate
+     * @return
+     */
+    public Object prop(String propKey, boolean allowDuplicate) {
+    	List<String> propValues = getPropertyValue(propKey);
+    	
+    	if(propValues.isEmpty())
+    		return null;
+    	else if(allowDuplicate)
+    		return propValues;
+    	else
+    		return propValues.get(0);
+    }
+    
+    /**
+     * Sets a property.
+     * Property is updated if it already exists.
+     * @param propKey
+     * @param propValue
+     * @return
+     */
+    public EObjectProxy prop(String propKey, String propValue) {
+    	return prop(propKey, propValue, false);
+    }
+    
+    /**
+     * Sets a property.
+     * Property is updated if it already exists (if duplicate=false)
+     * or added anyway (if duplicate=true).
+     * @param propKey
+     * @param propValue
+     * @param allowDuplicate
+     * @return
+     */
+    public EObjectProxy prop(String propKey, String propValue, boolean allowDuplicate) {
+    	return allowDuplicate ? addProperty(propKey, propValue) : addOrUpdateProperty(propKey, propValue);
     }
     
     /**
@@ -395,15 +457,15 @@ public abstract class EObjectProxy implements IModelConstants {
      * Remove all instances of property "key" 
      * @param key
      */
-    public EObjectProxy removeProperty(String key) {
-        return removeProperty(key, null);
+    public EObjectProxy removeProp(String key) {
+        return removeProp(key, null);
     }
     
     /**
      * Remove (all instances of) property "key" that matches "value"
      * @param key
      */
-    public EObjectProxy removeProperty(String key, String value) {
+    public EObjectProxy removeProp(String key, String value) {
         checkModelAccess();
         
         if(getEObject() instanceof IProperties) {
