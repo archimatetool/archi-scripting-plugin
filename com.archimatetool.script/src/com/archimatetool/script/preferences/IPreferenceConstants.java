@@ -18,4 +18,6 @@ public interface IPreferenceConstants {
     String PREFS_EDITOR = "scriptEditor"; //$NON-NLS-1$
     String PREFS_DOUBLE_CLICK_BEHAVIOUR = "doubleClickBehaviour"; //$NON-NLS-1$
     String PREFS_SCRIPTS_FOLDER = "scriptsFolder"; //$NON-NLS-1$
+    
+    String PREFS_CONSOLE_WORD_WRAP = "consoleWordWrap"; //$NON-NLS-1$
 }

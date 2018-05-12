@@ -139,11 +139,6 @@ extends AbstractFileView  {
     }
     
     @Override
-    protected void makeLocalMenuActions() {
-        // We don't want this
-    }
-    
-    @Override
     protected void handleDoubleClickAction() {
         int option = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_DOUBLE_CLICK_BEHAVIOUR);
         switch(option) {

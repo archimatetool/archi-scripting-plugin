@@ -7,6 +7,7 @@ package com.archimatetool.script.views.console;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -18,6 +19,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.IArchiScriptImages;
+import com.archimatetool.script.preferences.IPreferenceConstants;
 
 
 
@@ -39,6 +41,7 @@ extends ViewPart {
         fTextPane = new StyledText(parent, SWT.H_SCROLL | SWT.V_SCROLL);
         fTextPane.setEditable(false);
         fTextPane.setTabs(40);
+        fTextPane.setWordWrap(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP));
         
         fActionClear = new Action() {
             {
@@ -53,6 +56,7 @@ extends ViewPart {
             }
         };
         
+        makeLocalMenuActions();
         makeLocalToolBarActions();
     }
     
@@ -74,6 +78,27 @@ extends ViewPart {
         manager.add(fActionClear);
     }
 
+    /**
+     * Make Local Menu items
+     */
+    protected void makeLocalMenuActions() {
+        IActionBars actionBars = getViewSite().getActionBars();
+
+        // Local menu items go here
+        IMenuManager manager = actionBars.getMenuManager();
+        manager.add(new Action(Messages.ConsoleView_1, IAction.AS_CHECK_BOX) {
+            {
+                setChecked(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP));
+            }
+            
+            @Override
+            public void run() {
+                fTextPane.setWordWrap(isChecked());
+                ArchiScriptPlugin.INSTANCE.getPreferenceStore().setValue(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP, isChecked());
+            }
+        });
+    }
+    
     @Override
     public void setFocus() {
         if(fTextPane != null) {

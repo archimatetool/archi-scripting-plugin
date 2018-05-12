@@ -265,18 +265,6 @@ implements IContextProvider {
      * Make Any Local Bar Menu Actions
      */
     protected void makeLocalMenuActions() {
-        IActionBars actionBars = getViewSite().getActionBars();
-
-        // Local menu items go here
-        IMenuManager manager = actionBars.getMenuManager();
-        manager.add(new Action(Messages.AbstractFileView_12) {
-            @Override
-            public void run() {
-                MessageDialog.openInformation(getViewSite().getShell(),
-                        Messages.AbstractFileView_13,
-                        Messages.AbstractFileView_14);
-            }
-        });
     }
 
     /**
