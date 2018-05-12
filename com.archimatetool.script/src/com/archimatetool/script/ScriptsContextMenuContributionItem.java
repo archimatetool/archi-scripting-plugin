@@ -62,13 +62,16 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
                 fillItems(subMenu, file.listFiles());
             }
             else {
-                menuManager.add(new Action(FileUtils.getFileNameWithoutExtension(file), IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_SCRIPT)) {
-                    @Override
-                    public void run() {
-                        RunArchiScript script = new RunArchiScript(file);
-                        script.run();
-                    }
-                });
+                if(file.getName().toLowerCase().endsWith(ArchiScriptPlugin.SCRIPT_EXTENSION)) {
+                    menuManager.add(new Action(FileUtils.getFileNameWithoutExtension(file),
+                            IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_SCRIPT)) {
+                        @Override
+                        public void run() {
+                            RunArchiScript script = new RunArchiScript(file);
+                            script.run();
+                        }
+                    });
+                }
             }
         }
     }

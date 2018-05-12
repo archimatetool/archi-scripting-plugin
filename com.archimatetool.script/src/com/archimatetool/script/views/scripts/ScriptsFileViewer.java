@@ -36,6 +36,7 @@ import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 import com.archimatetool.script.views.file.AbstractFileView;
+import com.archimatetool.script.views.file.FileTreeViewer;
 import com.archimatetool.script.views.file.NewFileDialog;
 import com.archimatetool.script.views.file.PathEditorInput;
 
@@ -78,6 +79,11 @@ extends AbstractFileView  {
     @Override
     public File getRootFolder() {
         return ArchiScriptPlugin.INSTANCE.getUserScriptsFolder();
+    }
+    
+    @Override
+    protected FileTreeViewer createTreeViewer(Composite parent) {
+        return new ScriptsTreeViewer(getRootFolder(), parent);
     }
     
     @Override

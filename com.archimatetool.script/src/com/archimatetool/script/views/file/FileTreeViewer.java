@@ -11,6 +11,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -30,7 +31,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * File Tree Viewer
  */
-public class FileTreeViewer extends TreeViewer {
+public abstract class FileTreeViewer extends TreeViewer {
     /**
      * The Root Folder we are exploring
      */
@@ -47,7 +48,7 @@ public class FileTreeViewer extends TreeViewer {
         setup();
         
         setContentProvider(new FileTreeContentProvider());
-        setLabelProvider(new FileTreeLabelProvider());
+        setLabelProvider(getUserLabelProvider());
         
         fRootFolder.mkdirs();
         setInput(fRootFolder);
@@ -123,6 +124,10 @@ public class FileTreeViewer extends TreeViewer {
         });
     }
     
+    protected IBaseLabelProvider getUserLabelProvider() {
+        return new FileTreeLabelProvider(); 
+    }
+    
     /* 
      * Over-ride - make sure we have a folder!
      */
@@ -148,13 +153,13 @@ public class FileTreeViewer extends TreeViewer {
     }
     
     // ===============================================================================================
-	// ===================================== Tree Model ==============================================
+	// ===================================== Content Provider ========================================
 	// ===============================================================================================
     
     /**
      * The Tree Model for the Tree.
      */
-    class FileTreeContentProvider implements ITreeContentProvider {
+    protected class FileTreeContentProvider implements ITreeContentProvider {
         
         public void inputChanged(Viewer v, Object oldInput, Object newInput) {
         }
@@ -190,10 +195,10 @@ public class FileTreeViewer extends TreeViewer {
     }
     
     // ===============================================================================================
-	// ===================================== Label Model ==============================================
+	// ===================================== Label Provider ==========================================
 	// ===============================================================================================
 
-    class FileTreeLabelProvider extends LabelProvider {
+    protected class FileTreeLabelProvider extends LabelProvider {
         
         @Override
         public String getText(Object obj) {

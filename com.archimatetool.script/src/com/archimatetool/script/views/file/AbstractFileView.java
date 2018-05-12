@@ -72,11 +72,16 @@ implements IContextProvider {
      */
     public abstract File getRootFolder();
     
+    /**
+     * @return Tree Viewer
+     */
+    protected abstract FileTreeViewer createTreeViewer(Composite parent);
+    
     
     @Override
     public void createPartControl(Composite parent) {
         // Create the Tree Viewer first
-        fTreeViewer = new FileTreeViewer(getRootFolder(), parent);
+        fTreeViewer = createTreeViewer(parent);
         
         makeActions();
         registerGlobalActions();
