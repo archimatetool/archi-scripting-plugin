@@ -7,7 +7,7 @@
       <command
             defaultHandler="com.archimatetool.script.ShowScriptsViewHandler"
             id="com.archimatetool.scripts.command.showScriptsView"
-            name="Toggle Scripts Manager">
+            name="%command.name">
       </command>
    </extension>
    <extension
@@ -22,7 +22,7 @@
          <command
                commandId="com.archimatetool.scripts.command.showScriptsView"
                icon="img/script.png"
-               label="Scripts"
+               label="%command.label"
                style="push">
          </command>
       </menuContribution>
@@ -47,7 +47,7 @@
             locationURI="popup:com.archimatetool.editor.treeModelView?before=start_properties">
          <menu
                id="com.archimatetool.script.menu"
-               label="Scripts">
+               label="%menu.label">
             <dynamic
                   class="com.archimatetool.script.ScriptsContextMenuContributionItem"
                   id="com.archimatetool.script.menu">
@@ -61,14 +61,14 @@
             class="com.archimatetool.script.views.scripts.ScriptsFileViewer"
             icon="img/script.png"
             id="com.archimatetool.script.scriptsView"
-            name="Scripts Manager"
+            name="%view.name"
             restorable="true">
       </view>
       <view
             class="com.archimatetool.script.views.console.ConsoleView"
             icon="img/console_view.png"
             id="com.archimatetool.script.consoleView"
-            name="Scripts Console"
+            name="%view.name.0"
             restorable="true">
       </view>
    </extension>
@@ -128,7 +128,7 @@
       <page
             class="com.archimatetool.script.preferences.ScriptPreferencePage"
             id="com.archimatetool.script.preferences.ScriptPreferencePage"
-            name="Scripting">
+            name="%page.name">
       </page>
    </extension>
    <extension

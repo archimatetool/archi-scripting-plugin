@@ -34,6 +34,7 @@ import org.eclipse.ui.PartInitException;
 import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
+import com.archimatetool.script.IArchiScriptImages;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 import com.archimatetool.script.views.file.AbstractFileView;
 import com.archimatetool.script.views.file.FileTreeViewer;
@@ -103,6 +104,9 @@ extends AbstractFileView  {
         
         // Show Console
         fActionShowConsole = new ShowConsoleAction();
+        
+        // Icon
+        fActionNewFile.setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_SCRIPT));
     }
     
     @Override
