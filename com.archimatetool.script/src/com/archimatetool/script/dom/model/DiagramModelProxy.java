@@ -8,14 +8,16 @@ package com.archimatetool.script.dom.model;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
-
+import com.archimatetool.canvas.model.ICanvasModel;
 import com.archimatetool.model.IArchimateConcept;
+import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
+import com.archimatetool.model.ISketchModel;
 
 /**
  * DiagramModel wrapper proxy
@@ -33,6 +35,21 @@ public class DiagramModelProxy extends EObjectProxy {
         return (IDiagramModel)super.getEObject();
     }
     
+    @Override
+    public boolean isView() {
+        return getEObject() instanceof IArchimateDiagramModel;
+    }
+    
+    @Override
+    public boolean isCanvas() {
+        return getEObject() instanceof ICanvasModel;
+    }
+    
+    @Override
+    public boolean isSketch() {
+        return getEObject() instanceof ISketchModel;
+    }
+
     /**
      * @return child node diagram objects of this diagram model
      */

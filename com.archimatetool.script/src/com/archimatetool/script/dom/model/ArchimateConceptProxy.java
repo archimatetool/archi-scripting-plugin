@@ -30,6 +30,11 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
     protected IArchimateConcept getEObject() {
         return (IArchimateConcept)super.getEObject();
     }
+    
+    @Override
+    public boolean isConcept() {
+        return true;
+    }
 
     @Override
     public Object invoke(String methodName, Object... args) {

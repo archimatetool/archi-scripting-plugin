@@ -95,6 +95,34 @@ public abstract class EObjectProxy implements IModelConstants {
         return getEObject() != null;
     }
     
+    public boolean isConcept() {
+        return false;
+    }
+    
+    public boolean isElement() {
+        return false;
+    }
+    
+    public boolean isRelationship() {
+        return false;
+    }
+    
+    public boolean isFolder() {
+        return false;
+    }
+    
+    public boolean isView() {
+        return false;
+    }
+    
+    public boolean isCanvas() {
+        return false;
+    }
+    
+    public boolean isSketch() {
+        return false;
+    }
+    
     public ArchimateModelProxy getModel() {
         if(getEObject() instanceof IArchimateModelObject) {
             return new ArchimateModelProxy(((IArchimateModelObject)getEObject()).getArchimateModel());

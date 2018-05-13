@@ -29,6 +29,11 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
         return (IArchimateRelationship)super.getEObject();
     }
 
+    @Override
+    public boolean isRelationship() {
+        return true;
+    }
+    
     public ArchimateConceptProxy getSource() {
         return (ArchimateConceptProxy)EObjectProxy.get(getEObject().getSource());
     }

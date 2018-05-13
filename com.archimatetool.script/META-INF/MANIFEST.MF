@@ -8,11 +8,12 @@ Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.help.ui,
- com.archimatetool.editor;bundle-version="4.3.0",
+ com.archimatetool.editor,
  com.archimatetool.commandline,
  com.archimatetool.help,
  org.eclipse.core.resources,
- com.archimatetool.editor.browser
+ com.archimatetool.editor.browser,
+ com.archimatetool.canvas
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: com.archimatetool.script.ArchiScriptPlugin

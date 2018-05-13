@@ -30,6 +30,11 @@ public class FolderProxy extends EObjectProxy {
     }
     
     @Override
+    public boolean isFolder() {
+        return true;
+    }
+    
+    @Override
     public EObjectProxyCollection<EObjectProxy> children() {
         EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
         

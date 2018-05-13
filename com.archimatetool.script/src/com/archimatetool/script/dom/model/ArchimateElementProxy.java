@@ -26,6 +26,11 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         return (IArchimateElement)super.getEObject();
     }
     
+    @Override
+    public boolean isElement() {
+        return true;
+    }
+    
     /**
      * Replace this element with a new element of class type, preserving all connecting relationships and diagram components
      * @param type the Archimate type to replace with
