@@ -11,6 +11,7 @@ import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.script.ArchiScriptException;
 
 /**
  * Archimate Concept wrapper proxy
@@ -19,7 +20,7 @@ import com.archimatetool.model.IFolder;
  */
 public abstract class ArchimateConceptProxy extends EObjectProxy {
     
-    public ArchimateConceptProxy(IArchimateConcept concept) {
+    ArchimateConceptProxy(IArchimateConcept concept) {
         super(concept);
     }
     

@@ -10,7 +10,7 @@ package com.archimatetool.script.dom.model;
  * 
  * @author Phillip Beauvoir
  */
-public interface IModelConstants {
+interface IModelConstants {
 
     String ID = "id"; //$NON-NLS-1$
     String NAME = "name"; //$NON-NLS-1$

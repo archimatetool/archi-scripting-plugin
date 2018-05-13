@@ -14,7 +14,7 @@ import com.archimatetool.model.IDiagramModelConnection;
  */
 public class DiagramModelConnectionProxy extends DiagramModelComponentProxy {
     
-    public DiagramModelConnectionProxy(IDiagramModelConnection connection) {
+    DiagramModelConnectionProxy(IDiagramModelConnection connection) {
         super(connection);
     }
     

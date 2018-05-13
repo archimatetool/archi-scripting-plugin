@@ -27,7 +27,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         }
     }
     
-    public DiagramModelObjectProxy(IDiagramModelObject object) {
+    DiagramModelObjectProxy(IDiagramModelObject object) {
         super(object);
     }
     

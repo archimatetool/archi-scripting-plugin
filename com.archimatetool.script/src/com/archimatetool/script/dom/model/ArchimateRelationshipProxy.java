@@ -9,6 +9,7 @@ import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.script.ArchiScriptException;
 
 /**
  * Archimate Relationship wrapper proxy
@@ -17,7 +18,7 @@ import com.archimatetool.model.util.ArchimateModelUtils;
  */
 public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
     
-    public ArchimateRelationshipProxy(IArchimateRelationship relationship) {
+    ArchimateRelationshipProxy(IArchimateRelationship relationship) {
         super(relationship);
     }
     

@@ -19,7 +19,7 @@ import com.archimatetool.model.ILineObject;
  */
 public abstract class DiagramModelComponentProxy extends EObjectProxy {
     
-    public DiagramModelComponentProxy(IDiagramModelComponent component) {
+    DiagramModelComponentProxy(IDiagramModelComponent component) {
         super(component);
     }
     

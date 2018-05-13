@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T> implements IModelConstants {
     
-    public EObjectProxyCollection() {
+    EObjectProxyCollection() {
         super();
     }
     

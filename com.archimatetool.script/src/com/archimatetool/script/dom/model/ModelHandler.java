@@ -16,6 +16,7 @@ import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
+import com.archimatetool.script.ArchiScriptException;
 
 /**
  * Handles Models that are open in the UI
@@ -41,7 +42,7 @@ public class ModelHandler {
     	}
     }
     
-    public static void checkModelAccess(EObject eObject) {
+    static void checkModelAccess(EObject eObject) {
         // Only check if running in UI
         if(!PlatformUI.isWorkbenchRunning() || !(eObject instanceof IArchimateModelObject)) {
             return;

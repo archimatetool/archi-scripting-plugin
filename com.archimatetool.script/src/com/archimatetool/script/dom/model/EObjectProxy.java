@@ -29,6 +29,7 @@ import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
+import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
 /**
@@ -45,7 +46,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param eObject
      * @return EObjectProxy type
      */
-    public static EObjectProxy get(EObject eObject) {
+    static EObjectProxy get(EObject eObject) {
         if(eObject instanceof IArchimateModel) {
             return new ArchimateModelProxy((IArchimateModel)eObject);
         }
@@ -77,7 +78,7 @@ public abstract class EObjectProxy implements IModelConstants {
         return null;
     }
     
-    public EObjectProxy(EObject eObject) {
+    EObjectProxy(EObject eObject) {
         setEObject(eObject);
     }
     

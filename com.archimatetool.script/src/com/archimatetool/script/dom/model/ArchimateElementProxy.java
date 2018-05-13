@@ -14,7 +14,7 @@ import com.archimatetool.model.IArchimateElement;
  */
 public class ArchimateElementProxy extends ArchimateConceptProxy {
     
-    public ArchimateElementProxy(IArchimateElement element) {
+    ArchimateElementProxy(IArchimateElement element) {
         super(element);
     }
     

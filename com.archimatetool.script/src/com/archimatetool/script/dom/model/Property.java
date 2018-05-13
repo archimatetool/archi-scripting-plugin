@@ -14,7 +14,7 @@ public class Property {
     private String key;
     private String value;
 
-    public Property(String key, String value) {
+    Property(String key, String value) {
         this.key = key;
         this.value = value;
     }

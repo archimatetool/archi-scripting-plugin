@@ -22,7 +22,7 @@ import com.archimatetool.model.INameable;
  * 
  * @author Phillip Beauvoir
  */
-public class SelectorFilterFactory {
+class SelectorFilterFactory {
     
     public static interface ISelectorFilter {
         boolean accept(EObject object);

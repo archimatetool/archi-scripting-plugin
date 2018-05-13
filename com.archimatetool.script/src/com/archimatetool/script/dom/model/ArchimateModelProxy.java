@@ -21,6 +21,7 @@ import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.ModelVersion;
+import com.archimatetool.script.ArchiScriptException;
 
 /**
  * ArchiMate Model object wrapper proxy thing
@@ -29,7 +30,7 @@ import com.archimatetool.model.ModelVersion;
  */
 public class ArchimateModelProxy extends EObjectProxy {
     
-    public ArchimateModelProxy(IArchimateModel model) {
+    ArchimateModelProxy(IArchimateModel model) {
         super(model);
     }
 
@@ -62,7 +63,15 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy load(String path) {
-        setEObject(IEditorModelManager.INSTANCE.loadModel(new File(path)));
+        IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(new File(path));
+        
+        if(model != null) {
+            setEObject(model);
+        }
+        else {
+            throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_2, path));
+        }
+        
         return this;
     }
     

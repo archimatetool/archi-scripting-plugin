@@ -26,7 +26,7 @@ import com.archimatetool.model.ISketchModel;
  */
 public class DiagramModelProxy extends EObjectProxy {
     
-    public DiagramModelProxy(IDiagramModel dm) {
+    DiagramModelProxy(IDiagramModel dm) {
         super(dm);
     }
     
