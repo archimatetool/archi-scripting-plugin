@@ -85,6 +85,31 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     }
 
     /**
+     * @return the descendants of each object in the set of matched objects
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> find() {
+        return find(null);
+    }
+    
+    /**
+     * @param selector
+     * @return the descendants of each object in the set of matched objects
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> find(String selector) {
+        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
+        
+        for(EObjectProxy object : this) {
+            for(EObjectProxy child : selector == null ? object.find() : object.find(selector)) {
+                if(!list.contains(child)) {
+                    list.add(child);
+                }
+            }
+        }
+        
+        return list;
+    }
+    
+    /**
      * @return children as collection. Default is an empty list
      */
     public EObjectProxyCollection<? extends EObjectProxy> children() {

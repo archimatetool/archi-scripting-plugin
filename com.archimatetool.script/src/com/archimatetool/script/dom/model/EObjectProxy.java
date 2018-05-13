@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -186,6 +187,45 @@ public abstract class EObjectProxy implements IModelConstants {
         }
         
         return this;
+    }
+    
+    /**
+     * @return the descendants of each object in the set of matched objects
+     */
+    public EObjectProxyCollection<EObjectProxy> find() {
+        return find(""); //$NON-NLS-1$
+    }
+    
+    /**
+     * @param selector
+     * @return the descendants of each object in the set of matched objects
+     */
+    public EObjectProxyCollection<EObjectProxy> find(String selector) {
+        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+        
+        if(getEObject() == null) {
+            return list;
+        }
+        
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
+        if(filter == null) {
+            return list;
+        }
+        
+        // Iterate over all model contents and filter objects into the list
+        for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
+            EObject eObject = iter.next();
+            
+            if(filter.accept(eObject)) {
+                list.add(EObjectProxy.get(eObject));
+                
+                if(filter.isSingle()) {
+                    return list;
+                }
+            }
+        }
+        
+        return list;
     }
     
     /**

@@ -7,10 +7,8 @@ package com.archimatetool.script.dom.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
@@ -23,7 +21,6 @@ import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.ModelVersion;
-import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
 /**
  * ArchiMate Model object wrapper proxy thing
@@ -166,38 +163,6 @@ public class ArchimateModelProxy extends EObjectProxy {
         }
         
         return this;
-    }
-    
-    public EObjectProxyCollection<EObjectProxy> find() {
-        return find(""); //$NON-NLS-1$
-    }
-    
-    public EObjectProxyCollection<EObjectProxy> find(String selector) {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
-        
-        if(getEObject() == null) {
-            return list;
-        }
-        
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
-        if(filter == null) {
-            return list;
-        }
-        
-        // Iterate over all model contents and filter objects into the list
-        for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
-            EObject eObject = iter.next();
-            
-            if(filter.accept(eObject)) {
-                list.add(EObjectProxy.get(eObject));
-                
-                if(filter.isSingle()) {
-                    return list;
-                }
-            }
-        }
-        
-        return list;
     }
     
     @Override
