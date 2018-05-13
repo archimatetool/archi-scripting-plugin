@@ -35,17 +35,18 @@ public class FS {
      * @throws IOException
      */
     public void writeFile(String path, String text, String encoding) throws IOException {
-    	if(encoding.equals("BASE64")) { //$NON-NLS-1$
-    		writeBinFile(path, text);
-    	} else {
-	        File file = new File(path);
-	        file.createNewFile();
-	        
-	        OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), encoding);
-	        writer.write(text);
-	        writer.flush();
-	        writer.close();
-    	}
+        if(encoding.equals("BASE64")) { //$NON-NLS-1$
+            writeBinFile(path, text);
+        }
+        else {
+            File file = new File(path);
+            file.createNewFile();
+
+            try(OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), encoding)) {
+                writer.write(text);
+                writer.flush();
+            }
+        }
     }
 
     /**
@@ -58,10 +59,9 @@ public class FS {
         File file = new File(path);
         file.createNewFile();
         
-        FileOutputStream writer = new FileOutputStream(file);
-
-        writer.write(Base64.getDecoder().decode(base64text));
-        writer.flush();
-        writer.close();
+        try(FileOutputStream writer = new FileOutputStream(file)) {
+            writer.write(Base64.getDecoder().decode(base64text));
+            writer.flush();
+        }
     }
 }
