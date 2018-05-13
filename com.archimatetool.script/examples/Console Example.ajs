@@ -4,26 +4,41 @@
  *
  * console.show()
  * console.hide()
+ * console.setText(String)
  * console.println(String)
  * console.print(String)
- * console.setText(String)
+ * console.log(String)
+ * console.printError(Object)
  * console.clear()
- * console.setTextColor(red, green, blue)
+ * console.setTextColor(int, int, int)
+ * console.setDefaultTextColor()
  *
  */
-function main() {
 
-    console.show();
 
-    console.setTextColor(255, 0, 0);
-    console.println("Hello World in Red!");
+console.show();
 
-    console.setTextColor(0, 255, 0);
-    console.println("Hello World in Green!");
+console.setTextColor(255, 0, 0);
+console.log("Hello World in Red!");
 
-    console.setTextColor(0, 0, 255);
-    console.println("Hello World in Blue!");
+console.setTextColor(0, 255, 0);
+console.log("Hello World in Green!");
 
-    console.setDefaultTextColor();
-    
+console.setTextColor(0, 0, 255);
+console.log("Hello World in Blue!");
+
+console.log("");
+
+console.setDefaultTextColor();
+console.log("Hello World in Default colour!");
+
+console.log("");
+
+// console.printError in red
+try {
+    console.print("This is an error in red: ");
+    jArchi.fs.writeFile("/cannotAccess", "");
+}
+catch(err) {
+    console.printError(err);
 }

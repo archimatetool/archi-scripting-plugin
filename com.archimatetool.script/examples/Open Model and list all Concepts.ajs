@@ -1,0 +1,26 @@
+/*
+ * Open a model from file and print the concepts
+ */
+ 
+console.show();
+
+// Replace this with your own path to a model
+var filePath = "Archisurance.archimate";
+
+// Open the model in the UI and get the model proxy object
+$(model).load(filePath);
+
+console.log("Opened model: " + $(model));
+
+console.log("Concepts in model:");
+console.log("--------");
+
+// Concept type and names
+$("concepts").forEach(function(concept) {
+    console.println(concept.getType() + ": " + concept.getName());
+});
+
+// "for each" supported by Nashorn
+// for each(var concept in $("concepts")) {
+//     console.println(concept.getName());
+// }

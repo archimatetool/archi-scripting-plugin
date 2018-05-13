@@ -1,24 +1,22 @@
 /*
  * Open a model from file and display the elements as HTML in a Browser
  */
-function main() {
  
-    // Replace this with your own path to a model
-    var filePath = "C:\\projekts\\archi\\code\\archi-models\\Archisurance\\Archisurance.archimate";
+// Replace this with your own path to a model
+var filePath = "Archisurance.archimate";
 
-    $(model).load(filePath);
+$(model).load(filePath);
 
-    var text = "<html><body><table>";
+var text = "<html><body><table>";
 
-    text += "<th>Elements</th>";
+text += "<th>Elements</th>";
 
-    $("elements").forEach(function(element) {
-        text += "<tr><td style='border:1px solid black;'>" + element.getName() + "</td></tr>";
-    }); 
+$("elements").forEach(function(element) {
+    text += "<tr><td style='border:1px solid black;'>" + element.getName() + "</td></tr>";
+}); 
 
-    text += "</table></body></html>";
+text += "</table></body></html>";
 
-    var browser = Browser.newInstance();
-    browser.open();
-    browser.setText(text);
-}
+var browser = Browser.newInstance();
+browser.open();
+browser.setText(text);

@@ -1,30 +1,28 @@
 /*
  * Create a new model and add a Business Actor
  */
-function main() {
-    console.show();
 
-    $(model).create("Test Model");
+console.show();
 
-    console.println("Created model: " + $(model).name);
-    console.println("ID is: " + $(model).id);
-  
-    var actor = $(model).addElement("BusinessActor", "Oscar");
-    console.println("Added new element: " + actor.name);
+$(model).create("Test Model");
 
-    console.println("Elements in model:");
+console.log("Created model: " + $(model).name);
+console.log("ID is: " + $(model).id);
 
-    // Traditional JS
-    //$("elements").forEach(function(element) {
-    //    console.println(element.getName());
-    //});
-   
-    // "for each" supported by Nashorn
-    for each(var element in $("elements")) {
-        console.println(element.getName());
-    }
-    
-    console.println("Opening model in tree...");
-    
-    $(model).openInUI();
-}
+var actor = $(model).addElement("BusinessActor", "Oscar");
+console.log("Added new element: " + actor.name);
+
+console.log("Elements in model:");
+
+$("elements").forEach(function(element) {
+    console.println(element.getName());
+});
+
+// "for each" supported by Nashorn
+// for each(var element in $("elements")) {
+//     console.println(element.getName());
+// }
+
+console.log("Opening model in tree...");
+
+$(model).openInUI();

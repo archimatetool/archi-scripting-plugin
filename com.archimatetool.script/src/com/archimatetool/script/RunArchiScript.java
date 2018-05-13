@@ -86,7 +86,7 @@ public class RunArchiScript {
         engine.put("__JARCHI_FILE__", file.getAbsolutePath()); //$NON-NLS-1$
         engine.put("__JARCHI_DIR__", file.getParent());  //$NON-NLS-1$
         
-        // Eclipse ones - not sure we need these
+        // Eclipse ones - these are needed for calling UI methods such as opening dialogs, windows, etc
         if(PlatformUI.isWorkbenchRunning()) {
             engine.put("window", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
             engine.put("workbench", PlatformUI.getWorkbench()); //$NON-NLS-1$

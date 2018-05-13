@@ -1,22 +1,20 @@
 /*
  * Write some html text to a given file and open it in Browser
  */
-function main() {
 
-    // Replace this with your file name and path
-    var file = "C:\\temp\\test.html";
-    
-    var text = "<html><body>Hello World</body></html>";
-    
-    try {
-        ScriptUtils.writeTextToFile(text, file);
-    }
-    catch(err) {
-        console.printError(err);
-    }
-    
-    var browser = Browser.newInstance();
-    browser.open("file:///" + file, "Test");
-    
+// Replace this with your file name and path
+var file = "test.html";
+
+var text = "<html><body>Hello World</body></html>";
+
+try {
+    jArchi.fs.writeFile(file, text);
 }
+catch(err) {
+    console.printError(err);
+}
+
+var browser = Browser.newInstance();
+browser.open("file:///" + file, "Test");
+    
 

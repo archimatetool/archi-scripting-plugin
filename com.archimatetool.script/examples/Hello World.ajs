@@ -1,16 +1,14 @@
 /*
- * Hello World
+ * Hello World in a Message Dialog Box
  */
 
-function main() {
- 
-    text = "Hello World from Archi Scripting!\n\n";
-    text += "The quick brown fox jumped over the lazy dog's back. ";
-    text += "Now is the time for all good men to come to the aid of their country.";
+text = "Hello World from Archi Scripting!\n\n";
+text += "The quick brown fox jumped over the lazy dog's back. ";
+text += "Now is the time for all good men to come to the aid of their country.";
 
-    Packages.org.eclipse.jface.dialogs.MessageDialog.openInformation( 	
-        window.getShell(), 	
-        "Archi Scripting", 
-        text);
+var MessageDialog = Java.type("org.eclipse.jface.dialogs.MessageDialog");
 
-}
+MessageDialog.openInformation( 	
+    window.getShell(), 	
+    "Archi Scripting", 
+    text);
