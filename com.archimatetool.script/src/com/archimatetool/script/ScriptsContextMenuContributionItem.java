@@ -12,6 +12,8 @@ import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 
@@ -58,6 +60,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
         for(File file : files) {
             if(file.isDirectory()) {
                 MenuManager subMenu = new MenuManager(file.getName());
+                subMenu.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER));
                 menuManager.add(subMenu);
                 fillItems(subMenu, file.listFiles());
             }
