@@ -17,9 +17,6 @@ import com.archimatetool.model.IFolder;
  */
 public class FolderProxy extends EObjectProxy {
     
-    public FolderProxy() {
-    }
-    
     public FolderProxy(IFolder folder) {
         super(folder);
     }

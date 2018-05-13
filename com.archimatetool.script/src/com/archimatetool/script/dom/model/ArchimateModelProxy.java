@@ -29,9 +29,6 @@ import com.archimatetool.model.ModelVersion;
  */
 public class ArchimateModelProxy extends EObjectProxy {
     
-    public ArchimateModelProxy() {
-    }
-
     public ArchimateModelProxy(IArchimateModel model) {
         super(model);
     }

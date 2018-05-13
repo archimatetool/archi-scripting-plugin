@@ -19,9 +19,6 @@ import com.archimatetool.model.IFolder;
  */
 public abstract class ArchimateConceptProxy extends EObjectProxy {
     
-    public ArchimateConceptProxy() {
-    }
-    
     public ArchimateConceptProxy(IArchimateConcept concept) {
         super(concept);
     }

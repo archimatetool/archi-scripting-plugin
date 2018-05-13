@@ -17,9 +17,6 @@ import com.archimatetool.model.util.ArchimateModelUtils;
  */
 public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
     
-    public ArchimateRelationshipProxy() {
-    }
-    
     public ArchimateRelationshipProxy(IArchimateRelationship relationship) {
         super(relationship);
     }

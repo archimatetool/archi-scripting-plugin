@@ -77,9 +77,6 @@ public abstract class EObjectProxy implements IModelConstants {
         return null;
     }
     
-    public EObjectProxy() {
-    }
-    
     public EObjectProxy(EObject eObject) {
         setEObject(eObject);
     }
