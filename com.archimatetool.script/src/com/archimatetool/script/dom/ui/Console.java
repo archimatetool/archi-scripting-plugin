@@ -72,7 +72,7 @@ public class Console {
         }
     }
     
-    public void printError(Object error) {
+    public void error(Object error) {
         show();
         
         Color oldColor = currentColor;

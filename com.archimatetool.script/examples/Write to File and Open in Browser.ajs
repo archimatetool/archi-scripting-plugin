@@ -11,7 +11,7 @@ try {
     jArchi.fs.writeFile(file, text);
 }
 catch(err) {
-    console.printError(err);
+    console.error(err);
 }
 
 var browser = Browser.newInstance();

@@ -8,7 +8,7 @@
  * console.println(String)
  * console.print(String)
  * console.log(String)
- * console.printError(Object)
+ * console.error(Object)
  * console.clear()
  * console.setTextColor(int, int, int)
  * console.setDefaultTextColor()
@@ -40,5 +40,5 @@ try {
     jArchi.fs.writeFile("/cannotAccess", "");
 }
 catch(err) {
-    console.printError(err);
+    console.error(err);
 }
