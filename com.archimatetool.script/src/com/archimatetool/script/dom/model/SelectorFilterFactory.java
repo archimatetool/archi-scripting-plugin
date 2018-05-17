@@ -55,7 +55,7 @@ class SelectorFilterFactory {
         if(selector.equals("*")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
-                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel);
+                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
                 }
             };
         }
@@ -119,7 +119,7 @@ class SelectorFilterFactory {
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     object = getReferencedConcept(object);
-                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel)
+                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder)
                             && name.equals(((INameable)object).getName());
                 }
             };
@@ -137,7 +137,7 @@ class SelectorFilterFactory {
                     object = getReferencedConcept(object);
                     return object.eClass().getName().equals(s[0]) &&
                             ((INameable)object).getName().equals(s[1]) &&
-                            (object instanceof IArchimateConcept || object instanceof IDiagramModel);
+                            (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
                 }
             };
         }
@@ -148,7 +148,7 @@ class SelectorFilterFactory {
                 public boolean accept(EObject object) {
                     object = getReferencedConcept(object);
                     return object.eClass().getName().equals(selector) &&
-                            (object instanceof IArchimateConcept || object instanceof IDiagramModel);
+                            (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
                 }
             };
         }

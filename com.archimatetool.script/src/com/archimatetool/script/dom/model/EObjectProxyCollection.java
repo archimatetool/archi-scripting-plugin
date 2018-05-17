@@ -6,9 +6,12 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.eclipse.emf.ecore.EObject;
+
+import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
 
 /**
@@ -88,7 +91,17 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return the descendants of each object in the set of matched objects
      */
     public EObjectProxyCollection<? extends EObjectProxy> find() {
-        return find(null);
+    	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
+    	
+    	for(EObjectProxy object : this) {
+            for(EObjectProxy child : object.find()) {
+                if(!list.contains(child)) {
+                    list.add(child);
+                }
+            }
+        }
+        
+        return list;
     }
     
     /**
@@ -96,12 +109,31 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return the descendants of each object in the set of matched objects
      */
     public EObjectProxyCollection<? extends EObjectProxy> find(String selector) {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
+        return find().filter(selector);
+    }
+    
+    /**
+     * Filter the collection and keep only objects that match selector
+     * @param selector
+     * @return a filtered collection
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> filter(String selector) {
+        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
         
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
+        if(filter == null) {
+            return list;
+        }
+        
+        // Iterate over the collection and filter objects into the list
         for(EObjectProxy object : this) {
-            for(EObjectProxy child : selector == null ? object.find() : object.find(selector)) {
-                if(!list.contains(child)) {
-                    list.add(child);
+            EObject eObject = object.getEObject();
+            
+            if(filter.accept(eObject)) {
+                list.add(object);
+                
+                if(filter.isSingle()) {
+                    return list;
                 }
             }
         }
