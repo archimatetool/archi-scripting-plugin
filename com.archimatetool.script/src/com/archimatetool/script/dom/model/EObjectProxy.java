@@ -21,6 +21,7 @@ import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDocumentable;
@@ -90,6 +91,14 @@ public abstract class EObjectProxy implements IModelConstants {
         return fEObject;
     }
     
+    private EObject getReferencedConcept() {
+        if(getEObject() instanceof IDiagramModelArchimateComponent) {
+            return ((IDiagramModelArchimateComponent)getEObject()).getArchimateConcept();
+        }
+        
+        return getEObject();
+    }
+    
     public boolean isSet() {
         return getEObject() != null;
     }
@@ -154,8 +163,8 @@ public abstract class EObjectProxy implements IModelConstants {
      * @return class type of this object
      */
     public String getType() {
-        if(getEObject() != null) {
-            return getEObject().eClass().getName();
+        if(getReferencedConcept() != null) {
+            return getReferencedConcept().eClass().getName();
         }
         
         return null;
@@ -190,7 +199,7 @@ public abstract class EObjectProxy implements IModelConstants {
     /**
      * @return the descendants of each object in the set of matched objects
      */
-    public EObjectProxyCollection<EObjectProxy> find() {
+    public EObjectProxyCollection<? extends EObjectProxy> find() {
         return find(""); //$NON-NLS-1$
     }
     
@@ -198,32 +207,44 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param selector
      * @return the descendants of each object in the set of matched objects
      */
-    public EObjectProxyCollection<EObjectProxy> find(String selector) {
+    public EObjectProxyCollection<? extends EObjectProxy> find(String selector) {
         EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
         
         if(getEObject() == null) {
             return list;
         }
         
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
-        if(filter == null) {
-            return list;
-        }
-        
         // Iterate over all model contents and filter objects into the list
         for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
             EObject eObject = iter.next();
-            
-            if(filter.accept(eObject)) {
-                list.add(EObjectProxy.get(eObject));
-                
-                if(filter.isSingle()) {
-                    return list;
-                }
-            }
+            list.add(EObjectProxy.get(eObject));
         }
         
-        return list;
+        return list.filter(selector);
+    }
+    
+    public EObjectProxyCollection<? extends EObjectProxy> find(EObject eObject) {
+    	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    	
+    	if(eObject == null) {
+    		return list;
+    	}
+    	
+    	list.add(get(eObject));
+    	
+    	return list;
+    }
+    
+    public EObjectProxyCollection<? extends EObjectProxy> find(EObjectProxy object) {
+    	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    	
+    	if(object == null) {
+    		return list;
+    	}
+    	
+    	list.add(object);
+    	
+    	return list;
     }
     
     /**
@@ -330,12 +351,12 @@ public abstract class EObjectProxy implements IModelConstants {
     public EObjectProxy addProperty(String key, String value) {
         checkModelAccess();
         
-        if(getEObject() instanceof IProperties && key != null && value != null) {
+        if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
             // TODO use IArchimateFactory.eINSTANCE.createProperty(key, value);
             IProperty prop = IArchimateFactory.eINSTANCE.createProperty();
             prop.setKey(key);
             prop.setValue(value);
-            ((IProperties)getEObject()).getProperties().add(prop);
+            ((IProperties)getReferencedConcept()).getProperties().add(prop);
         }
         
         return this;
@@ -350,10 +371,10 @@ public abstract class EObjectProxy implements IModelConstants {
     public EObjectProxy addOrUpdateProperty(String key, String value) {
         checkModelAccess();
         
-        if(getEObject() instanceof IProperties && key != null && value != null) {
+        if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
             boolean updated = false;
             
-            for(IProperty prop : ((IProperties)getEObject()).getProperties()) {
+            for(IProperty prop : ((IProperties)getReferencedConcept()).getProperties()) {
                 if(prop.getKey().equals(key)) {
                     prop.setValue(value);
                     updated = true;
@@ -395,8 +416,8 @@ public abstract class EObjectProxy implements IModelConstants {
     public Set<String> getPropertyKey() {
         Set<String> list = new LinkedHashSet<String>();
         
-        if(getEObject() instanceof IProperties) {
-            for(IProperty p : ((IProperties)getEObject()).getProperties()) {
+        if(getReferencedConcept() instanceof IProperties) {
+            for(IProperty p : ((IProperties)getReferencedConcept()).getProperties()) {
                 list.add(p.getKey());
             }
         }
@@ -411,8 +432,8 @@ public abstract class EObjectProxy implements IModelConstants {
     public List<String> getPropertyValue(String key) {
         List<String> list = new ArrayList<String>();
         
-        if(getEObject() instanceof IProperties) {
-            for(IProperty p : ((IProperties)getEObject()).getProperties()) {
+        if(getReferencedConcept() instanceof IProperties) {
+            for(IProperty p : ((IProperties)getReferencedConcept()).getProperties()) {
                 if(p.getKey().equals(key)) {
                     list.add(p.getValue());
                 }
@@ -428,8 +449,8 @@ public abstract class EObjectProxy implements IModelConstants {
     public List<Property> getProperties() {
         List<Property> list = new ArrayList<Property>();
         
-        if(getEObject() instanceof IProperties) {
-            for(IProperty p : ((IProperties)getEObject()).getProperties()) {
+        if(getReferencedConcept() instanceof IProperties) {
+            for(IProperty p : ((IProperties)getReferencedConcept()).getProperties()) {
                 list.add(new Property(p.getKey(), p.getValue()));
             }
         }
@@ -442,9 +463,9 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param properties
      */
     public void setProperties(List<Property> properties) {
-        if(getEObject() instanceof IProperties) {
+        if(getReferencedConcept() instanceof IProperties) {
             // clear
-            ((IProperties)getEObject()).getProperties().clear();
+            ((IProperties)getReferencedConcept()).getProperties().clear();
             
             // add new ones
             properties.forEach(p -> {
@@ -468,9 +489,9 @@ public abstract class EObjectProxy implements IModelConstants {
     public EObjectProxy removeProp(String key, String value) {
         checkModelAccess();
         
-        if(getEObject() instanceof IProperties) {
+        if(getReferencedConcept() instanceof IProperties) {
             List<IProperty> toRemove = new ArrayList<IProperty>();
-            EList<IProperty> props = ((IProperties)getEObject()).getProperties();
+            EList<IProperty> props = ((IProperties)getReferencedConcept()).getProperties();
             
             for(IProperty p : props) {
                 if(p.getKey().equals(key)) {

@@ -127,14 +127,16 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         
         // Iterate over the collection and filter objects into the list
         for(EObjectProxy object : this) {
-            EObject eObject = object.getEObject();
-            
-            if(filter.accept(eObject)) {
-                list.add(object);
-                
-                if(filter.isSingle()) {
-                    return list;
-                }
+            if(object != null) {
+	            EObject eObject = object.getEObject();
+	            
+	            if(filter.accept(eObject)) {
+	                list.add(object);
+	                
+	                if(filter.isSingle()) {
+	                    return list;
+	                }
+	            }
             }
         }
         
