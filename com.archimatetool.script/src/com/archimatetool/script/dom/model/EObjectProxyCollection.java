@@ -29,30 +29,36 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         return isEmpty() ? null : get(0);
     }
     
-    public Object getId() {
+    // TODO: remove
+    private Object getId() {
         return attr(ID);
     }
 
-    public Object getName() {
+    // TODO: remove
+    private Object getName() {
         return attr(NAME);
     }
     
-    public EObjectProxyCollection<T> setName(String name) {
+    // TODO: remove
+    private EObjectProxyCollection<T> setName(String name) {
         return attr(NAME, name);
     }
     
-    public Object getDocumentation() {
+    // TODO: remove
+    private Object getDocumentation() {
         return attr(DOCUMENTATION);
     }
     
-    public EObjectProxyCollection<T> setDocumentation(String documentation) {
+    // TODO: remove
+    private EObjectProxyCollection<T> setDocumentation(String documentation) {
         return attr(DOCUMENTATION, documentation);
     }
     
     /**
      * @return class type of members
+     * TODO: remove
      */
-    public List<String> getType() {
+    private List<String> getType() {
         List<String> list = new ArrayList<>();
         
         for(EObjectProxy object : this) {
@@ -78,8 +84,9 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param methodName
      * @param args
      * @return
+     * TODO: remove
      */
-    public Object invoke(String methodName, Object... args) {
+    protected Object invoke(String methodName, Object... args) {
         for(EObjectProxy object : this) {
             object.invoke(methodName, args);
         }
@@ -147,17 +154,10 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return children as collection. Default is an empty list
      */
     public EObjectProxyCollection<? extends EObjectProxy> children() {
-        return children(null);
-    }
-    
-    /**
-     * @return children with selector as collection. Default is an empty list
-     */
-    public EObjectProxyCollection<? extends EObjectProxy> children(String selector) {
         EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
         
         for(EObjectProxy object : this) {
-            for(EObjectProxy child : selector == null ? object.children() : object.children(selector)) {
+            for(EObjectProxy child : object.children()) {
                 if(!list.contains(child)) {
                     list.add(child);
                 }
@@ -165,6 +165,13 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         }
         
         return list;
+    }
+    
+    /**
+     * @return children with selector as collection. Default is an empty list
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> children(String selector) {
+        return children().filter(selector);
     }
     
     /**
@@ -181,6 +188,11 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         
         return list;
     }
+    
+    public EObjectProxyCollection<? extends EObjectProxy> parent(String selector) {
+    	return parent().filter(selector);
+    }
+    
     
     /**
      * Return the list of properties' key for the first object in the collection

@@ -182,8 +182,9 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param methodName
      * @param args
      * @return
+     * TODO: remove
      */
-    public Object invoke(String methodName, Object... args) {
+    protected Object invoke(String methodName, Object... args) {
         switch(methodName) {
             case "delete": //$NON-NLS-1$
                 delete();
@@ -198,17 +199,10 @@ public abstract class EObjectProxy implements IModelConstants {
     
     /**
      * @return the descendants of each object in the set of matched objects
+     * TODO: Should be marked as protected but this might block jArchi() and $() 
      */
     public EObjectProxyCollection<? extends EObjectProxy> find() {
-        return find(""); //$NON-NLS-1$
-    }
-    
-    /**
-     * @param selector
-     * @return the descendants of each object in the set of matched objects
-     */
-    public EObjectProxyCollection<? extends EObjectProxy> find(String selector) {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
         
         if(getEObject() == null) {
             return list;
@@ -220,9 +214,22 @@ public abstract class EObjectProxy implements IModelConstants {
             list.add(EObjectProxy.get(eObject));
         }
         
-        return list.filter(selector);
+        return list;
     }
     
+    /**
+     * @param selector
+     * @return the descendants of each object in the set of matched objects
+     */
+    public EObjectProxyCollection<? extends EObjectProxy> find(String selector) {
+        return find().filter(selector);
+    }
+    
+    /**
+     * TODO: See if really needed
+     * @param eObject
+     * @return
+     */
     public EObjectProxyCollection<? extends EObjectProxy> find(EObject eObject) {
     	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
     	
@@ -235,6 +242,11 @@ public abstract class EObjectProxy implements IModelConstants {
     	return list;
     }
     
+    /**
+     * TODO: See if really needed
+     * @param object
+     * @return
+     */
     public EObjectProxyCollection<? extends EObjectProxy> find(EObjectProxy object) {
     	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
     	
@@ -250,34 +262,22 @@ public abstract class EObjectProxy implements IModelConstants {
     /**
      * @return children as collection. Default is an empty list
      */
-    public EObjectProxyCollection<? extends EObjectProxy> children() {
+    protected EObjectProxyCollection<? extends EObjectProxy> children() {
         return new EObjectProxyCollection<EObjectProxy>();
     }
     
     /**
      * @return children with selector as collection.
+     * TODO: remove
      */
-    public EObjectProxyCollection<? extends EObjectProxy> children(String selector) {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
-        
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
-        if(filter == null) {
-            return list;
-        }
-        
-        for(EObjectProxy object : children()) {
-            if(filter.accept(object.getEObject())) {
-                list.add(object);
-            }
-        }
-        
-        return list;
+    private EObjectProxyCollection<? extends EObjectProxy> children(String selector) {
+        return children().filter(selector);
     }
     
     /**
      * @return parent of this object. Default is the eContainer
      */
-    public EObjectProxy parent() {
+    protected EObjectProxy parent() {
         return getEObject() == null ? null : EObjectProxy.get(getEObject().eContainer());
 	}
 
@@ -348,7 +348,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param key
      * @param value
      */
-    public EObjectProxy addProperty(String key, String value) {
+    private EObjectProxy addProperty(String key, String value) {
         checkModelAccess();
         
         if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
@@ -368,7 +368,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param key
      * @param value
      */
-    public EObjectProxy addOrUpdateProperty(String key, String value) {
+    private EObjectProxy addOrUpdateProperty(String key, String value) {
         checkModelAccess();
         
         if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
@@ -395,8 +395,9 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param key
      * @param value
      * @return this
+     * TODO: remove
      */
-    public EObjectProxy updateProperty(String key, String value) {
+    private EObjectProxy updateProperty(String key, String value) {
         checkModelAccess();
         
         if(getEObject() instanceof IProperties && key != null && value != null) {
@@ -413,7 +414,7 @@ public abstract class EObjectProxy implements IModelConstants {
     /**
      * @return an array of strings containing the list of properties keys. A key appears only once (duplicates are removed)
      */
-    public Set<String> getPropertyKey() {
+    private Set<String> getPropertyKey() {
         Set<String> list = new LinkedHashSet<String>();
         
         if(getReferencedConcept() instanceof IProperties) {
@@ -429,7 +430,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param key
      * @return a list containing the value of property named "key"
      */
-    public List<String> getPropertyValue(String key) {
+    private List<String> getPropertyValue(String key) {
         List<String> list = new ArrayList<String>();
         
         if(getReferencedConcept() instanceof IProperties) {
@@ -446,7 +447,7 @@ public abstract class EObjectProxy implements IModelConstants {
     /**
      * @return All Property pairs
      */
-    public List<Property> getProperties() {
+    protected List<Property> getProperties() {
         List<Property> list = new ArrayList<Property>();
         
         if(getReferencedConcept() instanceof IProperties) {
@@ -462,7 +463,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * Replace the properties list 
      * @param properties
      */
-    public void setProperties(List<Property> properties) {
+    protected void setProperties(List<Property> properties) {
         if(getReferencedConcept() instanceof IProperties) {
             // clear
             ((IProperties)getReferencedConcept()).getProperties().clear();
@@ -510,7 +511,7 @@ public abstract class EObjectProxy implements IModelConstants {
         return this;
     }
 
-    public Object attr(String attribute) {
+    protected Object attr(String attribute) {
         switch(attribute) {
             case TYPE:
                 return getType();
@@ -532,7 +533,7 @@ public abstract class EObjectProxy implements IModelConstants {
         }
     }
     
-    public EObjectProxy attr(String attribute, Object value) {
+    protected EObjectProxy attr(String attribute, Object value) {
         checkModelAccess();
         
         switch(attribute) {
