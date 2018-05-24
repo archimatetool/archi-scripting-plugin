@@ -6,10 +6,9 @@
 package com.archimatetool.script.views.file;
 
 import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.InvalidPathException;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
@@ -91,8 +90,10 @@ public class NewFolderDialog {
             }
 
             // This will ensure non-legal filename characters are disallowed
-            IStatus result = ResourcesPlugin.getWorkspace().validateName(newText, IResource.FOLDER);
-            if(!result.isOK())  {
+            try {
+                FileSystems.getDefault().getPath(newText);
+            }
+            catch(InvalidPathException ex) {
                 return Messages.NewFolderDialog_4;
             }
 

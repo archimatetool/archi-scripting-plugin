@@ -11,7 +11,6 @@ Require-Bundle: org.eclipse.core.runtime,
  com.archimatetool.editor,
  com.archimatetool.commandline,
  com.archimatetool.help,
- org.eclipse.core.resources,
  com.archimatetool.editor.browser,
  com.archimatetool.canvas
 Bundle-ActivationPolicy: lazy

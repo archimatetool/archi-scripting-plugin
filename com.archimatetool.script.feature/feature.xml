@@ -43,30 +43,13 @@ OTHER DEALINGS IN THE SOFTWARE.
       <import plugin="com.archimatetool.editor" version="4.0.0" match="greaterOrEqual"/>
       <import plugin="com.archimatetool.help"/>
       <import plugin="com.archimatetool.editor.browser"/>
-      <import plugin="org.eclipse.core.expressions" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.core.filesystem" version="1.3.0" match="compatible"/>
-      <import plugin="org.eclipse.core.runtime" version="3.12.0" match="compatible"/>
-      <import plugin="org.eclipse.equinox.common" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.equinox.registry" version="3.2.0" match="compatible"/>
-      <import plugin="org.eclipse.osgi" version="3.2.0" match="compatible"/>
+      <import plugin="com.archimatetool.commandline"/>
+      <import plugin="com.archimatetool.canvas"/>
+      <import plugin="com.archimatetool.reports"/>
    </requires>
 
    <plugin
          id="com.archimatetool.script"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.resources"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.core.filesystem"
          download-size="0"
          install-size="0"
          version="0.0.0"
