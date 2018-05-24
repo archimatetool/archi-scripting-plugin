@@ -37,15 +37,14 @@ OTHER DEALINGS IN THE SOFTWARE.
    </license>
 
    <requires>
-      <import plugin="org.eclipse.core.runtime" version="3.6.0" match="compatible"/>
-      <import plugin="org.eclipse.ui" version="3.6.0" match="compatible"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.help.ui"/>
-      <import plugin="com.archimatetool.editor" version="4.0.0" match="greaterOrEqual"/>
+      <import plugin="com.archimatetool.editor"/>
+      <import plugin="com.archimatetool.commandline"/>
       <import plugin="com.archimatetool.help"/>
       <import plugin="com.archimatetool.editor.browser"/>
-      <import plugin="com.archimatetool.commandline"/>
       <import plugin="com.archimatetool.canvas"/>
-      <import plugin="com.archimatetool.reports"/>
    </requires>
 
    <plugin
