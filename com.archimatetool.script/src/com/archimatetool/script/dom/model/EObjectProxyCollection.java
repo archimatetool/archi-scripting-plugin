@@ -8,6 +8,7 @@ package com.archimatetool.script.dom.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -25,7 +26,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         super();
     }
     
-    public T val() {
+    public T first() {
         return isEmpty() ? null : get(0);
     }
     
@@ -199,7 +200,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return
      */
     public Set<String> prop() {
-    	return isEmpty() ? null : val().prop();
+    	return isEmpty() ? null : first().prop();
     }
     
     /**
@@ -209,7 +210,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return
      */
     public String prop(String propKey) {
-    	return isEmpty() ? null : val().prop(propKey);
+    	return isEmpty() ? null : first().prop(propKey);
     }
     
     /**
@@ -222,7 +223,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return
      */
     public Object prop(String propKey, boolean allowDuplicate) {
-    	return isEmpty() ? null : val().prop(propKey, allowDuplicate);
+    	return isEmpty() ? null : first().prop(propKey, allowDuplicate);
     }
     
     /**
@@ -283,7 +284,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     }
 
     public Object attr(String attribute) {
-    	return isEmpty() ? null : val().attr(attribute);
+    	return isEmpty() ? null : first().attr(attribute);
     }
 
     public EObjectProxyCollection<T> attr(String attribute, Object value) {
@@ -294,4 +295,8 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         return this;
     }
 
+    public EObjectProxyCollection<T> each(Consumer<? super T> action) {
+    	this.forEach(action);
+    	return this;
+    }
 }
