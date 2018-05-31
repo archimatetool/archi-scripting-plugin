@@ -45,45 +45,6 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     	   return !this.filter(selector).isEmpty();
     }
     
-    // TODO: remove
-    private Object getId() {
-        return attr(ID);
-    }
-
-    // TODO: remove
-    private Object getName() {
-        return attr(NAME);
-    }
-    
-    // TODO: remove
-    private EObjectProxyCollection<? extends EObjectProxy> setName(String name) {
-        return attr(NAME, name);
-    }
-    
-    // TODO: remove
-    private Object getDocumentation() {
-        return attr(DOCUMENTATION);
-    }
-    
-    // TODO: remove
-    private EObjectProxyCollection<? extends EObjectProxy> setDocumentation(String documentation) {
-        return attr(DOCUMENTATION, documentation);
-    }
-    
-    /**
-     * @return class type of members
-     * TODO: remove
-     */
-    private List<String> getType() {
-        List<String> list = new ArrayList<>();
-        
-        for(EObjectProxy object : this) {
-            list.add(object.getType());
-        }
-        
-        return list;
-    }
-    
     /**
      * Delete all in collection
      */
