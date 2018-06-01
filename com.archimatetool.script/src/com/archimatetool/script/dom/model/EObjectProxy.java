@@ -21,7 +21,6 @@ import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
-import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDocumentable;
@@ -31,12 +30,12 @@ import com.archimatetool.model.INameable;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.script.ArchiScriptException;
-import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
 /**
  * Abstract EObject wrapper proxy
  * 
  * @author Phillip Beauvoir
+ * @author jbsarrodie
  */
 public abstract class EObjectProxy implements IModelConstants {
     
@@ -45,7 +44,7 @@ public abstract class EObjectProxy implements IModelConstants {
     /**
      * Factory method for correct type of EObjectProxy
      * @param eObject
-     * @return EObjectProxy type
+     * @return EObjectProxy type or null if not found
      */
     static EObjectProxy get(EObject eObject) {
         if(eObject instanceof IArchimateModel) {
@@ -91,11 +90,11 @@ public abstract class EObjectProxy implements IModelConstants {
         return fEObject;
     }
     
-    private EObject getReferencedConcept() {
-        if(getEObject() instanceof IDiagramModelArchimateComponent) {
-            return ((IDiagramModelArchimateComponent)getEObject()).getArchimateConcept();
-        }
-        
+    /**
+     * @return The (possibly) referenced eObject underlying this eObject
+     * sub-classes can over-ride and return the underlying eObject
+     */
+    protected EObject getReferencedConcept() {
         return getEObject();
     }
     
@@ -171,7 +170,8 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     /**
-     * Delete this
+     * Delete this object.
+     * Sub-classes to implement this
      */
     public void delete() {
         throw new ArchiScriptException(NLS.bind(Messages.EObjectProxy_0, this));
@@ -182,7 +182,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param methodName
      * @param args
      * @return
-     * TODO: remove
+     * TODO: remove - PHIL: Maybe! This might be handy?
      */
     protected Object invoke(String methodName, Object... args) {
         switch(methodName) {
@@ -200,18 +200,20 @@ public abstract class EObjectProxy implements IModelConstants {
     /**
      * @return the descendants of each object in the set of matched objects
      * TODO: Should be marked as protected but this might block jArchi() and $() 
+     * PHIL: This *will* break jArchi() and $() !!!!
      */
     public EObjectProxyCollection<? extends EObjectProxy> find() {
     	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
         
-        if(getEObject() == null) {
-            return list;
-        }
-        
-        // Iterate over all model contents and filter objects into the list
-        for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
-            EObject eObject = iter.next();
-            list.add(EObjectProxy.get(eObject));
+        if(getEObject() != null) {
+            // Iterate over all model contents and put all objects into the list
+            for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
+                EObject eObject = iter.next();
+                EObjectProxy proxy = EObjectProxy.get(eObject);
+                if(proxy != null) {
+                    list.add(proxy);
+                }
+            }
         }
         
         return list;
@@ -219,7 +221,7 @@ public abstract class EObjectProxy implements IModelConstants {
     
     /**
      * @param selector
-     * @return the descendants of each object in the set of matched objects
+     * @return the set of matched objects
      */
     public EObjectProxyCollection<? extends EObjectProxy> find(String selector) {
         return find().filter(selector);
@@ -233,11 +235,10 @@ public abstract class EObjectProxy implements IModelConstants {
     public EObjectProxyCollection<? extends EObjectProxy> find(EObject eObject) {
     	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
     	
-    	if(eObject == null) {
-    		return list;
+    	EObjectProxy proxy = EObjectProxy.get(eObject);
+    	if(proxy != null) {
+            list.add(proxy);
     	}
-    	
-    	list.add(get(eObject));
     	
     	return list;
     }
@@ -250,11 +251,9 @@ public abstract class EObjectProxy implements IModelConstants {
     public EObjectProxyCollection<? extends EObjectProxy> find(EObjectProxy object) {
     	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
     	
-    	if(object == null) {
-    		return list;
+    	if(object != null) {
+    	    list.add(object);
     	}
-    	
-    	list.add(object);
     	
     	return list;
     }
@@ -276,12 +275,13 @@ public abstract class EObjectProxy implements IModelConstants {
     
     /**
      * @return parent of this object. Default is the eContainer
+     * TODO: PHIL: Why protected?
      */
     protected EObjectProxy parent() {
         return getEObject() == null ? null : EObjectProxy.get(getEObject().eContainer());
 	}
 
-	/*
+	/**
      * Return the list of properties' key
      * @return
      */
@@ -296,7 +296,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @return
      */
     public String prop(String propKey) {
-    	return (String) prop(propKey, false);
+    	return (String)prop(propKey, false);
     }
     
     /**
@@ -311,12 +311,15 @@ public abstract class EObjectProxy implements IModelConstants {
     public Object prop(String propKey, boolean allowDuplicate) {
     	List<String> propValues = getPropertyValue(propKey);
     	
-    	if(propValues.isEmpty())
-    		return null;
-    	else if(allowDuplicate)
+    	if(propValues.isEmpty()) {
+            return null;
+    	}
+    	else if(allowDuplicate) {
     		return propValues;
-    	else
+    	}
+    	else {
     		return propValues.get(0);
+    	}
     }
     
     /**
@@ -400,8 +403,8 @@ public abstract class EObjectProxy implements IModelConstants {
     private EObjectProxy updateProperty(String key, String value) {
         checkModelAccess();
         
-        if(getEObject() instanceof IProperties && key != null && value != null) {
-            for(IProperty prop : ((IProperties)getEObject()).getProperties()) {
+        if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
+            for(IProperty prop : ((IProperties)getReferencedConcept()).getProperties()) {
                 if(prop.getKey().equals(key)) {
                     prop.setValue(value);
                 }

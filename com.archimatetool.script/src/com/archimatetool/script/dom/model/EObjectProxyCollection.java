@@ -7,7 +7,6 @@ package com.archimatetool.script.dom.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -23,11 +22,6 @@ import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
  */
 public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T> implements IModelConstants {
     
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -7614536950474870868L;
-
 	EObjectProxyCollection() {
         super();
     }
@@ -35,6 +29,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     public T first() {
         return isEmpty() ? null : get(0);
     }
+    
     /**
      * Check the current matched set of object against a selector and
      * return true if at least one of these objects matches the given arguments.
@@ -42,7 +37,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return
      */
     public boolean is(String selector) {
-    	   return !this.filter(selector).isEmpty();
+        return !filter(selector).isEmpty();
     }
     
     /**
@@ -61,9 +56,9 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param methodName
      * @param args
      * @return
-     * TODO: remove
+     * TODO: remove PHIL: Maybe?
      */
-    protected Object invoke(String methodName, Object... args) {
+    protected EObjectProxyCollection<T> invoke(String methodName, Object... args) {
         for(EObjectProxy object : this) {
             object.invoke(methodName, args);
         }
@@ -72,7 +67,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     }
 
     /**
-     * @return the descendants of each object in the set of matched objects
+     * @return the set of matched objects
      */
     public EObjectProxyCollection<? extends EObjectProxy> find() {
     	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
@@ -90,14 +85,14 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     
     /**
      * @param selector
-     * @return the descendants of each object in the set of matched objects
+     * @return the set of matched objects
      */
     public EObjectProxyCollection<? extends EObjectProxy> find(String selector) {
         return find().filter(selector);
     }
     
     /**
-     * Filter the collection and keep only objects that match selector
+     * Filter the collection and keep only objects that match the selector
      * @param selector
      * @return a filtered collection
      */
@@ -160,7 +155,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return
      */
     public EObjectProxyCollection<? extends EObjectProxy> not(EObjectProxyCollection<? extends EObjectProxy> collection) {
-    	this.removeAll(collection);
+    	removeAll(collection);
     	return this;
     }
     
@@ -316,7 +311,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return
      */
     public EObjectProxyCollection<? extends EObjectProxy> each(Consumer<? super T> action) {
-    	this.forEach(action);
+    	forEach(action);
     	return this;
     }
     
@@ -326,7 +321,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return
      */
     public EObjectProxyCollection<? extends EObjectProxy> add(String selector) {
-    	return this.add(this.first().getModel().find(selector));
+    	return add(first().getModel().find(selector));
     }
     
     /**
@@ -335,7 +330,8 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return
      */
 	public EObjectProxyCollection<? extends EObjectProxy> add(EObjectProxyCollection<? extends EObjectProxy> collection) {
-		EObjectProxyCollection<? extends EObjectProxy> list = this.clone();
+		EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
+		list.addAll(this);
 		list.addAll(collection);
 		return list;
     }
@@ -343,13 +339,5 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
 	@SuppressWarnings("unchecked")
 	private void addAll(EObjectProxyCollection<? extends EObjectProxy> collection) {
 		super.addAll((Collection<? extends T>) collection);
-	}
-
-	/**
-	 * Create a copy of the set of matched objects.
-	 * Objects themselves are not copied, only the collection is.
-	 */
-	public EObjectProxyCollection<? extends EObjectProxy> clone() {
-		return (EObjectProxyCollection<? extends EObjectProxy>) super.clone();
 	}
 }

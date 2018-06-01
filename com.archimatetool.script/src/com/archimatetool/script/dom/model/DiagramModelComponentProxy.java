@@ -5,6 +5,8 @@
  */
 package com.archimatetool.script.dom.model;
 
+import org.eclipse.emf.ecore.EObject;
+
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelComponent;
@@ -60,6 +62,15 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
         return getEObject() instanceof IDiagramModelArchimateComponent;
     }
     
+    @Override
+    protected EObject getReferencedConcept() {
+        if(isArchimateConcept()) {
+            return ((IDiagramModelArchimateComponent)getEObject()).getArchimateConcept();
+        }
+        
+        return super.getReferencedConcept();
+    }
+
     /**
      * @return a list of source connections (if any)
      */
