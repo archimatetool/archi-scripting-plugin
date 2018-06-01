@@ -29,12 +29,12 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
     }
     
     /**
-     * Replace this element with a new element of class type, preserving all connecting relationships and diagram components
+     * Set the type of this element with a new element of class type, preserving all connecting relationships and diagram components
      * @param type the Archimate type to replace with
      * @return
      */
     @Override
-    public ArchimateElementProxy replace(String type) {
+    public ArchimateElementProxy setType(String type) {
         ArchimateElementProxy newElement = getModel().addElement(type, getName());
         
         if(newElement != null) {

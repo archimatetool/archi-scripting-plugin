@@ -37,9 +37,9 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
     @Override
     public Object invoke(String methodName, Object... args) {
         switch(methodName) {
-            case "replace": //$NON-NLS-1$
+            case "setType": //$NON-NLS-1$
                 if(args.length == 1 && args[0] instanceof String) {
-                    return replace((String)args[0]);
+                    return setType((String)args[0]);
                 }
                 break;
 
@@ -63,11 +63,11 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
     }
     
     /**
-     * Replace this concept with a new concept of class type, preserving all connecting relationships and diagram components
+     * Set the type of this concept with a new concept of class type, preserving all connecting relationships and diagram components
      * @param type the Archimate type to replace with
      * @return
      */
-    public abstract ArchimateConceptProxy replace(String type);
+    public abstract ArchimateConceptProxy setType(String type);
     
     public EObjectProxyCollection<ArchimateRelationshipProxy> getSourceRelationships() {
         EObjectProxyCollection<ArchimateRelationshipProxy> list = new EObjectProxyCollection<ArchimateRelationshipProxy>();
