@@ -32,8 +32,8 @@ public class FolderProxy extends EObjectProxy {
     }
     
     @Override
-    public EObjectProxyCollection<EObjectProxy> children() {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    public EObjectProxyCollection children() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IFolder folder : getEObject().getFolders()) {
             list.add(EObjectProxy.get(folder));

@@ -69,24 +69,24 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
      */
     public abstract ArchimateConceptProxy setType(String type);
     
-    public EObjectProxyCollection<ArchimateRelationshipProxy> getSourceRelationships() {
-        EObjectProxyCollection<ArchimateRelationshipProxy> list = new EObjectProxyCollection<ArchimateRelationshipProxy>();
+    public EObjectProxyCollection getSourceRelationships() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getSourceRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
         }
         return list;
     }
     
-    public EObjectProxyCollection<ArchimateRelationshipProxy> getTargetRelationships() {
-        EObjectProxyCollection<ArchimateRelationshipProxy> list = new EObjectProxyCollection<ArchimateRelationshipProxy>();
+    public EObjectProxyCollection getTargetRelationships() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getTargetRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
         }
         return list;
     }
     
-    public EObjectProxyCollection<DiagramModelComponentProxy> getDiagramComponentInstances() {
-        EObjectProxyCollection<DiagramModelComponentProxy> list = new EObjectProxyCollection<DiagramModelComponentProxy>();
+    public EObjectProxyCollection getDiagramComponentInstances() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
             for(IDiagramModelArchimateComponent dmc : DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(dm, getEObject())) {

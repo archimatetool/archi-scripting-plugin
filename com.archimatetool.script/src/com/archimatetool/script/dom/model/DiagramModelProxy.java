@@ -54,8 +54,8 @@ public class DiagramModelProxy extends EObjectProxy {
      * @return child node diagram objects of this diagram model
      */
     @Override
-    public EObjectProxyCollection<DiagramModelComponentProxy> children() {
-        EObjectProxyCollection<DiagramModelComponentProxy> list = new EObjectProxyCollection<DiagramModelComponentProxy>();
+    public EObjectProxyCollection children() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() == null) {
             return list;
@@ -77,20 +77,20 @@ public class DiagramModelProxy extends EObjectProxy {
         return list;
     }
     
-    public EObjectProxyCollection<EObjectProxy> getConcepts() {
+    public EObjectProxyCollection getConcepts() {
         return getConcepts(IArchimateConcept.class);
     }
     
-    public EObjectProxyCollection<EObjectProxy> getElements() {
+    public EObjectProxyCollection getElements() {
         return getConcepts(IArchimateElement.class);
     }
     
-    public EObjectProxyCollection<EObjectProxy> getRelationships() {
+    public EObjectProxyCollection getRelationships() {
         return getConcepts(IArchimateRelationship.class);
     }
     
-    private EObjectProxyCollection<EObjectProxy> getConcepts(Class<?> type) {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    private EObjectProxyCollection getConcepts(Class<?> type) {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() == null) {
             return list;

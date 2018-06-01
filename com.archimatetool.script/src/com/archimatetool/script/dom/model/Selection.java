@@ -25,7 +25,7 @@ import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 public class Selection implements IArchiScriptDOMFactory {
 
     public Object getDOMroot() {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(PlatformUI.isWorkbenchRunning()) {
             // For now just work with selections in the Model Tree

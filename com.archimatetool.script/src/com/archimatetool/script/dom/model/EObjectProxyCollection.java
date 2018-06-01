@@ -6,9 +6,9 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -20,13 +20,13 @@ import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
  * 
  * @author Phillip Beauvoir
  */
-public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T> implements IModelConstants {
+public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements IModelConstants {
     
 	EObjectProxyCollection() {
         super();
     }
     
-    public T first() {
+    public EObjectProxy first() {
         return isEmpty() ? null : get(0);
     }
     
@@ -43,7 +43,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     /**
      * Delete all in collection
      */
-    public EObjectProxyCollection<? extends EObjectProxy> delete() {
+    public EObjectProxyCollection delete() {
         for(EObjectProxy object : this) {
             object.delete();
         }
@@ -58,7 +58,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @return
      * TODO: remove PHIL: Maybe?
      */
-    protected EObjectProxyCollection<T> invoke(String methodName, Object... args) {
+    protected EObjectProxyCollection invoke(String methodName, Object... args) {
         for(EObjectProxy object : this) {
             object.invoke(methodName, args);
         }
@@ -69,8 +69,8 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     /**
      * @return the set of matched objects
      */
-    public EObjectProxyCollection<? extends EObjectProxy> find() {
-    	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
+    public EObjectProxyCollection find() {
+    	EObjectProxyCollection list = new EObjectProxyCollection();
     	
     	for(EObjectProxy object : this) {
             for(EObjectProxy child : object.find()) {
@@ -87,7 +87,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param selector
      * @return the set of matched objects
      */
-    public EObjectProxyCollection<? extends EObjectProxy> find(String selector) {
+    public EObjectProxyCollection find(String selector) {
         return find().filter(selector);
     }
     
@@ -96,8 +96,8 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param selector
      * @return a filtered collection
      */
-    public EObjectProxyCollection<? extends EObjectProxy> filter(String selector) {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    public EObjectProxyCollection filter(String selector) {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
         if(filter == null) {
@@ -123,12 +123,46 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     }
     
     /**
+     * Filter the collection and keep only objects that pass the function's test.
+     * @param predicate
+     * @return
+     */
+    public EObjectProxyCollection filter(Predicate<EObjectProxy> predicate) {
+    	EObjectProxyCollection list = new EObjectProxyCollection();
+    	if(predicate == null) {
+    		return list;
+    	}
+    	
+    	for(EObjectProxy object : this) {
+    		if(predicate.test(object)) {
+    			list.add(object);
+    		}
+    	}
+    	
+    	return list;
+    }
+    
+    /**
+     * Reduce the set of matched elements to those that have a descendant that matches the selector.
+     * @param selector
+     * @return
+     */
+    public EObjectProxyCollection has(String selector) {
+    	if(selector == null) {
+    		return this;
+    	}
+    	
+    	return filter((EObjectProxy object) -> object.find().is(selector));
+    }
+    
+    
+    /**
      * Remove elements from the set of matched elements.
      * @param selector
      * @return
      */
-    public EObjectProxyCollection<? extends EObjectProxy> not(String selector) {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    public EObjectProxyCollection not(String selector) {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
         if(filter == null) {
@@ -154,7 +188,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param collection
      * @return
      */
-    public EObjectProxyCollection<? extends EObjectProxy> not(EObjectProxyCollection<? extends EObjectProxy> collection) {
+    public EObjectProxyCollection not(EObjectProxyCollection collection) {
     	removeAll(collection);
     	return this;
     }
@@ -163,8 +197,8 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     /**
      * @return children as collection. Default is an empty list
      */
-    public EObjectProxyCollection<? extends EObjectProxy> children() {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
+    public EObjectProxyCollection children() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(EObjectProxy object : this) {
             for(EObjectProxy child : object.children()) {
@@ -180,15 +214,15 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     /**
      * @return children with selector as collection. Default is an empty list
      */
-    public EObjectProxyCollection<? extends EObjectProxy> children(String selector) {
+    public EObjectProxyCollection children(String selector) {
         return children().filter(selector);
     }
     
     /**
      * @return parent
      */
-    public EObjectProxyCollection<? extends EObjectProxy> parent() {
-        EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
+    public EObjectProxyCollection parent() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(EObjectProxy object : this) {
             if(object.parent() != null) {
@@ -199,10 +233,22 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
         return list;
     }
     
-    public EObjectProxyCollection<? extends EObjectProxy> parent(String selector) {
+    public EObjectProxyCollection parent(String selector) {
     	return parent().filter(selector);
     }
     
+    public EObjectProxyCollection parents() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
+        
+        for(EObjectProxy object : this) {
+        	EObjectProxyCollection parents = object.parents();
+            if(parents != null && !parents.isEmpty()) {
+                list = list.add(parents);
+            }
+        }
+        
+        return list;
+    }
     
     /**
      * Return the list of properties' key for the first object in the collection
@@ -242,7 +288,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param propValue
      * @return
      */
-    public EObjectProxyCollection<? extends EObjectProxy> prop(String propKey, String propValue) {
+    public EObjectProxyCollection prop(String propKey, String propValue) {
 	    for(EObjectProxy object : this) {
 	        object.prop(propKey, propValue);
 	    }
@@ -259,7 +305,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param allowDuplicate
      * @return
      */
-    public EObjectProxyCollection<? extends EObjectProxy> prop(String propKey, String propValue, boolean allowDuplicate) {
+    public EObjectProxyCollection prop(String propKey, String propValue, boolean allowDuplicate) {
 	    for(EObjectProxy object : this) {
 	        object.prop(propKey, propValue, allowDuplicate);
 	    }
@@ -271,7 +317,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * Remove all instances of property "key" on each object of the collection. Returns the updated collection
      * @param key
      */
-    public EObjectProxyCollection<? extends EObjectProxy> removeProp(String key) {
+    public EObjectProxyCollection removeProp(String key) {
         for(EObjectProxy object : this) {
             object.removeProp(key);
         }
@@ -284,7 +330,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param key
      * @param value
      */
-    public EObjectProxyCollection<? extends EObjectProxy> removeProp(String key, String value) {
+    public EObjectProxyCollection removeProp(String key, String value) {
         for(EObjectProxy object : this) {
             object.removeProp(key, value);
         }
@@ -296,7 +342,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
     	return isEmpty() ? null : first().attr(attribute);
     }
 
-    public EObjectProxyCollection<? extends EObjectProxy> attr(String attribute, Object value) {
+    public EObjectProxyCollection attr(String attribute, Object value) {
         for(EObjectProxy object : this) {
             object.attr(attribute, value);
         }
@@ -310,7 +356,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param action
      * @return
      */
-    public EObjectProxyCollection<? extends EObjectProxy> each(Consumer<? super T> action) {
+    public EObjectProxyCollection each(Consumer<EObjectProxy> action) {
     	forEach(action);
     	return this;
     }
@@ -320,7 +366,7 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param selector
      * @return
      */
-    public EObjectProxyCollection<? extends EObjectProxy> add(String selector) {
+    public EObjectProxyCollection add(String selector) {
     	return add(first().getModel().find(selector));
     }
     
@@ -329,15 +375,18 @@ public class EObjectProxyCollection<T extends EObjectProxy> extends ArrayList<T>
      * @param collection
      * @return
      */
-	public EObjectProxyCollection<? extends EObjectProxy> add(EObjectProxyCollection<? extends EObjectProxy> collection) {
-		EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<>();
-		list.addAll(this);
-		list.addAll(collection);
-		return list;
+	public EObjectProxyCollection add(EObjectProxyCollection collection) {
+		if(collection == null) {
+			return this;
+		}
+		
+        // Iterate over the collection and filter objects into the list
+        for(EObjectProxy object : collection) {
+            if(!contains(object)) {
+                super.add(object);
+            }
+        }
+        
+        return this;
     }
-	
-	@SuppressWarnings("unchecked")
-	private void addAll(EObjectProxyCollection<? extends EObjectProxy> collection) {
-		super.addAll((Collection<? extends T>) collection);
-	}
 }

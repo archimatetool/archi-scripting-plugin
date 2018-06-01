@@ -74,8 +74,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     /**
      * @return a list of source connections (if any)
      */
-    public EObjectProxyCollection<DiagramModelComponentProxy> getSourceConnections() {
-        EObjectProxyCollection<DiagramModelComponentProxy> list = new EObjectProxyCollection<DiagramModelComponentProxy>();
+    public EObjectProxyCollection getSourceConnections() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() instanceof IConnectable) {
             for(IDiagramModelConnection dmc : ((IConnectable)getEObject()).getSourceConnections()) {
@@ -89,8 +89,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     /**
      * @return a list of target connections (if any)
      */
-    public EObjectProxyCollection<DiagramModelComponentProxy> getTargetConnections() {
-        EObjectProxyCollection<DiagramModelComponentProxy> list = new EObjectProxyCollection<DiagramModelComponentProxy>();
+    public EObjectProxyCollection getTargetConnections() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() instanceof IConnectable) {
             for(IDiagramModelConnection dmc : ((IConnectable)getEObject()).getTargetConnections()) {

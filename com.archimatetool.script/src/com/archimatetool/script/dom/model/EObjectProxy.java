@@ -29,6 +29,7 @@ import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
+import com.archimatetool.model.impl.ArchimateModel;
 import com.archimatetool.script.ArchiScriptException;
 
 /**
@@ -202,8 +203,8 @@ public abstract class EObjectProxy implements IModelConstants {
      * TODO: Should be marked as protected but this might block jArchi() and $() 
      * PHIL: This *will* break jArchi() and $() !!!!
      */
-    public EObjectProxyCollection<? extends EObjectProxy> find() {
-    	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    public EObjectProxyCollection find() {
+    	EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() != null) {
             // Iterate over all model contents and put all objects into the list
@@ -223,7 +224,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param selector
      * @return the set of matched objects
      */
-    public EObjectProxyCollection<? extends EObjectProxy> find(String selector) {
+    public EObjectProxyCollection find(String selector) {
         return find().filter(selector);
     }
     
@@ -232,8 +233,8 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param eObject
      * @return
      */
-    public EObjectProxyCollection<? extends EObjectProxy> find(EObject eObject) {
-    	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    public EObjectProxyCollection find(EObject eObject) {
+    	EObjectProxyCollection list = new EObjectProxyCollection();
     	
     	EObjectProxy proxy = EObjectProxy.get(eObject);
     	if(proxy != null) {
@@ -248,8 +249,8 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param object
      * @return
      */
-    public EObjectProxyCollection<? extends EObjectProxy> find(EObjectProxy object) {
-    	EObjectProxyCollection<EObjectProxy> list = new EObjectProxyCollection<EObjectProxy>();
+    public EObjectProxyCollection find(EObjectProxy object) {
+    	EObjectProxyCollection list = new EObjectProxyCollection();
     	
     	if(object != null) {
     	    list.add(object);
@@ -261,15 +262,15 @@ public abstract class EObjectProxy implements IModelConstants {
     /**
      * @return children as collection. Default is an empty list
      */
-    protected EObjectProxyCollection<? extends EObjectProxy> children() {
-        return new EObjectProxyCollection<EObjectProxy>();
+    protected EObjectProxyCollection children() {
+        return new EObjectProxyCollection();
     }
     
     /**
      * @return children with selector as collection.
      * TODO: remove
      */
-    private EObjectProxyCollection<? extends EObjectProxy> children(String selector) {
+    private EObjectProxyCollection children(String selector) {
         return children().filter(selector);
     }
     
@@ -280,6 +281,16 @@ public abstract class EObjectProxy implements IModelConstants {
     protected EObjectProxy parent() {
         return getEObject() == null ? null : EObjectProxy.get(getEObject().eContainer());
 	}
+    
+    protected EObjectProxyCollection parents() {
+    	if(parent() == null || parent().getEObject() instanceof ArchimateModel) {
+    		return null;
+    	} else {
+    		EObjectProxyCollection list = new EObjectProxyCollection();
+    		list.add(parent());
+    		return list.add(list.parents());
+    	}
+    }
 
 	/**
      * Return the list of properties' key
