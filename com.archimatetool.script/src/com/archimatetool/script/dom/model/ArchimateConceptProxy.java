@@ -90,7 +90,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
             for(IDiagramModelArchimateComponent dmc : DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(dm, getEObject())) {
-                list.add((DiagramModelComponentProxy)EObjectProxy.get(dmc));
+                list.add(EObjectProxy.get(dmc));
             }
         }
         

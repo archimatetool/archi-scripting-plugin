@@ -367,7 +367,13 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * @return
      */
     public EObjectProxyCollection add(String selector) {
-    	return add(first().getModel().find(selector));
+        EObjectProxy first = first();
+        
+        if(first != null && first.getModel() != null) {
+            return add(first.getModel().find(selector));
+        }
+        
+        return this;
     }
     
     /**
@@ -376,16 +382,14 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * @return
      */
 	public EObjectProxyCollection add(EObjectProxyCollection collection) {
-		if(collection == null) {
-			return this;
+		if(collection != null) {
+	        // Iterate over the collection and filter objects into the list
+	        for(EObjectProxy object : collection) {
+	            if(!contains(object)) {
+	                super.add(object);
+	            }
+	        }
 		}
-		
-        // Iterate over the collection and filter objects into the list
-        for(EObjectProxy object : collection) {
-            if(!contains(object)) {
-                super.add(object);
-            }
-        }
         
         return this;
     }
