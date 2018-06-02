@@ -393,4 +393,102 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         
         return this;
     }
+	
+	/**
+	 * Get the concepts that are the targets or the sources
+	 * of each relationship in the set of matched objects.
+	 * @return
+	 */
+	public EObjectProxyCollection ends() {
+		EObjectProxyCollection list = new EObjectProxyCollection();
+		
+		for(EObjectProxy object : this) {
+			EObjectProxyCollection ends = new EObjectProxyCollection();
+			if(object instanceof ArchimateRelationshipProxy) {
+				ends.add(((ArchimateRelationshipProxy) object).getSource());
+				ends.add(((ArchimateRelationshipProxy) object).getTarget());
+			}
+			if(object instanceof DiagramModelConnectionProxy) {
+				ends.add(((DiagramModelConnectionProxy) object).getSource());
+				ends.add(((DiagramModelConnectionProxy) object).getTarget());
+			}
+			list.add(ends);
+        }
+		
+		return list;
+	}
+	
+	/**
+	 * Get the concepts that are the sources of each
+	 * relationship in the set of matched objects.
+	 * @return
+	 */
+	public EObjectProxyCollection sourceEnds() {
+		EObjectProxyCollection list = new EObjectProxyCollection();
+		
+		for(EObjectProxy object : this) {
+			EObjectProxyCollection ends = new EObjectProxyCollection();
+			if(object instanceof ArchimateRelationshipProxy) {
+				ends.add(((ArchimateRelationshipProxy) object).getSource());
+			}
+			if(object instanceof DiagramModelConnectionProxy) {
+				ends.add(((DiagramModelConnectionProxy) object).getSource());
+			}
+			list.add(ends);
+        }
+		
+		return list;
+	}
+	
+	/**
+	 * Get the concepts that are the targets of each
+	 * relationship in the set of matched objects.
+	 * @return
+	 */
+	public EObjectProxyCollection targetEnds() {
+		EObjectProxyCollection list = new EObjectProxyCollection();
+		
+		for(EObjectProxy object : this) {
+			EObjectProxyCollection ends = new EObjectProxyCollection();
+			if(object instanceof ArchimateRelationshipProxy) {
+				ends.add(((ArchimateRelationshipProxy) object).getTarget());
+			}
+			if(object instanceof DiagramModelConnectionProxy) {
+				ends.add(((DiagramModelConnectionProxy) object).getTarget());
+			}
+			list.add(ends);
+        }
+		
+		return list;
+	}
+	
+	/**
+	 * Get the concepts that are the targets or the sources of each
+	 * relationship in the set of matched objects, filtered by a selector.
+	 * @param selector
+	 * @return
+	 */
+	public EObjectProxyCollection ends(String selector) {
+		return ends().filter(selector);
+	}
+	
+	/**
+	 * Get the concepts that are the sources of each relationship
+	 * in the set of matched objects, filtered by a selector.
+	 * @param selector
+	 * @return
+	 */
+	public EObjectProxyCollection sourceEnds(String selector) {
+		return sourceEnds().filter(selector);
+	}
+	
+	/**
+	 * Get the concepts that are the targets of each relationship
+	 * in the set of matched objects, filtered by a selector.
+	 * @param selector
+	 * @return
+	 */
+	public EObjectProxyCollection targetEnds(String selector) {
+		return targetEnds().filter(selector);
+	}
 }
