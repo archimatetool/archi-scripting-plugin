@@ -53,22 +53,25 @@ public class Console {
         }
     }
     
-    public void println(String text) {
-        print(text + "\n"); //$NON-NLS-1$
+    public void println(Object obj) {
+        print(obj + "\n"); //$NON-NLS-1$
     }
     
-    public void log(String text) {
-        println(text);
+    public void log(Object... objs) {
+        for(Object o : objs) {
+            print(o);
+        }
+        print("\n"); //$NON-NLS-1$
     }
 
-    public void print(String text) {
+    public void print(Object obj) {
         ConsoleView viewer = findConsoleViewer();
         if(viewer != null) {
             viewer.setTextColor(currentColor);
-            viewer.append(text);
+            viewer.append(obj.toString());
         }
         else {
-            System.out.print(text);
+            System.out.print(obj);
         }
     }
     
