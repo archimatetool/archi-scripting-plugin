@@ -58,7 +58,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
 
     private void fillItems(MenuManager menuManager, File[] files) {
         for(File file : files) {
-            if(file.isDirectory()) {
+            if(file.isDirectory() && file.listFiles().length != 0) {
                 MenuManager subMenu = new MenuManager(file.getName());
                 subMenu.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER));
                 menuManager.add(subMenu);
