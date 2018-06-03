@@ -6,6 +6,8 @@
 package com.archimatetool.script;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionItem;
@@ -57,6 +59,15 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
     }
 
     private void fillItems(MenuManager menuManager, File[] files) {
+        Arrays.sort(files, new Comparator<File>() {
+            public int compare(File f1, File f2) {
+                if(f1.isDirectory() && f2.isFile()) {
+                    return -1;
+                }
+                return f1.compareTo(f2);
+            }
+        });
+        
         for(File file : files) {
             if(file.isDirectory() && doShowFile(file)) {
                 MenuManager subMenu = new MenuManager(file.getName());
@@ -87,7 +98,8 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
             }
             return false;
         }
-        else return file.getName().toLowerCase().endsWith(ArchiScriptPlugin.SCRIPT_EXTENSION);
+        
+        return file.getName().toLowerCase().endsWith(ArchiScriptPlugin.SCRIPT_EXTENSION);
     }
     
     public void initialize(IServiceLocator serviceLocator) {
