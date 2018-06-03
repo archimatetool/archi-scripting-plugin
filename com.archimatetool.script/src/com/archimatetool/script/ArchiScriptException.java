@@ -5,6 +5,8 @@
  */
 package com.archimatetool.script;
 
+import com.archimatetool.script.dom.ui.Console;
+
 /**
  * Archi Script Exception
  * 
@@ -14,7 +16,11 @@ public class ArchiScriptException extends RuntimeException {
 
     public ArchiScriptException(String message) {
         super(message);
-        System.err.println(this);
+        
+        // Show in console
+        if(Console.isVisible()) {
+            System.err.println(this);
+        }
     }
 
     public ArchiScriptException() {

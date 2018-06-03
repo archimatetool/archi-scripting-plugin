@@ -24,6 +24,10 @@ public class Console {
     public Console() {
     }
     
+    public static boolean isVisible() {
+        return findConsoleViewer() != null;
+    }
+    
     /**
      * Ensure that the Console is visible
      */
@@ -98,7 +102,7 @@ public class Console {
         currentColor = null;
     }
     
-    private ConsoleView findConsoleViewer() {
+    private static ConsoleView findConsoleViewer() {
         if(PlatformUI.isWorkbenchRunning()) {
             return (ConsoleView)ViewManager.findViewPart(ConsoleView.ID);
         }
