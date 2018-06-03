@@ -202,9 +202,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         
         for(EObjectProxy object : this) {
             for(EObjectProxy child : object.children()) {
-                if(!list.contains(child)) {
-                    list.add(child);
-                }
+                list.addUnique(child);
             }
         }
         
@@ -243,7 +241,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         for(EObjectProxy object : this) {
         	EObjectProxyCollection parents = object.parents();
             if(parents != null && !parents.isEmpty()) {
-                list = list.add(parents);
+                list = list.addAll(parents);
             }
         }
         
@@ -370,7 +368,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         EObjectProxy first = first();
         
         if(first != null && first.getModel() != null) {
-            return add(first.getModel().find(selector));
+            return addAll(first.getModel().find(selector));
         }
         
         return this;
@@ -381,13 +379,11 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * @param collection
      * @return
      */
-	public EObjectProxyCollection add(EObjectProxyCollection collection) {
+	public EObjectProxyCollection addAll(EObjectProxyCollection collection) {
 		if(collection != null) {
 	        // Iterate over the collection and filter objects into the list
 	        for(EObjectProxy object : collection) {
-	            if(!contains(object)) {
-	                super.add(object);
-	            }
+	            addUnique(object);
 	        }
 		}
         
@@ -403,16 +399,14 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-			EObjectProxyCollection ends = new EObjectProxyCollection();
 			if(object instanceof ArchimateRelationshipProxy) {
-				ends.add(((ArchimateRelationshipProxy) object).getSource());
-				ends.add(((ArchimateRelationshipProxy) object).getTarget());
+			    list.addUnique(((ArchimateRelationshipProxy) object).getSource());
+			    list.addUnique(((ArchimateRelationshipProxy) object).getTarget());
 			}
 			if(object instanceof DiagramModelConnectionProxy) {
-				ends.add(((DiagramModelConnectionProxy) object).getSource());
-				ends.add(((DiagramModelConnectionProxy) object).getTarget());
+			    list.addUnique(((DiagramModelConnectionProxy) object).getSource());
+			    list.addUnique(((DiagramModelConnectionProxy) object).getTarget());
 			}
-			list.add(ends);
         }
 		
 		return list;
@@ -427,14 +421,12 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-			EObjectProxyCollection ends = new EObjectProxyCollection();
 			if(object instanceof ArchimateRelationshipProxy) {
-				ends.add(((ArchimateRelationshipProxy) object).getSource());
+			    list.addUnique(((ArchimateRelationshipProxy) object).getSource());
 			}
 			if(object instanceof DiagramModelConnectionProxy) {
-				ends.add(((DiagramModelConnectionProxy) object).getSource());
+			    list.addUnique(((DiagramModelConnectionProxy) object).getSource());
 			}
-			list.add(ends);
         }
 		
 		return list;
@@ -449,14 +441,12 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-			EObjectProxyCollection ends = new EObjectProxyCollection();
 			if(object instanceof ArchimateRelationshipProxy) {
-				ends.add(((ArchimateRelationshipProxy) object).getTarget());
+			    list.addUnique(((ArchimateRelationshipProxy) object).getTarget());
 			}
 			if(object instanceof DiagramModelConnectionProxy) {
-				ends.add(((DiagramModelConnectionProxy) object).getTarget());
+			    list.addUnique(((DiagramModelConnectionProxy) object).getTarget());
 			}
-			list.add(ends);
         }
 		
 		return list;
@@ -490,5 +480,13 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	 */
 	public EObjectProxyCollection targetEnds(String selector) {
 		return targetEnds().filter(selector);
+	}
+	
+	boolean addUnique(EObjectProxy object) {
+	    if(object != null && !contains(object)) {
+	        return add(object);
+	    }
+	    
+	    return false;
 	}
 }

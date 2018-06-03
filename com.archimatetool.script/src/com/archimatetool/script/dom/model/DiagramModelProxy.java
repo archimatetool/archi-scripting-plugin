@@ -103,9 +103,7 @@ public class DiagramModelProxy extends EObjectProxy {
                 IArchimateConcept concept = ((IDiagramModelArchimateComponent)eObject).getArchimateConcept();
                 if(type.isInstance(concept)) {
                     EObjectProxy proxy = EObjectProxy.get(concept);
-                    if(!list.contains(proxy)) {
-                        list.add(proxy);
-                    }
+                    list.addUnique(proxy);
                 }
             }
         }

@@ -288,7 +288,7 @@ public abstract class EObjectProxy implements IModelConstants {
     	} else {
     		EObjectProxyCollection list = new EObjectProxyCollection();
     		list.add(parent());
-    		return list.add(list.parents());
+    		return list.addAll(list.parents());
     	}
     }
 
