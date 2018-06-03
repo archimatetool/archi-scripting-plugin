@@ -399,14 +399,10 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-			if(object instanceof ArchimateRelationshipProxy) {
-			    list.addUnique(((ArchimateRelationshipProxy) object).getSource());
-			    list.addUnique(((ArchimateRelationshipProxy) object).getTarget());
-			}
-			if(object instanceof DiagramModelConnectionProxy) {
-			    list.addUnique(((DiagramModelConnectionProxy) object).getSource());
-			    list.addUnique(((DiagramModelConnectionProxy) object).getTarget());
-			}
+		    if(object instanceof ArchimateRelationshipProxy || object instanceof DiagramModelConnectionProxy) {
+		        list.addUnique((EObjectProxy)object.attr(SOURCE));
+                list.addUnique((EObjectProxy)object.attr(TARGET));
+		    }
         }
 		
 		return list;
@@ -421,12 +417,9 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-			if(object instanceof ArchimateRelationshipProxy) {
-			    list.addUnique(((ArchimateRelationshipProxy) object).getSource());
-			}
-			if(object instanceof DiagramModelConnectionProxy) {
-			    list.addUnique(((DiagramModelConnectionProxy) object).getSource());
-			}
+            if(object instanceof ArchimateRelationshipProxy || object instanceof DiagramModelConnectionProxy) {
+                list.addUnique((EObjectProxy)object.attr(SOURCE));
+            }
         }
 		
 		return list;
@@ -441,12 +434,9 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-			if(object instanceof ArchimateRelationshipProxy) {
-			    list.addUnique(((ArchimateRelationshipProxy) object).getTarget());
-			}
-			if(object instanceof DiagramModelConnectionProxy) {
-			    list.addUnique(((DiagramModelConnectionProxy) object).getTarget());
-			}
+            if(object instanceof ArchimateRelationshipProxy || object instanceof DiagramModelConnectionProxy) {
+                list.addUnique((EObjectProxy)object.attr(TARGET));
+            }
         }
 		
 		return list;
