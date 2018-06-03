@@ -69,22 +69,24 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
         });
         
         for(File file : files) {
-            if(file.isDirectory() && doShowFile(file)) {
-                MenuManager subMenu = new MenuManager(file.getName());
-                subMenu.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER));
-                menuManager.add(subMenu);
-                fillItems(subMenu, file.listFiles());
-            }
-            else if(doShowFile(file)) {
-                menuManager.add(new Action(FileUtils.getFileNameWithoutExtension(file),
-                        IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_SCRIPT)) {
+            if(doShowFile(file)) {
+                if(file.isDirectory()) {
+                    MenuManager subMenu = new MenuManager(file.getName());
+                    subMenu.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER));
+                    menuManager.add(subMenu);
+                    fillItems(subMenu, file.listFiles());
+                }
+                else {
+                    menuManager.add(new Action(FileUtils.getFileNameWithoutExtension(file),
+                            IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_SCRIPT)) {
 
-                    @Override
-                    public void run() {
-                        RunArchiScript script = new RunArchiScript(file);
-                        script.run();
-                    }
-                });
+                        @Override
+                        public void run() {
+                            RunArchiScript script = new RunArchiScript(file);
+                            script.run();
+                        }
+                    });
+                }
             }
         }
     }
