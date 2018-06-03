@@ -29,7 +29,6 @@ import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
-import com.archimatetool.model.impl.ArchimateModel;
 import com.archimatetool.script.ArchiScriptException;
 
 /**
@@ -283,13 +282,14 @@ public abstract class EObjectProxy implements IModelConstants {
 	}
     
     protected EObjectProxyCollection parents() {
-    	if(parent() == null || parent().getEObject() instanceof ArchimateModel) {
-    		return null;
-    	} else {
-    		EObjectProxyCollection list = new EObjectProxyCollection();
-    		list.add(parent());
-    		return list.addAll(list.parents());
-    	}
+        if(parent() == null || parent().getEObject() instanceof IArchimateModel) {
+            return null;
+        }
+        else {
+            EObjectProxyCollection list = new EObjectProxyCollection();
+            list.add(parent());
+            return list.add(list.parents());
+        }
     }
 
 	/**

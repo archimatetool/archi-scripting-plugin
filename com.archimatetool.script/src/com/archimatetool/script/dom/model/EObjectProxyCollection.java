@@ -241,7 +241,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         for(EObjectProxy object : this) {
         	EObjectProxyCollection parents = object.parents();
             if(parents != null && !parents.isEmpty()) {
-                list = list.addAll(parents);
+                list = list.add(parents);
             }
         }
         
@@ -368,7 +368,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         EObjectProxy first = first();
         
         if(first != null && first.getModel() != null) {
-            return addAll(first.getModel().find(selector));
+            return add(first.getModel().find(selector));
         }
         
         return this;
@@ -379,7 +379,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * @param collection
      * @return
      */
-	public EObjectProxyCollection addAll(EObjectProxyCollection collection) {
+	public EObjectProxyCollection add(EObjectProxyCollection collection) {
 		if(collection != null) {
 	        // Iterate over the collection and filter objects into the list
 	        for(EObjectProxy object : collection) {
