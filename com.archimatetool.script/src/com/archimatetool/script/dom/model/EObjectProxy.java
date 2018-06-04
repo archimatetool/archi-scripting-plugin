@@ -476,8 +476,8 @@ public abstract class EObjectProxy implements IModelConstants {
             case NAME:
                 return getEObject() instanceof INameable ? ((INameable)getEObject()).getName() : null;
             
-            case DOCUMENTATION:
-                return getEObject() instanceof IDocumentable ? ((IDocumentable)getEObject()).getDocumentation() : null;
+            case DOCUMENTATION: // Referenced concept because diagram objects are not IDocumentable
+                return getReferencedConcept() instanceof IDocumentable ? ((IDocumentable)getReferencedConcept()).getDocumentation() : null;
                 
             case CHILDREN:
                 return children();
@@ -498,8 +498,8 @@ public abstract class EObjectProxy implements IModelConstants {
                 break;
             
             case DOCUMENTATION:
-                if(getEObject() instanceof IDocumentable) {
-                    ((IDocumentable)getEObject()).setDocumentation((String)value);
+                if(getReferencedConcept() instanceof IDocumentable) { // Referenced concept because diagram objects are not IDocumentable
+                    ((IDocumentable)getReferencedConcept()).setDocumentation((String)value);
                 }
                 break;
         }
