@@ -479,4 +479,144 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	    
 	    return false;
 	}
+	
+	/**
+	 * Get the visual objects that reference each object in collection.
+	 * TODO: Should be extended to work with DiagramModel too
+	 * @return
+	 */
+	public EObjectProxyCollection objectRefs() {
+		EObjectProxyCollection list = new EObjectProxyCollection();
+		
+		for(EObjectProxy object : this) {
+            if(object instanceof ArchimateConceptProxy) {
+            	// TODO: Decide if we keep attr() in proxy classes (I'd say no: why bother maintaining it?). If not, update following code.
+                list.add((EObjectProxyCollection)object.attr(DIAGRAM_COMPONENT_INSTANCES));
+            }
+        }
+		
+		return list;
+	}
+	
+	/**
+	 * Get the visual objects that reference each object
+	 * in collection, filtered by a selector.
+	 * @param selector
+	 * @return
+	 */
+	public EObjectProxyCollection objectRefs(String selector) {
+		return objectRefs().filter(selector);
+	}
+	
+	/**
+	 * Get the views in which each object in collection is referenced.
+	 * TODO: Should be extended to work with DiagramModel too
+	 * @return
+	 */
+	public EObjectProxyCollection viewRefs() {
+		EObjectProxyCollection list = new EObjectProxyCollection();
+		
+		for(EObjectProxy object : this) {
+            if(object instanceof ArchimateConceptProxy) {
+            	// TODO: Decide if we keep attr() in proxy classes (I'd say no: why bother maintaining it?). If yes, update following code.
+                list.add(((ArchimateConceptProxy) object).getDiagramInstances());
+            }
+        }
+		
+		return list;
+	}
+	
+	/**
+	 * Get the views in which each object in collection
+	 * is referenced, filtered by a selector.
+	 * @param selector
+	 * @return
+	 */
+	public EObjectProxyCollection viewRefs(String selector) {
+		return viewRefs().filter(selector);
+	}
+	
+	/**
+	 * Get the relationships that start or end at
+	 * each concept in the set of matched objects.
+	 * TODO: Should be extended to work with diagram objects too (and return connections)
+	 * @return
+	 */
+	public EObjectProxyCollection rels() {
+		EObjectProxyCollection list = new EObjectProxyCollection();
+		
+		for(EObjectProxy object : this) {
+		    if(object instanceof ArchimateConceptProxy) {
+		        list.add((EObjectProxyCollection)object.attr(TARGET_RELATIONSHIPS));
+                list.add((EObjectProxyCollection)object.attr(SOURCE_RELATIONSHIPS));
+		    }
+        }
+		
+		return list;
+	}
+	
+	/**
+	 * Get the (incoming) relationships that end at
+	 * each concept in the set of matched objects.
+	 * @return
+	 */
+	public EObjectProxyCollection inRels() {
+		EObjectProxyCollection list = new EObjectProxyCollection();
+		
+		for(EObjectProxy object : this) {
+            if(object instanceof ArchimateConceptProxy) {
+                list.add((EObjectProxyCollection)object.attr(TARGET_RELATIONSHIPS));
+            }
+        }
+		
+		return list;
+	}
+	
+	/**
+	 * Get the (outgoing) relationships that start at
+	 * each concept in the set of matched objects.
+	 * @return
+	 */
+	public EObjectProxyCollection outRels() {
+		EObjectProxyCollection list = new EObjectProxyCollection();
+		
+		for(EObjectProxy object : this) {
+            if(object instanceof ArchimateConceptProxy) {
+                list.add((EObjectProxyCollection)object.attr(SOURCE_RELATIONSHIPS));
+            }
+        }
+		
+		return list;
+	}
+	
+	/**
+	 * Get the relationships that start or end at each concept
+	 * in the set of matched objects, filtered by a selector.
+	 * @param selector
+	 * @return
+	 */
+	public EObjectProxyCollection rels(String selector) {
+		return rels().filter(selector);
+	}
+	
+	/**
+	 * Get the (incoming) relationships that end at each concept
+	 * in the set of matched objects, filtered by a selector.
+	 * @param selector
+	 * @return
+	 */
+	public EObjectProxyCollection inRels(String selector) {
+		return inRels().filter(selector);
+	}
+	
+	/**
+	 * Get the (outgoing) relationships that start at each concept
+	 * in the set of matched objects, filtered by a selector.
+	 * @param selector
+	 * @return
+	 */
+	public EObjectProxyCollection outRels(String selector) {
+		return outRels().filter(selector);
+	}
+
 }

@@ -69,7 +69,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
      */
     public abstract ArchimateConceptProxy setType(String type);
     
-    public EObjectProxyCollection getSourceRelationships() {
+    protected EObjectProxyCollection getSourceRelationships() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getSourceRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
@@ -77,7 +77,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return list;
     }
     
-    public EObjectProxyCollection getTargetRelationships() {
+    protected EObjectProxyCollection getTargetRelationships() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getTargetRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
@@ -85,7 +85,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return list;
     }
     
-    public EObjectProxyCollection getDiagramComponentInstances() {
+    protected EObjectProxyCollection getDiagramComponentInstances() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
@@ -97,8 +97,19 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return list;
     }
     
+    protected EObjectProxyCollection getDiagramInstances() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
+        
+        for(IDiagramModel dm : DiagramModelUtils.findReferencedDiagramsForArchimateConcept(getEObject())) {
+        	list.add(EObjectProxy.get(dm));
+        }
+        
+        return list;
+    }
+    
+    
     @Override
-    public Object attr(String attribute) {
+    protected Object attr(String attribute) {
         switch(attribute) {
             case SOURCE_RELATIONSHIPS:
                 return getSourceRelationships();
