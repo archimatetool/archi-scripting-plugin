@@ -5,11 +5,10 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
-
-import com.archimatetool.model.IDiagramModelArchimateComponent;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -25,10 +24,19 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
         return new JUnit4TestAdapter(DiagramModelComponentProxyTests.class);
     }
     
-    @Override
     @Test
-    public void getReferencedConcept_IsExpectedObject() {
-        assertSame(((IDiagramModelArchimateComponent)testProxy.getEObject()).getArchimateConcept(), testProxy.getReferencedConcept());
+    public void getDiagramModel() {
+        DiagramModelProxy dmProxy = ((DiagramModelComponentProxy)testProxy).getDiagramModel();
+        assertNotNull(dmProxy);
+        assertNotNull(dmProxy.getEObject());
     }
     
+    @Override
+    @Test
+    public void attr_Get() {
+        super.attr_Get();
+        
+        assertEquals(((DiagramModelComponentProxy)testProxy).getDiagramModel(), testProxy.attr(IModelConstants.DIAGRAM_MODEL));
+        assertEquals(((DiagramModelComponentProxy)testProxy).getArchimateConcept(), testProxy.attr(IModelConstants.ARCHIMATE_CONCEPT));
+    }
 }

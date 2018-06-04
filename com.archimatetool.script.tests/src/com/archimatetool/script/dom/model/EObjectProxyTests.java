@@ -60,12 +60,12 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void getEObject_IsExpectedObject() {
+    public void getEObject() {
         assertSame(testEObject, testProxy.getEObject());
     }
 
     @Test
-    public void getReferencedConcept_IsExpectedObject() {
+    public void getReferencedConcept() {
         assertSame(testProxy.getEObject(), testProxy.getReferencedConcept());
     }
     
@@ -110,7 +110,7 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void getModel_IsExpectedObject() {
+    public void getModel() {
         assertNotNull(testProxy.getModel());
     }
     
@@ -133,7 +133,7 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void getType_IsExpected() {
+    public void getType() {
         assertTrue(testProxy.getType() == testProxy.getReferencedConcept().eClass().getName());
     }
     
@@ -148,7 +148,7 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void find_All() {
+    public void find() {
         EObjectProxyCollection collection = testProxy.find();
         assertTrue(collection.isEmpty());
     }
@@ -174,25 +174,25 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void children_Expected() {
+    public void children() {
         EObjectProxyCollection collection = testProxy.children();
         assertTrue(collection.isEmpty());
     }
     
     @Test
-    public void parent_Expected() {
+    public void parent() {
         EObjectProxy object = testProxy.parent();
         assertNull(object);
     }
 
     @Test
-    public void parents_Expected() {
+    public void parents() {
         EObjectProxyCollection collection = testProxy.parents();
         assertNull(collection);
     }
     
     @Test
-    public void prop_Expected() {
+    public void prop() {
         List<String> collection = testProxy.prop();
         assertTrue(collection.isEmpty());
         
@@ -209,7 +209,7 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void prop_String_Expected() {
+    public void prop_Key() {
         String s = testProxy.prop("key");
         assertNull(s);
         
@@ -224,7 +224,7 @@ public abstract class EObjectProxyTests {
     }
 
     @Test
-    public void prop_String_Duplicate_Expected() {
+    public void prop_Key_Duplicate() {
         Object prop = testProxy.prop("key", true);
         assertNull(prop);
         
@@ -244,7 +244,7 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void prop_Key_Value_Expected() {
+    public void prop_Key_Value() {
         EObjectProxy proxy = testProxy.prop("key", "value");
         assertSame(testProxy, proxy);
         
@@ -263,7 +263,7 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void prop_Key_Value_Duplicate_Expected() {
+    public void prop_Key_Value_Duplicate() {
         EObjectProxy proxy = testProxy.prop("key", "value", true);
         assertSame(testProxy, proxy);
         
@@ -283,7 +283,7 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void removeProp_Expected() {
+    public void removeProp() {
         testProxy.prop("key", "value", true);
         testProxy.prop("key", "value2", true);
         
@@ -297,7 +297,7 @@ public abstract class EObjectProxyTests {
     }    
     
     @Test
-    public void removeProp_Value_Expected() {
+    public void removeProp_Key_Value() {
         testProxy.prop("key", "value", true);
         testProxy.prop("key", "value2", true);
         
@@ -338,7 +338,7 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void equals_Same() {
+    public void equals() {
         EObjectProxy proxy1 = EObjectProxy.get(testEObject);
         assertTrue(proxy1.equals(testProxy));
     }

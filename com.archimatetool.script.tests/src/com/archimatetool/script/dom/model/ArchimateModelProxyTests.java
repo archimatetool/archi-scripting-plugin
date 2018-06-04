@@ -57,13 +57,13 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
 
     @Override
     @Test
-    public void getModel_IsExpectedObject() {
+    public void getModel() {
         assertEquals(actualTestProxy, testProxy.getModel());
     }
     
     @Override
     @Test
-    public void find_All() {
+    public void find() {
         EObjectProxy testModelProxy = loadTestModel();
         
         EObjectProxyCollection collection = testModelProxy.find();
@@ -89,6 +89,28 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         
         collection = testModelProxy.find("concepts");
         assertEquals(298, collection.size());
+
+        collection = testModelProxy.find("elements");
+        assertEquals(120, collection.size());
+
+        collection = testModelProxy.find("relations");
+        assertEquals(178, collection.size());
+
+        collection = testModelProxy.find("views");
+        assertEquals(17, collection.size());
+
+        collection = testModelProxy.find("#66a2171b");
+        assertEquals(1, collection.size());
+        assertEquals("66a2171b", collection.get(0).getId());
+
+        collection = testModelProxy.find(".Business");
+        assertEquals(2, collection.size());
+        
+        collection = testModelProxy.find("Folder.Business");
+        assertEquals(2, collection.size());
+        
+        collection = testModelProxy.find("BusinessRole");
+        assertEquals(20, collection.size());
     }
 
     @Override
@@ -114,7 +136,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     }
 
     @Test
-    public void load_LoadsModel() {
+    public void load() {
         assertSame(testEObject, actualTestProxy.getEObject());
         
         ArchimateModelProxy proxy = actualTestProxy.load(TestData.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
@@ -123,7 +145,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     }    
 
     @Test
-    public void create_IsDifferentModel() {
+    public void create() {
         assertSame(testEObject, actualTestProxy.getEObject());
         
         ArchimateModelProxy proxy = actualTestProxy.create("Test");
@@ -134,7 +156,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     }
     
     @Test
-    public void copy_IsSame() {
+    public void copy() {
         assertSame(testEObject, actualTestProxy.getEObject());
         
         ArchimateModelProxy proxy = actualTestProxy.copy();

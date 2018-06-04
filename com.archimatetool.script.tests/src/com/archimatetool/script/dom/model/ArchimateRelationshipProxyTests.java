@@ -57,7 +57,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
 
     @Override
     @Test
-    public void getModel_IsExpectedObject() {
+    public void getModel() {
         assertEquals(testModelProxy, testProxy.getModel());
     }
     
@@ -69,14 +69,14 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
 
     @Override
     @Test
-    public void parent_Expected() {
+    public void parent() {
         EObjectProxy object = testProxy.parent();
         assertTrue(object instanceof FolderProxy);
     }
 
     @Override
     @Test
-    public void parents_Expected() {
+    public void parents() {
         EObjectProxyCollection collection = testProxy.parents();
         assertEquals(3, collection.size());
     }

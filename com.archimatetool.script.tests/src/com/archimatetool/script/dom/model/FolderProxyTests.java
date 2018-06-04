@@ -56,21 +56,21 @@ public class FolderProxyTests extends EObjectProxyTests {
     
     @Override
     @Test
-    public void parent_Expected() {
+    public void parent() {
         EObjectProxy object = testProxy.parent();
         assertTrue(object instanceof FolderProxy);
     }
 
     @Override
     @Test
-    public void parents_Expected() {
+    public void parents() {
         EObjectProxyCollection collection = testProxy.parents();
         assertEquals(2, collection.size());
     }
 
     @Override
     @Test
-    public void find_All() {
+    public void find() {
         EObjectProxyCollection collection = testProxy.find();
         assertEquals(28, collection.size());
         
@@ -102,7 +102,7 @@ public class FolderProxyTests extends EObjectProxyTests {
     
     @Override
     @Test
-    public void children_Expected() {
+    public void children() {
         EObjectProxyCollection collection = testProxy.children();
         assertEquals(28, collection.size());
         
