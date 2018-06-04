@@ -173,7 +173,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     @Override
     public Object attr(String attribute) {
-        if(PURPOSE.equals(attribute) && getEObject() != null) {
+        if((DOCUMENTATION.equals(attribute) || PURPOSE.equals(attribute)) && getEObject() != null) {
             return getEObject().getPurpose();
         }
         
@@ -184,7 +184,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     public EObjectProxy attr(String attribute, Object value) {
         checkModelAccess();
 
-        if(PURPOSE.equals(attribute) && getEObject() != null) {
+        if((DOCUMENTATION.equals(attribute) || PURPOSE.equals(attribute)) && getEObject() != null) {
             getEObject().setPurpose((String)value);
             return this;
         }

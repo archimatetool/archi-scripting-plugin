@@ -7,9 +7,7 @@ package com.archimatetool.script.dom.model;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -200,7 +198,7 @@ public abstract class EObjectProxy implements IModelConstants {
     /**
      * @return the descendants of each object in the set of matched objects
      * TODO: Should be marked as protected but this might block jArchi() and $() 
-     * PHIL: This *will* break jArchi() and $() !!!!
+     * PHIL: Make it protected but public in ArchimateModelProxy?
      */
     public EObjectProxyCollection find() {
     	EObjectProxyCollection list = new EObjectProxyCollection();
@@ -266,28 +264,21 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     /**
-     * @return children with selector as collection.
-     * TODO: remove
-     */
-    private EObjectProxyCollection children(String selector) {
-        return children().filter(selector);
-    }
-    
-    /**
      * @return parent of this object. Default is the eContainer
-     * TODO: PHIL: Why protected?
      */
     protected EObjectProxy parent() {
         return getEObject() == null ? null : EObjectProxy.get(getEObject().eContainer());
 	}
     
     protected EObjectProxyCollection parents() {
-        if(parent() == null || parent().getEObject() instanceof IArchimateModel) {
+        EObjectProxy parent = parent();
+        
+        if(parent == null || parent.getEObject() instanceof IArchimateModel) {
             return null;
         }
         else {
             EObjectProxyCollection list = new EObjectProxyCollection();
-            list.add(parent());
+            list.add(parent);
             return list.add(list.parents());
         }
     }
@@ -296,7 +287,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * Return the list of properties' key
      * @return
      */
-    public Set<String> prop() {
+    public List<String> prop() {
     	return getPropertyKey();
     }
     
@@ -313,7 +304,7 @@ public abstract class EObjectProxy implements IModelConstants {
     /**
      * Return a property value.
      * If multiple properties exist with the same key, then return only
-     * the first one (if duplicate=false) or an array with all values
+     * the first one (if duplicate=false) or a list with all values
      * (if duplicate=true).
      * @param propKey
      * @param allowDuplicate
@@ -404,36 +395,16 @@ public abstract class EObjectProxy implements IModelConstants {
     }
 
     /**
-     * Update the property with new value
-     * If this object already has multiple properties matching the key, all of them are updated.
-     * @param key
-     * @param value
-     * @return this
-     * TODO: remove
+     * @return a list of strings containing the list of properties keys. A key appears only once (duplicates are removed)
      */
-    private EObjectProxy updateProperty(String key, String value) {
-        checkModelAccess();
-        
-        if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
-            for(IProperty prop : ((IProperties)getReferencedConcept()).getProperties()) {
-                if(prop.getKey().equals(key)) {
-                    prop.setValue(value);
-                }
-            }
-        }
-        
-        return this;
-    }
-
-    /**
-     * @return an array of strings containing the list of properties keys. A key appears only once (duplicates are removed)
-     */
-    private Set<String> getPropertyKey() {
-        Set<String> list = new LinkedHashSet<String>();
+    private List<String> getPropertyKey() {
+        List<String> list = new ArrayList<String>();
         
         if(getReferencedConcept() instanceof IProperties) {
             for(IProperty p : ((IProperties)getReferencedConcept()).getProperties()) {
-                list.add(p.getKey());
+                if(!list.contains(p.getKey())) {
+                    list.add(p.getKey());
+                }
             }
         }
         
@@ -456,37 +427,6 @@ public abstract class EObjectProxy implements IModelConstants {
         }
         
         return list;
-    }
-    
-    /**
-     * @return All Property pairs
-     */
-    protected List<Property> getProperties() {
-        List<Property> list = new ArrayList<Property>();
-        
-        if(getReferencedConcept() instanceof IProperties) {
-            for(IProperty p : ((IProperties)getReferencedConcept()).getProperties()) {
-                list.add(new Property(p.getKey(), p.getValue()));
-            }
-        }
-        
-        return list;
-    }
-    
-    /**
-     * Replace the properties list 
-     * @param properties
-     */
-    protected void setProperties(List<Property> properties) {
-        if(getReferencedConcept() instanceof IProperties) {
-            // clear
-            ((IProperties)getReferencedConcept()).getProperties().clear();
-            
-            // add new ones
-            properties.forEach(p -> {
-                addProperty(p.getKey(), p.getValue());
-            });
-        }
     }
     
     /**

@@ -5,7 +5,12 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.Collection;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
 import com.archimatetool.model.IArchimateElement;
+import com.archimatetool.model.IProperty;
 
 /**
  * Archimate Element wrapper proxy
@@ -35,18 +40,21 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
      */
     @Override
     public ArchimateElementProxy setType(String type) {
-        ArchimateElementProxy newElement = getModel().addElement(type, getName());
+        checkModelAccess();
         
-        if(newElement != null) {
-            newElement.setProperties(getProperties());
+        ArchimateElementProxy newElementProxy = getModel().addElement(type, getName());
+        
+        if(newElementProxy != null) {
+            Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
+            newElementProxy.getEObject().getProperties().addAll(props);
             
-            getSourceRelationships().attr(SOURCE, newElement);
-            getTargetRelationships().attr(TARGET, newElement);
-            getDiagramComponentInstances().attr(ARCHIMATE_CONCEPT, newElement);
+            getSourceRelationships().attr(SOURCE, newElementProxy);
+            getTargetRelationships().attr(TARGET, newElementProxy);
+            getDiagramComponentInstances().attr(ARCHIMATE_CONCEPT, newElementProxy);
             
             delete();
         }
         
-        return newElement;
+        return newElementProxy;
     }
 }

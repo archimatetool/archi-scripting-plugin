@@ -5,9 +5,13 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.Collection;
+
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.IProperty;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
@@ -73,20 +77,23 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
      */
     @Override
     public ArchimateRelationshipProxy setType(String type) {
-        ArchimateRelationshipProxy newRelationship = getModel().addRelationship(type, getName(), getSource(), getTarget());
+        checkModelAccess();
         
-        if(newRelationship != null) {
-            newRelationship.setProperties(getProperties());
+        ArchimateRelationshipProxy newRelationshipProxy = getModel().addRelationship(type, getName(), getSource(), getTarget());
+        
+        if(newRelationshipProxy != null) {
+            Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
+            newRelationshipProxy.getEObject().getProperties().addAll(props);
             
-            getSourceRelationships().attr(SOURCE, newRelationship);
-            getTargetRelationships().attr(TARGET, newRelationship);
-            getDiagramComponentInstances().attr(ARCHIMATE_CONCEPT, newRelationship);
+            getSourceRelationships().attr(SOURCE, newRelationshipProxy);
+            getTargetRelationships().attr(TARGET, newRelationshipProxy);
+            getDiagramComponentInstances().attr(ARCHIMATE_CONCEPT, newRelationshipProxy);
             
             getEObject().disconnect();
             delete();
         }
         
-        return newRelationship;
+        return newRelationshipProxy;
     }
 
     @Override

@@ -94,7 +94,6 @@ class SelectorFilterFactory {
             
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
-                    object = getReferencedConcept(object);
                     return object instanceof IIdentifier && id.equals(((IIdentifier)object).getId());
                 }
                 

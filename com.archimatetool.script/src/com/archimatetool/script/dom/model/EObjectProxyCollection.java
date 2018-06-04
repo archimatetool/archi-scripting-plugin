@@ -6,7 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -252,7 +252,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      * Return the list of properties' key for the first object in the collection
      * @return
      */
-    public Set<String> prop() {
+    public List<String> prop() {
     	return isEmpty() ? null : first().prop();
     }
     
