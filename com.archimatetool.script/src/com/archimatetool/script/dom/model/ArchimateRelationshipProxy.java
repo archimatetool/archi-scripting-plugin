@@ -82,8 +82,10 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
         ArchimateRelationshipProxy newRelationshipProxy = getModel().addRelationship(type, getName(), getSource(), getTarget());
         
         if(newRelationshipProxy != null) {
+            IArchimateRelationship newRelationship = newRelationshipProxy.getEObject();
+            
             Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
-            newRelationshipProxy.getEObject().getProperties().addAll(props);
+            newRelationship.getProperties().addAll(props);
             
             getSourceRelationships().attr(SOURCE, newRelationshipProxy);
             getTargetRelationships().attr(TARGET, newRelationshipProxy);
@@ -91,9 +93,11 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
             
             getEObject().disconnect();
             delete();
+            
+            setEObject(newRelationship);
         }
         
-        return newRelationshipProxy;
+        return this;
     }
 
     @Override

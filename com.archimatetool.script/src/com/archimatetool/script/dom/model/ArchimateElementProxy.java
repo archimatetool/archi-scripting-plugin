@@ -45,16 +45,20 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         ArchimateElementProxy newElementProxy = getModel().addElement(type, getName());
         
         if(newElementProxy != null) {
+            IArchimateElement newElement = newElementProxy.getEObject();
+            
             Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
-            newElementProxy.getEObject().getProperties().addAll(props);
+            newElement.getProperties().addAll(props);
             
             getSourceRelationships().attr(SOURCE, newElementProxy);
             getTargetRelationships().attr(TARGET, newElementProxy);
             getDiagramComponentInstances().attr(ARCHIMATE_CONCEPT, newElementProxy);
             
             delete();
+            
+            setEObject(newElement);
         }
         
-        return newElementProxy;
+        return this;
     }
 }
