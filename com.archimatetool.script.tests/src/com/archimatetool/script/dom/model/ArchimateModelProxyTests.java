@@ -66,7 +66,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     public void find_All() {
         EObjectProxy testModelProxy = loadTestModel();
         
-        EObjectProxyCollection collection = testModelProxy .find();
+        EObjectProxyCollection collection = testModelProxy.find();
         assertEquals(788, collection.size());
 
         for(EObjectProxy eObjectProxy : collection) {

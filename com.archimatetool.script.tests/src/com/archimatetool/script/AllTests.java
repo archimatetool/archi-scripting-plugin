@@ -8,7 +8,9 @@ package com.archimatetool.script;
 
 import com.archimatetool.script.dom.model.ArchimateElementProxyTests;
 import com.archimatetool.script.dom.model.ArchimateModelProxyTests;
+import com.archimatetool.script.dom.model.ArchimateRelationshipProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelObjectProxyTests;
+import com.archimatetool.script.dom.model.FolderProxyTests;
 import com.archimatetool.script.dom.model.ModelTests;
 
 import junit.framework.TestSuite;
@@ -22,7 +24,9 @@ public class AllTests {
         suite.addTest(ArchimateElementProxyTests.suite());
 		suite.addTest(ArchimateModelProxyTests.suite());
         suite.addTest(DiagramModelObjectProxyTests.suite());
+        suite.addTest(FolderProxyTests.suite());
 		suite.addTest(ModelTests.suite());
+        suite.addTest(ArchimateRelationshipProxyTests.suite());
 		
         return suite;
 	}
