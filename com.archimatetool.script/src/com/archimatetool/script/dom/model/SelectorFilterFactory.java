@@ -13,6 +13,7 @@ import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
@@ -42,20 +43,11 @@ class SelectorFilterFactory {
         }
         
         // All
-        if(selector.equals("")) { //$NON-NLS-1$
-            return new ISelectorFilter() {
-                public boolean accept(EObject object) {
-                    object = getReferencedConcept(object);
-                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
-                }
-            };
-        }
-        
-        // All concepts and views
         if(selector.equals("*")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
-                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
+                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel
+                            || object instanceof IFolder || object instanceof IDiagramModelComponent);
                 }
             };
         }
