@@ -5,6 +5,8 @@ Bundle-SymbolicName: com.archimatetool.script.tests
 Bundle-Version: 1.0.0
 Fragment-Host: com.archimatetool.script
 Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
-Require-Bundle: org.junit
+Require-Bundle: org.junit,
+ com.archimatetool.testsupport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.archimatetool.script.tests
+Import-Package: com.archimatetool.testingtools

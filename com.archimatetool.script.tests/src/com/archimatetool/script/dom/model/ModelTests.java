@@ -8,8 +8,6 @@ package com.archimatetool.script.dom.model;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.archimatetool.script.dom.DomExtensionHelper;
@@ -26,14 +24,6 @@ public class ModelTests {
     
     public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(ModelTests.class);
-    }
-    
-    @Before
-    public void runOnceBeforeEachTest() {
-    }
-    
-    @After
-    public void runOnceAfterEachTest() {
     }
     
     @Test
