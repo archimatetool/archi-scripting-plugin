@@ -21,6 +21,7 @@ import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.ModelVersion;
+import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
 /**
@@ -147,6 +148,10 @@ public class ArchimateModelProxy extends EObjectProxy {
         
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(type);
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateRelationship().isSuperTypeOf(eClass)) { // Check this is the correct type
+            if(!ArchimateModelUtils.isValidRelationship(source.getEObject(), target.getEObject(), eClass)) {
+                throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_3, type));
+            }
+
             IArchimateRelationship relationship = (IArchimateRelationship)IArchimateFactory.eINSTANCE.create(eClass);
             relationship.setName(name);
             relationship.connect(source.getEObject(), target.getEObject());
