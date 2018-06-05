@@ -467,15 +467,14 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	
 	/**
 	 * Get the visual objects that reference each object in collection.
-	 * TODO: Should be extended to work with DiagramModel too
 	 * @return
 	 */
 	public EObjectProxyCollection objectRefs() {
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object instanceof ArchimateConceptProxy) {
-                list.add(((ArchimateConceptProxy)object).getDiagramComponentInstances());
+            if(object instanceof IReferencedProxy) {
+                list.add(((IReferencedProxy)object).objectRefs());
             }
         }
 		
@@ -494,15 +493,14 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	
 	/**
 	 * Get the views in which each object in collection is referenced.
-	 * TODO: Should be extended to work with DiagramModel too
 	 * @return
 	 */
 	public EObjectProxyCollection viewRefs() {
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object instanceof ArchimateConceptProxy) {
-                list.add(((ArchimateConceptProxy) object).getDiagramInstances());
+            if(object instanceof IReferencedProxy) {
+                list.add(((IReferencedProxy) object).viewRefs());
             }
         }
 		
@@ -530,8 +528,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		
 		for(EObjectProxy object : this) {
 		    if(object instanceof ArchimateConceptProxy) {
-                list.add(((ArchimateConceptProxy)object).getSourceRelationships());
-                list.add(((ArchimateConceptProxy)object).getTargetRelationships());
+                list.add(((ArchimateConceptProxy)object).outRels());
+                list.add(((ArchimateConceptProxy)object).inRels());
 		    }
         }
 		
@@ -548,7 +546,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		
 		for(EObjectProxy object : this) {
             if(object instanceof ArchimateConceptProxy) {
-                list.add(((ArchimateConceptProxy)object).getTargetRelationships());
+                list.add(((ArchimateConceptProxy)object).inRels());
             }
         }
 		
@@ -565,7 +563,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		
 		for(EObjectProxy object : this) {
             if(object instanceof ArchimateConceptProxy) {
-                list.add(((ArchimateConceptProxy)object).getTargetRelationships());
+                list.add(((ArchimateConceptProxy)object).outRels());
             }
         }
 		

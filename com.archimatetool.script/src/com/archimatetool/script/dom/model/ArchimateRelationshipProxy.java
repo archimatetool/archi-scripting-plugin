@@ -84,9 +84,9 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
             newRelationship.getProperties().addAll(props);
             
-            getSourceRelationships().attr(SOURCE, newRelationshipProxy);
-            getTargetRelationships().attr(TARGET, newRelationshipProxy);
-            getDiagramComponentInstances().attr(ARCHIMATE_CONCEPT, newRelationshipProxy);
+            outRels().attr(SOURCE, newRelationshipProxy);
+            inRels().attr(TARGET, newRelationshipProxy);
+            objectRefs().attr(ARCHIMATE_CONCEPT, newRelationshipProxy);
             
             getEObject().disconnect();
             delete();

@@ -18,7 +18,7 @@ import com.archimatetool.script.ArchiScriptException;
  * 
  * @author Phillip Beauvoir
  */
-public abstract class ArchimateConceptProxy extends EObjectProxy {
+public abstract class ArchimateConceptProxy extends EObjectProxy implements IReferencedProxy{
     
     ArchimateConceptProxy(IArchimateConcept concept) {
         super(concept);
@@ -33,7 +33,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
     public void delete() {
         checkModelAccess();
         
-        if(getSourceRelationships().isEmpty() && getTargetRelationships().isEmpty() && getDiagramComponentInstances().isEmpty()) {
+        if(outRels().isEmpty() && inRels().isEmpty() && objectRefs().isEmpty()) {
             ((IFolder)getEObject().eContainer()).getElements().remove(getEObject());
         }
         else {
@@ -48,7 +48,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
      */
     public abstract ArchimateConceptProxy setType(String type);
     
-    protected EObjectProxyCollection getSourceRelationships() {
+    protected EObjectProxyCollection outRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getSourceRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
@@ -56,7 +56,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return list;
     }
     
-    protected EObjectProxyCollection getTargetRelationships() {
+    protected EObjectProxyCollection inRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getTargetRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
@@ -64,7 +64,8 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return list;
     }
     
-    protected EObjectProxyCollection getDiagramComponentInstances() {
+    @Override
+    public EObjectProxyCollection objectRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
@@ -76,7 +77,8 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         return list;
     }
     
-    protected EObjectProxyCollection getDiagramInstances() {
+    @Override
+    public EObjectProxyCollection viewRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IDiagramModel dm : DiagramModelUtils.findReferencedDiagramsForArchimateConcept(getEObject())) {
