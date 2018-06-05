@@ -30,27 +30,6 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
     }
     
     @Override
-    public boolean isConcept() {
-        return true;
-    }
-
-    @Override
-    public Object invoke(String methodName, Object... args) {
-        switch(methodName) {
-            case "setType": //$NON-NLS-1$
-                if(args.length == 1 && args[0] instanceof String) {
-                    return setType((String)args[0]);
-                }
-                break;
-
-            default:
-                break;
-        }
-        
-        return super.invoke(methodName, args);
-    }
-
-    @Override
     public void delete() {
         checkModelAccess();
         
@@ -105,21 +84,6 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         }
         
         return list;
-    }
-    
-    
-    @Override
-    protected Object attr(String attribute) {
-        switch(attribute) {
-            case SOURCE_RELATIONSHIPS:
-                return getSourceRelationships();
-            case TARGET_RELATIONSHIPS:
-                return getTargetRelationships();
-            case DIAGRAM_COMPONENT_INSTANCES:
-                return getDiagramComponentInstances();
-        }
-        
-        return super.attr(attribute);
     }
 
 }

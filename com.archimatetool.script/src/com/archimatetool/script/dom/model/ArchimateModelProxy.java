@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
@@ -177,7 +178,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     @Override
-    public Object attr(String attribute) {
+    protected Object attr(String attribute) {
         if((DOCUMENTATION.equals(attribute) || PURPOSE.equals(attribute)) && getEObject() != null) {
             return getEObject().getPurpose();
         }
@@ -186,7 +187,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     @Override
-    public EObjectProxy attr(String attribute, Object value) {
+    protected EObjectProxy attr(String attribute, Object value) {
         checkModelAccess();
 
         if((DOCUMENTATION.equals(attribute) || PURPOSE.equals(attribute)) && getEObject() != null) {
@@ -195,5 +196,27 @@ public class ArchimateModelProxy extends EObjectProxy {
         }
         
         return super.attr(attribute, value);
+    }
+    
+    // Expose find methods as public
+    
+    @Override
+    public EObjectProxyCollection find() {
+        return super.find();
+    }
+    
+    @Override
+    public EObjectProxyCollection find(EObject eObject) {
+        return super.find(eObject);
+    }
+    
+    @Override
+    public EObjectProxyCollection find(EObjectProxy object) {
+        return super.find(object);
+    }
+    
+    @Override
+    public EObjectProxyCollection find(String selector) {
+        return super.find(selector);
     }
 }

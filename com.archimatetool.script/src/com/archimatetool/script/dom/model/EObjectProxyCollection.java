@@ -52,21 +52,6 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     }
     
     /**
-     * Invoke a function (method) with parameters
-     * @param methodName
-     * @param args
-     * @return
-     * TODO: remove PHIL: Maybe?
-     */
-    protected EObjectProxyCollection invoke(String methodName, Object... args) {
-        for(EObjectProxy object : this) {
-            object.invoke(methodName, args);
-        }
-        
-        return this;
-    }
-
-    /**
      * @return the set of matched objects
      */
     public EObjectProxyCollection find() {
@@ -399,9 +384,9 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-		    if(object instanceof ArchimateRelationshipProxy || object instanceof DiagramModelConnectionProxy) {
-		        list.addUnique((EObjectProxy)object.attr(SOURCE));
-                list.addUnique((EObjectProxy)object.attr(TARGET));
+		    if(object instanceof IRelationshipProxy ) {
+		        list.addUnique(((IRelationshipProxy)object).getSource());
+                list.addUnique(((IRelationshipProxy)object).getTarget());
 		    }
         }
 		
@@ -417,8 +402,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object instanceof ArchimateRelationshipProxy || object instanceof DiagramModelConnectionProxy) {
-                list.addUnique((EObjectProxy)object.attr(SOURCE));
+            if(object instanceof IRelationshipProxy) {
+                list.addUnique(((IRelationshipProxy)object).getSource());
             }
         }
 		
@@ -434,8 +419,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object instanceof ArchimateRelationshipProxy || object instanceof DiagramModelConnectionProxy) {
-                list.addUnique((EObjectProxy)object.attr(TARGET));
+            if(object instanceof IRelationshipProxy) {
+                list.addUnique(((IRelationshipProxy)object).getTarget());
             }
         }
 		
@@ -490,8 +475,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		
 		for(EObjectProxy object : this) {
             if(object instanceof ArchimateConceptProxy) {
-            	// TODO: Decide if we keep attr() in proxy classes (I'd say no: why bother maintaining it?). If not, update following code.
-                list.add((EObjectProxyCollection)object.attr(DIAGRAM_COMPONENT_INSTANCES));
+                list.add(((ArchimateConceptProxy)object).getDiagramComponentInstances());
             }
         }
 		
@@ -518,7 +502,6 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		
 		for(EObjectProxy object : this) {
             if(object instanceof ArchimateConceptProxy) {
-            	// TODO: Decide if we keep attr() in proxy classes (I'd say no: why bother maintaining it?). If yes, update following code.
                 list.add(((ArchimateConceptProxy) object).getDiagramInstances());
             }
         }
@@ -547,8 +530,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		
 		for(EObjectProxy object : this) {
 		    if(object instanceof ArchimateConceptProxy) {
-		        list.add((EObjectProxyCollection)object.attr(TARGET_RELATIONSHIPS));
-                list.add((EObjectProxyCollection)object.attr(SOURCE_RELATIONSHIPS));
+                list.add(((ArchimateConceptProxy)object).getSourceRelationships());
+                list.add(((ArchimateConceptProxy)object).getTargetRelationships());
 		    }
         }
 		
@@ -565,7 +548,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		
 		for(EObjectProxy object : this) {
             if(object instanceof ArchimateConceptProxy) {
-                list.add((EObjectProxyCollection)object.attr(TARGET_RELATIONSHIPS));
+                list.add(((ArchimateConceptProxy)object).getTargetRelationships());
             }
         }
 		
@@ -582,7 +565,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		
 		for(EObjectProxy object : this) {
             if(object instanceof ArchimateConceptProxy) {
-                list.add((EObjectProxyCollection)object.attr(SOURCE_RELATIONSHIPS));
+                list.add(((ArchimateConceptProxy)object).getTargetRelationships());
             }
         }
 		

@@ -5,10 +5,6 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 import junit.framework.JUnit4TestAdapter;
 
 
@@ -23,10 +19,4 @@ public abstract class ArchimateConceptProxyTests extends EObjectProxyTests {
         return new JUnit4TestAdapter(ArchimateConceptProxyTests.class);
     }
     
-    @Override
-    @Test
-    public void isConcept() {
-        assertTrue(testProxy.isConcept());
-    }
-
 }

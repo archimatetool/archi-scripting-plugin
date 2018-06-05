@@ -20,7 +20,7 @@ import com.archimatetool.script.ArchiScriptException;
  * 
  * @author Phillip Beauvoir
  */
-public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
+public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements IRelationshipProxy {
     
     ArchimateRelationshipProxy(IArchimateRelationship relationship) {
         super(relationship);
@@ -32,14 +32,11 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
     }
 
     @Override
-    public boolean isRelationship() {
-        return true;
-    }
-    
     public ArchimateConceptProxy getSource() {
         return (ArchimateConceptProxy)EObjectProxy.get(getEObject().getSource());
     }
     
+    @Override
     public ArchimateConceptProxy getTarget() {
         return (ArchimateConceptProxy)EObjectProxy.get(getEObject().getTarget());
     }
@@ -53,7 +50,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
         }
         
         getEObject().setSource(source.getEObject());
-
+        
         return this;
     }
     
@@ -101,7 +98,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
     }
 
     @Override
-    public Object attr(String attribute) {
+    protected Object attr(String attribute) {
         switch(attribute) {
             case SOURCE:
                 return getSource();
@@ -113,7 +110,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy {
     }
 
     @Override
-    public EObjectProxy attr(String attribute, Object value) {
+    protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case SOURCE:
                 if(value instanceof ArchimateConceptProxy) {

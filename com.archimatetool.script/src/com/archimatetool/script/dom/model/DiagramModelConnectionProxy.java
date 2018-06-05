@@ -12,7 +12,7 @@ import com.archimatetool.model.IDiagramModelConnection;
  * 
  * @author Phillip Beauvoir
  */
-public class DiagramModelConnectionProxy extends DiagramModelComponentProxy {
+public class DiagramModelConnectionProxy extends DiagramModelComponentProxy implements IRelationshipProxy {
     
     DiagramModelConnectionProxy(IDiagramModelConnection connection) {
         super(connection);
@@ -23,16 +23,18 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy {
         return (IDiagramModelConnection)super.getEObject();
     }
     
+    @Override
     public DiagramModelComponentProxy getSource() {
         return (DiagramModelComponentProxy)EObjectProxy.get(getEObject().getSource());
     }
     
+    @Override
     public DiagramModelComponentProxy getTarget() {
         return (DiagramModelComponentProxy)EObjectProxy.get(getEObject().getTarget());
     }
     
     @Override
-    public Object attr(String attribute) {
+    protected Object attr(String attribute) {
         switch(attribute) {
             case SOURCE:
                 return getSource();

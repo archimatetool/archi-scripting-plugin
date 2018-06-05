@@ -102,16 +102,12 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     }
 
     @Override
-    public Object attr(String attribute) {
+    protected Object attr(String attribute) {
         switch(attribute) {
             case DIAGRAM_MODEL:
                 return getDiagramModel();
             case ARCHIMATE_CONCEPT:
                 return getArchimateConcept();
-            case SOURCE_CONNECTIONS:
-                return getSourceConnections();
-            case TARGET_CONNECTIONS:
-                return getTargetConnections();
             case FONT_COLOR:
                 return ((IFontAttribute)getEObject()).getFontColor();
             case FONT:
@@ -126,7 +122,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     }
     
     @Override
-    public EObjectProxy attr(String attribute, Object value) {
+    protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case ARCHIMATE_CONCEPT:
                 if(value instanceof ArchimateConceptProxy) {

@@ -27,12 +27,7 @@ public class FolderProxy extends EObjectProxy {
     }
     
     @Override
-    public boolean isFolder() {
-        return true;
-    }
-    
-    @Override
-    public EObjectProxyCollection children() {
+    protected EObjectProxyCollection children() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IFolder folder : getEObject().getFolders()) {
@@ -47,7 +42,7 @@ public class FolderProxy extends EObjectProxy {
     }
     
     @Override
-    public EObjectProxy attr(String attribute, Object value) {
+    protected EObjectProxy attr(String attribute, Object value) {
         // Can only rename user folders
         if(NAME.equals(attribute) && getEObject().getType() != FolderType.USER) {
             return this;

@@ -50,12 +50,6 @@ public class FolderProxyTests extends EObjectProxyTests {
     
     @Override
     @Test
-    public void isFolder() {
-        assertTrue(testProxy.isFolder());
-    }
-    
-    @Override
-    @Test
     public void parent() {
         EObjectProxy object = testProxy.parent();
         assertTrue(object instanceof FolderProxy);

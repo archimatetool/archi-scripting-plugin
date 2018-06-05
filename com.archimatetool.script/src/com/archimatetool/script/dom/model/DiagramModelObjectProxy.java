@@ -58,10 +58,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     }
     
     @Override
-    public Object attr(String attribute) {
+    protected Object attr(String attribute) {
         switch(attribute) {
-            case CHILDREN:
-                return children();
             case BOUNDS:
                 return getBounds();
             case FILL_COLOR:

@@ -6,7 +6,6 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -70,46 +69,6 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void isSet() {
-        assertTrue(testProxy.isSet());
-    }
-    
-    @Test
-    public void isConcept() {
-        assertFalse(testProxy.isConcept());
-    }
-    
-    @Test
-    public void isElement() {
-        assertFalse(testProxy.isElement());
-    }
-    
-    @Test
-    public void isRelationship() {
-        assertFalse(testProxy.isRelationship());
-    }
-    
-    @Test
-    public void isFolder() {
-        assertFalse(testProxy.isFolder());
-    }
-    
-    @Test
-    public void isView() {
-        assertFalse(testProxy.isView());
-    }
-    
-    @Test
-    public void isCanvas() {
-        assertFalse(testProxy.isCanvas());
-    }
-    
-    @Test
-    public void isSketch() {
-        assertFalse(testProxy.isSketch());
-    }
-    
-    @Test
     public void getModel() {
         assertNotNull(testProxy.getModel());
     }
@@ -140,11 +99,6 @@ public abstract class EObjectProxyTests {
     @Test(expected = ArchiScriptException.class)
     public void delete_ExceptionThrown() {
         testProxy.delete();
-    }
-    
-    @Test
-    public void invoke_ReturnsThis() {
-        assertSame(testProxy, testProxy.invoke("foo"));
     }
     
     @Test
@@ -322,8 +276,6 @@ public abstract class EObjectProxyTests {
 
         testProxy.setDocumentation("doc");
         assertEquals("doc", testProxy.attr(IModelConstants.DOCUMENTATION));
-        
-        assertTrue(testProxy.attr(IModelConstants.CHILDREN) instanceof EObjectProxyCollection);
     }
  
     @Test
@@ -339,8 +291,8 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void equals() {
-        EObjectProxy proxy1 = EObjectProxy.get(testEObject);
-        assertTrue(proxy1.equals(testProxy));
+        EObjectProxy proxy = EObjectProxy.get(testEObject);
+        assertTrue(proxy.equals(testProxy));
     }
 
 }

@@ -200,9 +200,6 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
         assertEquals(20, bounds.y);
         assertEquals(440, bounds.width);
         assertEquals(500, bounds.height);
-        
-        EObjectProxyCollection collection = (EObjectProxyCollection)proxy.attr(IModelConstants.CHILDREN);
-        assertEquals(6, collection.size());
     }
 
 }

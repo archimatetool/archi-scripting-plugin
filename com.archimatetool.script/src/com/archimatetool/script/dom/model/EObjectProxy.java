@@ -96,38 +96,6 @@ public abstract class EObjectProxy implements IModelConstants {
         return getEObject();
     }
     
-    public boolean isSet() {
-        return getEObject() != null;
-    }
-    
-    public boolean isConcept() {
-        return false;
-    }
-    
-    public boolean isElement() {
-        return false;
-    }
-    
-    public boolean isRelationship() {
-        return false;
-    }
-    
-    public boolean isFolder() {
-        return false;
-    }
-    
-    public boolean isView() {
-        return false;
-    }
-    
-    public boolean isCanvas() {
-        return false;
-    }
-    
-    public boolean isSketch() {
-        return false;
-    }
-    
     public ArchimateModelProxy getModel() {
         if(getEObject() instanceof IArchimateModelObject) {
             return new ArchimateModelProxy(((IArchimateModelObject)getEObject()).getArchimateModel());
@@ -176,32 +144,12 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     /**
-     * Invoke a function (method) with parameters
-     * @param methodName
-     * @param args
-     * @return
-     * TODO: remove - PHIL: Maybe! This might be handy?
-     */
-    protected Object invoke(String methodName, Object... args) {
-        switch(methodName) {
-            case "delete": //$NON-NLS-1$
-                delete();
-                break;
-
-            default:
-                break;
-        }
-        
-        return this;
-    }
-    
-    /**
      * @return the descendants of each object in the set of matched objects
      * TODO: Should be marked as protected but this might block jArchi() and $() 
      * PHIL: Make it protected but public in ArchimateModelProxy?
      * JB:   That should do the trick! (same is true for all find() methods)
      */
-    public EObjectProxyCollection find() {
+    protected EObjectProxyCollection find() {
     	EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() != null) {
@@ -222,7 +170,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param selector
      * @return the set of matched objects
      */
-    public EObjectProxyCollection find(String selector) {
+    protected EObjectProxyCollection find(String selector) {
         return find().filter(selector);
     }
     
@@ -231,7 +179,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param eObject
      * @return
      */
-    public EObjectProxyCollection find(EObject eObject) {
+    protected EObjectProxyCollection find(EObject eObject) {
     	EObjectProxyCollection list = new EObjectProxyCollection();
     	
     	EObjectProxy proxy = EObjectProxy.get(eObject);
@@ -247,7 +195,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param object
      * @return
      */
-    public EObjectProxyCollection find(EObjectProxy object) {
+    protected EObjectProxyCollection find(EObjectProxy object) {
     	EObjectProxyCollection list = new EObjectProxyCollection();
     	
     	if(object != null) {
@@ -480,9 +428,6 @@ public abstract class EObjectProxy implements IModelConstants {
             case DOCUMENTATION: // Referenced concept because diagram objects are not IDocumentable
                 return getReferencedConcept() instanceof IDocumentable ? ((IDocumentable)getReferencedConcept()).getDocumentation() : null;
                 
-            case CHILDREN:
-                return children();
-
             default:
                 return null;
         }

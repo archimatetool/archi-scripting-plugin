@@ -62,12 +62,6 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
     
     @Override
     @Test
-    public void isElement() {
-        assertTrue(testProxy.isElement());
-    }
-
-    @Override
-    @Test
     public void parent() {
         EObjectProxy object = testProxy.parent();
         assertTrue(object instanceof FolderProxy);
@@ -78,22 +72,6 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
     public void parents() {
         EObjectProxyCollection collection = testProxy.parents();
         assertEquals(2, collection.size());
-    }
-
-    @Test
-    public void invoke_Delete() {
-        ArchimateElementProxy proxy = testModelProxy.addElement("BusinessActor", "Fred");
-        assertTrue(proxy.getEObject().eContainer() instanceof IFolder);
-        
-        proxy.invoke("delete");
-        assertNull(proxy.getEObject().eContainer());
-    }
-    
-    @Test
-    public void invoke_SetType() {
-        Object newElementProxy = testProxy.invoke("setType", "BusinessActor");
-        assertTrue(newElementProxy instanceof ArchimateElementProxy);
-        assertSame(newElementProxy, testProxy);
     }
 
     @Test
