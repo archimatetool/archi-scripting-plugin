@@ -134,8 +134,8 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     }
     
     @Test
-    public void getSourceConnections() {
-        EObjectProxyCollection collection = actualTestProxy.getSourceConnections();
+    public void outRels() {
+        EObjectProxyCollection collection = actualTestProxy.outRels();
         assertEquals(1, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof DiagramModelConnectionProxy);
@@ -143,8 +143,8 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     }
 
     @Test
-    public void getTargetConnections() {
-        EObjectProxyCollection collection = actualTestProxy.getTargetConnections();
+    public void inRels() {
+        EObjectProxyCollection collection = actualTestProxy.inRels();
         assertEquals(1, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof DiagramModelConnectionProxy);
