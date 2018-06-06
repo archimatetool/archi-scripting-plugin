@@ -152,10 +152,10 @@ public class SelectorFilterFactoryTests {
         IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
         concept.setName("foo");
         
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("BusinessRole.foo");
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("business-role.foo");
         assertTrue(filter.accept(concept));
         
-        filter = SelectorFilterFactory.INSTANCE.getFilter("BusinessActor.foo");
+        filter = SelectorFilterFactory.INSTANCE.getFilter("business-actor.foo");
         assertFalse(filter.accept(concept));
     }
     
@@ -166,20 +166,20 @@ public class SelectorFilterFactoryTests {
         IDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
         IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
         
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("BusinessRole");
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("business-role");
         assertTrue(filter.accept(element));
-        filter = SelectorFilterFactory.INSTANCE.getFilter("BusinessActor");
+        filter = SelectorFilterFactory.INSTANCE.getFilter("business-actor");
         assertFalse(filter.accept(element));
         
-        filter = SelectorFilterFactory.INSTANCE.getFilter("AssociationRelationship");
+        filter = SelectorFilterFactory.INSTANCE.getFilter("association-relationship");
         assertTrue(filter.accept(relation));
-        filter = SelectorFilterFactory.INSTANCE.getFilter("InfluenceRelationship");
+        filter = SelectorFilterFactory.INSTANCE.getFilter("influence-relationship");
         assertFalse(filter.accept(relation));
     
-        filter = SelectorFilterFactory.INSTANCE.getFilter("ArchimateDiagramModel");
+        filter = SelectorFilterFactory.INSTANCE.getFilter("archimate-diagram-model");
         assertTrue(filter.accept(dm));
         
-        filter = SelectorFilterFactory.INSTANCE.getFilter("Folder");
+        filter = SelectorFilterFactory.INSTANCE.getFilter("folder");
         assertTrue(filter.accept(folder));
     }
 

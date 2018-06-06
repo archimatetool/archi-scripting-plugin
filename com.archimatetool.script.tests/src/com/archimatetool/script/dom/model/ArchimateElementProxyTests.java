@@ -76,7 +76,7 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
 
     @Test
     public void delete() {
-        ArchimateElementProxy proxy = testModelProxy.addElement("BusinessActor", "Fred");
+        ArchimateElementProxy proxy = testModelProxy.addElement("business-actor", "Fred");
         assertTrue(proxy.getEObject().eContainer() instanceof IFolder);
         
         proxy.delete();
@@ -90,7 +90,7 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
         assertEquals(6, actualTestProxy.inRels().size());
         assertEquals(3, actualTestProxy.objectRefs().size());
 
-        ArchimateElementProxy newElementProxy = actualTestProxy.setType("BusinessRole");
+        ArchimateElementProxy newElementProxy = actualTestProxy.setType("business-role");
         
         assertSame(newElementProxy, testProxy);
         assertTrue(newElementProxy.getEObject() instanceof IBusinessRole);

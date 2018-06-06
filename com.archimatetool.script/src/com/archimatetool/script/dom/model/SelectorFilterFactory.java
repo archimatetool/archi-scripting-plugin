@@ -118,14 +118,16 @@ class SelectorFilterFactory {
         
         // Find all objects with given type and name
         else if(selector.contains(".") && selector.length() > 2) { //$NON-NLS-1$
-            String[] s = selector.split("\\."); //$NON-NLS-1$
-            if(s.length != 2) {
+            if(selector.split("\\.").length != 2) { //$NON-NLS-1$
                 return null;
             }
-
+            
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     object = getReferencedConcept(object);
+                    String[] s = selector.split("\\."); //$NON-NLS-1$
+                    s[0] = EObjectProxy.getCamelCase(s[0]);
+                    
                     return object.eClass().getName().equals(s[0]) &&
                             ((INameable)object).getName().equals(s[1]) &&
                             (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
@@ -134,14 +136,17 @@ class SelectorFilterFactory {
         }
 
         // Class type of concept
-        else if(IArchimatePackage.eINSTANCE.getEClassifier(selector) != null) {
-            return new ISelectorFilter() {
-                public boolean accept(EObject object) {
-                    object = getReferencedConcept(object);
-                    return object.eClass().getName().equals(selector) &&
-                            (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
-                }
-            };
+        else {
+            String s = EObjectProxy.getCamelCase(selector);
+            if(IArchimatePackage.eINSTANCE.getEClassifier(EObjectProxy.getCamelCase(selector)) != null) {
+                return new ISelectorFilter() {
+                    public boolean accept(EObject object) {
+                        object = getReferencedConcept(object);
+                        return object.eClass().getName().equals(s) &&
+                                (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
+                    }
+                };
+            }
         }
 
         return null;

@@ -128,6 +128,8 @@ public class ArchimateModelProxy extends EObjectProxy {
             return null;
         }
         
+        type = getCamelCase(type);
+        
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(type);
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
@@ -146,6 +148,8 @@ public class ArchimateModelProxy extends EObjectProxy {
         if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
             return null;
         }
+        
+        type = getCamelCase(type);
         
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(type);
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateRelationship().isSuperTypeOf(eClass)) { // Check this is the correct type

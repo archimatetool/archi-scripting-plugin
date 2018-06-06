@@ -109,7 +109,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         collection = testModelProxy.find("Folder.Business");
         assertEquals(2, collection.size());
         
-        collection = testModelProxy.find("BusinessRole");
+        collection = testModelProxy.find("business-role");
         assertEquals(20, collection.size());
     }
 
@@ -173,12 +173,12 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         actualTestProxy.save(file.getAbsolutePath());
         
         assertTrue(file.exists());
-        assertEquals(133, file.length());
+        assertTrue(file.length() > 100);
     }
    
     @Test
     public void addElement() {
-        ArchimateElementProxy proxy = actualTestProxy.addElement("BusinessActor", "Fido");
+        ArchimateElementProxy proxy = actualTestProxy.addElement("business-actor", "Fido");
         assertNotNull(proxy);
         
         IArchimateElement element = proxy.getEObject();
@@ -188,15 +188,15 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     
     @Test(expected = ArchiScriptException.class)
     public void addElement_Bogus() {
-        actualTestProxy.addElement("AccessRelationship", "Fido");
+        actualTestProxy.addElement("access-relationship", "Fido");
     }
 
     @Test
     public void addRelationship() {
-        ArchimateElementProxy source = actualTestProxy.addElement("BusinessActor", "Fido");
-        ArchimateElementProxy target = actualTestProxy.addElement("BusinessRole", "Role");
+        ArchimateElementProxy source = actualTestProxy.addElement("business-actor", "Fido");
+        ArchimateElementProxy target = actualTestProxy.addElement("business-role", "Role");
         
-        ArchimateRelationshipProxy proxy = actualTestProxy.addRelationship("AssignmentRelationship", "Fido", source, target);
+        ArchimateRelationshipProxy proxy = actualTestProxy.addRelationship("assignment-relationship", "Fido", source, target);
         assertNotNull(proxy);
         
         IArchimateRelationship relation = proxy.getEObject();
