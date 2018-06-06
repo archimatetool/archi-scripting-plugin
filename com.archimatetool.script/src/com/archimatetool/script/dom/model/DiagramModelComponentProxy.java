@@ -11,7 +11,6 @@ import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IDiagramModelConnection;
-import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.IFontAttribute;
 import com.archimatetool.model.ILineObject;
 
@@ -63,21 +62,12 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
         return getEObject() instanceof IDiagramModelArchimateComponent;
     }
     
-    /**
-     * @return true if this diagram component references a Diagram Model
-     */
-    private boolean isDiagramModelReference() {
-    	return getEObject() instanceof IDiagramModelReference;
-    }
-    
     @Override
     protected EObject getReferencedConcept() {
         if(isArchimateConcept()) {
             return ((IDiagramModelArchimateComponent)getEObject()).getArchimateConcept();
-        } else if(isDiagramModelReference()) {
-        	return ((IDiagramModelReference)getEObject()).getReferencedModel();
         }
-        
+
         return super.getReferencedConcept();
     }
 

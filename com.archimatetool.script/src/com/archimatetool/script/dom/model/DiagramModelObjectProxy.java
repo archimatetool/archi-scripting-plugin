@@ -5,9 +5,12 @@
  */
 package com.archimatetool.script.dom.model;
 
+import org.eclipse.emf.ecore.EObject;
+
 import com.archimatetool.model.IBounds;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
+import com.archimatetool.model.IDiagramModelReference;
 
 /**
  * Diagram Model Object wrapper proxy
@@ -41,6 +44,22 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return new Bounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
     }
     
+    /**
+     * @return true if this diagram component references a Diagram Model
+     */
+    private boolean isDiagramModelReference() {
+        return getEObject() instanceof IDiagramModelReference;
+    }
+    
+    @Override
+    protected EObject getReferencedConcept() {
+        if(isDiagramModelReference()) {
+            return ((IDiagramModelReference)getEObject()).getReferencedModel();
+        }
+
+        return super.getReferencedConcept();
+    }
+
     /**
      * @return child node diagram objects of this diagram object (if any)
      */
