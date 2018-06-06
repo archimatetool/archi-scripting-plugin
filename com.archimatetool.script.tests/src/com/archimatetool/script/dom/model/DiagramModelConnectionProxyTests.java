@@ -49,7 +49,7 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
 
     @Test
     public void get_ReturnsCorrectProxy() {
-        EObjectProxy proxy = EObjectProxy.get(IArchimateFactory.eINSTANCE.createDiagramModelArchimateConnection());
+        EObjectProxy proxy = EObjectProxy.get(testEObject);
         assertTrue(proxy instanceof DiagramModelConnectionProxy);
         
         proxy = EObjectProxy.get(IArchimateFactory.eINSTANCE.createDiagramModelConnection());

@@ -63,8 +63,8 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy{
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
-            for(IDiagramModelReference dmc : DiagramModelUtils.findDiagramModelReferences(dm, getEObject())) {
-                list.add(EObjectProxy.get(dmc));
+            for(IDiagramModelReference ref : DiagramModelUtils.findDiagramModelReferences(dm, getEObject())) {
+                list.add(EObjectProxy.get(ref));
             }
         }
         
@@ -76,8 +76,8 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy{
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
-            for(IDiagramModelReference dmc : DiagramModelUtils.findDiagramModelReferences(dm, getEObject())) {
-                list.add(EObjectProxy.get(dmc.getDiagramModel()));
+            for(IDiagramModelReference ref : DiagramModelUtils.findDiagramModelReferences(dm, getEObject())) {
+                list.add(EObjectProxy.get(ref.getDiagramModel()));
             }
         }
         
