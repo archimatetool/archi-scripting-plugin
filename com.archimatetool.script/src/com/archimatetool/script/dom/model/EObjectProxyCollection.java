@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import org.eclipse.emf.ecore.EObject;
-
 import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
 
@@ -59,9 +57,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     	
     	for(EObjectProxy object : this) {
             for(EObjectProxy child : object.find()) {
-                if(!list.contains(child)) {
-                    list.add(child);
-                }
+                list.addUnique(child);
             }
         }
         
@@ -92,9 +88,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         // Iterate over the collection and filter objects into the list
         for(EObjectProxy object : this) {
             if(object != null) {
-	            EObject eObject = object.getEObject();
-	            
-	            if(filter.accept(eObject)) {
+	            if(filter.accept(object.getEObject())) {
 	                list.add(object);
 	                
 	                if(filter.isSingle()) {
@@ -120,7 +114,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     	
     	for(EObjectProxy object : this) {
     		if(predicate.test(object)) {
-    			list.add(object);
+    			list.addUnique(object);
     		}
     	}
     	
@@ -157,9 +151,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         // Iterate over the collection and filter objects into the list
         for(EObjectProxy object : this) {
             if(object != null) {
-	            EObject eObject = object.getEObject();
-	            
-	            if(!filter.accept(eObject)) {
+	            if(!filter.accept(object.getEObject())) {
 	                list.add(object);
 	            }
             }
@@ -226,7 +218,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         for(EObjectProxy object : this) {
         	EObjectProxyCollection parents = object.parents();
             if(parents != null && !parents.isEmpty()) {
-                list = list.add(parents);
+                list = list.add(parents); // TODO: should this just be list.add(parents); ?
             }
         }
         
@@ -457,14 +449,6 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		return targetEnds().filter(selector);
 	}
 	
-	boolean addUnique(EObjectProxy object) {
-	    if(object != null && !contains(object)) {
-	        return add(object);
-	    }
-	    
-	    return false;
-	}
-	
 	/**
 	 * Get the visual objects that reference each object in collection.
 	 * @return
@@ -599,5 +583,22 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	public EObjectProxyCollection outRels(String selector) {
 		return outRels().filter(selector);
 	}
+
+
+
+    /**
+     * Internal helper method (keep it at the bottom of this class)
+     * Add an object to this list only if it does not already exist in the list and is not null
+     * @param object
+     * @return true if added
+     */
+    boolean addUnique(EObjectProxy object) {
+        if(object != null && !contains(object)) {
+            return add(object);
+        }
+        
+        return false;
+    }
+    
 
 }
