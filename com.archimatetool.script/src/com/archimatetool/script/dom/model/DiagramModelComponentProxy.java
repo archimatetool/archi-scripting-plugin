@@ -19,7 +19,7 @@ import com.archimatetool.model.ILineObject;
  * 
  * @author Phillip Beauvoir
  */
-public abstract class DiagramModelComponentProxy extends EObjectProxy {
+public abstract class DiagramModelComponentProxy extends EObjectProxy implements IConnectableProxy {
     
     DiagramModelComponentProxy(IDiagramModelComponent component) {
         super(component);
@@ -74,7 +74,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     /**
      * @return a list of source connections (if any)
      */
-    public EObjectProxyCollection getSourceConnections() {
+    @Override
+    public EObjectProxyCollection outRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() instanceof IConnectable) {
@@ -89,7 +90,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     /**
      * @return a list of target connections (if any)
      */
-    public EObjectProxyCollection getTargetConnections() {
+    @Override
+    public EObjectProxyCollection inRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() instanceof IConnectable) {

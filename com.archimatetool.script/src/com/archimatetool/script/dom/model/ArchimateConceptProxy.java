@@ -18,7 +18,7 @@ import com.archimatetool.script.ArchiScriptException;
  * 
  * @author Phillip Beauvoir
  */
-public abstract class ArchimateConceptProxy extends EObjectProxy implements IReferencedProxy{
+public abstract class ArchimateConceptProxy extends EObjectProxy implements IReferencedProxy, IConnectableProxy {
     
     ArchimateConceptProxy(IArchimateConcept concept) {
         super(concept);
@@ -48,7 +48,8 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
      */
     public abstract ArchimateConceptProxy setType(String type);
     
-    protected EObjectProxyCollection outRels() {
+    @Override
+    public EObjectProxyCollection outRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getSourceRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
@@ -56,7 +57,8 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         return list;
     }
     
-    protected EObjectProxyCollection inRels() {
+    @Override
+    public EObjectProxyCollection inRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getTargetRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));

@@ -504,16 +504,15 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	/**
 	 * Get the relationships that start or end at
 	 * each concept in the set of matched objects.
-	 * TODO: Should be extended to work with diagram objects too (and return connections)
 	 * @return
 	 */
 	public EObjectProxyCollection rels() {
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-		    if(object instanceof ArchimateConceptProxy) {
-                list.add(((ArchimateConceptProxy)object).outRels());
-                list.add(((ArchimateConceptProxy)object).inRels());
+		    if(object instanceof IConnectableProxy) {
+                list.add(((IConnectableProxy)object).outRels());
+                list.add(((IConnectableProxy)object).inRels());
 		    }
         }
 		
@@ -529,8 +528,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object instanceof ArchimateConceptProxy) {
-                list.add(((ArchimateConceptProxy)object).inRels());
+            if(object instanceof IConnectableProxy) {
+                list.add(((IConnectableProxy)object).inRels());
             }
         }
 		
@@ -546,8 +545,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object instanceof ArchimateConceptProxy) {
-                list.add(((ArchimateConceptProxy)object).outRels());
+            if(object instanceof IConnectableProxy) {
+                list.add(((IConnectableProxy)object).outRels());
             }
         }
 		
