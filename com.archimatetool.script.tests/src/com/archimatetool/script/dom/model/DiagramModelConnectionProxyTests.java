@@ -133,6 +133,7 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     }
     
     @Override
+    @Test
     public void children() {
         super.children();
         

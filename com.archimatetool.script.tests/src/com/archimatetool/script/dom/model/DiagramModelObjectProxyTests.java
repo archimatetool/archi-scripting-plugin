@@ -161,6 +161,7 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     }
     
     @Override
+    @Test
     public void children() {
         super.children();
         
