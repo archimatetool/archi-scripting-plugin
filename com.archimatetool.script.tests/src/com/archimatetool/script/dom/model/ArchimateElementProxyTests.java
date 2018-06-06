@@ -41,7 +41,7 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
     
     @Before
     public void runOnceBeforeEachTest() {
-        testModelProxy = loadTestModel();
+        testModelProxy = TestsHelper.loadTestModel();
         
         testEObject = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "352");
         testProxy = EObjectProxy.get(testEObject);

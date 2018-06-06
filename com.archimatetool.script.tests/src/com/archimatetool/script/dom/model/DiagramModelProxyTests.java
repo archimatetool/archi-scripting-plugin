@@ -20,7 +20,7 @@ import junit.framework.JUnit4TestAdapter;
 
 
 /**
- * DiagramModelObjectProxy Tests
+ * DiagramModelProxy Tests
  * 
  * @author Phillip Beauvoir
  */
@@ -37,7 +37,7 @@ public class DiagramModelProxyTests extends EObjectProxyTests {
     
     @Before
     public void runOnceBeforeEachTest() {
-        testModelProxy = loadTestModel();
+        testModelProxy = TestsHelper.loadTestModel();
         
         testEObject = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4056");
         testProxy = EObjectProxy.get(testEObject);

@@ -12,8 +12,10 @@ import com.archimatetool.script.dom.model.ArchimateRelationshipProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelConnectionProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelObjectProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelProxyTests;
+import com.archimatetool.script.dom.model.EObjectProxyCollectionTests;
 import com.archimatetool.script.dom.model.FolderProxyTests;
 import com.archimatetool.script.dom.model.ModelTests;
+import com.archimatetool.script.dom.model.SelectorFilterFactoryTests;
 
 import junit.framework.TestSuite;
 
@@ -29,8 +31,11 @@ public class AllTests {
         suite.addTest(DiagramModelConnectionProxyTests.suite());
         suite.addTest(DiagramModelProxyTests.suite());
         suite.addTest(DiagramModelObjectProxyTests.suite());
+        suite.addTest(EObjectProxyCollectionTests.suite());
+        suite.addTest(SelectorFilterFactoryTests.suite());
         suite.addTest(FolderProxyTests.suite());
 		suite.addTest(ModelTests.suite());
+        suite.addTest(SelectorFilterFactoryTests.suite());
 		
         return suite;
 	}

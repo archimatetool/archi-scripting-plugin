@@ -16,7 +16,7 @@ import junit.framework.JUnit4TestAdapter;
 
 
 /**
- * Tests
+ * Model Tests
  * 
  * @author Phillip Beauvoir
  */

@@ -11,21 +11,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.junit.Test;
 
 import com.archimatetool.model.IArchimateFactory;
-import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.script.ArchiScriptException;
-import com.archimatetool.testingtools.ArchimateTestModel;
-import com.archimatetool.tests.TestData;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -45,18 +41,6 @@ public abstract class EObjectProxyTests {
     protected IArchimateModelObject testEObject;
     protected EObjectProxy testProxy;
     
-    protected ArchimateModelProxy loadTestModel() {
-        ArchimateTestModel tm = new ArchimateTestModel(TestData.TEST_MODEL_FILE_ARCHISURANCE);
-        try {
-            IArchimateModel model = tm.loadModel();
-            return (ArchimateModelProxy)EObjectProxy.get(model);
-        }
-        catch(IOException ex) {
-            ex.printStackTrace();
-        }
-        
-        return null;
-    }
     
     @Test
     public void getEObject() {

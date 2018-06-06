@@ -64,7 +64,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void find() {
-        EObjectProxy testModelProxy = loadTestModel();
+        EObjectProxy testModelProxy = TestsHelper.loadTestModel();
         
         EObjectProxyCollection collection = testModelProxy.find();
         assertEquals(788, collection.size());
@@ -79,7 +79,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     public void find_Selector() {
         super.find_Selector();
         
-        EObjectProxy testModelProxy = loadTestModel();
+        EObjectProxy testModelProxy = TestsHelper.loadTestModel();
         
         EObjectProxyCollection collection = testModelProxy.find("garbage");
         assertEquals(0, collection.size());
