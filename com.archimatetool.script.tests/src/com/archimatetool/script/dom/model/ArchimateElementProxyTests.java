@@ -86,22 +86,22 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
     @Test
     public void setType() {
         assertTrue(actualTestProxy.getEObject() instanceof IBusinessActor);
-        assertEquals(3, actualTestProxy.getSourceRelationships().size());
-        assertEquals(6, actualTestProxy.getTargetRelationships().size());
-        assertEquals(3, actualTestProxy.getDiagramComponentInstances().size());
+        assertEquals(3, actualTestProxy.outRels().size());
+        assertEquals(6, actualTestProxy.inRels().size());
+        assertEquals(3, actualTestProxy.objectRefs().size());
 
         ArchimateElementProxy newElementProxy = actualTestProxy.setType("BusinessRole");
         
         assertSame(newElementProxy, testProxy);
         assertTrue(newElementProxy.getEObject() instanceof IBusinessRole);
-        assertEquals(3, actualTestProxy.getSourceRelationships().size());
-        assertEquals(6, actualTestProxy.getTargetRelationships().size());
-        assertEquals(3, actualTestProxy.getDiagramComponentInstances().size());
+        assertEquals(3, actualTestProxy.outRels().size());
+        assertEquals(6, actualTestProxy.inRels().size());
+        assertEquals(3, actualTestProxy.objectRefs().size());
     }
 
     @Test
-    public void getSourceRelationships() {
-        EObjectProxyCollection collection = actualTestProxy.getSourceRelationships();
+    public void outRels() {
+        EObjectProxyCollection collection = actualTestProxy.outRels();
         assertEquals(3, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof ArchimateRelationshipProxy);
@@ -109,8 +109,8 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
     }
 
     @Test
-    public void getTargetRelationships() {
-        EObjectProxyCollection collection = actualTestProxy.getTargetRelationships();
+    public void inRels() {
+        EObjectProxyCollection collection = actualTestProxy.inRels();
         assertEquals(6, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof ArchimateRelationshipProxy);
@@ -118,11 +118,21 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
     }
     
     @Test
-    public void getDiagramComponentInstances() {
-        EObjectProxyCollection collection = actualTestProxy.getDiagramComponentInstances();
+    public void objectRefs() {
+        EObjectProxyCollection collection = actualTestProxy.objectRefs();
         assertEquals(3, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof DiagramModelObjectProxy);
         }
     }
+    
+    @Test
+    public void viewRefs() {
+        EObjectProxyCollection collection = actualTestProxy.viewRefs();
+        assertEquals(3, collection.size());
+        for(EObjectProxy eObjectProxy : collection) {
+            assertTrue(eObjectProxy instanceof DiagramModelProxy);
+        }
+    }
+
 }

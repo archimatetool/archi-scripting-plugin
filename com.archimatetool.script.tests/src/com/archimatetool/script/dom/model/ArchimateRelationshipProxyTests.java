@@ -87,40 +87,49 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
     @Test
     public void setType() {
         assertTrue(actualTestProxy.getEObject() instanceof IAccessRelationship);
-        assertEquals(0, actualTestProxy.getSourceRelationships().size());
-        assertEquals(0, actualTestProxy.getTargetRelationships().size());
-        assertEquals(1, actualTestProxy.getDiagramComponentInstances().size());
+        assertEquals(0, actualTestProxy.outRels().size());
+        assertEquals(0, actualTestProxy.inRels().size());
+        assertEquals(1, actualTestProxy.objectRefs().size());
 
         ArchimateRelationshipProxy newElementProxy = actualTestProxy.setType("AssociationRelationship");
         
         assertSame(newElementProxy, testProxy);
         assertTrue(newElementProxy.getEObject() instanceof IAssociationRelationship);
-        assertEquals(0, actualTestProxy.getSourceRelationships().size());
-        assertEquals(0, actualTestProxy.getTargetRelationships().size());
-        assertEquals(1, actualTestProxy.getDiagramComponentInstances().size());
+        assertEquals(0, actualTestProxy.outRels().size());
+        assertEquals(0, actualTestProxy.inRels().size());
+        assertEquals(1, actualTestProxy.objectRefs().size());
     }
 
     @Test
-    public void getSourceRelationships() {
-        EObjectProxyCollection collection = actualTestProxy.getSourceRelationships();
+    public void outRels() {
+        EObjectProxyCollection collection = actualTestProxy.outRels();
         assertEquals(0, collection.size());
     }
 
     @Test
-    public void getTargetRelationships() {
-        EObjectProxyCollection collection = actualTestProxy.getTargetRelationships();
+    public void inRels() {
+        EObjectProxyCollection collection = actualTestProxy.inRels();
         assertEquals(0, collection.size());
     }
     
     @Test
-    public void getDiagramComponentInstances() {
-        EObjectProxyCollection collection = actualTestProxy.getDiagramComponentInstances();
+    public void objectRefs() {
+        EObjectProxyCollection collection = actualTestProxy.objectRefs();
         assertEquals(1, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof DiagramModelConnectionProxy);
         }
     }
     
+    @Test
+    public void viewRefs() {
+        EObjectProxyCollection collection = actualTestProxy.viewRefs();
+        assertEquals(1, collection.size());
+        for(EObjectProxy eObjectProxy : collection) {
+            assertTrue(eObjectProxy instanceof DiagramModelProxy);
+        }
+    }
+
     @Test
     public void setSource() {
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createApplicationComponent());

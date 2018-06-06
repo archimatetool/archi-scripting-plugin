@@ -11,7 +11,6 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.model.IDiagramModel;
-import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;

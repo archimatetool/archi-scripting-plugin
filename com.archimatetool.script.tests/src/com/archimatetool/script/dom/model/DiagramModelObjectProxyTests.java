@@ -6,7 +6,6 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -63,18 +62,14 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     @Override
     @Test
     public void parent() {
-        // Find a diagram object
-        EObjectProxyCollection c = testModelProxy.find("#4104");
-        EObjectProxy object = c.first().parent();
-        assertEquals("4096", object.getId());
+        EObjectProxy parent = testProxy.parent();
+        assertEquals("4096", parent.getId());
     }
 
     @Override
     @Test
     public void parents() {
-        // Find a diagram object
-        EObjectProxyCollection c = testModelProxy.find("#4104");
-        EObjectProxyCollection collection = c.first().parents();
+        EObjectProxyCollection collection = testProxy.parents();
         
         assertEquals(3, collection.size());
         assertEquals("4096", collection.get(0).getId());
@@ -113,20 +108,11 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     }
 
     @Test
-    public void getArchimateConcept_IsNull() {
+    public void getArchimateConcept() {
         assertTrue(actualTestProxy.getArchimateConcept().getEObject() instanceof IBusinessService);
         IDiagramModelGroup group = (IDiagramModelGroup)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4096");
         DiagramModelObjectProxy groupProxy = new DiagramModelObjectProxy(group);
         assertNull(groupProxy.getArchimateConcept());
-    }
-    
-    @Test
-    public void isArchimateConcept() {
-        assertTrue(actualTestProxy.isArchimateConcept());
-        
-        IDiagramModelGroup group = (IDiagramModelGroup)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4096");
-        DiagramModelObjectProxy groupProxy = new DiagramModelObjectProxy(group);
-        assertFalse(groupProxy.isArchimateConcept());
     }
     
     @Override
