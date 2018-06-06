@@ -84,13 +84,13 @@ public class FolderProxyTests extends EObjectProxyTests {
         collection = testProxy.find("*");
         assertEquals(28, collection.size());
         
-        collection = testProxy.find("concepts");
+        collection = testProxy.find("concept");
         assertEquals(28, collection.size());
 
-        collection = testProxy.find("relations");
+        collection = testProxy.find("relation");
         assertEquals(28, collection.size());
     
-        collection = testProxy.find("elements");
+        collection = testProxy.find("element");
         assertEquals(0, collection.size());
     }
     

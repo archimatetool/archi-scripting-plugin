@@ -87,16 +87,16 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         collection = testModelProxy.find("*");
         assertEquals(788, collection.size());
         
-        collection = testModelProxy.find("concepts");
+        collection = testModelProxy.find("concept");
         assertEquals(298, collection.size());
 
-        collection = testModelProxy.find("elements");
+        collection = testModelProxy.find("element");
         assertEquals(120, collection.size());
 
-        collection = testModelProxy.find("relations");
+        collection = testModelProxy.find("relation");
         assertEquals(178, collection.size());
 
-        collection = testModelProxy.find("views");
+        collection = testModelProxy.find("view");
         assertEquals(17, collection.size());
 
         collection = testModelProxy.find("#66a2171b");
@@ -106,7 +106,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         collection = testModelProxy.find(".Business");
         assertEquals(2, collection.size());
         
-        collection = testModelProxy.find("Folder.Business");
+        collection = testModelProxy.find("folder.Business");
         assertEquals(2, collection.size());
         
         collection = testModelProxy.find("business-role");

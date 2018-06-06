@@ -5,6 +5,7 @@
  */
 package com.archimatetool.script.dom.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -30,7 +31,31 @@ public class SelectorFilterFactoryTests {
     public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(SelectorFilterFactoryTests.class);
     }
-    
+
+    // Put this test here, not best but EObjectProxyTests is abstract
+    @Test
+    public void EObjectProxy_getKebabCase() {
+        assertEquals("", EObjectProxy.getKebabCase(""));
+        assertEquals("a", EObjectProxy.getKebabCase("a"));
+        assertEquals("a", EObjectProxy.getKebabCase("A"));
+        assertEquals("abc", EObjectProxy.getKebabCase("ABC"));
+        assertEquals("aa-bb-cc", EObjectProxy.getKebabCase("AaBbCc"));
+        assertEquals("archimate-diagram-model", EObjectProxy.getKebabCase("ArchimateDiagramModel"));
+        assertEquals("folder", EObjectProxy.getKebabCase("Folder"));
+        assertEquals("business-object", EObjectProxy.getKebabCase("BusinessObject"));
+    }
+
+    // Put this test here, not best but EObjectProxyTests is abstract
+    @Test
+    public void EObjectProxy_getCamelCase() {
+        assertEquals("", EObjectProxy.getCamelCase(""));
+        assertEquals("A", EObjectProxy.getCamelCase("a"));
+        assertEquals("A", EObjectProxy.getCamelCase("A"));
+        assertEquals("ABC", EObjectProxy.getCamelCase("a-b-c"));
+        assertEquals("Folder", EObjectProxy.getCamelCase("folder"));
+        assertEquals("BusinessObject", EObjectProxy.getCamelCase("business-object"));
+        assertEquals("Businessobject", EObjectProxy.getCamelCase("BusinessObject"));
+    }
     
     @Test
     public void accept_All() {
@@ -52,8 +77,8 @@ public class SelectorFilterFactoryTests {
     }
     
     @Test
-    public void accept_Concepts() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("concepts");
+    public void accept_Concept() {
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("concept");
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
@@ -70,8 +95,8 @@ public class SelectorFilterFactoryTests {
     }
     
     @Test
-    public void accept_Elements() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("elements");
+    public void accept_Element() {
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("element");
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
 
@@ -88,8 +113,8 @@ public class SelectorFilterFactoryTests {
     }
     
     @Test
-    public void accept_Relations() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("relations");
+    public void accept_Relation() {
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("relation");
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
 
@@ -106,8 +131,8 @@ public class SelectorFilterFactoryTests {
     }
 
     @Test
-    public void accept_Views() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("views");
+    public void accept_View() {
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("view");
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createSketchModel()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createArchimateDiagramModel()));

@@ -63,8 +63,8 @@ public class EObjectProxyCollectionTests {
         element.setName("fred");
         element.setId("123");
         collection.add(EObjectProxy.get(element));
-        assertTrue(collection.is("concepts"));
-        assertTrue(collection.is("elements"));
+        assertTrue(collection.is("concept"));
+        assertTrue(collection.is("element"));
         assertTrue(collection.is("#123"));
         assertTrue(collection.is(".fred"));
         assertTrue(collection.is("business-role.fred"));
@@ -74,9 +74,9 @@ public class EObjectProxyCollectionTests {
         relation.setName("freda");
         relation.setId("1234");
         collection.add(EObjectProxy.get(relation));
-        assertTrue(collection.is("concepts"));
-        assertTrue(collection.is("elements"));
-        assertTrue(collection.is("relations"));
+        assertTrue(collection.is("concept"));
+        assertTrue(collection.is("element"));
+        assertTrue(collection.is("relation"));
         assertTrue(collection.is("#1234"));
         assertTrue(collection.is(".freda"));
         assertTrue(collection.is("association-relationship"));

@@ -53,7 +53,7 @@ class SelectorFilterFactory {
         }
         
         // All concepts
-        else if(selector.equals("concepts")) { //$NON-NLS-1$
+        else if(selector.equals("concept")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     return object instanceof IArchimateConcept;
@@ -62,7 +62,7 @@ class SelectorFilterFactory {
         }
         
         // All elements
-        else if(selector.equals("elements")) { //$NON-NLS-1$
+        else if(selector.equals("element")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     return object instanceof IArchimateElement;
@@ -71,7 +71,7 @@ class SelectorFilterFactory {
         }
         
         // All relationships
-        else if(selector.equals("relations") || selector.equals("relationships")) { //$NON-NLS-1$ //$NON-NLS-2$
+        else if(selector.equals("relation") || selector.equals("relationship")) { //$NON-NLS-1$ //$NON-NLS-2$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     return object instanceof IArchimateRelationship;
@@ -80,7 +80,7 @@ class SelectorFilterFactory {
         }
 
         // All views
-        else if(selector.equals("views")) { //$NON-NLS-1$
+        else if(selector.equals("view")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     return object instanceof IDiagramModel;
