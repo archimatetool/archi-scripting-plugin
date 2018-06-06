@@ -87,12 +87,10 @@ public abstract class EObjectProxy implements IModelConstants {
             return string;
         }
         
-        String p = Arrays.stream(string.split("\\-")) //$NON-NLS-1$
+        return Arrays.stream(string.split("\\-")) //$NON-NLS-1$
                 .map(String::toLowerCase)
                 .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1))
                 .collect(Collectors.joining());
-        
-        return p;
     }
     
     EObjectProxy(EObject eObject) {
