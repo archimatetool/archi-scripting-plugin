@@ -20,7 +20,7 @@ import com.archimatetool.model.IDiagramModelReference;
  * 
  * @author Phillip Beauvoir
  */
-public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy{
+public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy {
     
     DiagramModelProxy(IDiagramModel dm) {
         super(dm);
