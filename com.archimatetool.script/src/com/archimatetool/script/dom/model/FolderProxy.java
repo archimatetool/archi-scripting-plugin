@@ -44,10 +44,31 @@ public class FolderProxy extends EObjectProxy {
     @Override
     protected EObjectProxy attr(String attribute, Object value) {
         // Can only rename user folders
-        if(NAME.equals(attribute) && getEObject().getType() != FolderType.USER) {
+        if(NAME.equals(attribute) && !isUserFolder()) {
             return this;
         }
         
         return super.attr(attribute, value);
+    }
+    
+    @Override
+    public void delete() {
+        if(!isUserFolder()) {
+            return;
+        }
+
+        checkModelAccess();
+        
+        for(EObjectProxy child : children()) {
+            child.delete();
+        }
+        
+        if(getEObject().eContainer() != null) {
+            ((IFolder)getEObject().eContainer()).getFolders().remove(getEObject());
+        }
+    }
+    
+    private boolean isUserFolder() {
+        return getEObject().getType() == FolderType.USER;
     }
 }

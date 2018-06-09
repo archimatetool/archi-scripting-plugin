@@ -14,6 +14,7 @@ import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
+import com.archimatetool.model.IFolder;
 
 /**
  * DiagramModel wrapper proxy
@@ -62,9 +63,11 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy 
     public EObjectProxyCollection objectRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
-            for(IDiagramModelReference ref : DiagramModelUtils.findDiagramModelReferences(dm, getEObject())) {
-                list.add(EObjectProxy.get(ref));
+        if(getEObject().getArchimateModel() != null) {
+            for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
+                for(IDiagramModelReference ref : DiagramModelUtils.findDiagramModelReferences(dm, getEObject())) {
+                    list.add(EObjectProxy.get(ref));
+                }
             }
         }
         
@@ -75,12 +78,35 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy 
     public EObjectProxyCollection viewRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
-            for(IDiagramModelReference ref : DiagramModelUtils.findDiagramModelReferences(dm, getEObject())) {
-                list.add(EObjectProxy.get(ref.getDiagramModel()));
+        if(getEObject().getArchimateModel() != null) {
+            for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
+                for(IDiagramModelReference ref : DiagramModelUtils.findDiagramModelReferences(dm, getEObject())) {
+                    list.add(EObjectProxy.get(ref.getDiagramModel()));
+                }
             }
         }
         
         return list;
     }
+    
+    @Override
+    public void delete() {
+        checkModelAccess();
+        
+        // Delete diagram instances first
+        for(EObjectProxy proxy : objectRefs()) {
+            proxy.delete();
+        }
+
+        for(EObjectProxy child : children()) {
+            if(child instanceof DiagramModelObjectProxy) { // Don't do connections here
+                child.delete();
+            }
+        }
+        
+        if(getEObject().eContainer() != null) {
+            ((IFolder)getEObject().eContainer()).getElements().remove(getEObject());
+        }
+    }
+
 }

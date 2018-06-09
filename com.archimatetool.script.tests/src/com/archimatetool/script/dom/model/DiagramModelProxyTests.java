@@ -116,4 +116,10 @@ public class DiagramModelProxyTests extends EObjectProxyTests {
             assertTrue(eObjectProxy.getEObject() instanceof IDiagramModel);
         }
     }
+    
+    @Override
+    @Test
+    public void delete() {
+        // TODO
+    }
 }

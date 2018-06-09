@@ -105,4 +105,9 @@ public class FolderProxyTests extends EObjectProxyTests {
         }
     }
     
+    @Override
+    @Test
+    public void delete() {
+        // TODO
+    }
 }
