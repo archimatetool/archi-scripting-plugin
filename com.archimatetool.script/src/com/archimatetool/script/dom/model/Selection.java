@@ -7,11 +7,12 @@ package com.archimatetool.script.dom.model;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 
-import com.archimatetool.editor.views.tree.ITreeModelView;
+import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 
 /**
@@ -23,18 +24,20 @@ import com.archimatetool.script.dom.IArchiScriptDOMFactory;
  * @author Phillip Beauvoir
  */
 public class Selection implements IArchiScriptDOMFactory {
-
+    
     public Object getDOMroot() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(PlatformUI.isWorkbenchRunning()) {
-            // For now just work with selections in the Model Tree
-            ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection(ITreeModelView.ID);
+            ISelection selection = ArchiScriptPlugin.INSTANCE.getCurrentSelection();
             
             if(selection instanceof IStructuredSelection) {
                 for(Object o : ((IStructuredSelection)selection).toArray()) {
                     
-                    if(o instanceof IAdaptable) {
+                    if(o instanceof EditPart) {
+                        o = ((EditPart)o).getModel();
+                    }
+                    else if(o instanceof IAdaptable) {
                         o = ((IAdaptable)o).getAdapter(EObject.class);
                     }
                     

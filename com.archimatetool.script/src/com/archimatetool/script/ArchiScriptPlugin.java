@@ -7,10 +7,17 @@ package com.archimatetool.script;
 
 import java.io.File;
 
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
+import com.archimatetool.editor.diagram.IDiagramModelEditor;
 import com.archimatetool.editor.utils.StringUtils;
+import com.archimatetool.editor.views.tree.ITreeModelView;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 
 
@@ -20,7 +27,7 @@ import com.archimatetool.script.preferences.IPreferenceConstants;
  * 
  * @author Phillip Beauvoir
  */
-public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup {
+public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup, IPartListener {
 
     public static final String PLUGIN_ID = "com.archimatetool.script"; //$NON-NLS-1$
     
@@ -58,5 +65,43 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup {
     public void earlyStartup() {
         // Do nothing
     }
+    
+    
+    @Override
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(this);
+    }
+    
+    // Track current workbench parts
+    private IWorkbenchPart currentPart;
 
+    public void partActivated(IWorkbenchPart part) {
+        if(part instanceof ITreeModelView || part instanceof IDiagramModelEditor) {
+            currentPart = part;
+        }
+    }
+
+    public void partBroughtToTop(IWorkbenchPart part) {
+    }
+
+    public void partClosed(IWorkbenchPart part) {
+        if(part instanceof ITreeModelView || part instanceof IDiagramModelEditor) {
+            currentPart = null;
+        }
+    }
+
+    public void partDeactivated(IWorkbenchPart part) {
+    }
+
+    public void partOpened(IWorkbenchPart part) {
+    }
+
+    public ISelection getCurrentSelection() {
+        if(currentPart != null) {
+            return currentPart.getSite().getSelectionProvider().getSelection();
+        }
+        
+        return null;
+    }
 }
