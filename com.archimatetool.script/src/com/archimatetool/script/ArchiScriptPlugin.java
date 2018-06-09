@@ -84,16 +84,16 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup, IPa
         }
     }
 
-    public void partBroughtToTop(IWorkbenchPart part) {
-    }
-
-    public void partClosed(IWorkbenchPart part) {
+    public void partDeactivated(IWorkbenchPart part) {
         if(part instanceof ITreeModelView || part instanceof IDiagramModelEditor) {
             currentPart = null;
         }
     }
 
-    public void partDeactivated(IWorkbenchPart part) {
+    public void partBroughtToTop(IWorkbenchPart part) {
+    }
+
+    public void partClosed(IWorkbenchPart part) {
     }
 
     public void partOpened(IWorkbenchPart part) {
