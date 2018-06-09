@@ -5,8 +5,6 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.util.ArrayList;
-
 import org.eclipse.emf.ecore.EObject;
 
 import com.archimatetool.model.IConnectable;
@@ -136,22 +134,4 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         
         return super.attr(attribute, value);
     }
-
-    // Delete a connection and all linked connections
-    protected void delete(IDiagramModelConnection connection) {
-        connection.disconnect();
-        
-        // Recurse on source connections
-        for(IDiagramModelConnection conn : new ArrayList<>(connection.getSourceConnections())) {
-            delete(conn);
-            conn.disconnect();
-        }
-
-        // Recurse on target connections
-        for(IDiagramModelConnection conn : new ArrayList<>(connection.getTargetConnections())) {
-            delete(conn);
-            conn.disconnect();
-        }
-    }
-
 }

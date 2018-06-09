@@ -124,4 +124,11 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         
         return super.attr(attribute, value);
     }
+    
+    @Override
+    public void delete() {
+        super.delete();
+        getEObject().disconnect();
+    }
+
 }

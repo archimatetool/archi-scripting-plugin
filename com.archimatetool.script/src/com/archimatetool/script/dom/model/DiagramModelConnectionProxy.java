@@ -48,6 +48,15 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
     @Override
     public void delete() {
         checkModelAccess();
-        delete(getEObject());
+        
+        getEObject().disconnect();
+        
+        for(EObjectProxy proxy : inRels()) {
+            proxy.delete();
+        }
+        
+        for(EObjectProxy proxy : outRels()) {
+            proxy.delete();
+        }
     }
 }

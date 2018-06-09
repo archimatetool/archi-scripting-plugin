@@ -11,7 +11,6 @@ import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IFolder;
-import com.archimatetool.script.ArchiScriptException;
 
 /**
  * Archimate Concept wrapper proxy
@@ -27,18 +26,6 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
     @Override
     protected IArchimateConcept getEObject() {
         return (IArchimateConcept)super.getEObject();
-    }
-    
-    @Override
-    public void delete() {
-        checkModelAccess();
-        
-        if(outRels().isEmpty() && inRels().isEmpty() && objectRefs().isEmpty()) {
-            ((IFolder)getEObject().eContainer()).getElements().remove(getEObject());
-        }
-        else {
-            throw new ArchiScriptException(Messages.ArchimateConceptProxy_0 + " " + this); //$NON-NLS-1$
-        }
     }
     
     /**
@@ -70,9 +57,11 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
     public EObjectProxyCollection objectRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
-            for(IDiagramModelArchimateComponent dmc : DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(dm, getEObject())) {
-                list.add(EObjectProxy.get(dmc));
+        if(getEObject().getArchimateModel() != null) {
+            for(IDiagramModel dm : getEObject().getArchimateModel().getDiagramModels()) {
+                for(IDiagramModelArchimateComponent dmc : DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(dm, getEObject())) {
+                    list.add(EObjectProxy.get(dmc));
+                }
             }
         }
         
@@ -88,6 +77,30 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         }
         
         return list;
+    }
+
+    @Override
+    public void delete() {
+        checkModelAccess();
+        
+        // Delete diagram instances first
+        for(EObjectProxy proxy : objectRefs()) {
+            proxy.delete();
+        }
+        
+        // Remove this object
+        if(getEObject().eContainer() != null) {
+            ((IFolder)getEObject().eContainer()).getElements().remove(getEObject());
+        }
+        
+        // Delete all connecting relationships
+        for(EObjectProxy proxy : inRels()) {
+            proxy.delete();
+        }
+        
+        for(EObjectProxy proxy : outRels()) {
+            proxy.delete();
+        }
     }
 
 }

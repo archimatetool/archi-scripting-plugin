@@ -5,12 +5,9 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.util.ArrayList;
-
 import org.eclipse.emf.ecore.EObject;
 
 import com.archimatetool.model.IBounds;
-import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
@@ -94,24 +91,21 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     @Override
     public void delete() {
         checkModelAccess();
-        delete(getEObject());
-    }
-    
-    private void delete(IDiagramModelObject object) {
-        ((IDiagramModelContainer)object.eContainer()).getChildren().remove(object);
 
-        for(IDiagramModelConnection connection : new ArrayList<>(object.getSourceConnections())) {
-            delete(connection);
-        }
-
-        for(IDiagramModelConnection connection : new ArrayList<>(object.getTargetConnections())) {
-            delete(connection);
+        if(getEObject().eContainer() != null) {
+            ((IDiagramModelContainer)getEObject().eContainer()).getChildren().remove(getEObject());
         }
         
-        if(object instanceof IDiagramModelContainer) {
-            for(IDiagramModelObject child : new ArrayList<>(((IDiagramModelContainer)object).getChildren())) {
-                delete(child);
-            }
+        for(EObjectProxy rel : inRels()) {
+            rel.delete();
+        }
+
+        for(EObjectProxy rel : outRels()) {
+            rel.delete();
+        }
+        
+        for(EObjectProxy child : children()) {
+            child.delete();
         }
     }
     
