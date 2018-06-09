@@ -5,6 +5,9 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.emf.ecore.EObject;
 
 import com.archimatetool.model.IConnectable;
@@ -133,6 +136,24 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         }
         
         return super.attr(attribute, value);
+    }
+
+    // Get all connections to delete for a given connection
+    protected Set<IDiagramModelConnection> getConnectionsToDelete(IDiagramModelConnection connection) {
+        Set<IDiagramModelConnection> list = new LinkedHashSet<>();
+        list.add(connection);
+        
+        // Recurse on source connections
+        for(IDiagramModelConnection conn : connection.getSourceConnections()) {
+            list.addAll(getConnectionsToDelete(conn));
+        }
+
+        // Recurse on target connections
+        for(IDiagramModelConnection conn : connection.getTargetConnections()) {
+            list.addAll(getConnectionsToDelete(conn));
+        }
+        
+        return list;
     }
 
 }

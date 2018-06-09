@@ -74,6 +74,7 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
         assertEquals(2, collection.size());
     }
 
+    @Override
     @Test
     public void delete() {
         ArchimateElementProxy proxy = testModelProxy.addElement("business-actor", "Fred");

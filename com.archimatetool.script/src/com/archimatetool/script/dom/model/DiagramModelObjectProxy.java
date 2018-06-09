@@ -5,9 +5,14 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.eclipse.emf.ecore.EObject;
 
 import com.archimatetool.model.IBounds;
+import com.archimatetool.model.IDiagramModelComponent;
+import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
@@ -88,4 +93,43 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return super.attr(attribute);
     }
 
+    @Override
+    public void delete() {
+        checkModelAccess();
+        
+        for(IDiagramModelComponent dmc : getComponentsToDelete(getEObject())) {
+            if(dmc instanceof IDiagramModelObject) {
+                EObject parent = dmc.eContainer();
+                if(parent != null) {
+                    ((IDiagramModelContainer)parent).getChildren().remove(dmc);
+                }
+            }
+            else if(dmc instanceof IDiagramModelConnection) {
+                ((IDiagramModelConnection)dmc).disconnect();
+            }
+        }
+    }
+    
+    private Set<IDiagramModelComponent> getComponentsToDelete(IDiagramModelObject object) {
+        Set<IDiagramModelComponent> list = new LinkedHashSet<>();
+        
+        list.add(object);
+
+        for(IDiagramModelConnection connection : object.getSourceConnections()) {
+            list.addAll(getConnectionsToDelete(connection));
+        }
+
+        for(IDiagramModelConnection connection : object.getTargetConnections()) {
+            list.addAll(getConnectionsToDelete(connection));
+        }
+        
+        if(object instanceof IDiagramModelContainer) {
+            for(IDiagramModelObject child : ((IDiagramModelContainer)object).getChildren()) {
+                list.addAll(getComponentsToDelete(child));
+            }
+        }
+        
+        return list;
+    }
+    
 }
