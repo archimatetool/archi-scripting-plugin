@@ -46,11 +46,47 @@
             allPopups="true"
             locationURI="popup:com.archimatetool.editor.treeModelView?before=start_properties">
          <menu
-               id="com.archimatetool.script.menu"
+               id="com.archimatetool.script.treemenu"
+               label="%menu.label">
+            <dynamic
+                  class="com.archimatetool.script.ScriptsContextMenuContributionItem"
+                  id="com.archimatetool.script.treemenu2">
+            </dynamic>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:ArchimateDiagramEditorContextMenuProvider?endof=group_export">
+         <menu
+               id="com.archimatetool.script.editormenu"
                label="%menu.label">
             <dynamic
                   class="com.archimatetool.script.ScriptsContextMenuContributionItem"
                   id="com.archimatetool.script.menu">
+            </dynamic>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:SketchEditorContextMenuProvider?endof=group_export">
+         <menu
+               id="com.archimatetool.script.editormenu3"
+               label="%menu.label">
+            <dynamic
+                  class="com.archimatetool.script.ScriptsContextMenuContributionItem"
+                  id="com.archimatetool.script.menu3">
+            </dynamic>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:CanvasEditorContextMenuProvider?endof=group_export">
+         <menu
+               id="com.archimatetool.script.editormenu2"
+               label="%menu.label">
+            <dynamic
+                  class="com.archimatetool.script.ScriptsContextMenuContributionItem"
+                  id="com.archimatetool.script.menu2">
             </dynamic>
          </menu>
       </menuContribution>
