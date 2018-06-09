@@ -70,7 +70,9 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup, IPa
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
-        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(this);
+        if(PlatformUI.isWorkbenchRunning()) {
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(this);
+        }
     }
     
     // Track current workbench parts
