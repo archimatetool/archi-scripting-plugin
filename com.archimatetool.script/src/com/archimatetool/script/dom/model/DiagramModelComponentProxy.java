@@ -5,8 +5,7 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -138,22 +137,21 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         return super.attr(attribute, value);
     }
 
-    // Get all connections to delete for a given connection
-    protected Set<IDiagramModelConnection> getConnectionsToDelete(IDiagramModelConnection connection) {
-        Set<IDiagramModelConnection> list = new LinkedHashSet<>();
-        list.add(connection);
+    // Delete a connection and all linked connections
+    protected void delete(IDiagramModelConnection connection) {
+        connection.disconnect();
         
         // Recurse on source connections
-        for(IDiagramModelConnection conn : connection.getSourceConnections()) {
-            list.addAll(getConnectionsToDelete(conn));
+        for(IDiagramModelConnection conn : new ArrayList<>(connection.getSourceConnections())) {
+            delete(conn);
+            conn.disconnect();
         }
 
         // Recurse on target connections
-        for(IDiagramModelConnection conn : connection.getTargetConnections()) {
-            list.addAll(getConnectionsToDelete(conn));
+        for(IDiagramModelConnection conn : new ArrayList<>(connection.getTargetConnections())) {
+            delete(conn);
+            conn.disconnect();
         }
-        
-        return list;
     }
 
 }

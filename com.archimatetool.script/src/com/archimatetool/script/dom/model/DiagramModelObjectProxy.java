@@ -5,13 +5,11 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import org.eclipse.emf.ecore.EObject;
 
 import com.archimatetool.model.IBounds;
-import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
@@ -96,40 +94,25 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     @Override
     public void delete() {
         checkModelAccess();
-        
-        for(IDiagramModelComponent dmc : getComponentsToDelete(getEObject())) {
-            if(dmc instanceof IDiagramModelObject) {
-                EObject parent = dmc.eContainer();
-                if(parent != null) {
-                    ((IDiagramModelContainer)parent).getChildren().remove(dmc);
-                }
-            }
-            else if(dmc instanceof IDiagramModelConnection) {
-                ((IDiagramModelConnection)dmc).disconnect();
-            }
-        }
+        delete(getEObject());
     }
     
-    private Set<IDiagramModelComponent> getComponentsToDelete(IDiagramModelObject object) {
-        Set<IDiagramModelComponent> list = new LinkedHashSet<>();
-        
-        list.add(object);
+    private void delete(IDiagramModelObject object) {
+        ((IDiagramModelContainer)object.eContainer()).getChildren().remove(object);
 
-        for(IDiagramModelConnection connection : object.getSourceConnections()) {
-            list.addAll(getConnectionsToDelete(connection));
+        for(IDiagramModelConnection connection : new ArrayList<>(object.getSourceConnections())) {
+            delete(connection);
         }
 
-        for(IDiagramModelConnection connection : object.getTargetConnections()) {
-            list.addAll(getConnectionsToDelete(connection));
+        for(IDiagramModelConnection connection : new ArrayList<>(object.getTargetConnections())) {
+            delete(connection);
         }
         
         if(object instanceof IDiagramModelContainer) {
-            for(IDiagramModelObject child : ((IDiagramModelContainer)object).getChildren()) {
-                list.addAll(getComponentsToDelete(child));
+            for(IDiagramModelObject child : new ArrayList<>(((IDiagramModelContainer)object).getChildren())) {
+                delete(child);
             }
         }
-        
-        return list;
     }
     
 }
