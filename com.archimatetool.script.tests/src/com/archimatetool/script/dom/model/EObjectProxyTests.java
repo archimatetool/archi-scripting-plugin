@@ -81,7 +81,7 @@ public abstract class EObjectProxyTests {
     }
     
     @Test(expected = ArchiScriptException.class)
-    public void delete_ExceptionThrown() {
+    public void delete() {
         testProxy.delete();
     }
     

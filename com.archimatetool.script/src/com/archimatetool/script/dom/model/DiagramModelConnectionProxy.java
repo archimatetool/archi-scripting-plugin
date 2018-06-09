@@ -5,6 +5,9 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.archimatetool.model.IDiagramModelConnection;
 
 /**
@@ -45,4 +48,29 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         return super.attr(attribute);
     }
 
+    @Override
+    public void delete() {
+        checkModelAccess();
+        
+        for(IDiagramModelConnection connection : getConnectionsToDelete(getEObject())) {
+            connection.disconnect();
+        }
+    }
+    
+    private List<IDiagramModelConnection> getConnectionsToDelete(IDiagramModelConnection connection) {
+        List<IDiagramModelConnection> list = new ArrayList<>();
+        list.add(connection);
+        
+        // Recurse on source connections
+        for(IDiagramModelConnection conn : connection.getSourceConnections()) {
+            list.addAll(getConnectionsToDelete(conn));
+        }
+
+        // Recurse on target connections
+        for(IDiagramModelConnection conn : connection.getTargetConnections()) {
+            list.addAll(getConnectionsToDelete(conn));
+        }
+        
+        return list;
+    }
 }

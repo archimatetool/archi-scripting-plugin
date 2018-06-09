@@ -17,6 +17,7 @@ import com.archimatetool.model.IAssociationRelationship;
 import com.archimatetool.model.ICompositionRelationship;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelConnection;
+import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.util.ArchimateModelUtils;
 
 import junit.framework.JUnit4TestAdapter;
@@ -169,4 +170,59 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         assertEquals("3835", ((EObjectProxy)actualTestProxy.attr(IModelConstants.TARGET)).getId());
     }
 
+    @Override
+    @Test
+    public void delete() {
+        IDiagramModelGroup group1 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        IDiagramModelGroup group2 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        IDiagramModelGroup group3 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        IDiagramModelGroup group4 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+
+        IDiagramModelConnection connection1 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
+        IDiagramModelConnection connection2 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
+        IDiagramModelConnection connection3 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
+        IDiagramModelConnection connection4 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
+        IDiagramModelConnection connection5 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
+        IDiagramModelConnection connection6 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
+        IDiagramModelConnection connection7 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
+        
+        connection1.connect(group1, group2);
+        connection2.connect(group3, connection1);
+        connection3.connect(connection1, group4);
+        connection4.connect(connection2, group4);
+        connection5.connect(group3, connection3);
+        connection6.connect(group3, connection4);
+        connection7.connect(connection5, group4);
+        
+        assertSame(connection1, group1.getSourceConnections().get(0));
+        assertEquals(1, connection1.getSourceConnections().size());
+        assertEquals(1, connection1.getTargetConnections().size());
+
+        DiagramModelConnectionProxy proxy = (DiagramModelConnectionProxy)EObjectProxy.get(connection1);
+        proxy.delete();
+        
+        assertTrue(group1.getSourceConnections().isEmpty());
+        assertTrue(group1.getTargetConnections().isEmpty());
+        assertTrue(group2.getSourceConnections().isEmpty());
+        assertTrue(group2.getTargetConnections().isEmpty());
+        assertTrue(group3.getSourceConnections().isEmpty());
+        assertTrue(group3.getTargetConnections().isEmpty());
+        assertTrue(group4.getSourceConnections().isEmpty());
+        assertTrue(group4.getTargetConnections().isEmpty());
+
+        assertTrue(connection1.getSourceConnections().isEmpty());
+        assertTrue(connection1.getTargetConnections().isEmpty());
+        assertTrue(connection2.getSourceConnections().isEmpty());
+        assertTrue(connection2.getTargetConnections().isEmpty());
+        assertTrue(connection3.getSourceConnections().isEmpty());
+        assertTrue(connection3.getTargetConnections().isEmpty());
+        assertTrue(connection4.getSourceConnections().isEmpty());
+        assertTrue(connection4.getTargetConnections().isEmpty());
+        assertTrue(connection5.getSourceConnections().isEmpty());
+        assertTrue(connection5.getTargetConnections().isEmpty());
+        assertTrue(connection6.getSourceConnections().isEmpty());
+        assertTrue(connection6.getTargetConnections().isEmpty());
+        assertTrue(connection7.getSourceConnections().isEmpty());
+        assertTrue(connection7.getTargetConnections().isEmpty());
+    }
 }
