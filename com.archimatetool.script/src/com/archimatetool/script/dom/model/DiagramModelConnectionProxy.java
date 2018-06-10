@@ -60,7 +60,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
                     if(width > 3) {
                         width = 3;
                     }
-                    ((ILineObject)getEObject()).setLineWidth((Integer)value);
+                    ((ILineObject)getEObject()).setLineWidth(width);
                 }
                 break;
         }

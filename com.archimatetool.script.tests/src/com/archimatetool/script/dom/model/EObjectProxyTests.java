@@ -14,6 +14,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.swt.widgets.Display;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.archimatetool.model.IArchimateFactory;
@@ -41,6 +43,12 @@ public abstract class EObjectProxyTests {
     protected IArchimateModelObject testEObject;
     protected EObjectProxy testProxy;
     
+    @BeforeClass
+    public static void ensureDefaultDisplay() {
+        if(Display.getCurrent() == null) {
+            Display.getDefault();
+        }
+    }
     
     @Test
     public void getEObject() {
@@ -250,33 +258,30 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
-    public void attr_Get() {
+    public void attr_ID() {
         assertEquals(((IIdentifier)testProxy.getEObject()).getId(), testProxy.attr(IModelConstants.ID));
-        
-        assertEquals(((IIdentifier)testProxy.getReferencedConcept()).eClass().getName(), testProxy.attr(IModelConstants.TYPE));
-        
-        testProxy.setName("foo");
-        assertEquals("foo", testProxy.attr(IModelConstants.NAME));
-
-        testProxy.setDocumentation("doc");
-        assertEquals("doc", testProxy.attr(IModelConstants.DOCUMENTATION));
     }
  
     @Test
-    public void attr_Set() {
-        EObjectProxy proxy = testProxy.attr(IModelConstants.NAME, "name");
-        assertSame(testProxy, proxy);
-        
-        assertEquals("name", testProxy.getName());
-        
-        testProxy.attr(IModelConstants.DOCUMENTATION, "doc");
-        assertEquals("doc", testProxy.getDocumentation());
+    public void attr_Type() {
+        assertEquals(((IIdentifier)testProxy.getReferencedConcept()).eClass().getName(), testProxy.attr(IModelConstants.TYPE));
     }
-    
+
+    @Test
+    public void attr_Name() {
+        testProxy.attr(IModelConstants.NAME, "foo");
+        assertEquals("foo", testProxy.attr(IModelConstants.NAME));
+    }
+
+    @Test
+    public void attr_Documentation() {
+        testProxy.attr(IModelConstants.DOCUMENTATION, "doc");
+        assertEquals("doc", testProxy.attr(IModelConstants.DOCUMENTATION));
+    }
+
     @Test
     public void equals() {
         EObjectProxy proxy = EObjectProxy.get(testEObject);
         assertTrue(proxy.equals(testProxy));
     }
-
 }

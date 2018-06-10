@@ -112,22 +112,13 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals(20, collection.size());
     }
 
-    @Override
     @Test
-    public void attr_Get() {
-        super.attr_Get();
-        
-        assertEquals("doc", actualTestProxy.attr(IModelConstants.PURPOSE));
+    public void attr_Purpose() {
+        assertEquals("", actualTestProxy.attr(IModelConstants.PURPOSE));
+        actualTestProxy.attr(IModelConstants.PURPOSE, "p");
+        assertEquals("p", actualTestProxy.attr(IModelConstants.PURPOSE));
     }
 
-    @Override
-    @Test
-    public void attr_Set() {
-        super.attr_Set();
-        actualTestProxy.attr(IModelConstants.PURPOSE, "p");
-        assertEquals("p", ((ArchimateModelProxy)testProxy).getPurpose());
-    }
-    
     @Test
     public void setPurpose() {
         actualTestProxy.setPurpose("purpose");

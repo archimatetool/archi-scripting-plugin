@@ -10,6 +10,10 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import com.archimatetool.editor.ui.ColorFactory;
+import com.archimatetool.editor.ui.FontFactory;
+import com.archimatetool.script.ArchiScriptException;
+
 import junit.framework.JUnit4TestAdapter;
 
 
@@ -18,6 +22,7 @@ import junit.framework.JUnit4TestAdapter;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests {
     
     public static junit.framework.Test suite() {
@@ -31,12 +36,59 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
         assertNotNull(dmProxy.getEObject());
     }
     
-    @Override
     @Test
-    public void attr_Get() {
-        super.attr_Get();
-        
+    public void attr_DiagramModel() {
         assertEquals(((DiagramModelComponentProxy)testProxy).getDiagramModel(), testProxy.attr(IModelConstants.DIAGRAM_MODEL));
+    }
+    
+    @Test
+    public void attr_ArchimateConcept() {
         assertEquals(((DiagramModelComponentProxy)testProxy).getArchimateConcept(), testProxy.attr(IModelConstants.ARCHIMATE_CONCEPT));
     }
+
+    @Test(expected=ArchiScriptException.class)
+    public void attr_Set_FontColorThrowsException() {
+        testProxy.attr(IModelConstants.FONT_COLOR, "123456");
+    }
+    
+    @Test
+    public void attr_FontColor() {
+        assertEquals("#000000", testProxy.attr(IModelConstants.FONT_COLOR));
+        testProxy.attr(IModelConstants.FONT_COLOR, "#121212");
+        assertEquals("#121212", testProxy.attr(IModelConstants.FONT_COLOR));
+    }
+
+    @Test
+    public void attr_FontName() {
+        assertEquals(FontFactory.getDefaultUserViewFontData().getName(), testProxy.attr(IModelConstants.FONT_NAME));
+        testProxy.attr(IModelConstants.FONT_NAME, "Comic Sans");
+        assertEquals("Comic Sans", testProxy.attr(IModelConstants.FONT_NAME));
+    }
+
+    @Test
+    public void attr_FontSize() {
+        assertEquals(FontFactory.getDefaultUserViewFontData().getHeight(), testProxy.attr(IModelConstants.FONT_SIZE));
+        testProxy.attr(IModelConstants.FONT_SIZE, 34);
+        assertEquals(34, testProxy.attr(IModelConstants.FONT_SIZE));
+    }
+
+    @Test
+    public void attr_FontStyle() {
+        assertEquals("normal", testProxy.attr(IModelConstants.FONT_STYLE));
+        testProxy.attr(IModelConstants.FONT_STYLE, "bold");
+        assertEquals("bold", testProxy.attr(IModelConstants.FONT_STYLE));
+        testProxy.attr(IModelConstants.FONT_STYLE, "italic");
+        assertEquals("italic", testProxy.attr(IModelConstants.FONT_STYLE));
+        testProxy.attr(IModelConstants.FONT_STYLE, "bolditalic");
+        assertEquals("bolditalic", testProxy.attr(IModelConstants.FONT_STYLE));
+    }
+
+    @Test
+    public void attr_LineColor() {
+        assertEquals(ColorFactory.convertRGBToString(ColorFactory.getDefaultLineColor(testProxy.getEObject()).getRGB()),
+                testProxy.attr(IModelConstants.LINE_COLOR));
+        testProxy.attr(IModelConstants.LINE_COLOR, "#232398");
+        assertEquals("#232398", testProxy.attr(IModelConstants.LINE_COLOR));
+    }
+    
 }

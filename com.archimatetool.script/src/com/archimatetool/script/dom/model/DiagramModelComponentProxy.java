@@ -7,8 +7,12 @@ package com.archimatetool.script.dom.model;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.RGB;
 
 import com.archimatetool.editor.ui.ColorFactory;
+import com.archimatetool.editor.ui.FontFactory;
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelComponent;
@@ -114,11 +118,15 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
             case ARCHIMATE_CONCEPT:
                 return getArchimateConcept();
             case FONT_COLOR:
-                return ((IFontAttribute)getEObject()).getFontColor();
-            case FONT:
-                return ((IFontAttribute)getEObject()).getFont();
+                return getFontColor();
+            case FONT_NAME:
+                return getFontData().getName();
+            case FONT_SIZE:
+                return getFontData().getHeight();
+            case FONT_STYLE:
+                return getFontStyleAsString();
             case LINE_COLOR:
-                return ((ILineObject)getEObject()).getLineColor();
+                return getLineColor();
             case LINE_WIDTH:
                 return ((ILineObject)getEObject()).getLineWidth();
         }
@@ -141,11 +149,28 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
                     ((IFontAttribute)getEObject()).setFontColor((String)value);
                 }
                 break;
-            case FONT:
+            case FONT_NAME:
                 if(value instanceof String) {
-                    // TODO: font name, font height, font style conversions
-                    // checkModelAccess();
-                    //((IFontAttribute)getEObject()).setFont((String)value);
+                    checkModelAccess();
+                    FontData fd = getFontData();
+                    fd.setName((String)value);
+                    ((IFontAttribute)getEObject()).setFont(fd.toString());
+                }
+                break;
+            case FONT_SIZE:
+                if(value instanceof Integer) {
+                    checkModelAccess();
+                    FontData fd = getFontData();
+                    fd.setHeight((Integer)value);
+                    ((IFontAttribute)getEObject()).setFont(fd.toString());
+                }
+                break;
+            case FONT_STYLE:
+                if(value instanceof String) {
+                    checkModelAccess();
+                    FontData fd = getFontData();
+                    fd.setStyle(getFontStyleAsInteger((String)value));
+                    ((IFontAttribute)getEObject()).setFont(fd.toString());
                 }
                 break;
             case LINE_COLOR:
@@ -158,6 +183,68 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         }
         
         return super.attr(attribute, value);
+    }
+    
+    protected String getFontColor() {
+        String color = ((IFontAttribute)getEObject()).getFontColor();
+        return color == null ? "#000000" : color; //$NON-NLS-1$
+    }
+    
+    protected int getFontStyleAsInteger(String style) {
+        int s = 0;
+        
+        if(style != null) {
+            if(style.contains("bold")) { //$NON-NLS-1$
+                s |= SWT.BOLD; 
+            }
+            if(style.contains("italic")) { //$NON-NLS-1$
+                s |= SWT.ITALIC; 
+            }
+        }
+        
+        return s;
+    }
+    
+    protected String getFontStyleAsString() {
+        FontData fd = getFontData();
+        
+        if(fd.getStyle() == 0) {
+            return "normal"; //$NON-NLS-1$
+        }
+        
+        String style = ""; //$NON-NLS-1$
+        
+        if((fd.getStyle() & SWT.BOLD) == SWT.BOLD) {
+            style = "bold"; //$NON-NLS-1$
+        }
+        if((fd.getStyle() & SWT.ITALIC) == SWT.ITALIC) {
+            style += "italic"; //$NON-NLS-1$
+        }
+        
+        return style;
+    }
+    
+    protected String getLineColor() {
+        String color = ((ILineObject)getEObject()).getLineColor();
+        RGB rgb = ColorFactory.convertStringToRGB(color);
+        if(rgb == null) {
+            rgb = ColorFactory.getDefaultLineColor(getEObject()).getRGB();
+        }
+        return ColorFactory.convertRGBToString(rgb);
+    }
+
+    protected FontData getFontData() {
+        FontData fd;
+        
+        String fontName = ((IFontAttribute)getEObject()).getFont();
+        if(fontName != null) {
+            fd = new FontData(fontName);
+        }
+        else {
+            fd = new FontData(FontFactory.getDefaultUserViewFontData().toString());
+        }
+        
+        return fd;
     }
     
     protected void checkColorValue(String value) {

@@ -178,20 +178,18 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
         }
     }
     
-    @Override
     @Test
-    public void attr_Get() {
-        super.attr_Get();
-        
+    public void attr_FillColor() {
+        assertEquals("#0080c0", actualTestProxy.attr(IModelConstants.FILL_COLOR));
+        actualTestProxy.attr(IModelConstants.FILL_COLOR, "#ffff80");
+        assertEquals("#ffff80", actualTestProxy.attr(IModelConstants.FILL_COLOR));
+    }
+    
+    @Test
+    public void attr_Bounds() {
         IDiagramModelObject dmo = (IDiagramModelObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3707");
         DiagramModelObjectProxy proxy = new DiagramModelObjectProxy(dmo);
-        
-        assertEquals(null, proxy.attr(IModelConstants.FONT_COLOR));
-        assertEquals("1|Arial|14.0|0|WINDOWS|1|0|0|0|0|0|0|0|0|1|0|0|0|0|Arial", proxy.attr(IModelConstants.FONT));
-        assertEquals(null, proxy.attr(IModelConstants.LINE_COLOR));
-        assertEquals(1, proxy.attr(IModelConstants.LINE_WIDTH));
-        assertEquals("#ffff80", proxy.attr(IModelConstants.FILL_COLOR));
-        
+
         Bounds bounds = (Bounds)proxy.attr(IModelConstants.BOUNDS);
         assertEquals(20, bounds.x);
         assertEquals(20, bounds.y);

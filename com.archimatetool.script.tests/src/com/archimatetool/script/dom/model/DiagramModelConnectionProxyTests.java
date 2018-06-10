@@ -156,17 +156,20 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         assertEquals("3835", source.getId());
     }
     
-    @Override
     @Test
-    public void attr_Get() {
-        super.attr_Get();
-        
-        assertEquals(null, actualTestProxy.attr(IModelConstants.FONT_COLOR));
-        assertEquals(null, actualTestProxy.attr(IModelConstants.FONT));
-        assertEquals(null, actualTestProxy.attr(IModelConstants.LINE_COLOR));
+    public void attr_LineWidth() {
         assertEquals(1, actualTestProxy.attr(IModelConstants.LINE_WIDTH));
-        
+        actualTestProxy.attr(IModelConstants.LINE_WIDTH, 4);
+        assertEquals(3, actualTestProxy.attr(IModelConstants.LINE_WIDTH));
+    }
+    
+    @Test
+    public void attr_Source() {
         assertEquals("3831", ((EObjectProxy)actualTestProxy.attr(IModelConstants.SOURCE)).getId());
+    }
+
+    @Test
+    public void attr_Target() {
         assertEquals("3835", ((EObjectProxy)actualTestProxy.attr(IModelConstants.TARGET)).getId());
     }
 
