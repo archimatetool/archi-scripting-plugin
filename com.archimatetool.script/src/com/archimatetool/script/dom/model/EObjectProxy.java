@@ -162,9 +162,6 @@ public abstract class EObjectProxy implements IModelConstants {
     
     /**
      * @return the descendants of each object in the set of matched objects
-     * TODO: Should be marked as protected but this might block jArchi() and $() 
-     * PHIL: Make it protected but public in ArchimateModelProxy?
-     * JB:   That should do the trick! (same is true for all find() methods)
      */
     protected EObjectProxyCollection find() {
     	EObjectProxyCollection list = new EObjectProxyCollection();
@@ -192,7 +189,6 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     /**
-     * TODO: See if really needed: it is!
      * @param eObject
      * @return
      */
@@ -208,7 +204,6 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     /**
-     * TODO: See if really needed: it is!
      * @param object
      * @return
      */
