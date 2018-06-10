@@ -42,7 +42,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
     
     @Before
     public void runOnceBeforeEachTest() {
-        testModelProxy = TestsHelper.loadTestModel();
+        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
         testEObject = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "882");
         testProxy = EObjectProxy.get(testEObject);

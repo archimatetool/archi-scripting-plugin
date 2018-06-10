@@ -37,7 +37,7 @@ public class DiagramModelProxyTests extends EObjectProxyTests {
     
     @Before
     public void runOnceBeforeEachTest() {
-        testModelProxy = TestsHelper.loadTestModel();
+        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
         testEObject = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4056");
         testProxy = EObjectProxy.get(testEObject);

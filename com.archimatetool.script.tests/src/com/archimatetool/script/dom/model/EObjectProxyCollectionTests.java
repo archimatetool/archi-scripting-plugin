@@ -104,7 +104,7 @@ public class EObjectProxyCollectionTests {
     
     @Test
     public void find() {
-        ArchimateModelProxy modelProxy = TestsHelper.loadTestModel();
+        ArchimateModelProxy modelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         EObjectProxyCollection collection = new EObjectProxyCollection();
         
         // Get an Archimate Diagram

@@ -23,7 +23,6 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.script.ArchiScriptException;
-import com.archimatetool.tests.TestData;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -64,7 +63,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void find() {
-        EObjectProxy testModelProxy = TestsHelper.loadTestModel();
+        EObjectProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
         EObjectProxyCollection collection = testModelProxy.find();
         assertEquals(788, collection.size());
@@ -79,7 +78,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     public void find_Selector() {
         super.find_Selector();
         
-        EObjectProxy testModelProxy = TestsHelper.loadTestModel();
+        EObjectProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
         EObjectProxyCollection collection = testModelProxy.find("garbage");
         assertEquals(0, collection.size());
@@ -139,7 +138,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     public void load() {
         assertSame(testEObject, actualTestProxy.getEObject());
         
-        ArchimateModelProxy proxy = actualTestProxy.load(TestData.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
+        ArchimateModelProxy proxy = actualTestProxy.load(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
         assertSame(actualTestProxy, proxy);
         assertNotSame(testEObject, proxy.getEObject());
     }    

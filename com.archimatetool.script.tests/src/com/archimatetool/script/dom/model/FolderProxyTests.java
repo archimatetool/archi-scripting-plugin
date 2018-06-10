@@ -33,7 +33,7 @@ public class FolderProxyTests extends EObjectProxyTests {
     
     @Before
     public void runOnceBeforeEachTest() {
-        testModelProxy = TestsHelper.loadTestModel();
+        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
         testEObject = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "74944b84");
         testProxy = EObjectProxy.get(testEObject);

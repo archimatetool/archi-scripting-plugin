@@ -5,23 +5,42 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.ecore.resource.Resource;
 
 import com.archimatetool.model.IArchimateModel;
-import com.archimatetool.testingtools.ArchimateTestModel;
-import com.archimatetool.tests.TestData;
+import com.archimatetool.model.util.ArchimateResourceFactory;
 
 /**
  * Helper
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 public class TestsHelper {
     
-    static ArchimateModelProxy loadTestModel() {
-        ArchimateTestModel tm = new ArchimateTestModel(TestData.TEST_MODEL_FILE_ARCHISURANCE);
+    private static File testFolder;
+    
+    static File TEST_MODEL_FILE_ARCHISURANCE = new File(getTestDataFolder(), "Archisurance.archimate");
+
+    static File getTestDataFolder() {
+        if(testFolder == null) {
+            testFolder = getLocalBundleFolder("com.archimatetool.script.tests", "testdata");
+        }
+        return testFolder;
+    }
+
+    static ArchimateModelProxy loadTestModel(File file) {
         try {
-            IArchimateModel model = tm.loadModel();
+            Resource resource = ArchimateResourceFactory.createNewResource(file);
+            resource.load(null);
+            IArchimateModel model = (IArchimateModel)resource.getContents().get(0);
+            model.setFile(file);
             return (ArchimateModelProxy)EObjectProxy.get(model);
         }
         catch(IOException ex) {
@@ -31,4 +50,14 @@ public class TestsHelper {
         return null;
     }
 
+    private static File getLocalBundleFolder(String bundleName, String path) {
+        URL url = Platform.getBundle(bundleName).getEntry("/");
+        try {
+            url = FileLocator.resolve(url);
+        }
+        catch(IOException ex) {
+            ex.printStackTrace();
+        }
+        return new File(url.getPath(), path);
+    }
 }
