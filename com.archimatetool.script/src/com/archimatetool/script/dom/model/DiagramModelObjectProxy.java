@@ -96,7 +96,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 break;
             case FILL_COLOR:
                 if(value instanceof String) {
-                    checkColorStringOK((String)value);
+                    checkColorValue((String)value);
+                    checkModelAccess();
                     getEObject().setFillColor((String)value);
                 }
                 break;

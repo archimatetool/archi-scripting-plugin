@@ -136,7 +136,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
                 break;
             case FONT_COLOR:
                 if(value instanceof String) {
-                    checkColorStringOK((String)value);
+                    checkColorValue((String)value);
                     checkModelAccess();
                     ((IFontAttribute)getEObject()).setFontColor((String)value);
                 }
@@ -150,7 +150,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
                 break;
             case LINE_COLOR:
                 if(value instanceof String) {
-                    checkColorStringOK((String)value);
+                    checkColorValue((String)value);
                     checkModelAccess();
                     ((ILineObject)getEObject()).setLineColor((String)value);
                 }
@@ -160,7 +160,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         return super.attr(attribute, value);
     }
     
-    protected void checkColorStringOK(String value) {
+    protected void checkColorValue(String value) {
         if(ColorFactory.convertStringToRGB(value) == null) {
             throw new ArchiScriptException(NLS.bind(Messages.DiagramModelComponentProxy_0, value));
         }
