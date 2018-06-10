@@ -194,10 +194,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     @Override
     protected EObjectProxy attr(String attribute, Object value) {
-        //checkModelAccess();
-
         if((DOCUMENTATION.equals(attribute) || PURPOSE.equals(attribute)) && getEObject() != null) {
-            //getEObject().setPurpose((String)value);
             CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ARCHIMATE_MODEL__PURPOSE, value));
             return this;
         }

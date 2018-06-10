@@ -20,14 +20,21 @@ public abstract class ScriptCommand extends Command {
     private EObject fEObject;
     private IArchimateModel fModel;
 
-    public ScriptCommand(String name, IArchimateModelObject eObject) {
-        this(name, eObject.getArchimateModel(), eObject);
-    }
-
-    public ScriptCommand(String name, IArchimateModel model, EObject eObject) {
+    public ScriptCommand(String name, EObject eObject) {
         super(name);
         fEObject = eObject;
-        fModel = model;
+        
+        if(eObject instanceof IArchimateModelObject) {
+            fModel = ((IArchimateModelObject)eObject).getArchimateModel();
+        }
+        else {
+            while(fModel == null) {
+                eObject = eObject.eContainer();
+                if(eObject instanceof IArchimateModelObject) {
+                    fModel = ((IArchimateModelObject)eObject).getArchimateModel();
+                }
+            }
+        }
     }
     
     public EObject getEObject() {

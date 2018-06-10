@@ -7,7 +7,6 @@ package com.archimatetool.script.commands;
 
 import java.util.List;
 
-import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 
@@ -22,7 +21,7 @@ public class RemovePropertiesCommand extends ScriptCommand {
     private List<IProperty> toRemove;
 
     public RemovePropertiesCommand(IProperties eObject, List<IProperty> toRemove) {
-        super("properties", (IArchimateModelObject)eObject); //$NON-NLS-1$
+        super("properties", eObject); //$NON-NLS-1$
         this.eObject = eObject;
         this.toRemove = toRemove;
     }

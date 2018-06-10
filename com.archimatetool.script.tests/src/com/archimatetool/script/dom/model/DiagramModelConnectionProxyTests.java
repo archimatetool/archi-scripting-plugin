@@ -12,7 +12,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
+import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IAssociationRelationship;
 import com.archimatetool.model.ICompositionRelationship;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
@@ -176,11 +178,20 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     @Override
     @Test
     public void delete() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        IArchimateDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
+        model.getDefaultFolderForObject(dm).getElements().add(dm);
+
         IDiagramModelGroup group1 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
         IDiagramModelGroup group2 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
         IDiagramModelGroup group3 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
         IDiagramModelGroup group4 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
 
+        dm.getChildren().add(group1);
+        dm.getChildren().add(group2);
+        dm.getChildren().add(group3);
+        dm.getChildren().add(group4);
+        
         IDiagramModelConnection connection1 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
         IDiagramModelConnection connection2 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
         IDiagramModelConnection connection3 = IArchimateFactory.eINSTANCE.createDiagramModelConnection();

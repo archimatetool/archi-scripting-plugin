@@ -14,6 +14,8 @@ import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.DisconnectRelationshipCommand;
 
 /**
  * Archimate Relationship wrapper proxy
@@ -129,8 +131,8 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
     
     @Override
     public void delete() {
+        CommandHandler.executeCommand(new DisconnectRelationshipCommand(getEObject()));
         super.delete();
-        getEObject().disconnect();
     }
 
 }

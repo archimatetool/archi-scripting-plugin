@@ -6,7 +6,6 @@
 package com.archimatetool.script.commands;
 
 import com.archimatetool.model.IArchimateFactory;
-import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 
@@ -21,7 +20,7 @@ public class AddPropertyCommand extends ScriptCommand {
     private IProperty property;
 
     public AddPropertyCommand(IProperties eObject, String key, String value) {
-        super("property", (IArchimateModelObject)eObject); //$NON-NLS-1$
+        super("property", eObject); //$NON-NLS-1$
         this.eObject = eObject;
 
         // TODO use IArchimateFactory.eINSTANCE.createProperty(key, value);

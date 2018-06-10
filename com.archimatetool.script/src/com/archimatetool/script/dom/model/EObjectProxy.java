@@ -349,7 +349,7 @@ public abstract class EObjectProxy implements IModelConstants {
             for(IProperty prop : ((IProperties)getReferencedConcept()).getProperties()) {
                 if(prop.getKey().equals(key)) {
                     //prop.setValue(value);
-                    CommandHandler.executeCommand(new SetCommand(getModel().getEObject(), prop, IArchimatePackage.Literals.PROPERTY__VALUE, value));
+                    CommandHandler.executeCommand(new SetCommand(prop, IArchimatePackage.Literals.PROPERTY__VALUE, value));
                     updated = true;
                 }
             }
@@ -454,17 +454,13 @@ public abstract class EObjectProxy implements IModelConstants {
         switch(attribute) {
             case NAME:
                 if(getEObject() instanceof INameable) {
-                    //checkModelAccess();
-                    //((INameable)getEObject()).setName((String)value);
-                    CommandHandler.executeCommand(new SetCommand((IArchimateModelObject)getEObject(), IArchimatePackage.Literals.NAMEABLE__NAME, value));
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.NAMEABLE__NAME, value));
                 }
                 break;
             
             case DOCUMENTATION:
                 if(getReferencedConcept() instanceof IDocumentable) { // Referenced concept because diagram objects are not IDocumentable
-                    //checkModelAccess();
-                    //((IDocumentable)getReferencedConcept()).setDocumentation((String)value);
-                    CommandHandler.executeCommand(new SetCommand((IArchimateModelObject)getReferencedConcept(), IArchimatePackage.Literals.DOCUMENTABLE__DOCUMENTATION, value));
+                    CommandHandler.executeCommand(new SetCommand(getReferencedConcept(), IArchimatePackage.Literals.DOCUMENTABLE__DOCUMENTATION, value));
                 }
                 break;
         }
@@ -476,7 +472,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * Check model access
      */
     protected void checkModelAccess() {
-        ModelHandler.checkModelAccess(getEObject());
+        //ModelHandler.checkModelAccess(getEObject());
     }
     
     @Override

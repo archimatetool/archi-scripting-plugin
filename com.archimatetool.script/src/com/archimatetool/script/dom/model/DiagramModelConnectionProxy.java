@@ -7,6 +7,8 @@ package com.archimatetool.script.dom.model;
 
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.ILineObject;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.DisconnectConnectionCommand;
 
 /**
  * Diagram Model Connection wrapper proxy
@@ -70,10 +72,6 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
 
     @Override
     public void delete() {
-        checkModelAccess();
-        
-        getEObject().disconnect();
-        
         for(EObjectProxy proxy : inRels()) {
             proxy.delete();
         }
@@ -81,5 +79,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         for(EObjectProxy proxy : outRels()) {
             proxy.delete();
         }
+
+        CommandHandler.executeCommand(new DisconnectConnectionCommand(getEObject()));
     }
 }
