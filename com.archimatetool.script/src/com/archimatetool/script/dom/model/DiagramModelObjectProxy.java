@@ -87,7 +87,24 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         
         return super.attr(attribute);
     }
-
+    
+    @Override
+    protected EObjectProxy attr(String attribute, Object value) {
+        switch(attribute) {
+            case BOUNDS:
+                // TODO: check bounds are correct
+                break;
+            case FILL_COLOR:
+                if(value instanceof String) {
+                    checkColorStringOK((String)value);
+                    getEObject().setFillColor((String)value);
+                }
+                break;
+        }
+        
+        return super.attr(attribute, value);
+    }
+    
     @Override
     public void delete() {
         checkModelAccess();

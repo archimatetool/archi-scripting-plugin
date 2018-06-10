@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import com.archimatetool.model.IDiagramModelConnection;
+import com.archimatetool.model.ILineObject;
 
 /**
  * Diagram Model Connection wrapper proxy
@@ -43,6 +44,26 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         }
         
         return super.attr(attribute);
+    }
+    
+    @Override
+    protected EObjectProxy attr(String attribute, Object value) {
+        switch(attribute) {
+            case LINE_WIDTH:
+                if(value instanceof Integer) {
+                    int width = (int)value;
+                    if(width < 0) {
+                        width = 1;
+                    }
+                    if(width > 3) {
+                        width = 3;
+                    }
+                    ((ILineObject)getEObject()).setLineWidth((Integer)value);
+                }
+                break;
+        }
+        
+        return super.attr(attribute, value);
     }
 
     @Override

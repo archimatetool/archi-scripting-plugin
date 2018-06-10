@@ -25,9 +25,9 @@ interface IModelConstants {
     String TARGET = "target"; //$NON-NLS-1$
     
     String BOUNDS = "bounds"; //$NON-NLS-1$
-    String FILL_COLOR = "fillColor";  //$NON-NLS-1$
-    String FONT_COLOR = "fontColor";  //$NON-NLS-1$
+    String FILL_COLOR = "fill-color";  //$NON-NLS-1$
+    String FONT_COLOR = "font-color";  //$NON-NLS-1$
     String FONT = "font";  //$NON-NLS-1$
-    String LINE_COLOR = "lineColor";  //$NON-NLS-1$
-    String LINE_WIDTH = "lineWidth";  //$NON-NLS-1$
+    String LINE_COLOR = "line-color";  //$NON-NLS-1$
+    String LINE_WIDTH = "line-width";  //$NON-NLS-1$
 }

@@ -6,13 +6,16 @@
 package com.archimatetool.script.dom.model;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.osgi.util.NLS;
 
+import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IFontAttribute;
 import com.archimatetool.model.ILineObject;
+import com.archimatetool.script.ArchiScriptException;
 
 /**
  * Diagram Model Component wrapper proxy
@@ -130,8 +133,33 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
                 if(value instanceof ArchimateConceptProxy) {
                     return setArchimateConcept((ArchimateConceptProxy)value);
                 }
+                break;
+            case FONT_COLOR:
+                if(value instanceof String) {
+                    checkColorStringOK((String)value);
+                    ((IFontAttribute)getEObject()).setFontColor((String)value);
+                }
+                break;
+            case FONT:
+                if(value instanceof String) {
+                    // TODO: font name, font height, font style conversions
+                    //((IFontAttribute)getEObject()).setFont((String)value);
+                }
+                break;
+            case LINE_COLOR:
+                if(value instanceof String) {
+                    checkColorStringOK((String)value);
+                    ((ILineObject)getEObject()).setLineColor((String)value);
+                }
+                break;
         }
         
         return super.attr(attribute, value);
+    }
+    
+    protected void checkColorStringOK(String value) {
+        if(ColorFactory.convertStringToRGB(value) == null) {
+            throw new ArchiScriptException(NLS.bind(Messages.DiagramModelComponentProxy_0, value));
+        }
     }
 }
