@@ -93,13 +93,13 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy 
     public void delete() {
         checkModelAccess();
         
-        // Delete diagram instances first
+        // Delete diagram references first
         for(EObjectProxy proxy : objectRefs()) {
             proxy.delete();
         }
 
         for(EObjectProxy child : children()) {
-            if(child instanceof DiagramModelObjectProxy) { // Don't do connections here
+            if(child instanceof DiagramModelObjectProxy) { // As children() also contains connections don't delete them here
                 child.delete();
             }
         }

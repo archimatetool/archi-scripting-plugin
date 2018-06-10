@@ -6,13 +6,20 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.archimatetool.model.IArchimateDiagramModel;
+import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.util.ArchimateModelUtils;
 
@@ -120,6 +127,32 @@ public class DiagramModelProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void delete() {
-        // TODO
+        assertEquals(35, actualTestProxy.children().size());
+        
+        assertEquals(1, actualTestProxy.viewRefs().size());
+
+        // Store dm contents
+        ArrayList<IDiagramModelComponent> children = new ArrayList<>();
+        for(Iterator<EObject> iter = actualTestProxy.getEObject().eAllContents(); iter.hasNext();) {
+            EObject eObject = iter.next();
+            if(eObject instanceof IDiagramModelComponent) {
+                children.add((IDiagramModelComponent)eObject);
+            }
+        }
+        assertEquals(65, children.size());
+        
+        actualTestProxy.delete();
+        
+        assertEquals(0, testProxy.children().size());
+        assertNull(testProxy.getModel());
+        assertEquals(0, actualTestProxy.viewRefs().size());
+        
+        for(IDiagramModelComponent eObject : children) {
+            assertNull(eObject.eContainer());
+            assertNull(eObject.getArchimateModel());
+            
+            assertEquals(0, ((IConnectable)eObject).getSourceConnections().size());
+            assertEquals(0, ((IConnectable)eObject).getTargetConnections().size());
+        }
     }
 }

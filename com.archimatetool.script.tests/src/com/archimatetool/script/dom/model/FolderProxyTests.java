@@ -6,11 +6,18 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+
+import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 
@@ -31,12 +38,15 @@ public class FolderProxyTests extends EObjectProxyTests {
     
     private ArchimateModelProxy testModelProxy;
     
+    private FolderProxy actualTestProxy;
+    
     @Before
     public void runOnceBeforeEachTest() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
         testEObject = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "74944b84");
         testProxy = EObjectProxy.get(testEObject);
+        actualTestProxy = (FolderProxy)testProxy;
     }
     
     @Test
@@ -97,8 +107,8 @@ public class FolderProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void children() {
-        EObjectProxyCollection collection = testProxy.children();
-        assertEquals(28, collection.size());
+        EObjectProxyCollection collection = actualTestProxy.children();
+        assertEquals(actualTestProxy.getEObject().getElements().size(), collection.size());
         
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof ArchimateRelationshipProxy);
@@ -108,6 +118,33 @@ public class FolderProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void delete() {
-        // TODO
+        assertEquals(actualTestProxy.getEObject().getElements().size(), actualTestProxy.children().size());
+        
+        // Store folder contents (relationships)
+        ArrayList<EObject> children = new ArrayList<>(actualTestProxy.getEObject().getElements());
+        
+        for(EObject eObject : children) {
+            IArchimateRelationship rel = (IArchimateRelationship)eObject;
+            assertNotNull(rel.eContainer());
+            assertNotNull(rel.getArchimateModel());
+            assertTrue(rel.getReferencingDiagramConnections().size() > 0);
+            assertTrue(rel.getSource().getSourceRelationships().contains(rel));
+            assertTrue(rel.getTarget().getTargetRelationships().contains(rel));
+        }
+
+        actualTestProxy.delete();
+        
+        assertEquals(0, actualTestProxy.children().size());
+        assertNull(actualTestProxy.getModel());
+        assertNull(actualTestProxy.getEObject().eContainer());
+        
+        for(EObject eObject : children) {
+            IArchimateRelationship rel = (IArchimateRelationship)eObject;
+            assertNull(rel.eContainer());
+            assertNull(rel.getArchimateModel());
+            assertEquals(0, rel.getReferencingDiagramConnections().size());
+            assertFalse(rel.getSource().getSourceRelationships().contains(rel));
+            assertFalse(rel.getTarget().getTargetRelationships().contains(rel));
+        }
     }
 }
