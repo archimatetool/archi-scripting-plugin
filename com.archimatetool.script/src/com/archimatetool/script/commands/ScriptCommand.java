@@ -8,6 +8,9 @@ package com.archimatetool.script.commands;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 
+import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimateModelObject;
+
 /**
  * ScriptCommand
  * 
@@ -15,14 +18,24 @@ import org.eclipse.gef.commands.Command;
  */
 public abstract class ScriptCommand extends Command {
     private EObject fEObject;
+    private IArchimateModel fModel;
 
-    public ScriptCommand(String name, EObject eObject) {
+    public ScriptCommand(String name, IArchimateModelObject eObject) {
+        this(name, eObject.getArchimateModel(), eObject);
+    }
+
+    public ScriptCommand(String name, IArchimateModel model, EObject eObject) {
         super(name);
         fEObject = eObject;
+        fModel = model;
     }
     
     public EObject getEObject() {
         return fEObject;
+    }
+    
+    public IArchimateModel getModel() {
+        return fModel;
     }
 
     public abstract void perform();

@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateElement;
-import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
@@ -31,7 +30,9 @@ import com.archimatetool.model.INameable;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.AddPropertyCommand;
 import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.RemovePropertiesCommand;
 import com.archimatetool.script.commands.SetCommand;
 
 /**
@@ -318,14 +319,16 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     private EObjectProxy addProperty(String key, String value) {
-        checkModelAccess();
+        //checkModelAccess();
         
         if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
             // TODO use IArchimateFactory.eINSTANCE.createProperty(key, value);
-            IProperty prop = IArchimateFactory.eINSTANCE.createProperty();
-            prop.setKey(key);
-            prop.setValue(value);
-            ((IProperties)getReferencedConcept()).getProperties().add(prop);
+            //IProperty prop = IArchimateFactory.eINSTANCE.createProperty();
+            //prop.setKey(key);
+            //prop.setValue(value);
+            //((IProperties)getReferencedConcept()).getProperties().add(prop);
+            
+            CommandHandler.executeCommand(new AddPropertyCommand((IProperties)getReferencedConcept(), key, value));
         }
         
         return this;
@@ -338,14 +341,15 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     private EObjectProxy addOrUpdateProperty(String key, String value) {
-        checkModelAccess();
+        //checkModelAccess();
         
         if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
             boolean updated = false;
             
             for(IProperty prop : ((IProperties)getReferencedConcept()).getProperties()) {
                 if(prop.getKey().equals(key)) {
-                    prop.setValue(value);
+                    //prop.setValue(value);
+                    CommandHandler.executeCommand(new SetCommand(getModel().getEObject(), prop, IArchimatePackage.Literals.PROPERTY__VALUE, value));
                     updated = true;
                 }
             }
@@ -406,7 +410,7 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param key
      */
     public EObjectProxy removeProp(String key, String value) {
-        checkModelAccess();
+        //checkModelAccess();
         
         if(getReferencedConcept() instanceof IProperties) {
             List<IProperty> toRemove = new ArrayList<IProperty>();
@@ -414,16 +418,14 @@ public abstract class EObjectProxy implements IModelConstants {
             
             for(IProperty p : props) {
                 if(p.getKey().equals(key)) {
-                    if(value == null) {
-                        toRemove.add(p);
-                    }
-                    else if(p.getValue().equals(value)) {
+                    if(value == null || p.getValue().equals(value)) {
                         toRemove.add(p);
                     }
                 }
             }
             
-            props.removeAll(toRemove);
+            //props.removeAll(toRemove);
+            CommandHandler.executeCommand(new RemovePropertiesCommand((IProperties)getReferencedConcept(), toRemove));
         }
         
         return this;
@@ -454,7 +456,7 @@ public abstract class EObjectProxy implements IModelConstants {
                 if(getEObject() instanceof INameable) {
                     //checkModelAccess();
                     //((INameable)getEObject()).setName((String)value);
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.NAMEABLE__NAME, value));
+                    CommandHandler.executeCommand(new SetCommand((IArchimateModelObject)getEObject(), IArchimatePackage.Literals.NAMEABLE__NAME, value));
                 }
                 break;
             
@@ -462,7 +464,7 @@ public abstract class EObjectProxy implements IModelConstants {
                 if(getReferencedConcept() instanceof IDocumentable) { // Referenced concept because diagram objects are not IDocumentable
                     //checkModelAccess();
                     //((IDocumentable)getReferencedConcept()).setDocumentation((String)value);
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DOCUMENTABLE__DOCUMENTATION, value));
+                    CommandHandler.executeCommand(new SetCommand((IArchimateModelObject)getReferencedConcept(), IArchimatePackage.Literals.DOCUMENTABLE__DOCUMENTATION, value));
                 }
                 break;
         }

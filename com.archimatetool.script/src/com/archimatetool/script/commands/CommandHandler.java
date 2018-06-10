@@ -13,7 +13,6 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
 
 import com.archimatetool.model.IArchimateModel;
-import com.archimatetool.model.IArchimateModelObject;
 
 /**
  * CommandHandler
@@ -29,7 +28,7 @@ public class CommandHandler {
     }
 
     public static void executeCommand(ScriptCommand cmd) {
-        IArchimateModel model = ((IArchimateModelObject)cmd.getEObject()).getArchimateModel();
+        IArchimateModel model = cmd.getModel();
         CommandStack stack = (CommandStack)model.getAdapter(CommandStack.class);
         
         if(stack != null) {
