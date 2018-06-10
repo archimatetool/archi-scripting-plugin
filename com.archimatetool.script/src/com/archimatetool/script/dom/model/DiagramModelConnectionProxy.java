@@ -51,6 +51,8 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         switch(attribute) {
             case LINE_WIDTH:
                 if(value instanceof Integer) {
+                    checkModelAccess();
+                    
                     int width = (int)value;
                     if(width < 0) {
                         width = 1;

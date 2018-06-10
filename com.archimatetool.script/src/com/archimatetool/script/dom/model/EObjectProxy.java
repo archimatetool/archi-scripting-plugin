@@ -451,17 +451,17 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     protected EObjectProxy attr(String attribute, Object value) {
-        checkModelAccess();
-        
         switch(attribute) {
             case NAME:
                 if(getEObject() instanceof INameable) {
+                    checkModelAccess();
                     ((INameable)getEObject()).setName((String)value);
                 }
                 break;
             
             case DOCUMENTATION:
                 if(getReferencedConcept() instanceof IDocumentable) { // Referenced concept because diagram objects are not IDocumentable
+                    checkModelAccess();
                     ((IDocumentable)getReferencedConcept()).setDocumentation((String)value);
                 }
                 break;

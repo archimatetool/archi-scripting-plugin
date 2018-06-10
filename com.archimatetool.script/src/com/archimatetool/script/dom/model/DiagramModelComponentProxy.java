@@ -137,18 +137,21 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
             case FONT_COLOR:
                 if(value instanceof String) {
                     checkColorStringOK((String)value);
+                    checkModelAccess();
                     ((IFontAttribute)getEObject()).setFontColor((String)value);
                 }
                 break;
             case FONT:
                 if(value instanceof String) {
                     // TODO: font name, font height, font style conversions
+                    // checkModelAccess();
                     //((IFontAttribute)getEObject()).setFont((String)value);
                 }
                 break;
             case LINE_COLOR:
                 if(value instanceof String) {
                     checkColorStringOK((String)value);
+                    checkModelAccess();
                     ((ILineObject)getEObject()).setLineColor((String)value);
                 }
                 break;
