@@ -35,7 +35,9 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
      */
     @Override
     public ArchimateElementProxy setType(String type) {
-        checkModelAccess();
+        if(super.setType(type) == null) {
+            return this;
+        }
         
         ArchimateElementProxy newElementProxy = getModel().addElement(type, getName());
         

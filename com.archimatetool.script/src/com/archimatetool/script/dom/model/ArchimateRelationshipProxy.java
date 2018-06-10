@@ -74,7 +74,9 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
      */
     @Override
     public ArchimateRelationshipProxy setType(String type) {
-        checkModelAccess();
+        if(super.setType(type) == null) {
+            return this;
+        }
         
         ArchimateRelationshipProxy newRelationshipProxy = getModel().addRelationship(type, getName(), getSource(), getTarget());
         

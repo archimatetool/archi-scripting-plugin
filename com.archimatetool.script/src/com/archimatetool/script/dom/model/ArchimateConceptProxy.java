@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
@@ -33,7 +34,21 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
      * @param type the Archimate type to replace with
      * @return
      */
-    public abstract ArchimateConceptProxy setType(String type);
+    public ArchimateConceptProxy setType(String type) {
+        if(!StringUtils.isSet(type)) {
+            return null;
+        }
+        
+        // Check it's not already this type
+        String className = getCamelCase(type);
+        if(getEObject().eClass().getName().equals(className)) {
+            return null;
+        }
+        
+        checkModelAccess();
+
+        return this;
+    }
     
     @Override
     public EObjectProxyCollection outRels() {
