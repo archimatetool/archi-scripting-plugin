@@ -69,6 +69,9 @@ public class Console {
     }
 
     public void print(Object obj) {
+        if(obj == null) {
+            obj = "(null)"; //$NON-NLS-1$
+        }
         ConsoleView viewer = findConsoleViewer();
         if(viewer != null) {
             viewer.setTextColor(currentColor);
