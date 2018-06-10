@@ -24,6 +24,8 @@ import com.archimatetool.model.IFolder;
 import com.archimatetool.model.ModelVersion;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.SetCommand;
 
 /**
  * ArchiMate Model object wrapper proxy thing
@@ -192,10 +194,11 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     @Override
     protected EObjectProxy attr(String attribute, Object value) {
-        checkModelAccess();
+        //checkModelAccess();
 
         if((DOCUMENTATION.equals(attribute) || PURPOSE.equals(attribute)) && getEObject() != null) {
-            getEObject().setPurpose((String)value);
+            //getEObject().setPurpose((String)value);
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ARCHIMATE_MODEL__PURPOSE, value));
             return this;
         }
         

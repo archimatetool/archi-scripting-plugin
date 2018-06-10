@@ -19,6 +19,7 @@ import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
+import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelConnection;
@@ -30,6 +31,8 @@ import com.archimatetool.model.INameable;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.SetCommand;
 
 /**
  * Abstract EObject wrapper proxy
@@ -449,15 +452,17 @@ public abstract class EObjectProxy implements IModelConstants {
         switch(attribute) {
             case NAME:
                 if(getEObject() instanceof INameable) {
-                    checkModelAccess();
-                    ((INameable)getEObject()).setName((String)value);
+                    //checkModelAccess();
+                    //((INameable)getEObject()).setName((String)value);
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.NAMEABLE__NAME, value));
                 }
                 break;
             
             case DOCUMENTATION:
                 if(getReferencedConcept() instanceof IDocumentable) { // Referenced concept because diagram objects are not IDocumentable
-                    checkModelAccess();
-                    ((IDocumentable)getReferencedConcept()).setDocumentation((String)value);
+                    //checkModelAccess();
+                    //((IDocumentable)getReferencedConcept()).setDocumentation((String)value);
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DOCUMENTABLE__DOCUMENTATION, value));
                 }
                 break;
         }
