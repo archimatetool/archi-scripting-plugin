@@ -223,7 +223,9 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
     
     @Override
     public void delete() {
-        CommandHandler.executeCommand(new DisconnectRelationshipCommand(getEObject()));
+        if(getEObject().getArchimateModel() != null) {
+            CommandHandler.executeCommand(new DisconnectRelationshipCommand(getEObject()));
+        }
         super.delete();
     }
 

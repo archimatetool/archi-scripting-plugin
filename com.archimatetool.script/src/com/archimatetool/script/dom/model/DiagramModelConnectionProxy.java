@@ -82,6 +82,8 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
             proxy.delete();
         }
 
-        CommandHandler.executeCommand(new DisconnectConnectionCommand(getEObject()));
+        if(getArchimateModel() != null) {
+            CommandHandler.executeCommand(new DisconnectConnectionCommand(getEObject()));
+        }
     }
 }
