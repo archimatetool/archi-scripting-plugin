@@ -12,6 +12,7 @@ import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IProperty;
@@ -148,29 +149,31 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             ((ArchimateRelationshipProxy)proxy).setTarget(newRelationshipProxy, false);
         }
 
-        // TODO: Close views
+        // Store old relationship
+        ArchimateRelationshipProxy oldProxy = new ArchimateRelationshipProxy(getEObject());
+
         // Update all diagram connections
         for(EObjectProxy proxy : objectRefs()) {
-            CommandHandler.executeCommand(new ScriptCommand("type", getArchimateModel()) { //$NON-NLS-1$
-                IArchimateRelationship oldRelationship = getEObject();
+            // Store view for updating
+            IDiagramModel dm = ((IDiagramModelArchimateComponent)proxy.getEObject()).getDiagramModel();
 
+            CommandHandler.executeCommand(new ScriptCommand("type", getArchimateModel()) { //$NON-NLS-1$
                 @Override
                 public void perform() {
                     ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(newRelationship);
+                    ModelHandler.refreshEditor(dm);
                 }
 
                 @Override
                 public void undo() {
-                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(oldRelationship);
+                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(oldProxy.getEObject());
+                    ModelHandler.refreshEditor(dm);
                 }
             });
         }
 
-        // Store old relationship
-        ArchimateRelationshipProxy oldProxy = new ArchimateRelationshipProxy(getEObject());
-
         // Set this eObject
-       CommandHandler.executeCommand(new ScriptCommand("set", getArchimateModel()) { //$NON-NLS-1$
+        CommandHandler.executeCommand(new ScriptCommand("set", getArchimateModel()) { //$NON-NLS-1$
             @Override
             public void perform() {
                 getEObject().disconnect();
@@ -186,7 +189,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
 
         // Delete old relationship
         oldProxy.delete();
-        
+
         return this;
     }
 
