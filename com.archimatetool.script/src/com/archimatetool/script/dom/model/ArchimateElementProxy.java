@@ -108,25 +108,4 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         
         return this;
     }
-    
-    class SetTypeCommand extends ScriptCommand {
-
-        public SetTypeCommand(String type) {
-            super("type", getArchimateModel()); //$NON-NLS-1$
-        }
-        
-        @Override
-        public void undo() {
-            
-        }
-
-        @Override
-        public void perform() {
-            
-        }
-        
-        @Override
-        public void dispose() {
-        }
-    }
 }
