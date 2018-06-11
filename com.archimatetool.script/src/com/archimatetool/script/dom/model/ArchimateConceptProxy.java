@@ -46,8 +46,6 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
             return null;
         }
         
-        checkModelAccess();
-
         return this;
     }
     

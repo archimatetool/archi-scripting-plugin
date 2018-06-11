@@ -6,7 +6,6 @@
 package com.archimatetool.script.commands;
 
 import com.archimatetool.model.IArchimateElement;
-import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IFolder;
 
 /**
@@ -19,10 +18,10 @@ public class AddElementCommand extends ScriptCommand {
     private IFolder parent;
     private IArchimateElement element;
 
-    public AddElementCommand(IArchimateModel model, IArchimateElement element) {
-        super("add", model); //$NON-NLS-1$
+    public AddElementCommand(IFolder parent, IArchimateElement element) {
+        super("add", parent.getArchimateModel()); //$NON-NLS-1$
         this.element = element;
-        parent = model.getDefaultFolderForObject(element);
+        this.parent = parent;
     }
     
     @Override

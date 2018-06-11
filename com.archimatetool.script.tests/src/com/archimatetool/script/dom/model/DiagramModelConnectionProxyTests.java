@@ -15,7 +15,6 @@ import org.junit.Test;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
-import com.archimatetool.model.IAssociationRelationship;
 import com.archimatetool.model.ICompositionRelationship;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelConnection;
@@ -95,17 +94,6 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
 
         collection = testProxy.find("*");
         assertEquals(0, collection.size());
-    }
-
-    @Test
-    public void setArchimateConcept() {
-        assertTrue(actualTestProxy.getArchimateConcept().getEObject() instanceof ICompositionRelationship);
-        
-        IAssociationRelationship relation = IArchimateFactory.eINSTANCE.createAssociationRelationship();
-        ArchimateRelationshipProxy relationProxy = new ArchimateRelationshipProxy(relation);
-        actualTestProxy.setArchimateConcept(relationProxy);
-        
-        assertTrue(actualTestProxy.getArchimateConcept().getEObject() == relation);
     }
 
     @Test

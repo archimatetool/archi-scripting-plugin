@@ -8,6 +8,7 @@ package com.archimatetool.script.dom.model;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.editor.ui.services.EditorManager;
@@ -105,7 +106,10 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy 
         }
         
         if(getEObject().getArchimateModel() != null) {
-            EditorManager.closeDiagramEditor(getEObject()); // important!!
+            if(PlatformUI.isWorkbenchRunning()) {
+                EditorManager.closeDiagramEditor(getEObject()); // important!!
+            }
+            
             CommandHandler.executeCommand(new DeleteFolderObjectCommand(getEObject()));
         }
     }

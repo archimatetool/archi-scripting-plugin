@@ -22,6 +22,7 @@ import org.junit.Test;
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
+import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.script.ArchiScriptException;
@@ -46,6 +47,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Before
     public void runOnceBeforeEachTest() {
         testEObject = IArchimateFactory.eINSTANCE.createArchimateModel();
+        ((IArchimateModel)testEObject).setDefaults();
         testProxy = EObjectProxy.get(testEObject);
         actualTestProxy = (ArchimateModelProxy)testProxy;
     }

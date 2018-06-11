@@ -10,7 +10,11 @@ import java.util.Collection;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.archimatetool.model.IArchimateElement;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IProperty;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.ScriptCommand;
 
 /**
  * Archimate Element wrapper proxy
@@ -39,23 +43,87 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
             return this;
         }
         
-        ArchimateElementProxy newElementProxy = getModel().addElement(type, getName());
+        // Add new Element
+        ArchimateElementProxy newElementProxy = getModel().addElement(type, getName(), (IFolder)getEObject().eContainer());
         
-        if(newElementProxy != null) {
-            IArchimateElement newElement = newElementProxy.getEObject();
-            
-            Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
-            newElement.getProperties().addAll(props);
-            
-            outRels().attr(SOURCE, newElementProxy);
-            inRels().attr(TARGET, newElementProxy);
-            objectRefs().attr(ARCHIMATE_CONCEPT, newElementProxy);
-            
-            delete();
-            
-            setEObject(newElement);
+        if(newElementProxy == null) {
+            return this;
         }
         
+        IArchimateElement newElement = newElementProxy.getEObject();
+
+        // Copy Properties
+        Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
+        newElement.getProperties().addAll(props);
+
+        // Set source relations to this
+        for(EObjectProxy proxy : outRels()) {
+            ((ArchimateRelationshipProxy)proxy).setSource(newElementProxy, false);
+        }
+
+        // Set target relations to this
+        for(EObjectProxy proxy : inRels()) {
+            ((ArchimateRelationshipProxy)proxy).setTarget(newElementProxy, false);
+        }
+
+        // TODO: Close views
+        // Update all diagram objects
+        for(EObjectProxy proxy : objectRefs()) {
+            CommandHandler.executeCommand(new ScriptCommand("type", getArchimateModel()) { //$NON-NLS-1$
+                IArchimateElement oldElement = getEObject();
+
+                @Override
+                public void perform() {
+                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(newElement);
+                }
+
+                @Override
+                public void undo() {
+                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(oldElement);
+                }
+            });
+        }
+
+        // Store old element
+        ArchimateElementProxy oldProxy = new ArchimateElementProxy(getEObject());
+
+        // Set this eObject
+        CommandHandler.executeCommand(new ScriptCommand("set", getArchimateModel()) { //$NON-NLS-1$
+            @Override
+            public void perform() {
+                setEObject(newElement);
+            }
+
+            @Override
+            public void undo() {
+                setEObject(oldProxy.getEObject());
+            }
+        });
+
+        // Delete old element
+        oldProxy.delete();
+        
         return this;
+    }
+    
+    class SetTypeCommand extends ScriptCommand {
+
+        public SetTypeCommand(String type) {
+            super("type", getArchimateModel()); //$NON-NLS-1$
+        }
+        
+        @Override
+        public void undo() {
+            
+        }
+
+        @Override
+        public void perform() {
+            
+        }
+        
+        @Override
+        public void dispose() {
+        }
     }
 }

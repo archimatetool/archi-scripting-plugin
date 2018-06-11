@@ -21,10 +21,10 @@ import com.archimatetool.model.IArchimateModel;
  */
 public class CommandHandler {
     
-    private static Map<CommandStack, CompoundCommand> COMPOUNDCOMMANDS;
+    private static Map<CommandStack, CompoundCommand> compoundcommands;
     
     public static void init() {
-        COMPOUNDCOMMANDS = new HashMap<CommandStack, CompoundCommand>();
+        compoundcommands = new HashMap<CommandStack, CompoundCommand>();
     }
 
     public static void executeCommand(ScriptCommand cmd) {
@@ -32,10 +32,10 @@ public class CommandHandler {
         CommandStack stack = (CommandStack)model.getAdapter(CommandStack.class);
         
         if(stack != null) {
-            CompoundCommand compound = COMPOUNDCOMMANDS.get(stack);
+            CompoundCommand compound = compoundcommands.get(stack);
             if(compound == null) {
                 compound = new CompoundCommand("Script"); //$NON-NLS-1$
-                COMPOUNDCOMMANDS.put(stack, compound);
+                compoundcommands.put(stack, compound);
             }
             compound.add(cmd);
         }
@@ -44,7 +44,7 @@ public class CommandHandler {
     }
 
     public static void finalise() {
-        for(Entry<CommandStack, CompoundCommand> e : COMPOUNDCOMMANDS.entrySet()) {
+        for(Entry<CommandStack, CompoundCommand> e : compoundcommands.entrySet()) {
             e.getKey().execute(e.getValue());
         }
     }

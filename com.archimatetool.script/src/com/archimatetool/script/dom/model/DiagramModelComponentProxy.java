@@ -45,20 +45,6 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
     }
     
     /**
-     * Set this diagram component to ArchimateConceptProxy if this is an ArchiMate type, otherwise does nothing
-     * @param concept
-     * @return
-     */
-    public DiagramModelComponentProxy setArchimateConcept(ArchimateConceptProxy concept) {
-        if(isArchimateConcept()) {
-            checkModelAccess();
-            ((IDiagramModelArchimateComponent)getEObject()).setArchimateConcept(concept.getEObject());
-        }
-        
-        return this;
-    }
-    
-    /**
      * @return The ArchiMate component that this diagram component references or null if it does not reference one
      */
     public ArchimateConceptProxy getArchimateConcept() {
@@ -140,11 +126,6 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
     @Override
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
-            case ARCHIMATE_CONCEPT:
-                if(value instanceof ArchimateConceptProxy) {
-                    return setArchimateConcept((ArchimateConceptProxy)value);
-                }
-                break;
             case FONT_COLOR:
                 if(value instanceof String) {
                     checkColorValue((String)value);

@@ -16,7 +16,6 @@ import org.junit.Test;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
-import com.archimatetool.model.IArtifact;
 import com.archimatetool.model.IBusinessService;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelConnection;
@@ -98,17 +97,6 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
 
         collection = testProxy.find("*");
         assertEquals(1, collection.size());
-    }
-
-    @Test
-    public void setArchimateConcept() {
-        assertTrue(actualTestProxy.getArchimateConcept().getEObject() instanceof IBusinessService);
-        
-        IArtifact element = IArchimateFactory.eINSTANCE.createArtifact();
-        ArchimateElementProxy elementProxy = new ArchimateElementProxy(element);
-        actualTestProxy.setArchimateConcept(elementProxy);
-        
-        assertTrue(actualTestProxy.getArchimateConcept().getEObject() == element);
     }
 
     @Test

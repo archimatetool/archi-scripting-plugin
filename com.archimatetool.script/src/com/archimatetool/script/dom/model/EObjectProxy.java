@@ -472,13 +472,6 @@ public abstract class EObjectProxy implements IModelConstants {
         return this;
     }
     
-    /**
-     * Check model access
-     */
-    protected void checkModelAccess() {
-        //ModelHandler.checkModelAccess(getEObject());
-    }
-    
     @Override
     public boolean equals(Object obj) {
         if(this == obj) {

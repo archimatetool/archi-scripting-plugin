@@ -20,6 +20,7 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.IFolder;
 import com.archimatetool.model.ModelVersion;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
@@ -127,6 +128,10 @@ public class ArchimateModelProxy extends EObjectProxy {
      * @return The element
      */
     public ArchimateElementProxy addElement(String type, String name) {
+        return addElement(type, name, null);
+    }
+    
+    protected ArchimateElementProxy addElement(String type, String name, IFolder parent) {
         if(getEObject() == null) {
             return null;
         }
@@ -137,7 +142,13 @@ public class ArchimateModelProxy extends EObjectProxy {
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
             element.setName(name);
-            CommandHandler.executeCommand(new AddElementCommand(getArchimateModel(), element));
+            
+            if(parent == null) {
+                parent = getArchimateModel().getDefaultFolderForObject(element);
+            }
+
+            CommandHandler.executeCommand(new AddElementCommand(parent, element));
+            
             return new ArchimateElementProxy(element);
         }
         
@@ -145,6 +156,10 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
+        return addRelationship(type, name, source, target, null);
+    }
+    
+    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, IFolder parent) {
         if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
             return null;
         }
@@ -159,7 +174,13 @@ public class ArchimateModelProxy extends EObjectProxy {
 
             IArchimateRelationship relationship = (IArchimateRelationship)IArchimateFactory.eINSTANCE.create(eClass);
             relationship.setName(name);
-            CommandHandler.executeCommand(new AddRelationshipCommand(getArchimateModel(), relationship, source.getEObject(), target.getEObject()));
+            
+            if(parent == null) {
+                parent = getArchimateModel().getDefaultFolderForObject(relationship);
+            }
+            
+            CommandHandler.executeCommand(new AddRelationshipCommand(parent, relationship, source.getEObject(), target.getEObject()));
+            
             return new ArchimateRelationshipProxy(relationship);
         }
         

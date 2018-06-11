@@ -6,7 +6,6 @@
 package com.archimatetool.script.commands;
 
 import com.archimatetool.model.IArchimateConcept;
-import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 
@@ -21,12 +20,12 @@ public class AddRelationshipCommand extends ScriptCommand {
     private IArchimateRelationship relationship;
     private IArchimateConcept source, target;
 
-    public AddRelationshipCommand(IArchimateModel model, IArchimateRelationship relationship, IArchimateConcept source, IArchimateConcept target) {
-        super("add", model); //$NON-NLS-1$
+    public AddRelationshipCommand(IFolder parent, IArchimateRelationship relationship, IArchimateConcept source, IArchimateConcept target) {
+        super("add", parent.getArchimateModel()); //$NON-NLS-1$
         this.relationship = relationship;
         this.source = source;
         this.target = target;
-        parent = model.getDefaultFolderForObject(relationship);
+        this.parent = parent;
     }
     
     @Override

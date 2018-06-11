@@ -42,8 +42,6 @@ public class Model implements IArchiScriptDOMFactory {
             if(activePart != null) {
                 currentModel = activePart.getAdapter(IArchimateModel.class);
             }
-            
-            System.out.println(activePart);
         }
         // Else, if we are running in CLI mode, get the Current Model if there is one
         else {
