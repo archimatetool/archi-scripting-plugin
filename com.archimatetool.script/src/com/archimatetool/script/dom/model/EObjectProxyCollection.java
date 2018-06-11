@@ -89,7 +89,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         for(EObjectProxy object : this) {
             if(object != null) {
 	            if(filter.accept(object.getEObject())) {
-	                list.add(object);
+	                list.addUnique(object);
 	                
 	                if(filter.isSingle()) {
 	                    return list;

@@ -5,10 +5,12 @@
  */
 package com.archimatetool.script.dom.model;
 
+import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.ILineObject;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DisconnectConnectionCommand;
+import com.archimatetool.script.commands.SetCommand;
 
 /**
  * Diagram Model Connection wrapper proxy
@@ -53,8 +55,6 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         switch(attribute) {
             case LINE_WIDTH:
                 if(value instanceof Integer) {
-                    checkModelAccess();
-                    
                     int width = (int)value;
                     if(width < 0) {
                         width = 1;
@@ -62,6 +62,8 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
                     if(width > 3) {
                         width = 3;
                     }
+                    
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_WIDTH, width));
                     ((ILineObject)getEObject()).setLineWidth(width);
                 }
                 break;

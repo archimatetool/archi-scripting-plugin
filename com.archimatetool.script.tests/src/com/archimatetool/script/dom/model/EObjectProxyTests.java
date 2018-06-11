@@ -66,6 +66,11 @@ public abstract class EObjectProxyTests {
     }
     
     @Test
+    public void getArchimateModel() {
+        assertNotNull(testProxy.getArchimateModel());
+    }
+    
+    @Test
     public void getID() {
         ((IIdentifier)testEObject).setId("123");
         assertEquals("123", testProxy.getId());

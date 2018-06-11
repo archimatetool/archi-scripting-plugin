@@ -14,25 +14,31 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * @author Phillip Beauvoir
  */
 public class SetCommand extends ScriptCommand {
-    protected EStructuralFeature fFeature;
-    protected Object fOldValue;
-    protected Object fNewValue;
+    private EStructuralFeature feature;
+    private Object oldValue;
+    private Object newValue;
+    private EObject eObject;
 
     public SetCommand(EObject eObject, EStructuralFeature feature, Object newValue) {
         super("Script", eObject); //$NON-NLS-1$
-        fFeature = feature;
-        fOldValue = getEObject().eGet(feature);
-        fNewValue = newValue;
+        this.feature = feature;
+        this.eObject = eObject;
+        oldValue = eObject.eGet(feature);
+        this.newValue = newValue;
     }
     
     @Override
     public void perform() {
-        getEObject().eSet(fFeature, fNewValue);
+        eObject.eSet(feature, newValue);
     }
     
     @Override
     public void undo() {
-        getEObject().eSet(fFeature, fOldValue);
+        eObject.eSet(feature, oldValue);
     }
     
+    @Override
+    public void dispose() {
+        eObject = null;
+    }
 }

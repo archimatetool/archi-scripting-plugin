@@ -35,4 +35,10 @@ public class RemovePropertiesCommand extends ScriptCommand {
     public void perform() {
         eObject.getProperties().removeAll(toRemove);
     }
+    
+    @Override
+    public void dispose() {
+        toRemove = null;
+        eObject = null;
+    }
 }

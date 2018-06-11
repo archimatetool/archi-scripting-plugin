@@ -8,12 +8,14 @@ package com.archimatetool.script.dom.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.gef.commands.CommandStack;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -63,7 +65,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void find() {
-        EObjectProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        ArchimateModelProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
         EObjectProxyCollection collection = testModelProxy.find();
         assertEquals(788, collection.size());
@@ -78,7 +80,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     public void find_Selector() {
         super.find_Selector();
         
-        EObjectProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        ArchimateModelProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
         EObjectProxyCollection collection = testModelProxy.find("garbage");
         assertEquals(0, collection.size());
@@ -143,6 +145,9 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertNotSame(testEObject, proxy.getEObject());
         
         assertEquals("Test", proxy.getName());
+        
+        assertNotNull(actualTestProxy.getEObject().getAdapter(IArchiveManager.class));
+        assertNull(actualTestProxy.getEObject().getAdapter(CommandStack.class));
     }
     
     @Test
@@ -164,6 +169,11 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         
         assertTrue(file.exists());
         assertTrue(file.length() > 100);
+    }
+    
+    @Test(expected=ArchiScriptException.class)
+    public void save_Exception() throws IOException {
+        actualTestProxy.save("/cannotaccess.archimate");
     }
    
     @Test

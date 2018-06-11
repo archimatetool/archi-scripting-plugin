@@ -17,7 +17,6 @@ import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateModel;
-import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
@@ -118,11 +117,16 @@ public abstract class EObjectProxy implements IModelConstants {
     }
     
     public ArchimateModelProxy getModel() {
-        if(getEObject() instanceof IArchimateModelObject) {
-            return (ArchimateModelProxy)get(((IArchimateModelObject)getEObject()).getArchimateModel());
+        return (ArchimateModelProxy)get(getArchimateModel());
+    }
+    
+    // Helper method to get the eObject's containing IArchimateModel
+    protected IArchimateModel getArchimateModel() {
+        EObject o = getEObject();
+        while(!(o instanceof IArchimateModel) && o != null) {
+            o = o.eContainer();
         }
-        
-        return null;
+        return (IArchimateModel)o;
     }
     
     public String getId() {

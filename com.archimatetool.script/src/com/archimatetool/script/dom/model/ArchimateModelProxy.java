@@ -20,10 +20,11 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
-import com.archimatetool.model.IFolder;
 import com.archimatetool.model.ModelVersion;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.AddElementCommand;
+import com.archimatetool.script.commands.AddRelationshipCommand;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.SetCommand;
 
@@ -96,19 +97,21 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy save(String path) throws IOException {
-        checkModelAccess();
-        
         if(getEObject() != null) {
             File file = new File(path);
-            getEObject().setFile(file);
+            if(file.canWrite()) {
+                getEObject().setFile(file);
+                return save();
+            }
+            else {
+                throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_4, file));
+            }
         }
 
-        return save();
+        return this;
     }
     
     public ArchimateModelProxy save() throws IOException {
-        checkModelAccess();
-        
         if(getEObject() != null && getEObject().getFile() != null) {
             getEObject().setVersion(ModelVersion.VERSION);
             IArchiveManager archiveManager = (IArchiveManager)getEObject().getAdapter(IArchiveManager.class);
@@ -124,8 +127,6 @@ public class ArchimateModelProxy extends EObjectProxy {
      * @return The element
      */
     public ArchimateElementProxy addElement(String type, String name) {
-        checkModelAccess();
-        
         if(getEObject() == null) {
             return null;
         }
@@ -136,8 +137,7 @@ public class ArchimateModelProxy extends EObjectProxy {
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
             element.setName(name);
-            IFolder folder = getEObject().getDefaultFolderForObject(element);
-            folder.getElements().add(element);
+            CommandHandler.executeCommand(new AddElementCommand(getArchimateModel(), element));
             return new ArchimateElementProxy(element);
         }
         
@@ -145,8 +145,6 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
-        checkModelAccess();
-        
         if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
             return null;
         }
@@ -161,9 +159,7 @@ public class ArchimateModelProxy extends EObjectProxy {
 
             IArchimateRelationship relationship = (IArchimateRelationship)IArchimateFactory.eINSTANCE.create(eClass);
             relationship.setName(name);
-            relationship.connect(source.getEObject(), target.getEObject());
-            IFolder folder = getEObject().getDefaultFolderForObject(relationship);
-            folder.getElements().add(relationship);
+            CommandHandler.executeCommand(new AddRelationshipCommand(getArchimateModel(), relationship, source.getEObject(), target.getEObject()));
             return new ArchimateRelationshipProxy(relationship);
         }
         

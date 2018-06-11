@@ -5,7 +5,8 @@
  */
 package com.archimatetool.script.commands;
 
-import com.archimatetool.model.IArchimateModelObject;
+import org.eclipse.emf.ecore.EObject;
+
 import com.archimatetool.model.IFolder;
 
 /**
@@ -17,20 +18,22 @@ public class DeleteFolderObjectCommand extends ScriptCommand {
 
     private int index;
     private IFolder parent;
+    private EObject eObject;
 
-    public DeleteFolderObjectCommand(IArchimateModelObject eObject) {
+    public DeleteFolderObjectCommand(EObject eObject) {
         super("delete", eObject); //$NON-NLS-1$
         parent = (IFolder)eObject.eContainer();
+        this.eObject = eObject;
     }
 
     @Override
     public void undo() {
         if(index != -1) { // might be already be deleted from Command in CompoundCommand
-            if(getEObject() instanceof IFolder) {
-                parent.getFolders().add(index, (IFolder)getEObject());
+            if(eObject instanceof IFolder) {
+                parent.getFolders().add(index, (IFolder)eObject);
             }
             else {
-                parent.getElements().add(index, getEObject());
+                parent.getElements().add(index, eObject);
             }
         }
     }
@@ -40,23 +43,23 @@ public class DeleteFolderObjectCommand extends ScriptCommand {
         // Ensure index is stored just before execute because if this is part of a composite delete action
         // then the index positions will have changed
         
-        if(getEObject() instanceof IFolder) {
-            index = parent.getFolders().indexOf(getEObject());
+        if(eObject instanceof IFolder) {
+            index = parent.getFolders().indexOf(eObject);
             if(index != -1) { // might be already be deleted from Command in CompoundCommand
-                parent.getFolders().remove(getEObject());
+                parent.getFolders().remove(eObject);
             }
         }
         else {
-            index = parent.getElements().indexOf(getEObject()); 
+            index = parent.getElements().indexOf(eObject); 
             if(index != -1) { // might be already be deleted from Command in CompoundCommand
-                parent.getElements().remove(getEObject());
+                parent.getElements().remove(eObject);
             }
         }
     }
     
     @Override
     public void dispose() {
-        super.dispose();
+        eObject = null;
         parent = null;
     }
 

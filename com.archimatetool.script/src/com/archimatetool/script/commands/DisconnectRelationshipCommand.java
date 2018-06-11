@@ -13,24 +13,26 @@ import com.archimatetool.model.IArchimateRelationship;
  * @author Phillip Beauvoir
  */
 public class DisconnectRelationshipCommand extends ScriptCommand {
+    
+    private IArchimateRelationship eObject;
 
     public DisconnectRelationshipCommand(IArchimateRelationship eObject) {
         super("delete", eObject); //$NON-NLS-1$
+        this.eObject = eObject;
     }
 
     @Override
-    public IArchimateRelationship getEObject() {
-        return (IArchimateRelationship)super.getEObject();
-    }
-    
-    @Override
     public void undo() {
-        getEObject().reconnect();
+        eObject.reconnect();
     }
 
     @Override
     public void perform() {
-        getEObject().disconnect();
+        eObject.disconnect();
     }
     
+    @Override
+    public void dispose() {
+        eObject = null;
+    }
 }

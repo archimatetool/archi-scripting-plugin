@@ -17,17 +17,19 @@ public class DeleteDiagramModelObjectCommand extends ScriptCommand {
     
     private int index;
     private IDiagramModelContainer parent;
+    private IDiagramModelObject eObject;
 
     public DeleteDiagramModelObjectCommand(IDiagramModelObject eObject) {
         super("delete", eObject); //$NON-NLS-1$
         parent = (IDiagramModelContainer)eObject.eContainer();
+        this.eObject = eObject;
     }
 
     @Override
     public void undo() {
         // Add the Child at old index position
         if(index != -1) { // might have already been deleted by another process
-            parent.getChildren().add(index, (IDiagramModelObject)getEObject());
+            parent.getChildren().add(index, eObject);
         }
     }
 
@@ -35,15 +37,15 @@ public class DeleteDiagramModelObjectCommand extends ScriptCommand {
     public void perform() {
         // Ensure index is stored just before execute because if this is part of a composite delete action
         // then the index positions will have changed
-        index = parent.getChildren().indexOf(getEObject()); 
+        index = parent.getChildren().indexOf(eObject); 
         if(index != -1) { // might be already be deleted from Command in CompoundCommand
-            parent.getChildren().remove(getEObject());
+            parent.getChildren().remove(eObject);
         }
     }
     
     @Override
     public void dispose() {
-        super.dispose();
+        eObject = null;
         parent = null;
     }
 }

@@ -9,7 +9,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.commands.Command;
 
 import com.archimatetool.model.IArchimateModel;
-import com.archimatetool.model.IArchimateModelObject;
 
 /**
  * ScriptCommand
@@ -17,32 +16,31 @@ import com.archimatetool.model.IArchimateModelObject;
  * @author Phillip Beauvoir
  */
 public abstract class ScriptCommand extends Command {
-    private EObject fEObject;
-    private IArchimateModel fModel;
+    private IArchimateModel model;
 
-    public ScriptCommand(String name, EObject eObject) {
+    protected ScriptCommand(String name, IArchimateModel model) {
         super(name);
-        fEObject = eObject;
-        
-        if(eObject instanceof IArchimateModelObject) {
-            fModel = ((IArchimateModelObject)eObject).getArchimateModel();
-        }
-        else {
-            while(fModel == null) {
-                eObject = eObject.eContainer();
-                if(eObject instanceof IArchimateModelObject) {
-                    fModel = ((IArchimateModelObject)eObject).getArchimateModel();
-                }
-            }
-        }
+        this.model = model;
+    }
+
+    protected ScriptCommand(String name, EObject eObject) {
+        super(name);
+        setModel(eObject);
+    }
+
+    protected ScriptCommand(String name) {
+        super(name);
     }
     
-    public EObject getEObject() {
-        return fEObject;
+    protected void setModel(EObject eObject) {
+        while(!(eObject instanceof IArchimateModel) && eObject != null) {
+            eObject = eObject.eContainer();
+        }
+        model = (IArchimateModel)eObject;
     }
     
     public IArchimateModel getModel() {
-        return fModel;
+        return model;
     }
 
     public abstract void perform();
@@ -58,6 +56,6 @@ public abstract class ScriptCommand extends Command {
     
     @Override
     public void dispose() {
-        fEObject = null;
+        model = null;
     }
 }

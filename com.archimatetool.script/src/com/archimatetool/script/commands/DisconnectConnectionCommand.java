@@ -13,24 +13,26 @@ import com.archimatetool.model.IDiagramModelConnection;
  * @author Phillip Beauvoir
  */
 public class DisconnectConnectionCommand extends ScriptCommand {
+    
+    private IDiagramModelConnection eObject;
 
     public DisconnectConnectionCommand(IDiagramModelConnection eObject) {
         super("delete", eObject); //$NON-NLS-1$
+        this.eObject = eObject;
     }
 
     @Override
-    public IDiagramModelConnection getEObject() {
-        return (IDiagramModelConnection)super.getEObject();
-    }
-    
-    @Override
     public void undo() {
-        getEObject().reconnect();
+        eObject.reconnect();
     }
 
     @Override
     public void perform() {
-        getEObject().disconnect();
+        eObject.disconnect();
     }
     
+    @Override
+    public void dispose() {
+        eObject = null;
+    }
 }
