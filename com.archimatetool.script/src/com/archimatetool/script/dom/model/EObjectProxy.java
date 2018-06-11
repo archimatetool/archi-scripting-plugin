@@ -323,15 +323,8 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     private EObjectProxy addProperty(String key, String value) {
-        //checkModelAccess();
         
         if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
-            // TODO use IArchimateFactory.eINSTANCE.createProperty(key, value);
-            //IProperty prop = IArchimateFactory.eINSTANCE.createProperty();
-            //prop.setKey(key);
-            //prop.setValue(value);
-            //((IProperties)getReferencedConcept()).getProperties().add(prop);
-            
             CommandHandler.executeCommand(new AddPropertyCommand((IProperties)getReferencedConcept(), key, value));
         }
         
@@ -345,8 +338,6 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param value
      */
     private EObjectProxy addOrUpdateProperty(String key, String value) {
-        //checkModelAccess();
-        
         if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
             boolean updated = false;
             
