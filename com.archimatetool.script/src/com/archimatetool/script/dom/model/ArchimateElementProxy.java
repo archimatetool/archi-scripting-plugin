@@ -79,13 +79,13 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
                 @Override
                 public void perform() {
                     ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(newElement);
-                    ModelHandler.refreshEditor(dm);
+                    ModelUtil.refreshEditor(dm);
                 }
 
                 @Override
                 public void undo() {
                     ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(oldProxy.getEObject());
-                    ModelHandler.refreshEditor(dm);
+                    ModelUtil.refreshEditor(dm);
                 }
             });
         }

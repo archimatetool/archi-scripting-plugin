@@ -161,13 +161,13 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
                 @Override
                 public void perform() {
                     ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(newRelationship);
-                    ModelHandler.refreshEditor(dm);
+                    ModelUtil.refreshEditor(dm);
                 }
 
                 @Override
                 public void undo() {
                     ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(oldProxy.getEObject());
-                    ModelHandler.refreshEditor(dm);
+                    ModelUtil.refreshEditor(dm);
                 }
             });
         }

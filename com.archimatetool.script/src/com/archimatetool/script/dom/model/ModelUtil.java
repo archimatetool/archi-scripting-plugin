@@ -5,6 +5,7 @@
  */
 package com.archimatetool.script.dom.model;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -13,16 +14,39 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.diagram.DiagramEditorInput;
 import com.archimatetool.editor.diagram.IDiagramModelEditor;
+import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IFolder;
 
 /**
- * Handles Models that are open in the UI
+ * Model Utils
  * 
  * @author Phillip Beauvoir
  */
-public class ModelHandler {
+public class ModelUtil {
     
-    private ModelHandler() {
+    private ModelUtil() {
+    }
+    
+    /**
+     * @param folder
+     * @param concept
+     * @return true if the given parent folder is the correct folder to contain this concept
+     */
+    public static boolean isCorrectFolderForConcept(IFolder folder, IArchimateConcept concept) {
+        IFolder topFolder = folder.getArchimateModel().getDefaultFolderForObject(concept);
+        if(folder == topFolder) {
+            return true;
+        }
+        
+        EObject e = folder;
+        while((e = e.eContainer()) != null) {
+            if(e == topFolder) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     public static void refreshEditor(IDiagramModel dm) {

@@ -133,7 +133,7 @@ public class ArchimateModelProxy extends EObjectProxy {
         return addElement(type, name, null);
     }
     
-    protected ArchimateElementProxy addElement(String type, String name, IFolder parent) {
+    public ArchimateElementProxy addElement(String type, String name, IFolder parentFolder) {
         if(getEObject() == null) {
             return null;
         }
@@ -145,12 +145,12 @@ public class ArchimateModelProxy extends EObjectProxy {
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
             element.setName(name);
             
-            // TODO if this becomes public API, check folder is correct for type
-            if(parent == null) {
-                parent = getArchimateModel().getDefaultFolderForObject(element);
+            // Check folder is correct for type, if not use default folder
+            if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, element)) {
+                parentFolder = getArchimateModel().getDefaultFolderForObject(element);
             }
 
-            CommandHandler.executeCommand(new AddElementCommand(parent, element));
+            CommandHandler.executeCommand(new AddElementCommand(parentFolder, element));
             
             return new ArchimateElementProxy(element);
         }
@@ -162,7 +162,7 @@ public class ArchimateModelProxy extends EObjectProxy {
         return addRelationship(type, name, source, target, null);
     }
     
-    protected ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, IFolder parent) {
+    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, IFolder parentFolder) {
         if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
             return null;
         }
@@ -178,12 +178,12 @@ public class ArchimateModelProxy extends EObjectProxy {
             IArchimateRelationship relationship = (IArchimateRelationship)IArchimateFactory.eINSTANCE.create(eClass);
             relationship.setName(name);
             
-            // TODO if this becomes public API, check folder is correct for type
-            if(parent == null) {
-                parent = getArchimateModel().getDefaultFolderForObject(relationship);
+            // Check folder is correct for type, if not use default folder
+            if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, relationship)) {
+                parentFolder = getArchimateModel().getDefaultFolderForObject(relationship);
             }
             
-            CommandHandler.executeCommand(new AddRelationshipCommand(parent, relationship, source.getEObject(), target.getEObject()));
+            CommandHandler.executeCommand(new AddRelationshipCommand(parentFolder, relationship, source.getEObject(), target.getEObject()));
             
             return new ArchimateRelationshipProxy(relationship);
         }
