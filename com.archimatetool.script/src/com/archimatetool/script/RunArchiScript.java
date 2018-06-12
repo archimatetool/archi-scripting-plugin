@@ -6,7 +6,6 @@
 package com.archimatetool.script;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -58,9 +57,7 @@ public class RunArchiScript {
             CommandHandler.init();
 
             // Evaluate the script
-            try(FileReader reader = new FileReader(file)) {
-                engine.eval(reader);
-            }
+            engine.eval("load('"+file.getAbsolutePath()+"')");
             
             // If there is a "main" function invoke that
             if("function".equals(engine.eval("typeof main"))) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -82,10 +79,6 @@ public class RunArchiScript {
      * Global Variables
      */
     private void defineGlobalVariables(ScriptEngine engine) {
-        // Bind our global variables
-        engine.put("__JARCHI_FILE__", file.getAbsolutePath()); //$NON-NLS-1$
-        engine.put("__JARCHI_DIR__", file.getParent());  //$NON-NLS-1$
-        
         // Eclipse ones - these are needed for calling UI methods such as opening dialogs, windows, etc
         if(PlatformUI.isWorkbenchRunning()) {
             engine.put("window", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
