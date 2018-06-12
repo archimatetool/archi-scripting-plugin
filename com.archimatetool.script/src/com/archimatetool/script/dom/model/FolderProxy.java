@@ -9,6 +9,8 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.DeleteFolderObjectCommand;
 
 /**
  * DiagramModel wrapper proxy
@@ -57,14 +59,12 @@ public class FolderProxy extends EObjectProxy {
             return;
         }
 
-        checkModelAccess();
-        
         for(EObjectProxy child : children()) {
             child.delete();
         }
         
-        if(getEObject().eContainer() != null) {
-            ((IFolder)getEObject().eContainer()).getFolders().remove(getEObject());
+        if(getEObject().getArchimateModel() != null) {
+            CommandHandler.executeCommand(new DeleteFolderObjectCommand(getEObject()));
         }
     }
     

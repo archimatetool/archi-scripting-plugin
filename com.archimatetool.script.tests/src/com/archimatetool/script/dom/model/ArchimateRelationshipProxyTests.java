@@ -131,14 +131,14 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         }
     }
 
-    @Test
+    @Test(expected=ArchiScriptException.class)
     public void setSource() {
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createApplicationComponent());
         actualTestProxy.setSource(proxy);
         assertEquals(proxy.getEObject(), actualTestProxy.getSource().getEObject());
     }
 
-    @Test
+    @Test(expected=ArchiScriptException.class)
     public void setTarget() {
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createArtifact());
         actualTestProxy.setTarget(proxy);

@@ -106,4 +106,8 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup, IPa
         
         return null;
     }
+    
+    public IWorkbenchPart getActivePart() {
+        return currentPart;
+    }
 }

@@ -10,10 +10,17 @@ import java.util.Collection;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.osgi.util.NLS;
 
+import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.DisconnectRelationshipCommand;
+import com.archimatetool.script.commands.ScriptCommand;
 
 /**
  * Archimate Relationship wrapper proxy
@@ -42,28 +49,68 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
     }
     
     public ArchimateRelationshipProxy setSource(ArchimateConceptProxy source) {
-        checkModelAccess();
-        
+        return setSource(source, true);
+    }
+    
+    public ArchimateRelationshipProxy setSource(ArchimateConceptProxy source, boolean updateViews) {
         if(!ArchimateModelUtils.isValidRelationship(source.getEObject(), getEObject().getTarget(), getEObject().eClass())) {
             throw new ArchiScriptException(NLS.bind(Messages.ArchimateRelationshipProxy_0,
                     new Object[] { getEObject().eClass().getName(), source, getTarget() }));
         }
         
-        getEObject().setSource(source.getEObject());
+        CommandHandler.executeCommand(new ScriptCommand("source", getArchimateModel()) { //$NON-NLS-1$
+            IArchimateConcept oldSource = getEObject().getSource();
+            
+            @Override
+            public void perform() {
+                getEObject().setSource(source.getEObject());
+            }
+            
+            @Override
+            public void undo() {
+                getEObject().setSource(oldSource);
+            }
+        });
+        
+        // TODO: All diagram connections to be updated.
+        //       If the new source diagram object exists in a view, connect to that else delete the connection
+        if(updateViews && !objectRefs().isEmpty()) {
+            throw new ArchiScriptException("Cannot set Source in Views"); //$NON-NLS-1$
+        }
         
         return this;
     }
     
     public ArchimateRelationshipProxy setTarget(ArchimateConceptProxy target) {
-        checkModelAccess();
-        
+        return setTarget(target, true);
+    }
+    
+    protected ArchimateRelationshipProxy setTarget(ArchimateConceptProxy target, boolean updateViews) {
         if(!ArchimateModelUtils.isValidRelationship(getEObject().getSource(), target.getEObject(), getEObject().eClass())) {
             throw new ArchiScriptException(NLS.bind(Messages.ArchimateRelationshipProxy_1,
                     new Object[] { getEObject().eClass().getName(), getSource(), target }));
         }
         
-        getEObject().setTarget(target.getEObject());
-
+        CommandHandler.executeCommand(new ScriptCommand("target", getArchimateModel()) { //$NON-NLS-1$
+            IArchimateConcept oldTarget = getEObject().getTarget();
+            
+            @Override
+            public void perform() {
+                getEObject().setTarget(target.getEObject());
+            }
+            
+            @Override
+            public void undo() {
+                getEObject().setTarget(oldTarget);
+            }
+        });
+        
+        // TODO: All diagram connections to be updated.
+        //       If the new target diagram object exists in a view, connect to that else delete the connection
+        if(updateViews && !objectRefs().isEmpty()) {
+            throw new ArchiScriptException("Cannot set Target in Views"); //$NON-NLS-1$
+        }
+        
         return this;
     }
     
@@ -78,24 +125,71 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             return this;
         }
         
-        ArchimateRelationshipProxy newRelationshipProxy = getModel().addRelationship(type, getName(), getSource(), getTarget());
+        // Add new relationship
+        ArchimateRelationshipProxy newRelationshipProxy = getModel().addRelationship(type, getName(),
+                getSource(), getTarget(), (IFolder)getEObject().eContainer());
         
-        if(newRelationshipProxy != null) {
-            IArchimateRelationship newRelationship = newRelationshipProxy.getEObject();
-            
-            Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
-            newRelationship.getProperties().addAll(props);
-            
-            outRels().attr(SOURCE, newRelationshipProxy);
-            inRels().attr(TARGET, newRelationshipProxy);
-            objectRefs().attr(ARCHIMATE_CONCEPT, newRelationshipProxy);
-            
-            getEObject().disconnect();
-            delete();
-            
-            setEObject(newRelationship);
+        if(newRelationshipProxy == null) {
+            return this;
         }
         
+        IArchimateRelationship newRelationship = newRelationshipProxy.getEObject();
+
+        // Copy all properties
+        Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
+        newRelationship.getProperties().addAll(props);
+
+        // Set source relations to this
+        for(EObjectProxy proxy : outRels()) {
+            ((ArchimateRelationshipProxy)proxy).setSource(newRelationshipProxy, false);
+        }
+
+        // Set target relations to this
+        for(EObjectProxy proxy : inRels()) {
+            ((ArchimateRelationshipProxy)proxy).setTarget(newRelationshipProxy, false);
+        }
+
+        // Store old relationship
+        ArchimateRelationshipProxy oldProxy = new ArchimateRelationshipProxy(getEObject());
+
+        // Update all diagram connections
+        for(EObjectProxy proxy : objectRefs()) {
+            // Store view for updating
+            IDiagramModel dm = ((IDiagramModelArchimateComponent)proxy.getEObject()).getDiagramModel();
+
+            CommandHandler.executeCommand(new ScriptCommand("type", getArchimateModel()) { //$NON-NLS-1$
+                @Override
+                public void perform() {
+                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(newRelationship);
+                    ModelHandler.refreshEditor(dm);
+                }
+
+                @Override
+                public void undo() {
+                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(oldProxy.getEObject());
+                    ModelHandler.refreshEditor(dm);
+                }
+            });
+        }
+
+        // Set this eObject
+        CommandHandler.executeCommand(new ScriptCommand("set", getArchimateModel()) { //$NON-NLS-1$
+            @Override
+            public void perform() {
+                getEObject().disconnect();
+                setEObject(newRelationship);
+            }
+
+            @Override
+            public void undo() {
+                setEObject(oldProxy.getEObject());
+                getEObject().reconnect();
+            }
+        });
+
+        // Delete old relationship
+        oldProxy.delete();
+
         return this;
     }
 
@@ -129,8 +223,10 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
     
     @Override
     public void delete() {
+        if(getEObject().getArchimateModel() != null) {
+            CommandHandler.executeCommand(new DisconnectRelationshipCommand(getEObject()));
+        }
         super.delete();
-        getEObject().disconnect();
     }
 
 }

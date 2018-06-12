@@ -23,8 +23,8 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
-import com.archimatetool.script.dom.model.ModelHandler;
 import com.archimatetool.script.views.console.ConsoleOutput;
 
 
@@ -54,8 +54,8 @@ public class RunArchiScript {
                 engine.eval(initReader);
             }
         	
-            // Initialise ModelHandler
-            ModelHandler.init();
+            // Initialise CommandHandler
+            CommandHandler.init();
 
             // Evaluate the script
             try(FileReader reader = new FileReader(file)) {
@@ -73,8 +73,8 @@ public class RunArchiScript {
         finally {
             ConsoleOutput.end();
             
-            // Re-open models if any were closed
-            ModelHandler.openModels();
+            // Add Commands to UI
+            CommandHandler.finalise();
         }
 	}
 

@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.FontFactory;
+import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelComponent;
@@ -20,6 +21,8 @@ import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IFontAttribute;
 import com.archimatetool.model.ILineObject;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.SetCommand;
 
 /**
  * Diagram Model Component wrapper proxy
@@ -39,20 +42,6 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
     
     public DiagramModelProxy getDiagramModel() {
         return new DiagramModelProxy(getEObject().getDiagramModel());
-    }
-    
-    /**
-     * Set this diagram component to ArchimateConceptProxy if this is an ArchiMate type, otherwise does nothing
-     * @param concept
-     * @return
-     */
-    public DiagramModelComponentProxy setArchimateConcept(ArchimateConceptProxy concept) {
-        if(isArchimateConcept()) {
-            checkModelAccess();
-            ((IDiagramModelArchimateComponent)getEObject()).setArchimateConcept(concept.getEObject());
-        }
-        
-        return this;
     }
     
     /**
@@ -137,47 +126,37 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
     @Override
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
-            case ARCHIMATE_CONCEPT:
-                if(value instanceof ArchimateConceptProxy) {
-                    return setArchimateConcept((ArchimateConceptProxy)value);
-                }
-                break;
             case FONT_COLOR:
                 if(value instanceof String) {
                     checkColorValue((String)value);
-                    checkModelAccess();
-                    ((IFontAttribute)getEObject()).setFontColor((String)value);
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT_COLOR, value));
                 }
                 break;
             case FONT_NAME:
                 if(value instanceof String) {
-                    checkModelAccess();
                     FontData fd = getFontData();
                     fd.setName((String)value);
-                    ((IFontAttribute)getEObject()).setFont(fd.toString());
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT, fd.toString()));
                 }
                 break;
             case FONT_SIZE:
                 if(value instanceof Integer) {
-                    checkModelAccess();
                     FontData fd = getFontData();
                     fd.setHeight((Integer)value);
-                    ((IFontAttribute)getEObject()).setFont(fd.toString());
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT, fd.toString()));
                 }
                 break;
             case FONT_STYLE:
                 if(value instanceof String) {
-                    checkModelAccess();
                     FontData fd = getFontData();
                     fd.setStyle(getFontStyleAsInteger((String)value));
-                    ((IFontAttribute)getEObject()).setFont(fd.toString());
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT, fd.toString()));
                 }
                 break;
             case LINE_COLOR:
                 if(value instanceof String) {
                     checkColorValue((String)value);
-                    checkModelAccess();
-                    ((ILineObject)getEObject()).setLineColor((String)value);
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_COLOR, value));
                 }
                 break;
         }

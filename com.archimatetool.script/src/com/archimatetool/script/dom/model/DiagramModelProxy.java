@@ -8,13 +8,16 @@ package com.archimatetool.script.dom.model;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
+import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
-import com.archimatetool.model.IFolder;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.DeleteFolderObjectCommand;
 
 /**
  * DiagramModel wrapper proxy
@@ -91,8 +94,6 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy 
     
     @Override
     public void delete() {
-        checkModelAccess();
-        
         // Delete diagram references first
         for(EObjectProxy proxy : objectRefs()) {
             proxy.delete();
@@ -104,8 +105,12 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy 
             }
         }
         
-        if(getEObject().eContainer() != null) {
-            ((IFolder)getEObject().eContainer()).getElements().remove(getEObject());
+        if(getEObject().getArchimateModel() != null) {
+            if(PlatformUI.isWorkbenchRunning()) {
+                EditorManager.closeDiagramEditor(getEObject()); // important!!
+            }
+            
+            CommandHandler.executeCommand(new DeleteFolderObjectCommand(getEObject()));
         }
     }
 

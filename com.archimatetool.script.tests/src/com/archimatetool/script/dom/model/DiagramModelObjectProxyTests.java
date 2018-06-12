@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
-import com.archimatetool.model.IArtifact;
+import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IBusinessService;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelConnection;
@@ -97,17 +97,6 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
 
         collection = testProxy.find("*");
         assertEquals(1, collection.size());
-    }
-
-    @Test
-    public void setArchimateConcept() {
-        assertTrue(actualTestProxy.getArchimateConcept().getEObject() instanceof IBusinessService);
-        
-        IArtifact element = IArchimateFactory.eINSTANCE.createArtifact();
-        ArchimateElementProxy elementProxy = new ArchimateElementProxy(element);
-        actualTestProxy.setArchimateConcept(elementProxy);
-        
-        assertTrue(actualTestProxy.getArchimateConcept().getEObject() == element);
     }
 
     @Test
@@ -200,7 +189,9 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     @Override
     @Test
     public void delete() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
         IArchimateDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
+        model.getDefaultFolderForObject(dm).getElements().add(dm);
         
         IDiagramModelGroup group1 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
         dm.getChildren().add(group1);

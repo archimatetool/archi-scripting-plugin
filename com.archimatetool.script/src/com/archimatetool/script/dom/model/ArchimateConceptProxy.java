@@ -11,7 +11,8 @@ import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
-import com.archimatetool.model.IFolder;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.DeleteFolderObjectCommand;
 
 /**
  * Archimate Concept wrapper proxy
@@ -45,8 +46,6 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
             return null;
         }
         
-        checkModelAccess();
-
         return this;
     }
     
@@ -96,18 +95,11 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
 
     @Override
     public void delete() {
-        checkModelAccess();
-        
         // Delete diagram instances first
         for(EObjectProxy proxy : objectRefs()) {
             proxy.delete();
         }
-        
-        // Remove this object
-        if(getEObject().eContainer() != null) {
-            ((IFolder)getEObject().eContainer()).getElements().remove(getEObject());
-        }
-        
+       
         // Delete all connecting relationships
         for(EObjectProxy proxy : inRels()) {
             proxy.delete();
@@ -116,6 +108,11 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         for(EObjectProxy proxy : outRels()) {
             proxy.delete();
         }
+
+        if(getEObject().getArchimateModel() != null) {
+            CommandHandler.executeCommand(new DeleteFolderObjectCommand(getEObject()));
+        }
+      
     }
 
 }

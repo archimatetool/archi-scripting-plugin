@@ -7,10 +7,14 @@ package com.archimatetool.script.dom.model;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IBounds;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.DeleteDiagramModelObjectCommand;
+import com.archimatetool.script.commands.SetCommand;
 
 /**
  * Diagram Model Object wrapper proxy
@@ -97,8 +101,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case FILL_COLOR:
                 if(value instanceof String) {
                     checkColorValue((String)value);
-                    checkModelAccess();
-                    getEObject().setFillColor((String)value);
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__FILL_COLOR, value));
                 }
                 break;
         }
@@ -108,12 +111,6 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     
     @Override
     public void delete() {
-        checkModelAccess();
-
-        if(getEObject().eContainer() != null) {
-            ((IDiagramModelContainer)getEObject().eContainer()).getChildren().remove(getEObject());
-        }
-        
         for(EObjectProxy rel : inRels()) {
             rel.delete();
         }
@@ -124,6 +121,10 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         
         for(EObjectProxy child : children()) {
             child.delete();
+        }
+
+        if(getEObject().eContainer() != null) {
+            CommandHandler.executeCommand(new DeleteDiagramModelObjectCommand(getEObject()));
         }
     }
     

@@ -9,9 +9,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.commandline.CommandLineState;
-import com.archimatetool.editor.diagram.IDiagramModelEditor;
+import com.archimatetool.editor.ui.services.ViewManager;
 import com.archimatetool.editor.views.tree.ITreeModelView;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 
 /**
@@ -31,11 +32,11 @@ public class Model implements IArchiScriptDOMFactory {
         
         // Get and wrap the currently selected model in the UI if there is one
         if(PlatformUI.isWorkbenchRunning()) {
-            IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+            IWorkbenchPart activePart = ArchiScriptPlugin.INSTANCE.getActivePart();
             
             // Fallback to tree
-            if(!(activePart instanceof ITreeModelView || activePart instanceof IDiagramModelEditor)) {
-                activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ITreeModelView.ID);
+            if(activePart == null) {
+                activePart = ViewManager.findViewPart(ITreeModelView.ID);
             }
             
             if(activePart != null) {
