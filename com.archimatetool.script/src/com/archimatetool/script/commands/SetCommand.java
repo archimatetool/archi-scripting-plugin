@@ -38,6 +38,13 @@ public class SetCommand extends ScriptCommand {
     }
     
     @Override
+    public boolean canExecute() {
+        return (newValue != null) ? !newValue.equals(oldValue)
+                : (oldValue != null) ? !oldValue.equals(newValue)
+                : false;
+    }
+
+    @Override
     public void dispose() {
         eObject = null;
     }

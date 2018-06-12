@@ -28,6 +28,10 @@ public class CommandHandler {
     }
 
     public static void executeCommand(ScriptCommand cmd) {
+        if(!cmd.canExecute()) {
+            return;
+        }
+        
         IArchimateModel model = cmd.getModel();
         CommandStack stack = (CommandStack)model.getAdapter(CommandStack.class);
         

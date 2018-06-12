@@ -37,6 +37,11 @@ public class RemovePropertiesCommand extends ScriptCommand {
     }
     
     @Override
+    public boolean canExecute() {
+        return toRemove != null && !toRemove.isEmpty();
+    }
+    
+    @Override
     public void dispose() {
         toRemove = null;
         eObject = null;

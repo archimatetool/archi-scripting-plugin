@@ -405,8 +405,6 @@ public abstract class EObjectProxy implements IModelConstants {
      * @param key
      */
     public EObjectProxy removeProp(String key, String value) {
-        //checkModelAccess();
-        
         if(getReferencedConcept() instanceof IProperties) {
             List<IProperty> toRemove = new ArrayList<IProperty>();
             EList<IProperty> props = ((IProperties)getReferencedConcept()).getProperties();
@@ -419,7 +417,6 @@ public abstract class EObjectProxy implements IModelConstants {
                 }
             }
             
-            //props.removeAll(toRemove);
             CommandHandler.executeCommand(new RemovePropertiesCommand((IProperties)getReferencedConcept(), toRemove));
         }
         

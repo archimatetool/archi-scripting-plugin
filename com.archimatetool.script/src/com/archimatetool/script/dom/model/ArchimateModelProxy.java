@@ -90,6 +90,8 @@ public class ArchimateModelProxy extends EObjectProxy {
         IArchiveManager archiveManager = IArchiveManager.FACTORY.createArchiveManager(model);
         model.setAdapter(IArchiveManager.class, archiveManager);
         
+        // Don't add a CommandStack. One will be added if openInUI() is called
+        
         return this;
     }
     
@@ -143,6 +145,7 @@ public class ArchimateModelProxy extends EObjectProxy {
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
             element.setName(name);
             
+            // TODO if this becomes public API, check folder is correct for type
             if(parent == null) {
                 parent = getArchimateModel().getDefaultFolderForObject(element);
             }
