@@ -162,7 +162,7 @@ public class ArchimateModelProxy extends EObjectProxy {
         return addRelationship(type, name, source, target, null);
     }
     
-    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, IFolder parent) {
+    protected ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, IFolder parent) {
         if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
             return null;
         }
@@ -178,6 +178,7 @@ public class ArchimateModelProxy extends EObjectProxy {
             IArchimateRelationship relationship = (IArchimateRelationship)IArchimateFactory.eINSTANCE.create(eClass);
             relationship.setName(name);
             
+            // TODO if this becomes public API, check folder is correct for type
             if(parent == null) {
                 parent = getArchimateModel().getDefaultFolderForObject(relationship);
             }
