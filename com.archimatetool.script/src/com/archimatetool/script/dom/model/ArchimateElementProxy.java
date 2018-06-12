@@ -10,8 +10,7 @@ import java.util.Collection;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.archimatetool.model.IArchimateElement;
-import com.archimatetool.model.IDiagramModel;
-import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.script.commands.CommandHandler;
@@ -72,20 +71,19 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
 
         // Update all diagram objects
         for(EObjectProxy proxy : objectRefs()) {
-            // Store view for updating
-            IDiagramModel dm = ((IDiagramModelArchimateComponent)proxy.getEObject()).getDiagramModel();
-            
             CommandHandler.executeCommand(new ScriptCommand("type", getArchimateModel()) { //$NON-NLS-1$
+                IDiagramModelArchimateObject dmo = (IDiagramModelArchimateObject)proxy.getEObject();
+
                 @Override
                 public void perform() {
-                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(newElement);
-                    ModelUtil.refreshEditor(dm);
+                    dmo.setArchimateConcept(newElement);
+                    ModelUtil.refreshDiagramModelComponent(dmo);
                 }
 
                 @Override
                 public void undo() {
-                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(oldProxy.getEObject());
-                    ModelUtil.refreshEditor(dm);
+                    dmo.setArchimateConcept(oldProxy.getEObject());
+                    ModelUtil.refreshDiagramModelComponent(dmo);
                 }
             });
         }

@@ -12,8 +12,7 @@ import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
-import com.archimatetool.model.IDiagramModel;
-import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.model.util.ArchimateModelUtils;
@@ -154,20 +153,19 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
 
         // Update all diagram connections
         for(EObjectProxy proxy : objectRefs()) {
-            // Store view for updating
-            IDiagramModel dm = ((IDiagramModelArchimateComponent)proxy.getEObject()).getDiagramModel();
+            IDiagramModelArchimateConnection dmc = (IDiagramModelArchimateConnection)proxy.getEObject();
 
             CommandHandler.executeCommand(new ScriptCommand("type", getArchimateModel()) { //$NON-NLS-1$
                 @Override
                 public void perform() {
-                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(newRelationship);
-                    ModelUtil.refreshEditor(dm);
+                    dmc.setArchimateConcept(newRelationship);
+                    ModelUtil.refreshDiagramModelComponent(dmc);
                 }
 
                 @Override
                 public void undo() {
-                    ((IDiagramModelArchimateComponent)proxy.getEObject()).setArchimateConcept(oldProxy.getEObject());
-                    ModelUtil.refreshEditor(dm);
+                    dmc.setArchimateConcept(oldProxy.getEObject());
+                    ModelUtil.refreshDiagramModelComponent(dmc);
                 }
             });
         }

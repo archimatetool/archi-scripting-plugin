@@ -6,16 +6,13 @@
 package com.archimatetool.script.dom.model;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
-import com.archimatetool.editor.diagram.DiagramEditorInput;
-import com.archimatetool.editor.diagram.IDiagramModelEditor;
 import com.archimatetool.model.IArchimateConcept;
-import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelComponent;
+import com.archimatetool.model.IDiagramModelConnection;
+import com.archimatetool.model.IDiagramModelContainer;
+import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IFolder;
 
 /**
@@ -49,24 +46,25 @@ public class ModelUtil {
         return false;
     }
     
-    public static void refreshEditor(IDiagramModel dm) {
+    /**
+     * If a DiagramModelComponent needs a refresh in a View, this does the trick/
+     * It simply deletes the model component and adds it again causing a MVC refresh
+     * @param dmc
+     */
+    public static void refreshDiagramModelComponent(IDiagramModelComponent dmc) {
         if(PlatformUI.isWorkbenchRunning()) {
-            IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            for(IEditorReference ref : page.getEditorReferences()) {
-                try {
-                    IEditorInput input = ref.getEditorInput();
-                    if(input instanceof DiagramEditorInput && ((DiagramEditorInput)input).getDiagramModel() == dm) {
-                        IDiagramModelEditor editor = (IDiagramModelEditor)ref.getEditor(false);
-                        if(editor != null) {
-                            editor.getGraphicalViewer().setContents(editor.getModel());
-                        }
-                    }
+            IDiagramModelContainer parent = (IDiagramModelContainer)dmc.eContainer();
+            if(parent != null) {
+                if(dmc instanceof IDiagramModelObject) {
+                    int index = parent.getChildren().indexOf(dmc);
+                    parent.getChildren().remove(dmc);
+                    parent.getChildren().add(index, (IDiagramModelObject)dmc);
                 }
-                catch(PartInitException ex) {
-                    ex.printStackTrace();
+                else if(dmc instanceof IDiagramModelConnection) {
+                    ((IDiagramModelConnection)dmc).disconnect();
+                    ((IDiagramModelConnection)dmc).reconnect();
                 }
             }
         }
     }
-    
 }
