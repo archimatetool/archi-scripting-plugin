@@ -5,15 +5,19 @@
  */
 package com.archimatetool.script.dom.model;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.model.IArchimateConcept;
+import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.model.util.ArchimateModelUtils;
 
 /**
  * Model Utils
@@ -44,6 +48,29 @@ public class ModelUtil {
         }
         
         return false;
+    }
+    
+    /**
+     * @param element
+     * @param type kebab-case type
+     * @return false if trying to set an invalid type
+     */
+    public static boolean isAllowedSetType(IArchimateConcept concept, String type) {
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(EObjectProxy.getCamelCase(type));
+        
+        for(IArchimateRelationship rel : concept.getSourceRelationships()) {
+            if(!ArchimateModelUtils.isValidRelationship(eClass, rel.getTarget().eClass(), rel.eClass())) {
+                return false;
+            }
+        }
+        
+        for(IArchimateRelationship rel : concept.getTargetRelationships()) {
+            if(!ArchimateModelUtils.isValidRelationship(rel.getSource().eClass(), eClass, rel.eClass())) {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     /**
