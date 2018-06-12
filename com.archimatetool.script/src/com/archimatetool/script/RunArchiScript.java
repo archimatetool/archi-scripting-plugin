@@ -57,7 +57,7 @@ public class RunArchiScript {
             CommandHandler.init();
 
             // Evaluate the script
-            engine.eval("load('"+file.getAbsolutePath()+"')");
+            engine.eval("load('" + file.getAbsolutePath() + "')");  //$NON-NLS-1$//$NON-NLS-2$
             
             // If there is a "main" function invoke that
             if("function".equals(engine.eval("typeof main"))) { //$NON-NLS-1$ //$NON-NLS-2$
