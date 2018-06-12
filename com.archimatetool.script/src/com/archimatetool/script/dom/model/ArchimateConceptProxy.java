@@ -30,6 +30,11 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         return (IArchimateConcept)super.getEObject();
     }
     
+    // Return this
+    public ArchimateConceptProxy getArchimateConcept() {
+        return this;
+    }
+    
     /**
      * Set the type of this concept with a new concept of class type, preserving all connecting relationships and diagram components
      * @param type the Archimate type to replace with
