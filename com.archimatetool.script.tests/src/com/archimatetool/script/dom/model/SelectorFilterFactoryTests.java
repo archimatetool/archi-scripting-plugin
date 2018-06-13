@@ -5,7 +5,6 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -32,31 +31,6 @@ public class SelectorFilterFactoryTests {
         return new JUnit4TestAdapter(SelectorFilterFactoryTests.class);
     }
 
-    // Put this test here, not best but EObjectProxyTests is abstract
-    @Test
-    public void EObjectProxy_getKebabCase() {
-        assertEquals("", EObjectProxy.getKebabCase(""));
-        assertEquals("a", EObjectProxy.getKebabCase("a"));
-        assertEquals("a", EObjectProxy.getKebabCase("A"));
-        assertEquals("abc", EObjectProxy.getKebabCase("ABC"));
-        assertEquals("aa-bb-cc", EObjectProxy.getKebabCase("AaBbCc"));
-        assertEquals("archimate-diagram-model", EObjectProxy.getKebabCase("ArchimateDiagramModel"));
-        assertEquals("folder", EObjectProxy.getKebabCase("Folder"));
-        assertEquals("business-object", EObjectProxy.getKebabCase("BusinessObject"));
-    }
-
-    // Put this test here, not best but EObjectProxyTests is abstract
-    @Test
-    public void EObjectProxy_getCamelCase() {
-        assertEquals("", EObjectProxy.getCamelCase(""));
-        assertEquals("A", EObjectProxy.getCamelCase("a"));
-        assertEquals("A", EObjectProxy.getCamelCase("A"));
-        assertEquals("ABC", EObjectProxy.getCamelCase("a-b-c"));
-        assertEquals("Folder", EObjectProxy.getCamelCase("folder"));
-        assertEquals("BusinessObject", EObjectProxy.getCamelCase("business-object"));
-        assertEquals("Businessobject", EObjectProxy.getCamelCase("BusinessObject"));
-    }
-    
     @Test
     public void accept_All() {
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("*");

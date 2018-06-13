@@ -6,10 +6,8 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -79,21 +77,6 @@ public abstract class EObjectProxy implements IModelConstants {
         }
 
         return null;
-    }
-    
-    static String getKebabCase(String string) {
-        return string.replaceAll("([a-z])([A-Z]+)", "$1-$2").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-    
-    static String getCamelCase(String string) {
-        if(string == null || "".equals(string)) { //$NON-NLS-1$
-            return string;
-        }
-        
-        return Arrays.stream(string.split("\\-")) //$NON-NLS-1$
-                .map(String::toLowerCase)
-                .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1))
-                .collect(Collectors.joining());
     }
     
     EObjectProxy(EObject eObject) {

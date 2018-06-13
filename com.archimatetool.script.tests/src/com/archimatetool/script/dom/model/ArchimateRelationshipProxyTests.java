@@ -91,6 +91,8 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
 
     @Test
     public void setType() {
+        // TODO a proper test on object in test model
+
         assertTrue(actualTestProxy.getEObject() instanceof IAccessRelationship);
         assertEquals(0, actualTestProxy.outRels().size());
         assertEquals(0, actualTestProxy.inRels().size());

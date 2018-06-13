@@ -90,6 +90,8 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
 
     @Test
     public void setType() {
+        // TODO a proper test on object in test model
+        
         assertTrue(actualTestProxy.getEObject() instanceof IBusinessActor);
         assertEquals(3, actualTestProxy.outRels().size());
         assertEquals(6, actualTestProxy.inRels().size());

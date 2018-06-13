@@ -47,7 +47,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         }
         
         // Check it's not already this type
-        String className = getCamelCase(type);
+        String className = ModelUtil.getCamelCase(type);
         if(getEObject().eClass().getName().equals(className)) {
             return null;
         }

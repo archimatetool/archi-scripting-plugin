@@ -5,6 +5,9 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
@@ -35,6 +38,10 @@ public class ModelUtil {
      * @return true if the given parent folder is the correct folder to contain this concept
      */
     public static boolean isCorrectFolderForConcept(IFolder folder, IArchimateConcept concept) {
+        if(folder == null) {
+            return false;
+        }
+        
         IFolder topFolder = folder.getArchimateModel().getDefaultFolderForObject(concept);
         if(folder == topFolder) {
             return true;
@@ -56,16 +63,26 @@ public class ModelUtil {
      * @return false if trying to set an invalid type
      */
     public static boolean isAllowedSetType(IArchimateConcept concept, String type) {
-        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(EObjectProxy.getCamelCase(type));
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(getCamelCase(type));
         
+        // Check source relationships
         for(IArchimateRelationship rel : concept.getSourceRelationships()) {
             if(!ArchimateModelUtils.isValidRelationship(eClass, rel.getTarget().eClass(), rel.eClass())) {
                 return false;
             }
         }
         
+        // Check target relationships
         for(IArchimateRelationship rel : concept.getTargetRelationships()) {
             if(!ArchimateModelUtils.isValidRelationship(rel.getSource().eClass(), eClass, rel.eClass())) {
+                return false;
+            }
+        }
+        
+        // If a relationship, check ends
+        if(concept instanceof IArchimateRelationship) {
+            if(!ArchimateModelUtils.isValidRelationship(((IArchimateRelationship)concept).getSource(),
+                    ((IArchimateRelationship)concept).getTarget(), eClass)) {
                 return false;
             }
         }
@@ -93,5 +110,20 @@ public class ModelUtil {
                 }
             }
         }
+    }
+
+    public static String getKebabCase(String string) {
+        return string.replaceAll("([a-z])([A-Z]+)", "$1-$2").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public static String getCamelCase(String string) {
+        if(string == null || "".equals(string)) { //$NON-NLS-1$
+            return string;
+        }
+        
+        return Arrays.stream(string.split("\\-")) //$NON-NLS-1$
+                .map(String::toLowerCase)
+                .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1))
+                .collect(Collectors.joining());
     }
 }

@@ -49,7 +49,7 @@ public class TestsHelper {
         
         return null;
     }
-
+    
     private static File getLocalBundleFolder(String bundleName, String path) {
         URL url = Platform.getBundle(bundleName).getEntry("/");
         try {

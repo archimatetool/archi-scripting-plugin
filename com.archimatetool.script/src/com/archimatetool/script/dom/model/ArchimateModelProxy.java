@@ -138,9 +138,7 @@ public class ArchimateModelProxy extends EObjectProxy {
             return null;
         }
         
-        type = getCamelCase(type);
-        
-        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(type);
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
             element.setName(name);
@@ -167,9 +165,7 @@ public class ArchimateModelProxy extends EObjectProxy {
             return null;
         }
         
-        type = getCamelCase(type);
-        
-        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(type);
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateRelationship().isSuperTypeOf(eClass)) { // Check this is the correct type
             if(!ArchimateModelUtils.isValidRelationship(source.getEObject(), target.getEObject(), eClass)) {
                 throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_3, type));
