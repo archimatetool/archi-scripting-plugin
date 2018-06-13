@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 import com.archimatetool.script.views.console.ConsoleOutput;
@@ -56,8 +57,11 @@ public class RunArchiScript {
             // Initialise CommandHandler
             CommandHandler.init();
 
+            // Normalize filename so that nashorn's load() can run it
+            String scriptPath = PlatformUtils.isWindows() ? file.getAbsolutePath().replace('\\', '/') : file.getAbsolutePath();
+            
             // Evaluate the script
-            engine.eval("load('" + file.getAbsolutePath() + "')");  //$NON-NLS-1$//$NON-NLS-2$
+            engine.eval("load('" + scriptPath + "')");  //$NON-NLS-1$//$NON-NLS-2$
             
             // If there is a "main" function invoke that
             if("function".equals(engine.eval("typeof main"))) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -121,5 +125,4 @@ public class RunArchiScript {
         System.err.println("Script Error at: " + x.getClass().getName() + ", " +  //$NON-NLS-1$//$NON-NLS-2$
                 string);
 	}
-
 }
