@@ -13,7 +13,6 @@ import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
-import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
@@ -47,7 +46,7 @@ class SelectorFilterFactory {
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     return (object instanceof IArchimateConcept || object instanceof IDiagramModel
-                            || object instanceof IFolder || object instanceof IDiagramModelComponent);
+                            || object instanceof IFolder);
                 }
             };
         }
@@ -56,6 +55,7 @@ class SelectorFilterFactory {
         else if(selector.equals("concept")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
+                    object = getReferencedConcept(object);
                     return object instanceof IArchimateConcept;
                 }
             };
@@ -65,6 +65,7 @@ class SelectorFilterFactory {
         else if(selector.equals("element")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
+                    object = getReferencedConcept(object);
                     return object instanceof IArchimateElement;
                 }
             };
@@ -74,6 +75,7 @@ class SelectorFilterFactory {
         else if(selector.equals("relation") || selector.equals("relationship")) { //$NON-NLS-1$ //$NON-NLS-2$
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
+                    object = getReferencedConcept(object);
                     return object instanceof IArchimateRelationship;
                 }
             };
@@ -109,9 +111,7 @@ class SelectorFilterFactory {
             
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
-                    object = getReferencedConcept(object);
-                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder)
-                            && name.equals(((INameable)object).getName());
+                    return (object instanceof INameable) && name.equals(((INameable)object).getName());
                 }
             };
         }
@@ -125,11 +125,13 @@ class SelectorFilterFactory {
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     object = getReferencedConcept(object);
-                    String[] s = selector.split("\\."); //$NON-NLS-1$
-                    s[0] = ModelUtil.getCamelCase(s[0]);
                     
-                    return object.eClass().getName().equals(s[0]) &&
-                            ((INameable)object).getName().equals(s[1]) &&
+                    String[] s = selector.split("\\."); //$NON-NLS-1$
+                    String type = ModelUtil.getCamelCase(s[0]);
+                    String name = s[1];
+                    
+                    return object.eClass().getName().equals(type) &&
+                            ((INameable)object).getName().equals(name) &&
                             (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
                 }
             };

@@ -88,7 +88,7 @@ public class DiagramModelProxyTests extends EObjectProxyTests {
         assertEquals(0, collection.size());
 
         collection = actualTestProxy.find("*");
-        assertEquals(65, collection.size());
+        assertEquals(0, collection.size());
     }
 
     @Override

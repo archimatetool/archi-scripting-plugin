@@ -88,7 +88,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals(0, collection.size());
 
         collection = testModelProxy.find("*");
-        assertEquals(788, collection.size());
+        assertEquals(340, collection.size());
         
         collection = testModelProxy.find("concept");
         assertEquals(298, collection.size());
@@ -98,6 +98,9 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
 
         collection = testModelProxy.find("relation");
         assertEquals(178, collection.size());
+
+        collection = testModelProxy.find("folder");
+        assertEquals(25, collection.size());
 
         collection = testModelProxy.find("view");
         assertEquals(17, collection.size());
@@ -113,7 +116,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals(2, collection.size());
         
         collection = testModelProxy.find("business-role");
-        assertEquals(20, collection.size());
+        assertEquals(5, collection.size());
     }
 
     @Test

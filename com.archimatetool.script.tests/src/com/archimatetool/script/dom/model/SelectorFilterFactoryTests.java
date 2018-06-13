@@ -13,6 +13,8 @@ import org.junit.Test;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateConnection;
+import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
@@ -40,12 +42,18 @@ public class SelectorFilterFactoryTests {
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createSketchModel()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createArchimateDiagramModel()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createFolder()));
-        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelGroup()));
-        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelNote()));
-        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelConnection()));
-        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelReference()));
-        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject()));
-        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelArchimateConnection()));
+        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelGroup()));
+        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelNote()));
+        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelConnection()));
+        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelReference()));
+
+        IDiagramModelArchimateObject dmo = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        dmo.setArchimateConcept(IArchimateFactory.eINSTANCE.createBusinessActor());
+        assertFalse(filter.accept(dmo));
+        
+        IDiagramModelArchimateConnection dmc = IArchimateFactory.eINSTANCE.createDiagramModelArchimateConnection();
+        dmc.setArchimateConcept(IArchimateFactory.eINSTANCE.createAssignmentRelationship());
+        assertFalse(filter.accept(dmc));
         
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createBounds()));
     }
@@ -64,8 +72,14 @@ public class SelectorFilterFactoryTests {
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelNote()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelConnection()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelReference()));
-        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject()));
-        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelArchimateConnection()));
+
+        IDiagramModelArchimateObject dmo = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        dmo.setArchimateConcept(IArchimateFactory.eINSTANCE.createBusinessActor());
+        assertTrue(filter.accept(dmo));
+        
+        IDiagramModelArchimateConnection dmc = IArchimateFactory.eINSTANCE.createDiagramModelArchimateConnection();
+        dmc.setArchimateConcept(IArchimateFactory.eINSTANCE.createAssignmentRelationship());
+        assertTrue(filter.accept(dmc));
     }
     
     @Test
@@ -82,8 +96,14 @@ public class SelectorFilterFactoryTests {
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelNote()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelConnection()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelReference()));
-        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject()));
-        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelArchimateConnection()));
+        
+        IDiagramModelArchimateObject dmo = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        dmo.setArchimateConcept(IArchimateFactory.eINSTANCE.createBusinessActor());
+        assertTrue(filter.accept(dmo));
+        
+        IDiagramModelArchimateConnection dmc = IArchimateFactory.eINSTANCE.createDiagramModelArchimateConnection();
+        dmc.setArchimateConcept(IArchimateFactory.eINSTANCE.createAssignmentRelationship());
+        assertFalse(filter.accept(dmc));
     }
     
     @Test
@@ -100,8 +120,14 @@ public class SelectorFilterFactoryTests {
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelNote()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelConnection()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelReference()));
-        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject()));
-        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelArchimateConnection()));
+        
+        IDiagramModelArchimateObject dmo = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        dmo.setArchimateConcept(IArchimateFactory.eINSTANCE.createBusinessActor());
+        assertFalse(filter.accept(dmo));
+        
+        IDiagramModelArchimateConnection dmc = IArchimateFactory.eINSTANCE.createDiagramModelArchimateConnection();
+        dmc.setArchimateConcept(IArchimateFactory.eINSTANCE.createAssignmentRelationship());
+        assertTrue(filter.accept(dmc));
     }
 
     @Test
@@ -139,8 +165,13 @@ public class SelectorFilterFactoryTests {
         IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
         concept.setName("foo");
         
+        IDiagramModelArchimateObject dmo = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        dmo.setArchimateConcept(concept);
+
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(".foo");
+
         assertTrue(filter.accept(concept));
+        assertTrue(filter.accept(dmo));
         
         filter = SelectorFilterFactory.INSTANCE.getFilter(".foot");
         assertFalse(filter.accept(concept));

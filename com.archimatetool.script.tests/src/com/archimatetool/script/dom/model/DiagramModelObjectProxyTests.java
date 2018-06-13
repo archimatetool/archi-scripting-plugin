@@ -96,7 +96,7 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
         assertEquals(0, collection.size());
 
         collection = testProxy.find("*");
-        assertEquals(1, collection.size());
+        assertEquals(0, collection.size());
     }
 
     @Test

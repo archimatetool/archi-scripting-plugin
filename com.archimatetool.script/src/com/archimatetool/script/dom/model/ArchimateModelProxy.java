@@ -238,6 +238,6 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     @Override
     public EObjectProxyCollection find(String selector) {
-        return super.find(selector);
+        return super.find("*").filter(selector); //$NON-NLS-1$
     }
 }
