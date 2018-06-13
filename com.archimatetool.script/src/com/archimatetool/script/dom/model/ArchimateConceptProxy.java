@@ -37,10 +37,11 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
     
     /**
      * Set the type of this concept with a new concept of class type, preserving all connecting relationships and diagram components
+     * Sub-classes call this first.
      * @param type the Archimate type to replace with
      * @return
      */
-    public ArchimateConceptProxy setType(String type) {
+    protected ArchimateConceptProxy setType(String type) {
         if(!StringUtils.isSet(type)) {
             return null;
         }

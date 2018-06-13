@@ -17,7 +17,6 @@ import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IBusinessActor;
 import com.archimatetool.model.IBusinessRole;
-import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 
 import junit.framework.JUnit4TestAdapter;
@@ -77,11 +76,16 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
     @Override
     @Test
     public void delete() {
-        ArchimateElementProxy proxy = testModelProxy.addElement("business-actor", "Fred");
-        assertTrue(proxy.getEObject().eContainer() instanceof IFolder);
+        assertEquals(3, actualTestProxy.objectRefs().size());
+        assertEquals(6, actualTestProxy.inRels().size());
+        assertEquals(3, actualTestProxy.outRels().size());
         
-        proxy.delete();
-        assertNull(proxy.getEObject().eContainer());
+        actualTestProxy.delete();
+
+        assertNull(testProxy.getModel());
+        assertEquals(0, actualTestProxy.objectRefs().size());
+        assertEquals(0, actualTestProxy.inRels().size());
+        assertEquals(0, actualTestProxy.outRels().size());
     }
 
     @Test

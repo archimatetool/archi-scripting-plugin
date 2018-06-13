@@ -17,7 +17,6 @@ import com.archimatetool.model.IAccessRelationship;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IAssociationRelationship;
-import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
@@ -78,11 +77,16 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
     @Override
     @Test
     public void delete() {
-        ArchimateElementProxy proxy = testModelProxy.addElement("business-actor", "Fred");
-        assertTrue(proxy.getEObject().eContainer() instanceof IFolder);
+        assertEquals(1, actualTestProxy.objectRefs().size());
+        assertEquals(0, actualTestProxy.inRels().size());
+        assertEquals(0, actualTestProxy.outRels().size());
         
-        proxy.delete();
-        assertNull(proxy.getEObject().eContainer());
+        actualTestProxy.delete();
+
+        assertNull(testProxy.getModel());
+        assertEquals(0, actualTestProxy.objectRefs().size());
+        assertEquals(0, actualTestProxy.inRels().size());
+        assertEquals(0, actualTestProxy.outRels().size());
     }
 
     @Test

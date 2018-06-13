@@ -5,6 +5,10 @@
  */
 package com.archimatetool.script.dom.model;
 
+import static org.junit.Assert.assertSame;
+
+import org.junit.Test;
+
 import junit.framework.JUnit4TestAdapter;
 
 
@@ -17,6 +21,11 @@ public abstract class ArchimateConceptProxyTests extends EObjectProxyTests {
     
     public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(ArchimateConceptProxyTests.class);
+    }
+    
+    @Test
+    public void getArchimateConcept() {
+        assertSame(testProxy, ((ArchimateConceptProxy)testProxy).getArchimateConcept());
     }
     
 }
