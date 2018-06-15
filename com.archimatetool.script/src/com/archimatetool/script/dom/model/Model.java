@@ -48,6 +48,6 @@ public class Model implements IArchiScriptDOMFactory {
             currentModel = CommandLineState.getModel();
         }
         
-        return currentModel == null ? null : new ArchimateModelProxy(currentModel);
+        return new ArchimateModelProxy(currentModel);
     }
 }
