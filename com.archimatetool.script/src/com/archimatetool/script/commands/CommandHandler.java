@@ -48,6 +48,7 @@ public class CommandHandler {
     }
 
     public static void finalise() {
+        // This simply calls empty execute() methods since perform() has already been called, but puts the commmands on the stack
         for(Entry<CommandStack, CompoundCommand> e : compoundcommands.entrySet()) {
             e.getKey().execute(e.getValue());
         }

@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -62,13 +61,8 @@ public class RunArchiScript {
             
             // Evaluate the script
             engine.eval("load('" + scriptPath + "')");  //$NON-NLS-1$//$NON-NLS-2$
-            
-            // If there is a "main" function invoke that
-            if("function".equals(engine.eval("typeof main"))) { //$NON-NLS-1$ //$NON-NLS-2$
-                ((Invocable)engine).invokeFunction("main"); //$NON-NLS-1$
-            }
         }
-        catch(ScriptException | IOException | NoSuchMethodException ex) {
+        catch(ScriptException | IOException ex) {
             error(ex, ex.toString());
         }
         finally {

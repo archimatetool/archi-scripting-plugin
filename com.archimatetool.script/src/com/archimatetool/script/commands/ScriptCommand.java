@@ -46,7 +46,8 @@ public abstract class ScriptCommand extends Command {
     public abstract void perform();
     
     @Override
-    public void execute() {
+    public final void execute() {
+        // Do nothing. Do not use! Use perform() instead.
     }
     
     @Override
