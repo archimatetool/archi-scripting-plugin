@@ -1,8 +1,0 @@
-/*
- * New Model Action Example
- * Shows how to call the run() method of an internal Action
- */
-
-
-var Action = Java.type("com.archimatetool.editor.actions.NewArchimateModelAction");
-new Action().run();
