@@ -36,6 +36,8 @@ import com.archimatetool.script.commands.SetCommand;
  */
 public class ArchimateModelProxy extends EObjectProxy {
     
+    ArchimateModelProxy() {}
+    
     ArchimateModelProxy(IArchimateModel model) {
         super(model);
     }
@@ -66,33 +68,6 @@ public class ArchimateModelProxy extends EObjectProxy {
     @Override
     public String getDocumentation() {
         return getPurpose();
-    }
-    
-    public ArchimateModelProxy load(String path) {
-        IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(new File(path));
-        
-        if(model != null) {
-            setEObject(model);
-        }
-        else {
-            throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_2, path));
-        }
-        
-        return this;
-    }
-    
-    public ArchimateModelProxy create(String modelName) {
-        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
-        model.setDefaults();
-        model.setName(modelName);
-        setEObject(model);
-        
-        IArchiveManager archiveManager = IArchiveManager.FACTORY.createArchiveManager(model);
-        model.setAdapter(IArchiveManager.class, archiveManager);
-        
-        // Don't add a CommandStack. One will be added if openInUI() is called
-        
-        return this;
     }
     
     public ArchimateModelProxy copy() {
@@ -195,6 +170,10 @@ public class ArchimateModelProxy extends EObjectProxy {
     public ArchimateModelProxy openInUI() {
         if(PlatformUI.isWorkbenchRunning()) {
             IEditorModelManager.INSTANCE.openModel(getEObject());
+            // IEditorModelManager.INSTANCE.loadModel adds the model to its list of models but doesn't fire PROPERTY_MODEL_OPENED event.
+            // If you then you call openInUI IEditorModelManager sees it as already loaded and doesn't fire PROPERTY_MODEL_OPENED.
+            // So we do it here.
+            IEditorModelManager.INSTANCE.firePropertyChange(IEditorModelManager.INSTANCE, IEditorModelManager.PROPERTY_MODEL_OPENED, null, getEObject());
         }
         
         return this;

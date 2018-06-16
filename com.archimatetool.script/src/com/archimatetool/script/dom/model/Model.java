@@ -5,15 +5,21 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.io.File;
+
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.commandline.CommandLineState;
+import com.archimatetool.editor.model.IArchiveManager;
+import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.ui.services.ViewManager;
 import com.archimatetool.editor.views.tree.ITreeModelView;
+import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.ArchiScriptPlugin;
-import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 
 /**
  * Current model object
@@ -24,12 +30,9 @@ import com.archimatetool.script.dom.IArchiScriptDOMFactory;
  * 
  * @author Phillip Beauvoir
  */
-public class Model implements IArchiScriptDOMFactory {
+public class Model extends ArchimateModelProxy {
     
-    public Object getDOMroot() {
-        // Default is null, no current model
-        IArchimateModel currentModel = null;
-        
+    public Model() {
         // Get and wrap the currently selected model in the UI if there is one
         if(PlatformUI.isWorkbenchRunning()) {
             IWorkbenchPart activePart = ArchiScriptPlugin.INSTANCE.getActivePart();
@@ -40,14 +43,42 @@ public class Model implements IArchiScriptDOMFactory {
             }
             
             if(activePart != null) {
-                currentModel = activePart.getAdapter(IArchimateModel.class);
+                setEObject(activePart.getAdapter(IArchimateModel.class));
             }
         }
         // Else, if we are running in CLI mode, get the Current Model if there is one
         else {
-            currentModel = CommandLineState.getModel();
+            setEObject(CommandLineState.getModel());
+        }
+    }
+    
+    public ArchimateModelProxy create(String modelName) {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        model.setDefaults();
+        model.setName(modelName);
+        
+        IArchiveManager archiveManager = IArchiveManager.FACTORY.createArchiveManager(model);
+        model.setAdapter(IArchiveManager.class, archiveManager);
+        
+        // Don't add a CommandStack. One will be added if openInUI() is called
+        
+        return new ArchimateModelProxy(model);
+    }
+    
+    public ArchimateModelProxy load(String path) {
+        File file = new File(path);
+        
+        IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(file);
+        
+        if(model != null) {
+            return new ArchimateModelProxy(model);
         }
         
-        return new ArchimateModelProxy(currentModel);
+        throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_2, path));
+    }
+    
+    public ArchimateModelProxy setCurrent(ArchimateModelProxy current) {
+        setEObject(current.getEObject());
+        return this;
     }
 }
