@@ -85,7 +85,6 @@ public class ArchimateModelProxy extends EObjectProxy {
             
             getEObject().setFile(file);
             
-            
             return save();
         }
 

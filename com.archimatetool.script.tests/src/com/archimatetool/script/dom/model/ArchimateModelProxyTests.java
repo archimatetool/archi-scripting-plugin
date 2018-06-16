@@ -150,11 +150,6 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertTrue(file.length() > 100);
     }
     
-    @Test(expected=ArchiScriptException.class)
-    public void save_Exception() throws IOException {
-        actualTestProxy.save("/cannotaccess.archimate");
-    }
-   
     @Test
     public void addElement() {
         ArchimateElementProxy proxy = actualTestProxy.addElement("business-actor", "Fido");
