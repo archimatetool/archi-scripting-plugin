@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
@@ -77,13 +78,8 @@ public class ArchimateModelProxy extends EObjectProxy {
     public ArchimateModelProxy save(String path) throws IOException {
         if(getEObject() != null) {
             File file = new File(path);
-            if(file.canWrite()) {
-                getEObject().setFile(file);
-                return save();
-            }
-            else {
-                throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_4, file));
-            }
+            getEObject().setFile(file);
+            return save();
         }
 
         return this;
@@ -168,12 +164,28 @@ public class ArchimateModelProxy extends EObjectProxy {
      * @return The ArchimateModelProxy
      */
     public ArchimateModelProxy openInUI() {
+        if(getEObject() == null) {
+            return this;
+        }
+        
         if(PlatformUI.isWorkbenchRunning()) {
-            IEditorModelManager.INSTANCE.openModel(getEObject());
-            // IEditorModelManager.INSTANCE.loadModel adds the model to its list of models but doesn't fire PROPERTY_MODEL_OPENED event.
-            // If you then you call openInUI IEditorModelManager sees it as already loaded and doesn't fire PROPERTY_MODEL_OPENED.
-            // So we do it here.
-            IEditorModelManager.INSTANCE.firePropertyChange(IEditorModelManager.INSTANCE, IEditorModelManager.PROPERTY_MODEL_OPENED, null, getEObject());
+            // If the model has a command stack it's already been loaded by a load() command
+            if(getEObject().getAdapter(CommandStack.class) != null) {
+                // Need to do this!
+                IEditorModelManager.INSTANCE.firePropertyChange(IEditorModelManager.INSTANCE, IEditorModelManager.PROPERTY_MODEL_OPENED,
+                        null, getEObject());
+            }
+            // Else from create()
+            else {
+                // If it's been saved already
+                if(getEObject().getFile() != null) {
+                    IEditorModelManager.INSTANCE.openModel(getEObject().getFile());
+                }
+                // Else
+                else {
+                    IEditorModelManager.INSTANCE.openModel(getEObject());
+                }
+            }
         }
         
         return this;

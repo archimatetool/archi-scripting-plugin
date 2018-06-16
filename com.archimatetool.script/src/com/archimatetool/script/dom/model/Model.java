@@ -60,7 +60,7 @@ public class Model extends ArchimateModelProxy {
         IArchiveManager archiveManager = IArchiveManager.FACTORY.createArchiveManager(model);
         model.setAdapter(IArchiveManager.class, archiveManager);
         
-        // Don't add a CommandStack. One will be added if openInUI() is called
+        // Don't add a CommandStack or other adapters. These will be created if openInUI() is called
         
         return new ArchimateModelProxy(model);
     }
@@ -68,8 +68,17 @@ public class Model extends ArchimateModelProxy {
     public ArchimateModelProxy load(String path) {
         File file = new File(path);
         
-        IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(file);
+        // Already open in UI
+        if(PlatformUI.isWorkbenchRunning()) {
+            for(IArchimateModel model : IEditorModelManager.INSTANCE.getModels()) {
+                if(file.equals(model.getFile())) {
+                    return new ArchimateModelProxy(model);
+                }
+            }
+        }
         
+        // Else load from file
+        IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(file);
         if(model != null) {
             return new ArchimateModelProxy(model);
         }

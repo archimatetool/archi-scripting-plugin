@@ -51,10 +51,7 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup, IPa
         String path = getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER);
         
         if(StringUtils.isSet(path)) {
-            File file = new File(path);
-            if(file.canWrite()) {
-                return file;
-            }
+            return new File(path);
         }
         
         // Default

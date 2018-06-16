@@ -7,15 +7,12 @@ package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.gef.commands.CommandStack;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -132,29 +129,6 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals("purpose", actualTestProxy.getPurpose());
     }
 
-    @Test
-    public void load() {
-        assertSame(testEObject, actualTestProxy.getEObject());
-        
-        ArchimateModelProxy proxy = actualTestProxy.load(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
-        assertSame(actualTestProxy, proxy);
-        assertNotSame(testEObject, proxy.getEObject());
-    }    
-
-    @Test
-    public void create() {
-        assertSame(testEObject, actualTestProxy.getEObject());
-        
-        ArchimateModelProxy proxy = actualTestProxy.create("Test");
-        assertSame(actualTestProxy, proxy);
-        assertNotSame(testEObject, proxy.getEObject());
-        
-        assertEquals("Test", proxy.getName());
-        
-        assertNotNull(actualTestProxy.getEObject().getAdapter(IArchiveManager.class));
-        assertNull(actualTestProxy.getEObject().getAdapter(CommandStack.class));
-    }
-    
     @Test
     public void copy() {
         assertSame(testEObject, actualTestProxy.getEObject());
