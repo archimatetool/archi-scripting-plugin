@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
@@ -78,7 +77,15 @@ public class ArchimateModelProxy extends EObjectProxy {
     public ArchimateModelProxy save(String path) throws IOException {
         if(getEObject() != null) {
             File file = new File(path);
+            
+            // Check we don't already have a model open in UI with the same file name
+            if(PlatformUI.isWorkbenchRunning() && IEditorModelManager.INSTANCE.isModelLoaded(file)) {
+                throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_5, file));
+            }
+            
             getEObject().setFile(file);
+            
+            
             return save();
         }
 
@@ -169,8 +176,8 @@ public class ArchimateModelProxy extends EObjectProxy {
         }
         
         if(PlatformUI.isWorkbenchRunning()) {
-            // If the model has a command stack it's already been loaded by a load() command
-            if(getEObject().getAdapter(CommandStack.class) != null) {
+            // If the model has already been loaded by a load() command
+            if(IEditorModelManager.INSTANCE.isModelLoaded(getEObject().getFile())) {
                 // Need to do this!
                 IEditorModelManager.INSTANCE.firePropertyChange(IEditorModelManager.INSTANCE, IEditorModelManager.PROPERTY_MODEL_OPENED,
                         null, getEObject());

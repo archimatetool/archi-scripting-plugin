@@ -20,6 +20,8 @@ public class Messages extends NLS {
 
     public static String ArchimateModelProxy_4;
 
+    public static String ArchimateModelProxy_5;
+
     public static String ArchimateRelationshipProxy_0;
 
     public static String ArchimateRelationshipProxy_1;
@@ -30,7 +32,6 @@ public class Messages extends NLS {
 
     public static String EObjectProxy_0;
 
-    public static String ModelHandler_0;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
