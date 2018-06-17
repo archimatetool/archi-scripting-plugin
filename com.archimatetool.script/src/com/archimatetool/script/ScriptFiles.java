@@ -26,7 +26,7 @@ public class ScriptFiles {
 	    return file.isFile() && file.getName().toLowerCase().endsWith(LINK_EXTENSION);
 	}
 	
-	public static File resolve(File file) {
+	public static File resolveLinkFile(File file) {
         try {
             byte[] bytes = Files.readAllBytes(file.toPath());
             return new File(new String(bytes));
@@ -38,7 +38,7 @@ public class ScriptFiles {
         return file;
 	}
 	
-	public static void write(File linkFile, File linked) {
+	public static void writeLinkFile(File linkFile, File linked) {
 	    try {
             Files.write(linkFile.toPath(), linked.getAbsolutePath().getBytes());
         }

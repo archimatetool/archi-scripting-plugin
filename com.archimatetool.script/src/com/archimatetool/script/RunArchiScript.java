@@ -57,7 +57,7 @@ public class RunArchiScript {
             CommandHandler.init();
             
             if(ScriptFiles.isLinkedFile(file)) {
-                file = ScriptFiles.resolve(file);
+                file = ScriptFiles.resolveLinkFile(file);
             }
             
             // Normalize filename so that nashorn's load() can run it

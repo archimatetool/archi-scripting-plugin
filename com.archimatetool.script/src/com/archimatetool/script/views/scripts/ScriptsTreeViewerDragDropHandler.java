@@ -213,7 +213,7 @@ public class ScriptsTreeViewerDragDropHandler {
                 }
             }
             else {
-                ScriptFiles.write(new File(parent, FileUtils.getFileNameWithoutExtension(file) + ScriptFiles.LINK_EXTENSION), file);
+                ScriptFiles.writeLinkFile(new File(parent, FileUtils.getFileNameWithoutExtension(file) + ScriptFiles.LINK_EXTENSION), file);
             }
         }
         

@@ -53,7 +53,7 @@ public class ScriptsTreeViewer extends FileTreeViewer {
             if(ScriptFiles.isLinkedFile(file)) {
                 Image image = IArchiScriptImages.ImageFactory.getImage(IArchiScriptImages.ICON_SCRIPT);
                 
-                if(!ScriptFiles.resolve(file).exists()) {
+                if(!ScriptFiles.resolveLinkFile(file).exists()) {
                     return IArchiScriptImages.ImageFactory.getOverlayImage(image,
                             IArchiScriptImages.ICON_LINK_WARN_OVERLAY, IDecoration.BOTTOM_RIGHT);
                 }
@@ -79,7 +79,7 @@ public class ScriptsTreeViewer extends FileTreeViewer {
             if(element instanceof File) {
                 File file = (File)element;
                 if(ScriptFiles.isLinkedFile(file)) {
-                    return ScriptFiles.resolve(file).getAbsolutePath();
+                    return ScriptFiles.resolveLinkFile(file).getAbsolutePath();
                 }
                 return file.getAbsolutePath();
             }
