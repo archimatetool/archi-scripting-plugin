@@ -101,7 +101,9 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
             return false;
         }
         
-        return file.getName().toLowerCase().endsWith(ArchiScriptPlugin.SCRIPT_EXTENSION);
+        String ext = FileUtils.getFileExtension(file);
+        
+        return ext.equals(ScriptFiles.SCRIPT_EXTENSION) || ext.equals(ScriptFiles.LINK_EXTENSION);
     }
     
     public void initialize(IServiceLocator serviceLocator) {

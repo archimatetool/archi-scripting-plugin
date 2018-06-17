@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.IArchiScriptImages;
+import com.archimatetool.script.ScriptFiles;
 
 
 /**
@@ -37,7 +38,7 @@ public class RestoreExampleScriptsAction extends Action {
     @Override
     public void run() {
         Enumeration<URL> enm = ArchiScriptPlugin.INSTANCE.getBundle().findEntries("examples", //$NON-NLS-1$
-                ArchiScriptPlugin.SCRIPT_WILDCARD_EXTENSION, true);
+                ScriptFiles.SCRIPT_WILDCARD_EXTENSION, true);
         
         if(enm == null) {
             return;

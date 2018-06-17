@@ -8,17 +8,19 @@ package com.archimatetool.script.views.file;
 import java.io.File;
 
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -52,6 +54,18 @@ public abstract class FileTreeViewer extends TreeViewer {
         
         fRootFolder.mkdirs();
         setInput(fRootFolder);
+        
+        ColumnViewerToolTipSupport.enableFor(this);
+        
+        setComparator(new ViewerComparator() {
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                if(((File)e1).isDirectory() && ((File)e2).isFile()) {
+                    return -1;
+                }
+                return ((File)e1).compareTo((File)e2);
+            }
+        });
         
         //expandToLevel(ALL_LEVELS);
     }
@@ -198,38 +212,26 @@ public abstract class FileTreeViewer extends TreeViewer {
 	// ===================================== Label Provider ==========================================
 	// ===============================================================================================
 
-    protected class FileTreeLabelProvider extends LabelProvider {
+    protected class FileTreeLabelProvider extends CellLabelProvider {
         
         @Override
-        public String getText(Object obj) {
-        	if(obj instanceof File) {
-        	    File f = (File)obj;
-        	    return f.getName();
-        	}
-        	else {
-        	    return ""; //$NON-NLS-1$
-        	}
+        public void update(ViewerCell cell) {
+            if(cell.getElement() instanceof File) {
+                File file = (File)cell.getElement();
+                cell.setText(getText(file));
+                cell.setImage(getImage(file));
+            }
         }
         
-        @Override
-        public Image getImage(Object obj) {
-            Image image = null;
-            
-            if(obj instanceof File) {
-                File f = (File)obj;
-                if(f.isDirectory()) {
-                    image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
-                }
-                else {
-                    image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
-                }
+        public String getText(File file) {
+        	return file.getName();
+        }
+        
+        public Image getImage(File file) {
+            if(file.isDirectory()) {
+                return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
             }
-            
-            if(image == null) {
-                image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
-            }
-            
-            return image;
+            return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
         }
     }
 }

@@ -25,6 +25,16 @@ public class Messages extends NLS {
 
     public static String ScriptsFileViewer_2;
 
+    public static String ScriptsTreeViewerDragDropHandler_0;
+
+    public static String ScriptsTreeViewerDragDropHandler_1;
+
+    public static String ScriptsTreeViewerDragDropHandler_2;
+
+    public static String ScriptsTreeViewerDragDropHandler_3;
+
+    public static String ScriptsTreeViewerDragDropHandler_4;
+
     public static String ShowConsoleAction_0;
     static {
         // initialize resource bundle

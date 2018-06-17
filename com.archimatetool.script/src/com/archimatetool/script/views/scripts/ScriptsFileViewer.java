@@ -35,6 +35,7 @@ import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.IArchiScriptImages;
+import com.archimatetool.script.ScriptFiles;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 import com.archimatetool.script.views.file.AbstractFileView;
 import com.archimatetool.script.views.file.FileTreeViewer;
@@ -214,7 +215,7 @@ extends AbstractFileView  {
         
         if(parent.exists()) {
             NewFileDialog dialog = new NewFileDialog(getViewSite().getShell(), parent);
-            dialog.setDefaultExtension(ArchiScriptPlugin.SCRIPT_EXTENSION);
+            dialog.setDefaultExtension(ScriptFiles.SCRIPT_EXTENSION);
             
             if(dialog.open()) {
                 File newFile = dialog.getFile();

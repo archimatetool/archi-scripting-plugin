@@ -25,6 +25,8 @@ public interface IArchiScriptImages {
     String ICON_CONSOLE = IMGPATH + "console_view.png"; //$NON-NLS-1$
     String ICON_EDIT = IMGPATH + "edit.png"; //$NON-NLS-1$
     String ICON_EXAMPLES = IMGPATH + "examples.png"; //$NON-NLS-1$
+    String ICON_LINK_OVERLAY = IMGPATH + "link_ovr.png"; //$NON-NLS-1$
+    String ICON_LINK_WARN_OVERLAY = IMGPATH + "linkwarn_ovr.png"; //$NON-NLS-1$
     String ICON_REFRESH = IMGPATH + "refresh.png"; //$NON-NLS-1$
     String ICON_RUN = IMGPATH + "run_exc.png"; //$NON-NLS-1$
     String ICON_SCRIPT = IMGPATH + "script.png"; //$NON-NLS-1$

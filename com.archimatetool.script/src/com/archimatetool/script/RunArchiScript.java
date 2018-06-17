@@ -55,7 +55,11 @@ public class RunArchiScript {
         	
             // Initialise CommandHandler
             CommandHandler.init();
-
+            
+            if(ScriptFiles.isLinkedFile(file)) {
+                file = ScriptFiles.resolve(file);
+            }
+            
             // Normalize filename so that nashorn's load() can run it
             String scriptPath = PlatformUtils.isWindows() ? file.getAbsolutePath().replace('\\', '/') : file.getAbsolutePath();
             
