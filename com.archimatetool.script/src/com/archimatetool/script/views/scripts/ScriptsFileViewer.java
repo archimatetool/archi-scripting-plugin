@@ -165,6 +165,10 @@ extends AbstractFileView  {
         File file = (File)((IStructuredSelection)getViewer().getSelection()).getFirstElement();
 
         if(file != null && !file.isDirectory() && file.exists()) {
+            if(ScriptFiles.isLinkedFile(file)) {
+                file = ScriptFiles.resolveLinkFile(file);
+            }
+            
             String editor = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_EDITOR);
             if(StringUtils.isSet(editor)) {
                 try {
