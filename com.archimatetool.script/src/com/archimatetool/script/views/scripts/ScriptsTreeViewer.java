@@ -6,6 +6,7 @@
 package com.archimatetool.script.views.scripts;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IDecoration;
@@ -53,9 +54,14 @@ public class ScriptsTreeViewer extends FileTreeViewer {
             if(ScriptFiles.isLinkedFile(file)) {
                 Image image = IArchiScriptImages.ImageFactory.getImage(IArchiScriptImages.ICON_SCRIPT);
                 
-                if(!ScriptFiles.resolveLinkFile(file).exists()) {
-                    return IArchiScriptImages.ImageFactory.getOverlayImage(image,
-                            IArchiScriptImages.ICON_LINK_WARN_OVERLAY, IDecoration.BOTTOM_RIGHT);
+                try {
+                    if(!ScriptFiles.resolveLinkFile(file).exists()) {
+                        return IArchiScriptImages.ImageFactory.getOverlayImage(image,
+                                IArchiScriptImages.ICON_LINK_WARN_OVERLAY, IDecoration.BOTTOM_RIGHT);
+                    }
+                }
+                catch(IOException ex) {
+                    ex.printStackTrace();
                 }
                 
                 return IArchiScriptImages.ImageFactory.getOverlayImage(image,
@@ -79,7 +85,12 @@ public class ScriptsTreeViewer extends FileTreeViewer {
             if(element instanceof File) {
                 File file = (File)element;
                 if(ScriptFiles.isLinkedFile(file)) {
-                    return ScriptFiles.resolveLinkFile(file).getAbsolutePath();
+                    try {
+                        return ScriptFiles.resolveLinkFile(file).getAbsolutePath();
+                    }
+                    catch(IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
                 return file.getAbsolutePath();
             }

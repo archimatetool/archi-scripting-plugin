@@ -26,25 +26,13 @@ public class ScriptFiles {
 	    return file.isFile() && file.getName().toLowerCase().endsWith(LINK_EXTENSION);
 	}
 	
-	public static File resolveLinkFile(File file) {
-        try {
-            byte[] bytes = Files.readAllBytes(file.toPath());
-            return new File(new String(bytes));
-        }
-        catch(IOException ex) {
-            ex.printStackTrace();
-        }
-        
-        return file;
+	public static File resolveLinkFile(File file) throws IOException {
+	    byte[] bytes = Files.readAllBytes(file.toPath());
+	    return new File(new String(bytes));
 	}
 	
-	public static void writeLinkFile(File linkFile, File linked) {
-	    try {
-            Files.write(linkFile.toPath(), linked.getAbsolutePath().getBytes());
-        }
-        catch(IOException ex) {
-            ex.printStackTrace();
-        }
+	public static void writeLinkFile(File linkFile, File linked) throws IOException {
+	    Files.write(linkFile.toPath(), linked.getAbsolutePath().getBytes());
 	}
 	
 }

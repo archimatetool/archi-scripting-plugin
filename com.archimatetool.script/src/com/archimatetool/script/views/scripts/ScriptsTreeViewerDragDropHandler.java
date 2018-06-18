@@ -42,12 +42,12 @@ public class ScriptsTreeViewerDragDropHandler {
     /**
      * Drag operations we support
      */
-    private int fDragOperations = DND.DROP_MOVE | DND.DROP_LINK;
+    private int fDragOperations = DND.DROP_MOVE | DND.DROP_COPY;
 
     /**
      * Drop operations we support on the tree
      */
-    private int fDropOperations = DND.DROP_MOVE | DND.DROP_LINK;
+    private int fDropOperations = DND.DROP_MOVE | DND.DROP_COPY;
 
     /**
      * Whether we have a valid tree selection
@@ -112,15 +112,16 @@ public class ScriptsTreeViewerDragDropHandler {
                 
                 if(event.detail == DND.DROP_NONE) {
                     event.feedback = DND.FEEDBACK_NONE;
+                    return;
                 }
                 
                 if(isFileDragOperation(event.currentDataType)) {
-                    event.detail |= DND.DROP_LINK;
+                    event.detail |= DND.DROP_COPY;
                 }
                 else {
                     event.detail |= DND.DROP_MOVE;
                 }
-                
+
                 event.feedback |= DND.FEEDBACK_SCROLL | DND.FEEDBACK_EXPAND;
             }
 
@@ -138,6 +139,10 @@ public class ScriptsTreeViewerDragDropHandler {
         });
     }
     
+    private boolean isValidSelection(DropTargetEvent event) {
+        return fIsValidTreeSelection || isValidFileSelection(event);
+    }
+
     /**
      * Determine whether we have a valid selection of objects dragged from the Tree
      */
@@ -145,10 +150,9 @@ public class ScriptsTreeViewerDragDropHandler {
         return selection != null && !selection.isEmpty();
     }
     
-    private boolean isValidSelection(DropTargetEvent event) {
-        return fIsValidTreeSelection || isValidFileSelection(event);
-    }
-
+    /**
+     * Determine whether we have a valid selection of objects dragged from the desktop
+     */
     private boolean isValidFileSelection(DropTargetEvent event) {
         return isFileDragOperation(event.currentDataType);
     }
@@ -174,46 +178,67 @@ public class ScriptsTreeViewerDragDropHandler {
      * Add external file objects dragged from the desktop
      */
     private void addFileObjects(File parent, String[] paths) {
+        boolean hasScriptFile = false;
+        boolean doLink = false;
+        
+        // Do we have a script file?
         for(String path : paths) {
             File file = new File(path);
-            if(!ScriptFiles.isScriptFile(file)) {
-                return;
+            if(ScriptFiles.isScriptFile(file)) {
+                hasScriptFile = true;
+                break;
             }
         }
         
-        MessageDialog dialog = new MessageDialog(Display.getCurrent().getActiveShell(),
-                Messages.ScriptsTreeViewerDragDropHandler_0,
-                null,
-                Messages.ScriptsTreeViewerDragDropHandler_1,
-                MessageDialog.QUESTION,
-                new String[] {
-                    Messages.ScriptsTreeViewerDragDropHandler_2,
-                    Messages.ScriptsTreeViewerDragDropHandler_3,
-                    Messages.ScriptsTreeViewerDragDropHandler_4 },
-                0);
-        
-        int result = dialog.open();
-        
-        if(result == 2) {
-            return;
+        // If we do, offer to link as well as copy files
+        if(hasScriptFile) {
+            MessageDialog dialog = new MessageDialog(Display.getCurrent().getActiveShell(),
+                    Messages.ScriptsTreeViewerDragDropHandler_0,
+                    null,
+                    Messages.ScriptsTreeViewerDragDropHandler_1,
+                    MessageDialog.QUESTION,
+                    new String[] {
+                        Messages.ScriptsTreeViewerDragDropHandler_2,
+                        Messages.ScriptsTreeViewerDragDropHandler_3,
+                        Messages.ScriptsTreeViewerDragDropHandler_4 },
+                    0);
+            
+            int result = dialog.open();
+            
+            // cancel
+            if(result == 2) {
+                return;
+            }
+            
+            // link
+            if(result == 1) {
+                doLink = true;
+            }
         }
         
         for(String path : paths) {
             File file = new File(path);
             
-            if(result == 0) {
-                try {
-                    File target = new File(parent, file.getName());
-                    if(!target.exists()) {
-                        Files.copy(file.toPath(), target.toPath());
+            if(file.isFile()) {
+                if(doLink && ScriptFiles.isScriptFile(file)) {
+                    try {
+                        ScriptFiles.writeLinkFile(new File(parent, FileUtils.getFileNameWithoutExtension(file) + ScriptFiles.LINK_EXTENSION), file);
+                    }
+                    catch(IOException ex) {
+                        ex.printStackTrace();
                     }
                 }
-                catch(IOException ex) {
-                    ex.printStackTrace();
+                else {
+                    File target = new File(parent, file.getName());
+                    if(!target.exists()) {
+                        try {
+                            Files.copy(file.toPath(), target.toPath());
+                        }
+                        catch(IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
                 }
-            }
-            else {
-                ScriptFiles.writeLinkFile(new File(parent, FileUtils.getFileNameWithoutExtension(file) + ScriptFiles.LINK_EXTENSION), file);
             }
         }
         
@@ -294,11 +319,9 @@ public class ScriptsTreeViewerDragDropHandler {
         }
         
         // If moving a folder check that target folder is not a descendant of the source folder
-        if(object instanceof File) {
-            while((targetTreeItem = targetTreeItem.getParentItem()) != null) {
-                if(targetTreeItem.getData() == object) {
-                    return false;
-                }
+        while((targetTreeItem = targetTreeItem.getParentItem()) != null) {
+            if(targetTreeItem.getData() == object) {
+                return false;
             }
         }
         
