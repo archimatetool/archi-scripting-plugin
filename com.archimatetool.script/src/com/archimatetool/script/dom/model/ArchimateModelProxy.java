@@ -36,8 +36,6 @@ import com.archimatetool.script.commands.SetCommand;
  */
 public class ArchimateModelProxy extends EObjectProxy {
     
-    ArchimateModelProxy() {}
-    
     ArchimateModelProxy(IArchimateModel model) {
         super(model);
     }
@@ -216,6 +214,15 @@ public class ArchimateModelProxy extends EObjectProxy {
         return super.attr(attribute, value);
     }
     
+    /**
+     * Set the Current Model to this
+     * @return
+     */
+    public ArchimateModelProxy setAsCurrent() {
+        CurrentModel.INSTANCE.setEObject(getEObject());
+        return this;
+    }
+
     // Expose find methods as public
     
     @Override

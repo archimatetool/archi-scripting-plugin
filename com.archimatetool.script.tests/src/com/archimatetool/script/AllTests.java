@@ -9,6 +9,7 @@ package com.archimatetool.script;
 import com.archimatetool.script.dom.model.ArchimateElementProxyTests;
 import com.archimatetool.script.dom.model.ArchimateModelProxyTests;
 import com.archimatetool.script.dom.model.ArchimateRelationshipProxyTests;
+import com.archimatetool.script.dom.model.CurrentModelTests;
 import com.archimatetool.script.dom.model.DiagramModelConnectionProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelObjectProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelProxyTests;
@@ -29,6 +30,7 @@ public class AllTests {
         suite.addTest(ArchimateElementProxyTests.suite());
 		suite.addTest(ArchimateModelProxyTests.suite());
         suite.addTest(ArchimateRelationshipProxyTests.suite());
+        suite.addTest(CurrentModelTests.suite());
         suite.addTest(DiagramModelConnectionProxyTests.suite());
         suite.addTest(DiagramModelProxyTests.suite());
         suite.addTest(DiagramModelObjectProxyTests.suite());

@@ -52,17 +52,4 @@ public class ModelTests {
         assertNotNull(proxy.getEObject().getAdapter(IArchiveManager.class));
         assertNull(proxy.getEObject().getAdapter(CommandStack.class));
     }
-    
-    @Test
-    public void setCurrent() throws Exception {
-        Model model = (Model)DomExtensionHelper.getDomObject("com.archimatetool.script.model"); //$NON-NLS-1$
-        assertNull(model.getEObject());
-        
-        ArchimateModelProxy proxy = model.create("foo");
-        assertNull(model.getEObject());
-        
-        model.setCurrent(proxy);
-        
-        assertEquals(proxy, model);
-    }
 }

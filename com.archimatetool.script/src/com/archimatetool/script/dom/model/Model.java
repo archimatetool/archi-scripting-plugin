@@ -8,21 +8,16 @@ package com.archimatetool.script.dom.model;
 import java.io.File;
 
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
-import com.archimatetool.commandline.CommandLineState;
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
-import com.archimatetool.editor.ui.services.ViewManager;
-import com.archimatetool.editor.views.tree.ITreeModelView;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.script.ArchiScriptException;
-import com.archimatetool.script.ArchiScriptPlugin;
 
 /**
- * Current model object
+ * Model load and create object
  * 
  * Represents the current model
  * This can be the selected model in focus if run in the UI, or the current model if run from the ACLI
@@ -30,27 +25,7 @@ import com.archimatetool.script.ArchiScriptPlugin;
  * 
  * @author Phillip Beauvoir
  */
-public class Model extends ArchimateModelProxy {
-    
-    public Model() {
-        // Get and wrap the currently selected model in the UI if there is one
-        if(PlatformUI.isWorkbenchRunning()) {
-            IWorkbenchPart activePart = ArchiScriptPlugin.INSTANCE.getActivePart();
-            
-            // Fallback to tree
-            if(activePart == null) {
-                activePart = ViewManager.findViewPart(ITreeModelView.ID);
-            }
-            
-            if(activePart != null) {
-                setEObject(activePart.getAdapter(IArchimateModel.class));
-            }
-        }
-        // Else, if we are running in CLI mode, get the Current Model if there is one
-        else {
-            setEObject(CommandLineState.getModel());
-        }
-    }
+public class Model {
     
     public ArchimateModelProxy create(String modelName) {
         IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
@@ -86,8 +61,4 @@ public class Model extends ArchimateModelProxy {
         throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_2, path));
     }
     
-    public ArchimateModelProxy setCurrent(ArchimateModelProxy current) {
-        setEObject(current.getEObject());
-        return this;
-    }
 }

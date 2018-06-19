@@ -7,6 +7,7 @@ package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -61,6 +62,13 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals(actualTestProxy, testProxy.getModel());
     }
     
+    @Test
+    public void setAsCurrent() throws Exception {
+        assertNull(CurrentModel.INSTANCE.getEObject());
+        actualTestProxy.setAsCurrent();
+        assertEquals(actualTestProxy, CurrentModel.INSTANCE);
+    }
+
     @Override
     @Test
     public void find() {

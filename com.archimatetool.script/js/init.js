@@ -5,6 +5,7 @@ function jArchi (obj) {
 		return model.find(obj || "");
 }
 
+jArchi.model = jArchiModel;
 jArchi.fs = jArchiFS;
 
 $ = jArchi;

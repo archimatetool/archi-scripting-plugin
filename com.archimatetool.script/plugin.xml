@@ -139,9 +139,14 @@
             variableName="selection">
       </dom>
       <dom
+            class="com.archimatetool.script.dom.model.CurrentModel"
+            id="com.archimatetool.script.currentmodel"
+            variableName="model">
+      </dom>
+      <dom
             class="com.archimatetool.script.dom.model.Model"
             id="com.archimatetool.script.model"
-            variableName="model">
+            variableName="jArchiModel">
       </dom>
       <dom
             class="com.archimatetool.script.dom.ui.Browser"
