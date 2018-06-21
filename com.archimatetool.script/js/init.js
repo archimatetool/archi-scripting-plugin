@@ -9,3 +9,35 @@ jArchi.model = jArchiModel;
 jArchi.fs = jArchiFS;
 
 $ = jArchi;
+
+var window = {
+	alert: function(message) {
+		var MessageDialog = Java.type("org.eclipse.jface.dialogs.MessageDialog");
+		MessageDialog.openInformation(shell, "Archi", message);
+	},
+
+	confirm: function(message) {
+		var MessageDialog = Java.type("org.eclipse.jface.dialogs.MessageDialog");
+		return MessageDialog.openConfirm(shell, "Archi", message);
+	},
+
+	prompt: function(message, defaultText) {
+		var InputDialog = Java.type("org.eclipse.jface.dialogs.InputDialog");
+		var dialog = new InputDialog(shell, "Archi", message, defaultText, null);
+		dialog.open();
+		return dialog.getValue();
+	},
+
+	openFile: function() {
+		var FileDialog = Java.type("org.eclipse.swt.widgets.FileDialog");
+		var dialog = new FileDialog(shell, 1 << 12);
+		return dialog.open();
+	},
+
+	saveFile: function() {
+		var FileDialog = Java.type("org.eclipse.swt.widgets.FileDialog");
+		var dialog = new FileDialog(shell, 1 << 13);
+		return dialog.open();
+	},
+
+};

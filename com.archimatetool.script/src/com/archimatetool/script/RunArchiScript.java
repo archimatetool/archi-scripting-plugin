@@ -83,8 +83,9 @@ public class RunArchiScript {
     private void defineGlobalVariables(ScriptEngine engine) {
         // Eclipse ones - these are needed for calling UI methods such as opening dialogs, windows, etc
         if(PlatformUI.isWorkbenchRunning()) {
-            engine.put("window", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
             engine.put("workbench", PlatformUI.getWorkbench()); //$NON-NLS-1$
+            engine.put("workbenchwindow", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
+            engine.put("shell", PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()); //$NON-NLS-1$
         }
     }
 
