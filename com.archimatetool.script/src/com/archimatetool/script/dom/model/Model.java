@@ -43,19 +43,26 @@ public class Model {
     public ArchimateModelProxy load(String path) {
         File file = new File(path);
         
-        // Already open in UI
         if(PlatformUI.isWorkbenchRunning()) {
+            // Already open in UI
             for(IArchimateModel model : IEditorModelManager.INSTANCE.getModels()) {
                 if(file.equals(model.getFile())) {
                     return new ArchimateModelProxy(model);
                 }
             }
+            
+            // Load and Open it in UI
+            IArchimateModel model = IEditorModelManager.INSTANCE.openModel(file);
+            if(model != null) {
+                return new ArchimateModelProxy(model);
+            }
         }
-        
-        // Else load from file
-        IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(file);
-        if(model != null) {
-            return new ArchimateModelProxy(model);
+        // No UI, else load from file
+        else {
+            IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(file);
+            if(model != null) {
+                return new ArchimateModelProxy(model);
+            }
         }
         
         throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_2, path));
