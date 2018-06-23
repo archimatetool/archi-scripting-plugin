@@ -8,8 +8,8 @@ package com.archimatetool.script;
 import java.io.File;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -27,7 +27,7 @@ import com.archimatetool.script.preferences.IPreferenceConstants;
  * 
  * @author Phillip Beauvoir
  */
-public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup, IPartListener {
+public class ArchiScriptPlugin extends AbstractUIPlugin implements IPartListener {
 
     public static final String PLUGIN_ID = "com.archimatetool.script"; //$NON-NLS-1$
     
@@ -56,18 +56,20 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IStartup, IPa
         return new File(path);
     }
     
-    public void earlyStartup() {
-        // Do nothing
-    }
-    
-    
     @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         if(PlatformUI.isWorkbenchRunning()) {
-            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(this);
+            // This needs to be on a thread
+            Display.getDefault().asyncExec(new Runnable() {
+                public void run() {
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(ArchiScriptPlugin.this);
+                }
+            });
         }
     }
+    
+    
     
     // Track current workbench parts
     private IWorkbenchPart currentPart;
