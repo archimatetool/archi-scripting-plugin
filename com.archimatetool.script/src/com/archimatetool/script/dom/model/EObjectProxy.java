@@ -38,7 +38,7 @@ import com.archimatetool.script.commands.SetCommand;
  * @author Phillip Beauvoir
  * @author jbsarrodie
  */
-public abstract class EObjectProxy implements IModelConstants {
+public abstract class EObjectProxy implements IModelConstants, Comparable<EObjectProxy> {
     
     private EObject fEObject;
     
@@ -463,5 +463,13 @@ public abstract class EObjectProxy implements IModelConstants {
     @Override
     public String toString() {
         return getType() + ": " + getName(); //$NON-NLS-1$
+    }
+
+    @Override
+    public int compareTo(EObjectProxy o) {
+        if(o == null || o.getName() == null || getName() == null) {
+            return 0;
+        }
+        return getName().compareTo(o.getName());
     }
 }
