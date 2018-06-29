@@ -34,6 +34,12 @@ var window = {
 		return dialog.open();
 	},
 
+	promptOpenDirectory: function() {
+		var DirectoryDialog = Java.type("org.eclipse.swt.widgets.DirectoryDialog");
+		var dialog = new DirectoryDialog(shell);
+		return dialog.open();
+	},
+
 	promptSaveFile: function() {
 		var FileDialog = Java.type("org.eclipse.swt.widgets.FileDialog");
 		var dialog = new FileDialog(shell, 1 << 13);
