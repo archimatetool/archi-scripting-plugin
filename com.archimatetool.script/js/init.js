@@ -28,13 +28,13 @@ var window = {
 		return dialog.getValue();
 	},
 
-	openFile: function() {
+	promptOpenFile: function() {
 		var FileDialog = Java.type("org.eclipse.swt.widgets.FileDialog");
 		var dialog = new FileDialog(shell, 1 << 12);
 		return dialog.open();
 	},
 
-	saveFile: function() {
+	promptSaveFile: function() {
 		var FileDialog = Java.type("org.eclipse.swt.widgets.FileDialog");
 		var dialog = new FileDialog(shell, 1 << 13);
 		return dialog.open();
