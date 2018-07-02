@@ -1,7 +1,9 @@
 ﻿# Archi Scripting Plug-in
 
 ## What is this?
-This is an extension to Archi that allows scripting of tasks using the JavaScript language. It's a work in progress.
+This is an extension to Archi that allows scripting of tasks using the JavaScript language.
+
+>Read [official announcement](https://blog.archimatetool.com/2018/07/02/jarchi/) for more information about binary distribution and license.
 
 ## How to use it
 Binaries will be made available separately.
