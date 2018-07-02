@@ -53,9 +53,8 @@ extends AbstractFileView  {
     public static String ID = ArchiScriptPlugin.PLUGIN_ID + ".scriptsView"; //$NON-NLS-1$
     public static String HELP_ID = ArchiScriptPlugin.PLUGIN_ID + ".scriptsViewHelp"; //$NON-NLS-1$
     
-    RunScriptAction fActionRun;
-    RestoreExampleScriptsAction fActionRestoreExamples;
-    IAction fActionShowConsole;
+    private RunScriptAction fActionRun;
+    private IAction fActionShowConsole;
     
     /**
      * Application Preferences Listener
@@ -100,9 +99,6 @@ extends AbstractFileView  {
         fActionNewFile.setText(Messages.ScriptsFileViewer_0);
         fActionNewFile.setToolTipText(Messages.ScriptsFileViewer_1);
         
-        // Restore Examples
-        fActionRestoreExamples = new RestoreExampleScriptsAction(getViewer());
-        
         // Show Console
         fActionShowConsole = new ShowConsoleAction();
         
@@ -117,8 +113,7 @@ extends AbstractFileView  {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
 
-        manager.appendToGroup(IWorkbenchActionConstants.NEW_GROUP, new Separator());
-        manager.appendToGroup(IWorkbenchActionConstants.NEW_GROUP, fActionRestoreExamples);
+        manager.appendToGroup(IWorkbenchActionConstants.NEW_GROUP, new Separator("extra")); //$NON-NLS-1$
         
         manager.add(fActionRun);
         manager.add(new Separator());
