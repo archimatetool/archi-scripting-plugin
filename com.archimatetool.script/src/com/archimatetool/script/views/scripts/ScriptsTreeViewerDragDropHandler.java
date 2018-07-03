@@ -311,7 +311,7 @@ public class ScriptsTreeViewerDragDropHandler {
      */
     private boolean canDropObject(Object object, TreeItem targetTreeItem) {
         if(targetTreeItem == null) {  // Root tree
-            return false;
+            return true;
         }
         
         if(object == targetTreeItem.getData()) {  // Cannot drop onto itself
