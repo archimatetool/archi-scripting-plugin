@@ -28,21 +28,38 @@ var window = {
 		return dialog.getValue();
 	},
 
-	promptOpenFile: function() {
+	promptOpenFile: function(options) {
 		var FileDialog = Java.type("org.eclipse.swt.widgets.FileDialog");
 		var dialog = new FileDialog(shell, 1 << 12);
+		
+		var options = options || {};
+		dialog.text = options.title || "Archi";
+		dialog.filterExtensions = options.filterExtensions || [];
+		dialog.fileName = options.fileName || null;
+
 		return dialog.open();
 	},
 
-	promptOpenDirectory: function() {
+	promptOpenDirectory: function(options) {
 		var DirectoryDialog = Java.type("org.eclipse.swt.widgets.DirectoryDialog");
 		var dialog = new DirectoryDialog(shell);
+
+		var options = options || {};
+		dialog.text = options.title || "Archi";
+		dialog.filterPath = options.filterPath || null;
+
 		return dialog.open();
 	},
 
-	promptSaveFile: function() {
+	promptSaveFile: function(options) {
 		var FileDialog = Java.type("org.eclipse.swt.widgets.FileDialog");
 		var dialog = new FileDialog(shell, 1 << 13);
+
+		var options = options || {};
+		dialog.text = options.title || "Archi";
+		dialog.filterExtensions = options.filterExtensions || [];
+		dialog.fileName = options.fileName || null;
+
 		return dialog.open();
 	},
 
