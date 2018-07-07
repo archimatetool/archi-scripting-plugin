@@ -20,62 +20,62 @@ public class Browser {
     
     private IBrowserEditor fBrowserEditor;
     
-    private boolean instanced;
-    
     public Browser() {
     }
     
-    public Browser newInstance() {
+    // Return new instance of Browser
+    public Browser open() {
+        return open("http://localhost", "Archi");  //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    
+    // Return new instance of Browser
+    public Browser open(String url) {
+        return open(url, url);
+    }
+    
+    // Return new instance of Browser
+    public Browser open(String url, String title) {
         Browser browser = new Browser();
-        browser.instanced = true;
+        browser.setBrowserEditor(url, title); 
         return browser;
     }
-    
-    public void open() {
-        if(checkInstanced()) {
-            open("http://localhost", "Archi");  //$NON-NLS-1$//$NON-NLS-2$
-        }
-    }
-    
-    public void open(String url, String title) {
-        if(checkInstanced()) {
-            createBrowserEditor(url, title);
-        }
-    }
-    
+
     public void setText(String html) {
-        if(checkInstanced() && fBrowserEditor != null) {
+        if(fBrowserEditor != null) {
             fBrowserEditor.getBrowser().setText(html, true);
         }
     }
     
+    public void setURL(String url) {
+        setBrowserEditor(url, url);
+    }
+    
+    public void setTitle(String title) {
+        setBrowserEditor(null, title);
+    }
+    
     public void close() {
-        if(checkInstanced() && fBrowserEditor != null) {
+        if(fBrowserEditor != null) {
             IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
             page.closeEditor(fBrowserEditor, false);
         }
     }
 
-    private boolean checkInstanced()  {
-        if(!instanced) {
-            System.err.println(Messages.Browser_0);
-        }
-        
-        return instanced;
-    }
-    
-    private void createBrowserEditor(String url, String title) {
+    private void setBrowserEditor(String url, String title) {
         if(!PlatformUI.isWorkbenchRunning()) {
             return;
         }
         
-        BrowserEditorInput input = new BrowserEditorInput(url, title);
-        
         if(fBrowserEditor == null) {
+            BrowserEditorInput input = new BrowserEditorInput(url, title);
             fBrowserEditor = (IBrowserEditor)EditorManager.openEditor(input, IBrowserEditor.ID);
         }
         else {
-            fBrowserEditor.setBrowserEditorInput(new BrowserEditorInput(url, title));
+            if(title == null) {
+                title = fBrowserEditor.getEditorInput().getName();
+            }
+            BrowserEditorInput input = new BrowserEditorInput(url, title);
+            fBrowserEditor.setBrowserEditorInput(input);
         }
     }
 }
