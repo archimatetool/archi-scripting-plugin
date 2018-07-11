@@ -15,6 +15,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
@@ -116,7 +117,7 @@ public class ArchimateModelProxy extends EObjectProxy {
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
-            element.setName(name);
+            element.setName(StringUtils.safeString(name));
             
             // Check folder is correct for type, if not use default folder
             if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, element)) {
@@ -147,7 +148,7 @@ public class ArchimateModelProxy extends EObjectProxy {
             }
 
             IArchimateRelationship relationship = (IArchimateRelationship)IArchimateFactory.eINSTANCE.create(eClass);
-            relationship.setName(name);
+            relationship.setName(StringUtils.safeString(name));
             
             // Check folder is correct for type, if not use default folder
             if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, relationship)) {
