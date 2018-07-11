@@ -59,6 +59,13 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
     }
 
     @Test
+    public void attr_FontColorNull() {
+        assertEquals("#000000", testProxy.attr(IModelConstants.FONT_COLOR));
+        testProxy.attr(IModelConstants.FONT_COLOR, null);
+        assertEquals("#000000", testProxy.attr(IModelConstants.FONT_COLOR));
+    }
+
+    @Test
     public void attr_FontName() {
         assertEquals(FontFactory.getDefaultUserViewFontData().getName(), testProxy.attr(IModelConstants.FONT_NAME));
         testProxy.attr(IModelConstants.FONT_NAME, "Comic Sans");
@@ -91,4 +98,14 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
         assertEquals("#232398", testProxy.attr(IModelConstants.LINE_COLOR));
     }
     
+    @Test
+    public void attr_LineColorNull() {
+        String defaultLineColor = ColorFactory.convertRGBToString(ColorFactory.getDefaultLineColor(testProxy.getEObject()).getRGB());
+        
+        assertEquals(defaultLineColor, testProxy.attr(IModelConstants.LINE_COLOR));
+        testProxy.attr(IModelConstants.LINE_COLOR, null);
+        assertEquals(defaultLineColor, testProxy.attr(IModelConstants.LINE_COLOR));
+    }
+
+
 }

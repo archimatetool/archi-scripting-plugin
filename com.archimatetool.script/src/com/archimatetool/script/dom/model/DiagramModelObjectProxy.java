@@ -100,9 +100,10 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 break;
             case FILL_COLOR:
                 if(value instanceof String) {
-                    checkColorValue((String)value);
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__FILL_COLOR, value));
+                    checkColorValue((String)value); // check correct color value
                 }
+                // Set color. A null value is allowed
+                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__FILL_COLOR, value));
                 break;
         }
         

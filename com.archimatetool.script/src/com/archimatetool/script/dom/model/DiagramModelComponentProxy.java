@@ -128,9 +128,10 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         switch(attribute) {
             case FONT_COLOR:
                 if(value instanceof String) {
-                    checkColorValue((String)value);
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT_COLOR, value));
+                    checkColorValue((String)value); // check correct color value
                 }
+                // Set color. A null value is allowed
+                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT_COLOR, value));
                 break;
             case FONT_NAME:
                 if(value instanceof String) {
@@ -155,9 +156,10 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
                 break;
             case LINE_COLOR:
                 if(value instanceof String) {
-                    checkColorValue((String)value);
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_COLOR, value));
+                    checkColorValue((String)value); // check correct color value
                 }
+                // Set color. A null value is allowed
+                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_COLOR, value));
                 break;
         }
         

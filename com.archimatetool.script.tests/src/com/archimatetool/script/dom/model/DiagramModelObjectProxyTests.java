@@ -175,6 +175,13 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     }
     
     @Test
+    public void attr_FillColorNull() {
+        assertEquals("#0080c0", testProxy.attr(IModelConstants.FILL_COLOR));
+        testProxy.attr(IModelConstants.FILL_COLOR, null);
+        assertEquals(null, testProxy.attr(IModelConstants.FILL_COLOR));
+    }
+
+    @Test
     public void attr_Bounds() {
         IDiagramModelObject dmo = (IDiagramModelObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3707");
         DiagramModelObjectProxy proxy = new DiagramModelObjectProxy(dmo);
