@@ -10,6 +10,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +25,6 @@ import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.util.ArchimateModelUtils;
-import com.archimatetool.script.dom.model.DiagramModelObjectProxy.Bounds;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -144,11 +145,11 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     
     @Test
     public void getBounds() {
-        Bounds bounds = actualTestProxy.getBounds();
-        assertEquals(20, bounds.x);
-        assertEquals(25, bounds.y);
-        assertEquals(101, bounds.width);
-        assertEquals(60, bounds.height);
+        Map<String, Integer> bounds = actualTestProxy.getBounds();
+        assertEquals(20, (int)bounds.get("x"));
+        assertEquals(25, (int)bounds.get("y"));
+        assertEquals(101, (int)bounds.get("width"));
+        assertEquals(60, (int)bounds.get("height"));
     }
     
     @Override
@@ -186,11 +187,11 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
         IDiagramModelObject dmo = (IDiagramModelObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3707");
         DiagramModelObjectProxy proxy = new DiagramModelObjectProxy(dmo);
 
-        Bounds bounds = (Bounds)proxy.attr(IModelConstants.BOUNDS);
-        assertEquals(20, bounds.x);
-        assertEquals(20, bounds.y);
-        assertEquals(440, bounds.width);
-        assertEquals(500, bounds.height);
+        Map<?, ?> bounds = (Map<?, ?>)proxy.attr(IModelConstants.BOUNDS);
+        assertEquals(20, bounds.get("x"));
+        assertEquals(20, bounds.get("y"));
+        assertEquals(440, bounds.get("width"));
+        assertEquals(500, bounds.get("height"));
     }
 
     @Override

@@ -5,8 +5,12 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 
+import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IBounds;
 import com.archimatetool.model.IDiagramModelContainer;
@@ -23,17 +27,6 @@ import com.archimatetool.script.commands.SetCommand;
  */
 public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     
-    public static class Bounds {
-        public int x, y, width, height;
-
-        public Bounds(int x, int y, int width, int height) {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
-        }
-    }
-    
     DiagramModelObjectProxy(IDiagramModelObject object) {
         super(object);
     }
@@ -43,9 +36,26 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return (IDiagramModelObject)super.getEObject();
     }
     
-    public Bounds getBounds() {
+    public Map<String, Integer> getBounds() {
         IBounds b = getEObject().getBounds();
-        return new Bounds(b.getX(), b.getY(), b.getWidth(), b.getHeight());
+        
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("x", b.getX()); //$NON-NLS-1$
+        map.put("y", b.getY()); //$NON-NLS-1$
+        map.put("width", b.getWidth()); //$NON-NLS-1$
+        map.put("height", b.getHeight()); //$NON-NLS-1$
+        
+        return map;
+    }
+    
+    public void setBounds(Map<?, ?> map) {
+        int x = (map.get("x") instanceof Integer) ? (int)map.get("x") : getEObject().getBounds().getX(); //$NON-NLS-1$ //$NON-NLS-2$
+        int y = (map.get("y") instanceof Integer) ? (int)map.get("y") : getEObject().getBounds().getY(); //$NON-NLS-1$ //$NON-NLS-2$
+        int width = (map.get("width") instanceof Integer) ? (int)map.get("width") : getEObject().getBounds().getWidth(); //$NON-NLS-1$ //$NON-NLS-2$
+        int height = (map.get("height") instanceof Integer) ? (int)map.get("height") : getEObject().getBounds().getHeight(); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__BOUNDS, bounds));
     }
     
     /**
@@ -96,7 +106,9 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case BOUNDS:
-                // TODO: check bounds are correct
+                if(value instanceof Map) {
+                    setBounds((Map<?, ?>)value);
+                }
                 break;
             case FILL_COLOR:
                 if(value instanceof String) {
