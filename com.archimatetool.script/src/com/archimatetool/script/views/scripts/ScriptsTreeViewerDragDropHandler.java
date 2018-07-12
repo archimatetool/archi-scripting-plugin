@@ -178,6 +178,10 @@ public class ScriptsTreeViewerDragDropHandler {
      * Add external file objects dragged from the desktop
      */
     private void addFileObjects(File parent, String[] paths) {
+        if(parent == null || paths == null) {
+            return;
+        }
+        
         boolean hasScriptFile = false;
         boolean doLink = false;
         
