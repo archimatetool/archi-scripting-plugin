@@ -99,94 +99,42 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         return list;
     }
 
-    @Override
-    protected Object attr(String attribute) {
-        switch(attribute) {
-            case DIAGRAM_MODEL:
-                return getDiagramModel();
-            case ARCHIMATE_CONCEPT:
-                return getArchimateConcept();
-            case FONT_COLOR:
-                return getFontColor();
-            case FONT_NAME:
-                return getFontData().getName();
-            case FONT_SIZE:
-                return getFontData().getHeight();
-            case FONT_STYLE:
-                return getFontStyleAsString();
-            case LINE_COLOR:
-                return getLineColor();
-            case LINE_WIDTH:
-                return ((ILineObject)getEObject()).getLineWidth();
-        }
-        
-        return super.attr(attribute);
-    }
-    
-    @Override
-    protected EObjectProxy attr(String attribute, Object value) {
-        switch(attribute) {
-            case FONT_COLOR:
-                if(value instanceof String) {
-                    checkColorValue((String)value); // check correct color value
-                }
-                // Set color. A null value is allowed
-                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT_COLOR, value));
-                break;
-            case FONT_NAME:
-                if(value instanceof String) {
-                    FontData fd = getFontData();
-                    fd.setName((String)value);
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT, fd.toString()));
-                }
-                break;
-            case FONT_SIZE:
-                if(value instanceof Integer) {
-                    FontData fd = getFontData();
-                    fd.setHeight((Integer)value);
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT, fd.toString()));
-                }
-                break;
-            case FONT_STYLE:
-                if(value instanceof String) {
-                    FontData fd = getFontData();
-                    fd.setStyle(getFontStyleAsInteger((String)value));
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT, fd.toString()));
-                }
-                break;
-            case LINE_COLOR:
-                if(value instanceof String) {
-                    checkColorValue((String)value); // check correct color value
-                }
-                // Set color. A null value is allowed
-                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_COLOR, value));
-                break;
-        }
-        
-        return super.attr(attribute, value);
-    }
-    
-    protected String getFontColor() {
+    public String getFontColor() {
         String color = ((IFontAttribute)getEObject()).getFontColor();
         return color == null ? "#000000" : color; //$NON-NLS-1$
     }
     
-    protected int getFontStyleAsInteger(String style) {
-        int s = 0;
-        
-        if(style != null) {
-            if(style.contains("bold")) { //$NON-NLS-1$
-                s |= SWT.BOLD; 
-            }
-            if(style.contains("italic")) { //$NON-NLS-1$
-                s |= SWT.ITALIC; 
-            }
-        }
-        
-        return s;
+    public DiagramModelComponentProxy setFontColor(String value) {
+        // check correct color value
+        checkColorValue(value); 
+        // Set color. A null value is allowed
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT_COLOR, value));
+        return this;
+    }
+
+    public String getFontName() {
+        return getFontData().getName();
     }
     
-    protected String getFontStyleAsString() {
+    public DiagramModelComponentProxy setFontName(String value) {
+        FontData fd = getFontData();
+        fd.setName(value);
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT, fd.toString()));
+        return this;
+    }
+    
+    public int getFontSize() {
+        return getFontData().getHeight();
+    }
+    
+    public DiagramModelComponentProxy setFontSize(int value) {
+        FontData fd = getFontData();
+        fd.setHeight(value);
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT, fd.toString()));
+        return this;
+    }
+    
+    public String getFontStyle() {
         FontData fd = getFontData();
         
         if(fd.getStyle() == 0) {
@@ -205,7 +153,25 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         return style;
     }
     
-    protected String getLineColor() {
+    public DiagramModelComponentProxy setFontStyle(String value) {
+        FontData fd = getFontData();
+        
+        int style = 0;
+        if(value != null) {
+            if(value.contains("bold")) { //$NON-NLS-1$
+                style |= SWT.BOLD; 
+            }
+            if(value.contains("italic")) { //$NON-NLS-1$
+                style |= SWT.ITALIC; 
+            }
+        }
+        fd.setStyle(style);
+        
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.FONT_ATTRIBUTE__FONT, fd.toString()));
+        return this;
+    }
+    
+    public String getLineColor() {
         String color = ((ILineObject)getEObject()).getLineColor();
         RGB rgb = ColorFactory.convertStringToRGB(color);
         if(rgb == null) {
@@ -213,7 +179,76 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         }
         return ColorFactory.convertRGBToString(rgb);
     }
+    
+    public DiagramModelComponentProxy setLineColor(String value) {
+        // check correct color value
+        checkColorValue(value); 
+        // Set color. A null value is allowed
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_COLOR, value));
+        return this;
+    }
 
+    public int getLineWidth() {
+        return ((ILineObject)getEObject()).getLineWidth();
+    }
+
+    @Override
+    protected Object attr(String attribute) {
+        switch(attribute) {
+            case DIAGRAM_MODEL:
+                return getDiagramModel();
+            case ARCHIMATE_CONCEPT:
+                return getArchimateConcept();
+            case FONT_COLOR:
+                return getFontColor();
+            case FONT_NAME:
+                return getFontName();
+            case FONT_SIZE:
+                return getFontSize();
+            case FONT_STYLE:
+                return getFontStyle();
+            case LINE_COLOR:
+                return getLineColor();
+            case LINE_WIDTH:
+                return getLineWidth();
+        }
+        
+        return super.attr(attribute);
+    }
+    
+    @Override
+    protected EObjectProxy attr(String attribute, Object value) {
+        switch(attribute) {
+            case FONT_COLOR:
+                if(value instanceof String) {
+                    return setFontColor((String)value);
+                }
+                break;
+            case FONT_NAME:
+                if(value instanceof String) {
+                    return setFontName((String)value);
+                }
+                break;
+            case FONT_SIZE:
+                if(value instanceof Integer) {
+                    return setFontSize((int)value);
+                }
+                break;
+            case FONT_STYLE:
+                if(value instanceof String) {
+                    return setFontStyle((String)value);
+                }
+                break;
+            case LINE_COLOR:
+                if(value == null || value instanceof String) {
+                    return setLineColor((String)value);
+                }
+                break;
+        }
+        
+        return super.attr(attribute, value);
+    }
+    
     protected FontData getFontData() {
         FontData fd;
         
@@ -229,7 +264,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
     }
     
     protected void checkColorValue(String value) {
-        if(ColorFactory.convertStringToRGB(value) == null) {
+        if(value != null && ColorFactory.convertStringToRGB(value) == null) {
             throw new ArchiScriptException(NLS.bind(Messages.DiagramModelComponentProxy_0, value));
         }
     }

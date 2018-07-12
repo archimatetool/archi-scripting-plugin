@@ -38,6 +38,20 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         return (DiagramModelComponentProxy)EObjectProxy.get(getEObject().getTarget());
     }
     
+    public DiagramModelComponentProxy setLineWidth(int value) {
+        int width = value;
+        if(width < 0) {
+            width = 1;
+        }
+        if(width > 3) {
+            width = 3;
+        }
+        
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_WIDTH, width));
+        ((ILineObject)getEObject()).setLineWidth(width);
+        return this;
+    }
+
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {
@@ -55,16 +69,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         switch(attribute) {
             case LINE_WIDTH:
                 if(value instanceof Integer) {
-                    int width = (int)value;
-                    if(width < 0) {
-                        width = 1;
-                    }
-                    if(width > 3) {
-                        width = 3;
-                    }
-                    
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_WIDTH, width));
-                    ((ILineObject)getEObject()).setLineWidth(width);
+                    return setLineWidth((int)value);
                 }
                 break;
         }

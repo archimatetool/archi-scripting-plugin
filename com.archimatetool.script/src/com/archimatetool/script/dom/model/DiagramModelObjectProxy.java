@@ -90,13 +90,24 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return list;
     }
     
+    public String getFillColor() {
+        return getEObject().getFillColor();
+    }
+    
+    public DiagramModelObjectProxy setFillColor(String value) {
+        checkColorValue(value); // check correct color value
+        // Set color. A null value is allowed
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__FILL_COLOR, value));
+        return this;
+    }
+    
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {
             case BOUNDS:
                 return getBounds();
             case FILL_COLOR:
-                return getEObject().getFillColor();
+                return getFillColor();
         }
         
         return super.attr(attribute);
@@ -111,11 +122,9 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 }
                 break;
             case FILL_COLOR:
-                if(value instanceof String) {
-                    checkColorValue((String)value); // check correct color value
+                if(value == null || value instanceof String) {
+                    return setFillColor((String)value);
                 }
-                // Set color. A null value is allowed
-                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__FILL_COLOR, value));
                 break;
         }
         

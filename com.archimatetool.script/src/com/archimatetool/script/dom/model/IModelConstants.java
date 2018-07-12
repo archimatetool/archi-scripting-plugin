@@ -26,15 +26,13 @@ interface IModelConstants {
     
     String BOUNDS = "bounds"; //$NON-NLS-1$
     
-    String FILL_COLOR = "fill-color";  //$NON-NLS-1$
+    String FILL_COLOR = "fillColor";  //$NON-NLS-1$
     
-    String FONT_COLOR = "font-color";  //$NON-NLS-1$
-    String FONT_SIZE = "font-size";  //$NON-NLS-1$
-    String FONT_STYLE = "font-style";  //$NON-NLS-1$
+    String FONT_COLOR = "fontColor";  //$NON-NLS-1$
+    String FONT_SIZE = "fontSize";  //$NON-NLS-1$
+    String FONT_STYLE = "fontStyle";  //$NON-NLS-1$
+    String FONT_NAME = "fontName";  //$NON-NLS-1$
     
-    String FONT_NAME = "font-name";  //$NON-NLS-1$
-    
-    
-    String LINE_COLOR = "line-color";  //$NON-NLS-1$
-    String LINE_WIDTH = "line-width";  //$NON-NLS-1$
+    String LINE_COLOR = "lineColor";  //$NON-NLS-1$
+    String LINE_WIDTH = "lineWidth";  //$NON-NLS-1$
 }
