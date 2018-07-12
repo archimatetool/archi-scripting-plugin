@@ -97,14 +97,14 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     }
 
     @Test
-    public void getArchimateConcept() {
-        assertTrue(actualTestProxy.getArchimateConcept().getEObject() instanceof ICompositionRelationship);
+    public void getConcept() {
+        assertTrue(actualTestProxy.getConcept().getEObject() instanceof ICompositionRelationship);
     }
     
     @Override
     @Test
     public void getReferencedConcept() {
-        assertSame(actualTestProxy.getArchimateConcept().getEObject(), actualTestProxy.getReferencedConcept());
+        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedConcept());
         
         IDiagramModelConnection connection = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
         DiagramModelConnectionProxy connectionProxy = new DiagramModelConnectionProxy(connection);

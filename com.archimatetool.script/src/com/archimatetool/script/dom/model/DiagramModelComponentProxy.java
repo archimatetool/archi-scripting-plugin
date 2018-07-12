@@ -47,7 +47,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
     /**
      * @return The ArchiMate component that this diagram component references or null if it does not reference one
      */
-    public ArchimateConceptProxy getArchimateConcept() {
+    public ArchimateConceptProxy getConcept() {
         return isArchimateConcept() ? (ArchimateConceptProxy)EObjectProxy.get(((IDiagramModelArchimateComponent)getEObject()).getArchimateConcept()) : null;
     }
     
@@ -197,8 +197,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         switch(attribute) {
             case DIAGRAM_MODEL:
                 return getDiagramModel();
-            case ARCHIMATE_CONCEPT:
-                return getArchimateConcept();
+            case CONCEPT:
+                return getConcept();
             case FONT_COLOR:
                 return getFontColor();
             case FONT_NAME:

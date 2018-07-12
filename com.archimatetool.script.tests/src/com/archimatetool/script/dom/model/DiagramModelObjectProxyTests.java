@@ -101,17 +101,17 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     }
 
     @Test
-    public void getArchimateConcept() {
-        assertTrue(actualTestProxy.getArchimateConcept().getEObject() instanceof IBusinessService);
+    public void getConcept() {
+        assertTrue(actualTestProxy.getConcept().getEObject() instanceof IBusinessService);
         IDiagramModelGroup group = (IDiagramModelGroup)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4096");
         DiagramModelObjectProxy groupProxy = new DiagramModelObjectProxy(group);
-        assertNull(groupProxy.getArchimateConcept());
+        assertNull(groupProxy.getConcept());
     }
     
     @Override
     @Test
     public void getReferencedConcept() {
-        assertSame(actualTestProxy.getArchimateConcept().getEObject(), actualTestProxy.getReferencedConcept());
+        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedConcept());
         
         // Group has none
         IDiagramModelGroup group = (IDiagramModelGroup)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4096");

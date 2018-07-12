@@ -31,7 +31,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
     }
     
     // Return this
-    public ArchimateConceptProxy getArchimateConcept() {
+    public ArchimateConceptProxy getConcept() {
         return this;
     }
     

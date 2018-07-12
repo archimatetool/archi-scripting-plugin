@@ -18,7 +18,7 @@ interface IModelConstants {
     String PURPOSE = "purpose"; //$NON-NLS-1$
     String TYPE = "type"; //$NON-NLS-1$
     
-    String ARCHIMATE_CONCEPT = "archimateConcept"; //$NON-NLS-1$
+    String CONCEPT = "concept"; //$NON-NLS-1$
     String DIAGRAM_MODEL = "diagramModel"; //$NON-NLS-1$
     
     String SOURCE = "source"; //$NON-NLS-1$

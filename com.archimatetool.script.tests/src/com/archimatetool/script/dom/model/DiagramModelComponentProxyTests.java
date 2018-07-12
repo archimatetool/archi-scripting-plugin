@@ -43,7 +43,7 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
     
     @Test
     public void attr_ArchimateConcept() {
-        assertEquals(((DiagramModelComponentProxy)testProxy).getArchimateConcept(), testProxy.attr(IModelConstants.ARCHIMATE_CONCEPT));
+        assertEquals(((DiagramModelComponentProxy)testProxy).getConcept(), testProxy.attr(IModelConstants.CONCEPT));
     }
 
     @Test(expected=ArchiScriptException.class)

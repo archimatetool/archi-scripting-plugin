@@ -24,8 +24,8 @@ public abstract class ArchimateConceptProxyTests extends EObjectProxyTests {
     }
     
     @Test
-    public void getArchimateConcept() {
-        assertSame(testProxy, ((ArchimateConceptProxy)testProxy).getArchimateConcept());
+    public void getConcept() {
+        assertSame(testProxy, ((ArchimateConceptProxy)testProxy).getConcept());
     }
     
 }
