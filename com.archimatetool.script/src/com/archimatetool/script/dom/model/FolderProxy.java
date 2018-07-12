@@ -44,13 +44,13 @@ public class FolderProxy extends EObjectProxy {
     }
     
     @Override
-    protected EObjectProxy attr(String attribute, Object value) {
+    public EObjectProxy setName(String name) {
         // Can only rename user folders
-        if(NAME.equals(attribute) && !isUserFolder()) {
-            return this;
+        if(isUserFolder()) {
+            super.setName(name);
         }
         
-        return super.attr(attribute, value);
+        return this;
     }
     
     @Override

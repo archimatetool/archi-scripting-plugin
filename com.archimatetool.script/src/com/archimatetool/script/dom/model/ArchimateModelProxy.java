@@ -52,11 +52,14 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public EObjectProxy setPurpose(String purpose) {
-        return attr(PURPOSE, purpose);
+        if(getEObject() != null) {
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ARCHIMATE_MODEL__PURPOSE, purpose));
+        }
+        return this;
     }
     
     public String getPurpose() {
-        return (String)attr(PURPOSE);
+        return getEObject() != null ? getEObject().getPurpose() : null;
     }
     
     @Override
@@ -198,8 +201,10 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     @Override
     protected Object attr(String attribute) {
-        if((DOCUMENTATION.equals(attribute) || PURPOSE.equals(attribute)) && getEObject() != null) {
-            return getEObject().getPurpose();
+        switch(attribute) {
+            case PURPOSE:
+            case DOCUMENTATION:
+                return getPurpose();
         }
         
         return super.attr(attribute);
@@ -207,9 +212,12 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     @Override
     protected EObjectProxy attr(String attribute, Object value) {
-        if((DOCUMENTATION.equals(attribute) || PURPOSE.equals(attribute)) && getEObject() != null) {
-            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ARCHIMATE_MODEL__PURPOSE, value));
-            return this;
+        switch(attribute) {
+            case PURPOSE:
+            case DOCUMENTATION:
+                if(value instanceof String) {
+                    return setPurpose((String)value);
+                }
         }
         
         return super.attr(attribute, value);

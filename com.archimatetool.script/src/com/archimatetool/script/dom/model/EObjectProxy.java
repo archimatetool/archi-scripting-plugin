@@ -113,23 +113,30 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     }
     
     public String getId() {
-        return (String)attr(ID);
+        return getEObject() instanceof IIdentifier ? ((IIdentifier)getEObject()).getId() : null;
     }
 
     public String getName() {
-        return (String)attr(NAME);
+        return getEObject() instanceof INameable ? ((INameable)getEObject()).getName() : null;
     }
     
     public EObjectProxy setName(String name) {
-        return attr(NAME, name);
+        if(getEObject() instanceof INameable) {
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.NAMEABLE__NAME, name));
+        }
+        return this;
     }
     
     public String getDocumentation() {
-        return (String)attr(DOCUMENTATION);
+        // Referenced concept because diagram objects are not IDocumentable
+        return getReferencedConcept() instanceof IDocumentable ? ((IDocumentable)getReferencedConcept()).getDocumentation() : null;
     }
     
     public EObjectProxy setDocumentation(String documentation) {
-        return attr(DOCUMENTATION, documentation);
+        if(getReferencedConcept() instanceof IDocumentable) { // Referenced concept because diagram objects are not IDocumentable
+            CommandHandler.executeCommand(new SetCommand(getReferencedConcept(), IArchimatePackage.Literals.DOCUMENTABLE__DOCUMENTATION, documentation));
+        }
+        return this;
     }
     
     /**
@@ -412,13 +419,13 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
                 return getType();
 
             case ID:
-                return getEObject() instanceof IIdentifier ? ((IIdentifier)getEObject()).getId() : null;
+                return getId();
 
             case NAME:
-                return getEObject() instanceof INameable ? ((INameable)getEObject()).getName() : null;
+                return getName();
             
-            case DOCUMENTATION: // Referenced concept because diagram objects are not IDocumentable
-                return getReferencedConcept() instanceof IDocumentable ? ((IDocumentable)getReferencedConcept()).getDocumentation() : null;
+            case DOCUMENTATION:
+                return getDocumentation();
                 
             default:
                 return null;
@@ -428,16 +435,14 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case NAME:
-                if(getEObject() instanceof INameable) {
-                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.NAMEABLE__NAME, value));
+                if(value instanceof String) {
+                    return setName((String)value);
                 }
-                break;
             
             case DOCUMENTATION:
-                if(getReferencedConcept() instanceof IDocumentable) { // Referenced concept because diagram objects are not IDocumentable
-                    CommandHandler.executeCommand(new SetCommand(getReferencedConcept(), IArchimatePackage.Literals.DOCUMENTABLE__DOCUMENTATION, value));
+                if(value instanceof String) {
+                    return setDocumentation((String)value);
                 }
-                break;
         }
         
         return this;
