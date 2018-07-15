@@ -98,31 +98,28 @@ public class ArchimateModelProxy extends EObjectProxy {
      * Add an ArchiMate element and put in default folder
      */
     public ArchimateElementProxy addElement(String type, String name) {
-        return addElement(type, name, null);
+        return ModelUtil.addElement(getEObject(), type, name, null);
     }
     
     /**
      * Add an ArchiMate element and put in folder
      */
-    public ArchimateElementProxy addElement(String type, String name, FolderProxy parentFolderProxy) {
-        return ModelUtil.addElement(getEObject(), type, name, parentFolderProxy == null ? null : parentFolderProxy.getEObject());
+    public ArchimateElementProxy addElement(String type, String name, FolderProxy parentFolder) {
+        return ModelUtil.addElement(getEObject(), type, name, parentFolder.getEObject());
     }
     
     /**
      * Add an ArchiMate relationship and put in default folder
      */
     public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
-        return addRelationship(type, name, source, target, null);
+        return ModelUtil.addRelationship(getEObject(), type, name, source.getEObject(), target.getEObject(), null);
     }
     
     /**
      * Add an ArchiMate relationship and put in folder
      */
-    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, FolderProxy parentFolderProxy) {
-        return ModelUtil.addRelationship(getEObject(), type, name,
-                source  == null ? null : source.getEObject(),
-                target  == null ? null : target.getEObject(),
-                parentFolderProxy == null ? null : parentFolderProxy.getEObject());
+    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, FolderProxy parentFolder) {
+        return ModelUtil.addRelationship(getEObject(), type, name, source.getEObject(), target.getEObject(), parentFolder.getEObject());
     }
     
     /**
@@ -131,30 +128,7 @@ public class ArchimateModelProxy extends EObjectProxy {
      * @return The ArchimateModelProxy
      */
     public ArchimateModelProxy openInUI() {
-        if(getEObject() == null) {
-            return this;
-        }
-        
-        if(PlatformUI.isWorkbenchRunning()) {
-            // If the model has already been loaded by a load() command
-            if(IEditorModelManager.INSTANCE.isModelLoaded(getEObject().getFile())) {
-                // Need to do this!
-                IEditorModelManager.INSTANCE.firePropertyChange(IEditorModelManager.INSTANCE, IEditorModelManager.PROPERTY_MODEL_OPENED,
-                        null, getEObject());
-            }
-            // Else from create()
-            else {
-                // If it's been saved already
-                if(getEObject().getFile() != null) {
-                    IEditorModelManager.INSTANCE.openModel(getEObject().getFile());
-                }
-                // Else
-                else {
-                    IEditorModelManager.INSTANCE.openModel(getEObject());
-                }
-            }
-        }
-        
+        ModelUtil.openModelInUI(getEObject());
         return this;
     }
     

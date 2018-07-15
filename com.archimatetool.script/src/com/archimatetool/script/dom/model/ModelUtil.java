@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateElement;
@@ -46,13 +47,13 @@ class ModelUtil {
             return null;
         }
         
-        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(getCamelCase(type));
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
             element.setName(StringUtils.safeString(name));
             
             // Check folder is correct for type, if not use default folder
-            if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, element)) {
+            if(parentFolder == null || !isCorrectFolderForConcept(parentFolder, element)) {
                 parentFolder = model.getDefaultFolderForObject(element);
             }
 
@@ -66,11 +67,12 @@ class ModelUtil {
 
     static ArchimateRelationshipProxy addRelationship(IArchimateModel model, String type, String name, IArchimateConcept source,
             IArchimateConcept target, IFolder parentFolder) {
+        
         if(model == null || source == null || target == null) {
             return null;
         }
         
-        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(getCamelCase(type));
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateRelationship().isSuperTypeOf(eClass)) { // Check this is the correct type
             if(!ArchimateModelUtils.isValidRelationship(source, target, eClass)) {
                 throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_3, type));
@@ -80,7 +82,7 @@ class ModelUtil {
             relationship.setName(StringUtils.safeString(name));
             
             // Check folder is correct for type, if not use default folder
-            if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, relationship)) {
+            if(parentFolder == null || !isCorrectFolderForConcept(parentFolder, relationship)) {
                 parentFolder = model.getDefaultFolderForObject(relationship);
             }
             
@@ -172,6 +174,28 @@ class ModelUtil {
         }
     }
 
+    static void openModelInUI(IArchimateModel model) {
+        if(model != null && PlatformUI.isWorkbenchRunning()) {
+            // If the model has already been loaded by a load() command
+            if(IEditorModelManager.INSTANCE.isModelLoaded(model.getFile())) {
+                // Need to do this!
+                IEditorModelManager.INSTANCE.firePropertyChange(IEditorModelManager.INSTANCE, IEditorModelManager.PROPERTY_MODEL_OPENED,
+                        null, model);
+            }
+            // Else from create()
+            else {
+                // If it's been saved already
+                if(model.getFile() != null) {
+                    IEditorModelManager.INSTANCE.openModel(model.getFile());
+                }
+                // Else
+                else {
+                    IEditorModelManager.INSTANCE.openModel(model);
+                }
+            }
+        }
+    }
+    
     static String getKebabCase(String string) {
         return string.replaceAll("([a-z])([A-Z]+)", "$1-$2").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
     }
