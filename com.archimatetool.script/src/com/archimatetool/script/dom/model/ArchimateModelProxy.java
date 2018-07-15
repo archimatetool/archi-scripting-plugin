@@ -8,25 +8,16 @@ package com.archimatetool.script.dom.model;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
-import com.archimatetool.editor.utils.StringUtils;
-import com.archimatetool.model.IArchimateElement;
-import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
-import com.archimatetool.model.IArchimateRelationship;
-import com.archimatetool.model.IFolder;
 import com.archimatetool.model.ModelVersion;
-import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
-import com.archimatetool.script.commands.AddElementCommand;
-import com.archimatetool.script.commands.AddRelationshipCommand;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.SetCommand;
 
@@ -104,66 +95,34 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     /**
-     * @param type Type of element
-     * @param name Name of element
-     * @return The element
+     * Add an ArchiMate element and put in default folder
      */
     public ArchimateElementProxy addElement(String type, String name) {
         return addElement(type, name, null);
     }
     
-    public ArchimateElementProxy addElement(String type, String name, IFolder parentFolder) {
-        if(getEObject() == null) {
-            return null;
-        }
-        
-        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
-        if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
-            IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
-            element.setName(StringUtils.safeString(name));
-            
-            // Check folder is correct for type, if not use default folder
-            if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, element)) {
-                parentFolder = getArchimateModel().getDefaultFolderForObject(element);
-            }
-
-            CommandHandler.executeCommand(new AddElementCommand(parentFolder, element));
-            
-            return new ArchimateElementProxy(element);
-        }
-        
-        throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_0, type));
+    /**
+     * Add an ArchiMate element and put in folder
+     */
+    public ArchimateElementProxy addElement(String type, String name, FolderProxy parentFolderProxy) {
+        return ModelUtil.addElement(getEObject(), type, name, parentFolderProxy == null ? null : parentFolderProxy.getEObject());
     }
     
+    /**
+     * Add an ArchiMate relationship and put in default folder
+     */
     public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
         return addRelationship(type, name, source, target, null);
     }
     
-    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, IFolder parentFolder) {
-        if(getEObject() == null || source.getEObject() == null || target.getEObject() == null) {
-            return null;
-        }
-        
-        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
-        if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateRelationship().isSuperTypeOf(eClass)) { // Check this is the correct type
-            if(!ArchimateModelUtils.isValidRelationship(source.getEObject(), target.getEObject(), eClass)) {
-                throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_3, type));
-            }
-
-            IArchimateRelationship relationship = (IArchimateRelationship)IArchimateFactory.eINSTANCE.create(eClass);
-            relationship.setName(StringUtils.safeString(name));
-            
-            // Check folder is correct for type, if not use default folder
-            if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, relationship)) {
-                parentFolder = getArchimateModel().getDefaultFolderForObject(relationship);
-            }
-            
-            CommandHandler.executeCommand(new AddRelationshipCommand(parentFolder, relationship, source.getEObject(), target.getEObject()));
-            
-            return new ArchimateRelationshipProxy(relationship);
-        }
-        
-        throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_1, type));
+    /**
+     * Add an ArchiMate relationship and put in folder
+     */
+    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, FolderProxy parentFolderProxy) {
+        return ModelUtil.addRelationship(getEObject(), type, name,
+                source  == null ? null : source.getEObject(),
+                target  == null ? null : target.getEObject(),
+                parentFolderProxy == null ? null : parentFolderProxy.getEObject());
     }
     
     /**

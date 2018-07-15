@@ -10,9 +10,14 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.IArchimateConcept;
+import com.archimatetool.model.IArchimateElement;
+import com.archimatetool.model.IArchimateFactory;
+import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModelComponent;
@@ -21,23 +26,78 @@ import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.AddElementCommand;
+import com.archimatetool.script.commands.AddRelationshipCommand;
+import com.archimatetool.script.commands.CommandHandler;
 
 /**
  * Model Utils
  * 
  * @author Phillip Beauvoir
  */
-public class ModelUtil {
+class ModelUtil {
     
     private ModelUtil() {
     }
     
+    static ArchimateElementProxy addElement(IArchimateModel model, String type, String name, IFolder parentFolder) {
+        if(model == null) {
+            return null;
+        }
+        
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
+        if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
+            IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
+            element.setName(StringUtils.safeString(name));
+            
+            // Check folder is correct for type, if not use default folder
+            if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, element)) {
+                parentFolder = model.getDefaultFolderForObject(element);
+            }
+
+            CommandHandler.executeCommand(new AddElementCommand(parentFolder, element));
+            
+            return new ArchimateElementProxy(element);
+        }
+        
+        throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_0, type));
+    }
+
+    static ArchimateRelationshipProxy addRelationship(IArchimateModel model, String type, String name, IArchimateConcept source,
+            IArchimateConcept target, IFolder parentFolder) {
+        if(model == null || source == null || target == null) {
+            return null;
+        }
+        
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
+        if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateRelationship().isSuperTypeOf(eClass)) { // Check this is the correct type
+            if(!ArchimateModelUtils.isValidRelationship(source, target, eClass)) {
+                throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_3, type));
+            }
+
+            IArchimateRelationship relationship = (IArchimateRelationship)IArchimateFactory.eINSTANCE.create(eClass);
+            relationship.setName(StringUtils.safeString(name));
+            
+            // Check folder is correct for type, if not use default folder
+            if(parentFolder == null || !ModelUtil.isCorrectFolderForConcept(parentFolder, relationship)) {
+                parentFolder = model.getDefaultFolderForObject(relationship);
+            }
+            
+            CommandHandler.executeCommand(new AddRelationshipCommand(parentFolder, relationship, source, target));
+            
+            return new ArchimateRelationshipProxy(relationship);
+        }
+        
+        throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_1, type));
+    }
+
     /**
      * @param folder
      * @param concept
      * @return true if the given parent folder is the correct folder to contain this concept
      */
-    public static boolean isCorrectFolderForConcept(IFolder folder, IArchimateConcept concept) {
+    static boolean isCorrectFolderForConcept(IFolder folder, IArchimateConcept concept) {
         if(folder == null) {
             return false;
         }
@@ -62,7 +122,7 @@ public class ModelUtil {
      * @param type kebab-case type
      * @return false if trying to set an invalid type
      */
-    public static boolean isAllowedSetType(IArchimateConcept concept, String type) {
+    static boolean isAllowedSetType(IArchimateConcept concept, String type) {
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(getCamelCase(type));
         
         // Check source relationships
@@ -95,7 +155,7 @@ public class ModelUtil {
      * It simply deletes the model component and adds it again causing a MVC refresh
      * @param dmc
      */
-    public static void refreshDiagramModelComponent(IDiagramModelComponent dmc) {
+    static void refreshDiagramModelComponent(IDiagramModelComponent dmc) {
         if(PlatformUI.isWorkbenchRunning()) {
             IDiagramModelContainer parent = (IDiagramModelContainer)dmc.eContainer();
             if(parent != null) {
@@ -112,11 +172,11 @@ public class ModelUtil {
         }
     }
 
-    public static String getKebabCase(String string) {
+    static String getKebabCase(String string) {
         return string.replaceAll("([a-z])([A-Z]+)", "$1-$2").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    public static String getCamelCase(String string) {
+    static String getCamelCase(String string) {
         if(string == null || "".equals(string)) { //$NON-NLS-1$
             return string;
         }

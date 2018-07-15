@@ -129,8 +129,8 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         }
         
         // Add new relationship
-        ArchimateRelationshipProxy newRelationshipProxy = getModel().addRelationship(type, getName(),
-                getSource(), getTarget(), (IFolder)getEObject().eContainer());
+        ArchimateRelationshipProxy newRelationshipProxy = ModelUtil.addRelationship(getArchimateModel(), type, getName(),
+                getSource().getEObject(), getTarget().getEObject(), (IFolder)getEObject().eContainer());
         
         if(newRelationshipProxy == null) {
             return this;
