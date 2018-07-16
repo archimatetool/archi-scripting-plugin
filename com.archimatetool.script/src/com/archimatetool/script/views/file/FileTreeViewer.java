@@ -57,16 +57,6 @@ public abstract class FileTreeViewer extends TreeViewer {
         
         ColumnViewerToolTipSupport.enableFor(this);
         
-        setComparator(new ViewerComparator() {
-            @Override
-            public int compare(Viewer viewer, Object e1, Object e2) {
-                if(((File)e1).isDirectory() && ((File)e2).isFile()) {
-                    return -1;
-                }
-                return ((File)e1).compareTo((File)e2);
-            }
-        });
-        
         //expandToLevel(ALL_LEVELS);
     }
     
@@ -82,12 +72,21 @@ public abstract class FileTreeViewer extends TreeViewer {
         // Sort folders first, files second, alphabetical
         setComparator(new ViewerComparator() {
             @Override
-            public int category(Object element) {
-                if(element instanceof File) {
-                    File f = (File)element;
-                    return f.isDirectory() ? 0 : 1;
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                File f1 = (File)e1;
+                File f2 = (File)e2;
+                if(f1.isDirectory() && !f2.isDirectory()) {
+                    // Directory before non-directory
+                    return -1;
                 }
-            	return 0;
+                else if(!f1.isDirectory() && f2.isDirectory()) {
+                    // Non-directory after directory
+                    return 1;
+                }
+                else {
+                    // Alphabetic order otherwise
+                    return f1.getAbsolutePath().compareToIgnoreCase(f2.getAbsolutePath());
+                }
             }
         });
         
