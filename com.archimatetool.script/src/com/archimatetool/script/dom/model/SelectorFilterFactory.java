@@ -7,6 +7,7 @@ package com.archimatetool.script.dom.model;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.archimatetool.canvas.model.ICanvasPackage;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimatePackage;
@@ -140,7 +141,7 @@ class SelectorFilterFactory {
         // Class type of concept
         else {
             String type = ModelUtil.getCamelCase(selector);
-            if(IArchimatePackage.eINSTANCE.getEClassifier(type) != null) {
+            if(IArchimatePackage.eINSTANCE.getEClassifier(type) != null || ICanvasPackage.eINSTANCE.getEClassifier(type) != null) {
                 return new ISelectorFilter() {
                     public boolean accept(EObject object) {
                         object = getReferencedConcept(object);
