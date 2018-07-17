@@ -7,10 +7,8 @@ package com.archimatetool.script.dom.model;
 
 import org.eclipse.emf.ecore.EObject;
 
-import com.archimatetool.canvas.model.ICanvasPackage;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateElement;
-import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
