@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.utils.FileUtils;
 import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
@@ -73,7 +74,7 @@ public class RunArchiScript {
             ConsoleOutput.end();
             
             // Add Commands to UI
-            CommandHandler.finalise();
+            CommandHandler.finalise(FileUtils.getFileNameWithoutExtension(file));
         }
 	}
 

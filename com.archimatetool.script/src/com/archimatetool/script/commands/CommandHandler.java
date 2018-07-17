@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateModel;
 
@@ -38,7 +39,7 @@ public class CommandHandler {
         if(stack != null) {
             CompoundCommand compound = compoundcommands.get(stack);
             if(compound == null) {
-                compound = new CompoundCommand("Script"); //$NON-NLS-1$
+                compound = new CompoundCommand(Messages.CommandHandler_0);
                 compoundcommands.put(stack, compound);
             }
             compound.add(cmd);
@@ -47,9 +48,10 @@ public class CommandHandler {
         cmd.perform();
     }
 
-    public static void finalise() {
+    public static void finalise(String scriptName) {
         // This simply calls empty execute() methods since perform() has already been called, but puts the commmands on the stack
         for(Entry<CommandStack, CompoundCommand> e : compoundcommands.entrySet()) {
+            e.getValue().setLabel(NLS.bind(Messages.CommandHandler_1, scriptName));
             e.getKey().execute(e.getValue());
         }
     }
