@@ -123,14 +123,13 @@ class SelectorFilterFactory {
                 return null;
             }
             
+            String[] s = selector.split("\\."); //$NON-NLS-1$
+            String type = ModelUtil.getCamelCase(s[0]);
+            String name = s[1];
+            
             return new ISelectorFilter() {
                 public boolean accept(EObject object) {
                     object = getReferencedConcept(object);
-                    
-                    String[] s = selector.split("\\."); //$NON-NLS-1$
-                    String type = ModelUtil.getCamelCase(s[0]);
-                    String name = s[1];
-                    
                     return object.eClass().getName().equals(type) &&
                             ((INameable)object).getName().equals(name) &&
                             (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
@@ -141,18 +140,14 @@ class SelectorFilterFactory {
         // Class type of concept
         else {
             String type = ModelUtil.getCamelCase(selector);
-            if(IArchimatePackage.eINSTANCE.getEClassifier(type) != null || ICanvasPackage.eINSTANCE.getEClassifier(type) != null) {
-                return new ISelectorFilter() {
-                    public boolean accept(EObject object) {
-                        object = getReferencedConcept(object);
-                        return object.eClass().getName().equals(type) &&
-                                (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
-                    }
-                };
-            }
+            return new ISelectorFilter() {
+                public boolean accept(EObject object) {
+                    object = getReferencedConcept(object);
+                    return object.eClass().getName().equals(type) &&
+                            (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
+                }
+            };
         }
-
-        return null;
     }
     
     private EObject getReferencedConcept(EObject object) {
