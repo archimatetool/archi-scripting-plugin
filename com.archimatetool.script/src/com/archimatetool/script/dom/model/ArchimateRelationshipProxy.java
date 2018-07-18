@@ -6,12 +6,17 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.osgi.util.NLS;
 
+import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.IConnectable;
+import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IProperty;
@@ -57,11 +62,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
                     new Object[] { getEObject().eClass().getName(), source, getTarget() }));
         }
         
-        // TODO: Remove this check
-        if(updateViews && !objectRefs().isEmpty()) {
-            throw new ArchiScriptException("Cannot set Source in Views. Not yet implemented."); //$NON-NLS-1$
-        }
-        
+        // Set the new source in the model
         CommandHandler.executeCommand(new ScriptCommand("source", getArchimateModel()) { //$NON-NLS-1$
             IArchimateConcept oldSource = getEObject().getSource();
             
@@ -76,11 +77,35 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             }
         });
         
-        // TODO: All diagram connections to be updated.
-        //       If the new source diagram object exists in a view, connect to that else delete the connection
-        //       see ArchimateDiagramConnectionPolicy
         if(updateViews) {
-            
+            // Get each instance of the connection in a view
+            for(IDiagramModel diagramModel : getArchimateModel().getDiagramModels()) {
+                for(IDiagramModelArchimateConnection matchingConnection : DiagramModelUtils.findDiagramModelConnectionsForRelation(diagramModel, getEObject())) {
+                    
+                    // Get the first instance of the new source in this view and connect to that
+                    List<IDiagramModelArchimateComponent> list = DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(diagramModel, source.getEObject());
+                    if(!list.isEmpty()) {
+                        IDiagramModelArchimateComponent matchingComponent = list.get(0);
+                        IConnectable oldSource = matchingConnection.getSource();
+                        
+                        CommandHandler.executeCommand(new ScriptCommand("source", getArchimateModel()) { //$NON-NLS-1$
+                            @Override
+                            public void perform() {
+                                matchingConnection.connect(matchingComponent, matchingConnection.getTarget());
+                            }
+                            
+                            @Override
+                            public void undo() {
+                                matchingConnection.connect(oldSource, matchingConnection.getTarget());
+                            }
+                        });
+                    }
+                    // Not found, so delete the matching connection
+                    else {
+                        new DiagramModelConnectionProxy(matchingConnection).delete();
+                    }
+                }
+            }
         }
         
         return this;
@@ -96,11 +121,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
                     new Object[] { getEObject().eClass().getName(), getSource(), target }));
         }
         
-        // TODO: Remove this check
-        if(updateViews && !objectRefs().isEmpty()) {
-            throw new ArchiScriptException("Cannot set Target in Views. Not yet implemented."); //$NON-NLS-1$
-        }
-
+        // Set the new target in the model
         CommandHandler.executeCommand(new ScriptCommand("target", getArchimateModel()) { //$NON-NLS-1$
             IArchimateConcept oldTarget = getEObject().getTarget();
             
@@ -115,11 +136,35 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             }
         });
         
-        // TODO: All diagram connections to be updated.
-        //       If the new target diagram object exists in a view, connect to that else delete the connection
-        //       see ArchimateDiagramConnectionPolicy
         if(updateViews) {
-            
+            for(IDiagramModel diagramModel : getArchimateModel().getDiagramModels()) {
+                // Get each instance of the connection in a view
+                for(IDiagramModelArchimateConnection matchingConnection : DiagramModelUtils.findDiagramModelConnectionsForRelation(diagramModel, getEObject())) {
+                    
+                    // Get the first instance of the new target in this view and connect to that
+                    List<IDiagramModelArchimateComponent> list = DiagramModelUtils.findDiagramModelComponentsForArchimateConcept(diagramModel, target.getEObject());
+                    if(!list.isEmpty()) {
+                        IDiagramModelArchimateComponent matchingComponent = list.get(0);
+                        IConnectable oldTarget = matchingConnection.getTarget();
+                        
+                        CommandHandler.executeCommand(new ScriptCommand("target", getArchimateModel()) { //$NON-NLS-1$
+                            @Override
+                            public void perform() {
+                                matchingConnection.connect(matchingConnection.getSource(), matchingComponent);
+                            }
+                            
+                            @Override
+                            public void undo() {
+                                matchingConnection.connect(matchingConnection.getSource(), oldTarget);
+                            }
+                        });
+                    }
+                    // Not found, so delete the matching connection
+                    else {
+                        new DiagramModelConnectionProxy(matchingConnection).delete();
+                    }
+                }
+            }
         }
         
         return this;
