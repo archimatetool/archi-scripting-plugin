@@ -90,7 +90,7 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void getType() {
-        assertTrue(testProxy.getType() == testProxy.getReferencedConcept().eClass().getName());
+        assertEquals(ModelUtil.getKebabCase(testProxy.getReferencedConcept().eClass().getName()), testProxy.getType());
     }
     
     @Test(expected = ArchiScriptException.class)
@@ -269,7 +269,7 @@ public abstract class EObjectProxyTests {
  
     @Test
     public void attr_Type() {
-        assertEquals(((IIdentifier)testProxy.getReferencedConcept()).eClass().getName(), testProxy.attr(IModelConstants.TYPE));
+        assertEquals(ModelUtil.getKebabCase(((IIdentifier)testProxy.getReferencedConcept()).eClass().getName()), testProxy.attr(IModelConstants.TYPE));
     }
 
     @Test

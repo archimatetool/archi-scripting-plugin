@@ -144,7 +144,7 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
      */
     public String getType() {
         if(getReferencedConcept() != null) {
-            return getReferencedConcept().eClass().getName();
+            return ModelUtil.getKebabCase(getReferencedConcept().eClass().getName());
         }
         
         return null;
