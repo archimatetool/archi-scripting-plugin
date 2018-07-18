@@ -42,7 +42,7 @@ class ModelUtil {
     private ModelUtil() {
     }
     
-    static ArchimateElementProxy addElement(IArchimateModel model, String type, String name, IFolder parentFolder) {
+    static ArchimateElementProxy createElement(IArchimateModel model, String type, String name, IFolder parentFolder) {
         if(model == null) {
             return null;
         }
@@ -65,7 +65,7 @@ class ModelUtil {
         throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_0, type));
     }
 
-    static ArchimateRelationshipProxy addRelationship(IArchimateModel model, String type, String name, IArchimateConcept source,
+    static ArchimateRelationshipProxy createRelationship(IArchimateModel model, String type, String name, IArchimateConcept source,
             IArchimateConcept target, IFolder parentFolder) {
         
         if(model == null || source == null || target == null) {

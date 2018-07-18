@@ -159,8 +159,8 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     }
     
     @Test
-    public void addElement() {
-        ArchimateElementProxy proxy = actualTestProxy.addElement("business-actor", "Fido");
+    public void createElement() {
+        ArchimateElementProxy proxy = actualTestProxy.createElement("business-actor", "Fido");
         assertNotNull(proxy);
         
         IArchimateElement element = proxy.getEObject();
@@ -169,16 +169,16 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     }
     
     @Test(expected = ArchiScriptException.class)
-    public void addElement_Bogus() {
-        actualTestProxy.addElement("access-relationship", "Fido");
+    public void createElement_Bogus() {
+        actualTestProxy.createElement("access-relationship", "Fido");
     }
 
     @Test
-    public void addRelationship() {
-        ArchimateElementProxy source = actualTestProxy.addElement("business-actor", "Fido");
-        ArchimateElementProxy target = actualTestProxy.addElement("business-role", "Role");
+    public void createRelationship() {
+        ArchimateElementProxy source = actualTestProxy.createElement("business-actor", "Fido");
+        ArchimateElementProxy target = actualTestProxy.createElement("business-role", "Role");
         
-        ArchimateRelationshipProxy proxy = actualTestProxy.addRelationship("assignment-relationship", "Fido", source, target);
+        ArchimateRelationshipProxy proxy = actualTestProxy.createRelationship("assignment-relationship", "Fido", source, target);
         assertNotNull(proxy);
         
         IArchimateRelationship relation = proxy.getEObject();
@@ -188,15 +188,15 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     
     @Test(expected = ArchiScriptException.class)
     public void addRelationship_Bogus() {
-        ArchimateElementProxy source = actualTestProxy.addElement("BusinessActor", "Fido");
-        ArchimateElementProxy target = actualTestProxy.addElement("BusinessRole", "Role");
-        actualTestProxy.addRelationship("BusinessActor", "Fido", source, target);
+        ArchimateElementProxy source = actualTestProxy.createElement("BusinessActor", "Fido");
+        ArchimateElementProxy target = actualTestProxy.createElement("BusinessRole", "Role");
+        actualTestProxy.createRelationship("BusinessActor", "Fido", source, target);
     }
     
     @Test(expected = ArchiScriptException.class)
     public void addRelationship_BogusType() {
-        ArchimateElementProxy source = actualTestProxy.addElement("BusinessActor", "Fido");
-        ArchimateElementProxy target = actualTestProxy.addElement("BusinessRole", "Role");
-        actualTestProxy.addRelationship("AccessRelationship", "Fido", source, target);
+        ArchimateElementProxy source = actualTestProxy.createElement("BusinessActor", "Fido");
+        ArchimateElementProxy target = actualTestProxy.createElement("BusinessRole", "Role");
+        actualTestProxy.createRelationship("AccessRelationship", "Fido", source, target);
     }
 }

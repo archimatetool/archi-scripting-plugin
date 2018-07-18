@@ -95,31 +95,31 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     /**
-     * Add an ArchiMate element and put in default folder
+     * Create and add an ArchiMate element and put in default folder
      */
-    public ArchimateElementProxy addElement(String type, String name) {
-        return ModelUtil.addElement(getEObject(), type, name, null);
+    public ArchimateElementProxy createElement(String type, String name) {
+        return ModelUtil.createElement(getEObject(), type, name, null);
     }
     
     /**
-     * Add an ArchiMate element and put in folder
+     * Create and add an ArchiMate element and put in folder
      */
-    public ArchimateElementProxy addElement(String type, String name, FolderProxy parentFolder) {
-        return ModelUtil.addElement(getEObject(), type, name, parentFolder.getEObject());
+    public ArchimateElementProxy createElement(String type, String name, FolderProxy parentFolder) {
+        return ModelUtil.createElement(getEObject(), type, name, parentFolder.getEObject());
     }
     
     /**
-     * Add an ArchiMate relationship and put in default folder
+     * Create and add an ArchiMate relationship and put in default folder
      */
-    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
-        return ModelUtil.addRelationship(getEObject(), type, name, source.getEObject(), target.getEObject(), null);
+    public ArchimateRelationshipProxy createRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target) {
+        return ModelUtil.createRelationship(getEObject(), type, name, source.getEObject(), target.getEObject(), null);
     }
     
     /**
-     * Add an ArchiMate relationship and put in folder
+     * Create and add an ArchiMate relationship and put in folder
      */
-    public ArchimateRelationshipProxy addRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, FolderProxy parentFolder) {
-        return ModelUtil.addRelationship(getEObject(), type, name, source.getEObject(), target.getEObject(), parentFolder.getEObject());
+    public ArchimateRelationshipProxy createRelationship(String type, String name, ArchimateConceptProxy source, ArchimateConceptProxy target, FolderProxy parentFolder) {
+        return ModelUtil.createRelationship(getEObject(), type, name, source.getEObject(), target.getEObject(), parentFolder.getEObject());
     }
     
     /**
