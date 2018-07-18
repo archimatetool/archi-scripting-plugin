@@ -73,6 +73,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         
         // TODO: All diagram connections to be updated.
         //       If the new source diagram object exists in a view, connect to that else delete the connection
+        //       see ArchimateDiagramConnectionPolicy
         if(updateViews && !objectRefs().isEmpty()) {
             throw new ArchiScriptException("Cannot set Source in Views"); //$NON-NLS-1$
         }
@@ -106,6 +107,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         
         // TODO: All diagram connections to be updated.
         //       If the new target diagram object exists in a view, connect to that else delete the connection
+        //       see ArchimateDiagramConnectionPolicy
         if(updateViews && !objectRefs().isEmpty()) {
             throw new ArchiScriptException("Cannot set Target in Views"); //$NON-NLS-1$
         }
