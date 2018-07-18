@@ -51,7 +51,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         return setSource(source, true);
     }
     
-    public ArchimateRelationshipProxy setSource(ArchimateConceptProxy source, boolean updateViews) {
+    protected ArchimateRelationshipProxy setSource(ArchimateConceptProxy source, boolean updateViews) {
         if(!ArchimateModelUtils.isValidRelationship(source.getEObject(), getEObject().getTarget(), getEObject().eClass())) {
             throw new ArchiScriptException(NLS.bind(Messages.ArchimateRelationshipProxy_0,
                     new Object[] { getEObject().eClass().getName(), source, getTarget() }));
