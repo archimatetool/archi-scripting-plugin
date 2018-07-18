@@ -57,6 +57,11 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
                     new Object[] { getEObject().eClass().getName(), source, getTarget() }));
         }
         
+        // TODO: Remove this check
+        if(updateViews && !objectRefs().isEmpty()) {
+            throw new ArchiScriptException("Cannot set Source in Views. Not yet implemented."); //$NON-NLS-1$
+        }
+        
         CommandHandler.executeCommand(new ScriptCommand("source", getArchimateModel()) { //$NON-NLS-1$
             IArchimateConcept oldSource = getEObject().getSource();
             
@@ -74,8 +79,8 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         // TODO: All diagram connections to be updated.
         //       If the new source diagram object exists in a view, connect to that else delete the connection
         //       see ArchimateDiagramConnectionPolicy
-        if(updateViews && !objectRefs().isEmpty()) {
-            throw new ArchiScriptException("Cannot set Source in Views"); //$NON-NLS-1$
+        if(updateViews) {
+            
         }
         
         return this;
@@ -91,6 +96,11 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
                     new Object[] { getEObject().eClass().getName(), getSource(), target }));
         }
         
+        // TODO: Remove this check
+        if(updateViews && !objectRefs().isEmpty()) {
+            throw new ArchiScriptException("Cannot set Target in Views. Not yet implemented."); //$NON-NLS-1$
+        }
+
         CommandHandler.executeCommand(new ScriptCommand("target", getArchimateModel()) { //$NON-NLS-1$
             IArchimateConcept oldTarget = getEObject().getTarget();
             
@@ -108,8 +118,8 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         // TODO: All diagram connections to be updated.
         //       If the new target diagram object exists in a view, connect to that else delete the connection
         //       see ArchimateDiagramConnectionPolicy
-        if(updateViews && !objectRefs().isEmpty()) {
-            throw new ArchiScriptException("Cannot set Target in Views"); //$NON-NLS-1$
+        if(updateViews) {
+            
         }
         
         return this;
