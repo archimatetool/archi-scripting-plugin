@@ -8,7 +8,7 @@ public class Messages extends NLS {
 
     public static String ArchimateConceptProxy_0;
 
-    public static String ArchimateElementProxy_0;
+    public static String ArchimateConceptProxy_1;
 
     public static String ArchimateModelProxy_0;
 
@@ -25,8 +25,6 @@ public class Messages extends NLS {
     public static String ArchimateRelationshipProxy_0;
 
     public static String ArchimateRelationshipProxy_1;
-
-    public static String ArchimateRelationshipProxy_2;
 
     public static String DiagramModelComponentProxy_0;
 

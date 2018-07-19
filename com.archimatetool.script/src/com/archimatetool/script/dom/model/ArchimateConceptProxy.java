@@ -5,12 +5,15 @@
  */
 package com.archimatetool.script.dom.model;
 
+import org.eclipse.osgi.util.NLS;
+
 import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteFolderObjectCommand;
 
@@ -50,6 +53,10 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         String className = ModelUtil.getCamelCase(type);
         if(getEObject().eClass().getName().equals(className)) {
             return null;
+        }
+        
+        if(!ModelUtil.isAllowedSetType(getEObject(), type)) {
+            throw new ArchiScriptException(NLS.bind(Messages.ArchimateConceptProxy_1, type));
         }
         
         return this;

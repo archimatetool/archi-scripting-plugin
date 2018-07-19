@@ -8,13 +8,11 @@ package com.archimatetool.script.dom.model;
 import java.util.Collection;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IProperty;
-import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.ScriptCommand;
 
@@ -43,10 +41,6 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
     public ArchimateElementProxy setType(String type) {
         if(super.setType(type) == null) {
             return this;
-        }
-        
-        if(!ModelUtil.isAllowedSetType(getEObject(), type)) {
-            throw new ArchiScriptException(NLS.bind(Messages.ArchimateElementProxy_0, type));
         }
         
         // Add new Element

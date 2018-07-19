@@ -181,10 +181,6 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             return this;
         }
         
-        if(!ModelUtil.isAllowedSetType(getEObject(), type)) {
-            throw new ArchiScriptException(NLS.bind(Messages.ArchimateRelationshipProxy_2, type));
-        }
-        
         // Add new relationship
         ArchimateRelationshipProxy newRelationshipProxy = ModelUtil.createRelationship(getArchimateModel(), type, getName(),
                 getSource().getEObject(), getTarget().getEObject(), (IFolder)getEObject().eContainer());
