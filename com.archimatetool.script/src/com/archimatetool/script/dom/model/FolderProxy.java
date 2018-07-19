@@ -53,6 +53,27 @@ public class FolderProxy extends EObjectProxy {
         return this;
     }
     
+    /**
+     * Create a sub-folder
+     * @param name
+     * @return
+     */
+    public FolderProxy createFolder(String name) {
+        return ModelUtil.createFolder(getEObject(), name);
+    }
+    
+    /**
+     * Add conceptProxy to this folder.
+     * If conceptProxy already has a parent then conceptProxy is moved to this folder
+     * throws ArchiScriptException if incorrect folder type
+     * @param conceptProxy
+     * @return
+     */
+    public FolderProxy add(ArchimateConceptProxy conceptProxy) {
+        ModelUtil.addConcept(conceptProxy.getEObject(), getEObject());
+        return this;
+    }
+
     @Override
     public void delete() {
         if(!isUserFolder()) {

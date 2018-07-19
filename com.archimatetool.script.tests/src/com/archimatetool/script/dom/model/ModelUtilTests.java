@@ -10,7 +10,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.archimatetool.model.FolderType;
@@ -36,15 +35,16 @@ public class ModelUtilTests {
         return new JUnit4TestAdapter(ModelUtilTests.class);
     }
     
-    private static ArchimateModelProxy testModelProxy;
+    private ArchimateModelProxy testModelProxy;
     
-    @BeforeClass
-    public static void loadTestModel() {
+    private void loadTestModel() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
     }
     
     @Test
-    public void createElement_Folder() {
+    public void createElement_WithFolder() {
+        loadTestModel();
+        
         IFolder folder = testModelProxy.getEObject().getFolder(FolderType.APPLICATION);
         IFolder subfolder = IArchimateFactory.eINSTANCE.createFolder();
         subfolder.setType(FolderType.USER);
@@ -56,7 +56,9 @@ public class ModelUtilTests {
     }
     
     @Test
-    public void createElement_FolderNull() {
+    public void createElement_FolderIsNull() {
+        loadTestModel();
+        
         ArchimateElementProxy elementProxy = ModelUtil.createElement(testModelProxy.getArchimateModel(), "application-component", "Fido", null);
         assertEquals("Fido", elementProxy.getName());
         assertEquals(IArchimatePackage.eINSTANCE.getApplicationComponent(), elementProxy.getEObject().eClass());
@@ -65,11 +67,15 @@ public class ModelUtilTests {
     
     @Test(expected=ArchiScriptException.class)
     public void createElement_Exception() {
+        loadTestModel();
+        
         ModelUtil.createElement(testModelProxy.getArchimateModel(), "association-relationship", "Fido", null);
     }
 
     @Test
-    public void createRelationship_Folder() {
+    public void createRelationship_WithFolder() {
+        loadTestModel();
+        
         IFolder folder = testModelProxy.getEObject().getFolder(FolderType.RELATIONS);
         IFolder subfolder = IArchimateFactory.eINSTANCE.createFolder();
         subfolder.setType(FolderType.USER);
@@ -84,7 +90,9 @@ public class ModelUtilTests {
     }
     
     @Test
-    public void createRelationship_FolderNull() {
+    public void createRelationship_FolderIsNull() {
+        loadTestModel();
+        
         IArchimateConcept source = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
         IArchimateConcept target = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "507");
         ArchimateRelationshipProxy relationProxy = ModelUtil.createRelationship(testModelProxy.getArchimateModel(), "composition-relationship", "Fido",
@@ -96,13 +104,57 @@ public class ModelUtilTests {
 
     @Test(expected=ArchiScriptException.class)
     public void createRelationship_Exception() {
+        loadTestModel();
+        
         IArchimateConcept source = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
         IArchimateConcept target = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "507");
         ModelUtil.createRelationship(testModelProxy.getArchimateModel(), "node", "Fido", source, target, null);
     }
 
     @Test
+    public void createFolder() {
+        loadTestModel();
+        
+        IFolder parent = testModelProxy.getEObject().getFolder(FolderType.APPLICATION);
+        FolderProxy folderProxy = ModelUtil.createFolder(parent, "Fido");
+        assertEquals("Fido", folderProxy.getName());
+        assertEquals(FolderType.USER, folderProxy.getEObject().getType());
+        assertSame(parent, folderProxy.getEObject().eContainer());
+    }
+    
+    @Test
+    public void addConcept() {
+        loadTestModel();
+        
+        IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
+        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
+        ModelUtil.addConcept(concept, parent);
+        assertSame(parent, concept.eContainer());
+    }
+    
+    @Test
+    public void addConcept_NoExistingParent() {
+        loadTestModel();
+        
+        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
+        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
+        ModelUtil.addConcept(concept, parent);
+        assertSame(parent, concept.eContainer());
+    }
+    
+    @Test(expected=ArchiScriptException.class)
+    public void moveConcept_Exception() {
+        loadTestModel();
+        
+        IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
+        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4a8e833a");
+        ModelUtil.addConcept(concept, parent);
+    }
+
+    @Test
     public void isCorrectFolderForConcept() {
+        loadTestModel();
+        
         // Business Interface
         IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "1544");
         // parent folders
@@ -137,6 +189,8 @@ public class ModelUtilTests {
     
     @Test
     public void isAllowedSetType() {
+        loadTestModel();
+        
         // Business Role
         IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
         assertTrue(ModelUtil.isAllowedSetType(concept, "business-actor"));

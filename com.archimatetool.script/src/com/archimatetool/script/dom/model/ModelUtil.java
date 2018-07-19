@@ -15,6 +15,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.utils.StringUtils;
+import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
@@ -31,6 +32,7 @@ import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.AddElementCommand;
 import com.archimatetool.script.commands.AddRelationshipCommand;
 import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.ScriptCommand;
 
 /**
  * Model Utils
@@ -42,6 +44,14 @@ class ModelUtil {
     private ModelUtil() {
     }
     
+    /**
+     * Create a new ArchimateElementProxy, adding it to a folder
+     * @param model
+     * @param type
+     * @param name
+     * @param parentFolder
+     * @return
+     */
     static ArchimateElementProxy createElement(IArchimateModel model, String type, String name, IFolder parentFolder) {
         if(model == null) {
             return null;
@@ -65,6 +75,16 @@ class ModelUtil {
         throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_0, type));
     }
 
+    /**
+     * Create a new ArchimateRelationshipProxy, adding it to a folder
+     * @param model
+     * @param type
+     * @param name
+     * @param source
+     * @param target
+     * @param parentFolder
+     * @return
+     */
     static ArchimateRelationshipProxy createRelationship(IArchimateModel model, String type, String name, IArchimateConcept source,
             IArchimateConcept target, IFolder parentFolder) {
         
@@ -94,6 +114,67 @@ class ModelUtil {
         throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_1, type));
     }
 
+    /**
+     * Create a new FolderProxy
+     * @param parent
+     * @param name
+     * @return
+     */
+    static FolderProxy createFolder(IFolder parent, String name) {
+        IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
+        folder.setName(StringUtils.safeString(name));
+        folder.setType(FolderType.USER);
+        
+        CommandHandler.executeCommand(new ScriptCommand("Add", parent.getArchimateModel()) { //$NON-NLS-1$
+            @Override
+            public void perform() {
+                parent.getFolders().add(folder);
+            }
+
+            @Override
+            public void undo() {
+                parent.getFolders().remove(folder);
+            }
+        });
+        
+        return new FolderProxy(folder);
+    }
+    
+    /**
+     * Add a concept to a folder
+     * If concept already has parent folder, it is moved
+     * throws ArchiScriptException if incorrect folder type
+     * @param concept
+     * @param parent
+     */
+    static void addConcept(IArchimateConcept concept, IFolder parent) {
+        if(!isCorrectFolderForConcept(parent, concept)) {
+            throw new ArchiScriptException(Messages.ModelUtil_0);
+        }
+        
+        CommandHandler.executeCommand(new ScriptCommand("Add", parent.getArchimateModel()) { //$NON-NLS-1$
+            IFolder oldParent = (IFolder)concept.eContainer();
+            int oldPosition;
+            
+            @Override
+            public void perform() {
+                if(oldParent != null) {
+                    oldPosition = oldParent.getElements().indexOf(concept);
+                    oldParent.getElements().remove(concept);
+                }
+                parent.getElements().add(concept);
+            }
+
+            @Override
+            public void undo() {
+                parent.getElements().remove(concept);
+                if(oldParent != null) {
+                    oldParent.getElements().add(oldPosition, concept);
+                }
+            }
+        });
+    }
+    
     /**
      * @param folder
      * @param concept

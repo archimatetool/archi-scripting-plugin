@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
@@ -44,7 +45,7 @@ public class FolderProxyTests extends EObjectProxyTests {
     public void runOnceBeforeEachTest() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
-        testEObject = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "74944b84");
+        testEObject = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "74944b84"); // Relationships sub Folder
         testProxy = EObjectProxy.get(testEObject);
         actualTestProxy = (FolderProxy)testProxy;
     }
@@ -147,4 +148,25 @@ public class FolderProxyTests extends EObjectProxyTests {
             assertFalse(rel.getTarget().getTargetRelationships().contains(rel));
         }
     }
+    
+    @Test
+    public void createFolder() {
+        FolderProxy parent = (FolderProxy)testProxy.parent();
+        FolderProxy newFolder = parent.createFolder("Fido");
+        assertEquals(parent, newFolder.parent());
+        assertEquals("Fido", newFolder.getName());
+    }
+    
+    @Test
+    public void add_Concept() {
+        IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "1544"); // BusinessInterface
+        ArchimateConceptProxy conceptProxy = (ArchimateConceptProxy)EObjectProxy.get(concept);
+        
+        IFolder folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
+        FolderProxy folderProxy = (FolderProxy)EObjectProxy.get(folder);
+        
+        folderProxy.add(conceptProxy);
+        assertEquals(folderProxy, conceptProxy.parent());
+    }
+    
 }
