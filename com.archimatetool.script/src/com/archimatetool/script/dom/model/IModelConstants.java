@@ -19,7 +19,7 @@ interface IModelConstants {
     String TYPE = "type"; //$NON-NLS-1$
     
     String CONCEPT = "concept"; //$NON-NLS-1$
-    String DIAGRAM_MODEL = "diagramModel"; //$NON-NLS-1$
+    String VIEW = "view"; //$NON-NLS-1$
     
     String SOURCE = "source"; //$NON-NLS-1$
     String TARGET = "target"; //$NON-NLS-1$

@@ -40,7 +40,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
         return (IDiagramModelComponent)super.getEObject();
     }
     
-    public DiagramModelProxy getDiagramModel() {
+    public DiagramModelProxy getView() {
         return new DiagramModelProxy(getEObject().getDiagramModel());
     }
     
@@ -195,8 +195,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {
-            case DIAGRAM_MODEL:
-                return getDiagramModel();
+            case VIEW:
+                return getView();
             case CONCEPT:
                 return getConcept();
             case FONT_COLOR:

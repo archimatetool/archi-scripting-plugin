@@ -30,15 +30,15 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
     }
     
     @Test
-    public void getDiagramModel() {
-        DiagramModelProxy dmProxy = ((DiagramModelComponentProxy)testProxy).getDiagramModel();
+    public void getView() {
+        DiagramModelProxy dmProxy = ((DiagramModelComponentProxy)testProxy).getView();
         assertNotNull(dmProxy);
         assertNotNull(dmProxy.getEObject());
     }
     
     @Test
-    public void attr_DiagramModel() {
-        assertEquals(((DiagramModelComponentProxy)testProxy).getDiagramModel(), testProxy.attr(IModelConstants.DIAGRAM_MODEL));
+    public void attr_View() {
+        assertEquals(((DiagramModelComponentProxy)testProxy).getView(), testProxy.attr(IModelConstants.VIEW));
     }
     
     @Test
