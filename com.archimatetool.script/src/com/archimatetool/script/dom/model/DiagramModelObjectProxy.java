@@ -78,7 +78,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
      * @return child node diagram objects of this diagram object (if any)
      */
     @Override
-    public EObjectProxyCollection children() {
+    protected EObjectProxyCollection children() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() instanceof IDiagramModelContainer) {
