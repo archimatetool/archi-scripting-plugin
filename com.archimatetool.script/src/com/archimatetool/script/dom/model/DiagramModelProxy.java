@@ -62,7 +62,7 @@ public class DiagramModelProxy extends EObjectProxy {
         return list;
     }
 
-    public EObjectProxyCollection objectRefs() {
+    protected EObjectProxyCollection objectRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject().getArchimateModel() != null) {
@@ -76,7 +76,7 @@ public class DiagramModelProxy extends EObjectProxy {
         return list;
     }
     
-    public EObjectProxyCollection viewRefs() {
+    protected EObjectProxyCollection viewRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject().getArchimateModel() != null) {
