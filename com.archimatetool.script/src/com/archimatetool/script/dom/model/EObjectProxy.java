@@ -477,4 +477,11 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
         }
         return getName().compareTo(o.getName());
     }
+    
+    /**
+     * @return Internal class that implements interface methods that should not be exposed as public methods
+     */
+    protected Object getInternal() {
+        return null;
+    }
 }

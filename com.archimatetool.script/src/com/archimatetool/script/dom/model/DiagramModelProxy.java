@@ -24,7 +24,7 @@ import com.archimatetool.script.commands.DeleteFolderObjectCommand;
  * 
  * @author Phillip Beauvoir
  */
-public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy {
+public class DiagramModelProxy extends EObjectProxy {
     
     DiagramModelProxy(IDiagramModel dm) {
         super(dm);
@@ -62,7 +62,6 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy 
         return list;
     }
 
-    @Override
     public EObjectProxyCollection objectRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
@@ -77,7 +76,6 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy 
         return list;
     }
     
-    @Override
     public EObjectProxyCollection viewRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
@@ -114,4 +112,16 @@ public class DiagramModelProxy extends EObjectProxy implements IReferencedProxy 
         }
     }
 
+    @Override
+    protected Object getInternal() {
+        return new IReferencedProxy() {
+            public EObjectProxyCollection objectRefs() {
+                return DiagramModelProxy.this.objectRefs();
+            }
+
+            public EObjectProxyCollection viewRefs() {
+                return DiagramModelProxy.this.viewRefs();
+            }
+        };
+    }
 }

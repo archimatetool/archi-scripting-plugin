@@ -29,7 +29,7 @@ import com.archimatetool.script.commands.SetCommand;
  * 
  * @author Phillip Beauvoir
  */
-public abstract class DiagramModelComponentProxy extends EObjectProxy implements IConnectableProxy {
+public abstract class DiagramModelComponentProxy extends EObjectProxy {
     
     DiagramModelComponentProxy(IDiagramModelComponent component) {
         super(component);
@@ -70,8 +70,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
     /**
      * @return a list of source connections (if any)
      */
-    @Override
-    public EObjectProxyCollection outRels() {
+    protected EObjectProxyCollection outRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() instanceof IConnectable) {
@@ -86,8 +85,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
     /**
      * @return a list of target connections (if any)
      */
-    @Override
-    public EObjectProxyCollection inRels() {
+    protected EObjectProxyCollection inRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject() instanceof IConnectable) {
@@ -268,4 +266,18 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy implements
             throw new ArchiScriptException(NLS.bind(Messages.DiagramModelComponentProxy_0, value));
         }
     }
+    
+    @Override
+    protected Object getInternal() {
+        return new IConnectableProxy() {
+            public EObjectProxyCollection outRels() {
+                return DiagramModelComponentProxy.this.outRels();
+            }
+            
+            public EObjectProxyCollection inRels() {
+                return DiagramModelComponentProxy.this.inRels();
+            }
+        };
+    }
+
 }

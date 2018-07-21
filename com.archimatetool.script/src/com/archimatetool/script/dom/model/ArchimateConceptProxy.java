@@ -22,7 +22,7 @@ import com.archimatetool.script.commands.DeleteFolderObjectCommand;
  * 
  * @author Phillip Beauvoir
  */
-public abstract class ArchimateConceptProxy extends EObjectProxy implements IReferencedProxy, IConnectableProxy {
+public abstract class ArchimateConceptProxy extends EObjectProxy {
     
     ArchimateConceptProxy(IArchimateConcept concept) {
         super(concept);
@@ -62,8 +62,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         return this;
     }
     
-    @Override
-    public EObjectProxyCollection outRels() {
+    protected EObjectProxyCollection outRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getSourceRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
@@ -71,8 +70,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         return list;
     }
     
-    @Override
-    public EObjectProxyCollection inRels() {
+    protected EObjectProxyCollection inRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         for(IArchimateRelationship r : getEObject().getTargetRelationships()) {
             list.add(new ArchimateRelationshipProxy(r));
@@ -80,8 +78,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         return list;
     }
     
-    @Override
-    public EObjectProxyCollection objectRefs() {
+    protected EObjectProxyCollection objectRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         if(getEObject().getArchimateModel() != null) {
@@ -95,8 +92,7 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
         return list;
     }
     
-    @Override
-    public EObjectProxyCollection viewRefs() {
+    protected EObjectProxyCollection viewRefs() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
         for(IDiagramModel dm : DiagramModelUtils.findReferencedDiagramsForArchimateConcept(getEObject())) {
@@ -126,6 +122,29 @@ public abstract class ArchimateConceptProxy extends EObjectProxy implements IRef
             CommandHandler.executeCommand(new DeleteFolderObjectCommand(getEObject()));
         }
       
+    }
+
+    interface Internal extends IReferencedProxy, IConnectableProxy {}
+    
+    @Override
+    protected Object getInternal() {
+        return new Internal() {
+            public EObjectProxyCollection outRels() {
+                return ArchimateConceptProxy.this.outRels();
+            }
+            
+            public EObjectProxyCollection inRels() {
+                return ArchimateConceptProxy.this.inRels();
+            }
+            
+            public EObjectProxyCollection viewRefs() {
+                return ArchimateConceptProxy.this.viewRefs();
+            }
+            
+            public EObjectProxyCollection objectRefs() {
+                return ArchimateConceptProxy.this.objectRefs();
+            }
+        };
     }
 
 }
