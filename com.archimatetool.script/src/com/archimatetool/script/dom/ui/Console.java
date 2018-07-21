@@ -5,6 +5,9 @@
  */
 package com.archimatetool.script.dom.ui;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.PlatformUI;
 
@@ -69,16 +72,36 @@ public class Console {
     }
 
     public void print(Object obj) {
+        String output = ""; //$NON-NLS-1$
+        
         if(obj == null) {
-            obj = "(null)"; //$NON-NLS-1$
+            output = "(null)"; //$NON-NLS-1$
         }
-        ConsoleView viewer = findConsoleViewer();
-        if(viewer != null) {
-            viewer.setTextColor(currentColor);
-            viewer.append(obj.toString());
+        else if(obj instanceof Map<?, ?>) {
+            output = "{"; //$NON-NLS-1$
+            
+            for(Entry<?, ?> e : ((Map<?, ?>)obj).entrySet()) {
+                output += e.getKey() + ": " + e.getValue() + ", "; //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            
+            if(output.lastIndexOf(",") != -1) { //$NON-NLS-1$
+                output = output.substring(0, output.lastIndexOf(",")); //$NON-NLS-1$
+            }
+            
+            output += "}"; //$NON-NLS-1$
         }
         else {
-            System.out.print(obj);
+            output = obj.toString();
+        }
+        
+        ConsoleView viewer = findConsoleViewer();
+        
+        if(viewer != null) {
+            viewer.setTextColor(currentColor);
+            viewer.append(output);
+        }
+        else {
+            System.out.print(output);
         }
     }
     
