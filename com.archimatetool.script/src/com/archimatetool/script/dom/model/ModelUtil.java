@@ -49,16 +49,13 @@ class ModelUtil {
     }
     
     /**
-     * Create a new ArchimateElementProxy, adding it to a folder
-     * @param model
-     * @param type
-     * @param name
-     * @param parentFolder
-     * @return
+     * Create a new ArchimateElementProxy, adding it to a parentFolder
+     * If parentFolder is null use default folder
      */
     static ArchimateElementProxy createElement(IArchimateModel model, String type, String name, IFolder parentFolder) {
-        if(model == null) {
-            return null;
+        // Ensure all components share the same model
+        if(parentFolder != null && parentFolder.getArchimateModel() != model) {
+            throw new ArchiScriptException("Cannot add to folder with different model!"); //$NON-NLS-1$
         }
         
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(getCamelCase(type));
@@ -81,19 +78,14 @@ class ModelUtil {
 
     /**
      * Create a new ArchimateRelationshipProxy, adding it to a folder
-     * @param model
-     * @param type
-     * @param name
-     * @param source
-     * @param target
-     * @param parentFolder
-     * @return
+     * If parentFolder is null use default folder
      */
     static ArchimateRelationshipProxy createRelationship(IArchimateModel model, String type, String name, IArchimateConcept source,
             IArchimateConcept target, IFolder parentFolder) {
         
-        if(model == null || source == null || target == null) {
-            return null;
+        // Ensure all components share the same model
+        if((parentFolder != null && parentFolder.getArchimateModel() != model) || source.getArchimateModel() != model || target.getArchimateModel() != model) {
+            throw new ArchiScriptException("Cannot create relationship with components that belong to different models!"); //$NON-NLS-1$
         }
         
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(getCamelCase(type));
@@ -120,9 +112,6 @@ class ModelUtil {
 
     /**
      * Create a new FolderProxy
-     * @param parent
-     * @param name
-     * @return
      */
     static FolderProxy createFolder(IFolder parent, String name) {
         IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
@@ -148,10 +137,13 @@ class ModelUtil {
      * Add a concept to a folder
      * If concept already has parent folder, it is moved
      * throws ArchiScriptException if incorrect folder type
-     * @param concept
-     * @param parent
      */
     static void addConcept(IArchimateConcept concept, IFolder parent) {
+        // Ensure all components share the same model
+        if(concept.getArchimateModel() != null && concept.getArchimateModel() != parent.getArchimateModel()) {
+            throw new ArchiScriptException("Cannot add to folder with different model!"); //$NON-NLS-1$
+        }
+
         if(!isCorrectFolderForObject(parent, concept)) {
             throw new ArchiScriptException(Messages.ModelUtil_0);
         }
@@ -179,7 +171,15 @@ class ModelUtil {
         });
     }
     
+    /**
+     * Create a new view and add to parentFolder
+     */
     static DiagramModelProxy createView(IArchimateModel model, String type, String name, IFolder parentFolder) {
+        // Ensure all components share the same model
+        if(parentFolder != null && parentFolder.getArchimateModel() != model) {
+            throw new ArchiScriptException("Cannot add to folder with different model!"); //$NON-NLS-1$
+        }
+
         final IDiagramModel[] view = new IDiagramModel[1];
         final IFolder[] parent = new IFolder[1];
         
@@ -229,8 +229,6 @@ class ModelUtil {
     }
     
     /**
-     * @param folder
-     * @param concept
      * @return true if the given parent folder is the correct folder to contain this object
      */
     static boolean isCorrectFolderForObject(IFolder folder, EObject eObject) {
@@ -254,8 +252,7 @@ class ModelUtil {
     }
     
     /**
-     * @param element
-     * @param type kebab-case type
+     * check allowed type
      * @return false if trying to set an invalid type
      */
     static boolean isAllowedSetType(IArchimateConcept concept, String type) {
