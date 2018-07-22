@@ -14,7 +14,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.canvas.model.ICanvasFactory;
 import com.archimatetool.editor.model.IEditorModelManager;
+import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
@@ -23,6 +25,7 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelContainer;
@@ -64,7 +67,7 @@ class ModelUtil {
             element.setName(StringUtils.safeString(name));
             
             // Check folder is correct for type, if not use default folder
-            if(parentFolder == null || !isCorrectFolderForConcept(parentFolder, element)) {
+            if(parentFolder == null || !isCorrectFolderForObject(parentFolder, element)) {
                 parentFolder = model.getDefaultFolderForObject(element);
             }
 
@@ -103,7 +106,7 @@ class ModelUtil {
             relationship.setName(StringUtils.safeString(name));
             
             // Check folder is correct for type, if not use default folder
-            if(parentFolder == null || !isCorrectFolderForConcept(parentFolder, relationship)) {
+            if(parentFolder == null || !isCorrectFolderForObject(parentFolder, relationship)) {
                 parentFolder = model.getDefaultFolderForObject(relationship);
             }
             
@@ -149,7 +152,7 @@ class ModelUtil {
      * @param parent
      */
     static void addConcept(IArchimateConcept concept, IFolder parent) {
-        if(!isCorrectFolderForConcept(parent, concept)) {
+        if(!isCorrectFolderForObject(parent, concept)) {
             throw new ArchiScriptException(Messages.ModelUtil_0);
         }
         
@@ -176,17 +179,66 @@ class ModelUtil {
         });
     }
     
+    static DiagramModelProxy createView(IArchimateModel model, String type, String name, IFolder parentFolder) {
+        final IDiagramModel[] view = new IDiagramModel[1];
+        final IFolder[] parent = new IFolder[1];
+        
+        switch(type) {
+            case "archimate":  //$NON-NLS-1$
+                view[0] = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
+                break;
+
+            case "sketch":  //$NON-NLS-1$
+                view[0] = IArchimateFactory.eINSTANCE.createSketchModel();
+                break;
+
+            case "canvas":  //$NON-NLS-1$
+                view[0] = ICanvasFactory.eINSTANCE.createCanvasModel();
+                break;
+
+            default:
+                throw new ArchiScriptException("Wring view type: " + type); //$NON-NLS-1$
+        }
+        
+        view[0].setName(StringUtils.safeString(name));
+        
+        // Check folder is correct for type, if not use default folder
+        if(parentFolder == null || !isCorrectFolderForObject(parentFolder, view[0])) {
+            parent[0] = model.getDefaultFolderForObject(view[0]);
+        }
+        else {
+            parent[0] = parentFolder;
+        }
+        
+        CommandHandler.executeCommand(new ScriptCommand("Create", model) { //$NON-NLS-1$
+            @Override
+            public void perform() {
+                parent[0].getElements().add(view[0]);
+            }
+
+            @Override
+            public void undo() {
+                if(PlatformUI.isWorkbenchRunning()) {
+                    EditorManager.closeDiagramEditor(view[0]);
+                }
+                parent[0].getElements().remove(view[0]);
+            }
+        });
+        
+        return new DiagramModelProxy(view[0]);
+    }
+    
     /**
      * @param folder
      * @param concept
-     * @return true if the given parent folder is the correct folder to contain this concept
+     * @return true if the given parent folder is the correct folder to contain this object
      */
-    static boolean isCorrectFolderForConcept(IFolder folder, IArchimateConcept concept) {
+    static boolean isCorrectFolderForObject(IFolder folder, EObject eObject) {
         if(folder == null) {
             return false;
         }
         
-        IFolder topFolder = folder.getArchimateModel().getDefaultFolderForObject(concept);
+        IFolder topFolder = folder.getArchimateModel().getDefaultFolderForObject(eObject);
         if(folder == topFolder) {
             return true;
         }

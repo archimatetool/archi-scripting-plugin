@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.archimatetool.canvas.model.ICanvasPackage;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateFactory;
@@ -153,41 +154,64 @@ public class ModelUtilTests {
         IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4a8e833a");
         ModelUtil.addConcept(concept, parent);
     }
+    
+    @Test
+    public void createView() {
+        loadTestModel();
+        
+        IFolder parent = testModelProxy.getEObject().getFolder(FolderType.DIAGRAMS);
+
+        DiagramModelProxy viewProxy = ModelUtil.createView(testModelProxy.getEObject(), "archimate", "test", parent);
+        assertEquals("test", viewProxy.getName());
+        assertEquals(IArchimatePackage.eINSTANCE.getArchimateDiagramModel(), viewProxy.getEObject().eClass());
+        assertSame(parent, viewProxy.getEObject().eContainer());
+
+        viewProxy = ModelUtil.createView(testModelProxy.getEObject(), "sketch", "test", parent);
+        assertEquals("test", viewProxy.getName());
+        assertEquals(IArchimatePackage.eINSTANCE.getSketchModel(), viewProxy.getEObject().eClass());
+        assertSame(parent, viewProxy.getEObject().eContainer());
+
+        viewProxy = ModelUtil.createView(testModelProxy.getEObject(), "canvas", "test", parent);
+        assertEquals("test", viewProxy.getName());
+        assertEquals(ICanvasPackage.eINSTANCE.getCanvasModel(), viewProxy.getEObject().eClass());
+        assertSame(parent, viewProxy.getEObject().eContainer());
+    }
 
     @Test
-    public void isCorrectFolderForConcept() {
+    public void isCorrectFolderForObject() {
         loadTestModel();
         
         // Business Interface
         IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "1544");
         // parent folders
-        assertTrue(ModelUtil.isCorrectFolderForConcept((IFolder)concept.eContainer(), concept));
-        assertTrue(ModelUtil.isCorrectFolderForConcept((IFolder)concept.eContainer().eContainer(), concept));
+        assertTrue(ModelUtil.isCorrectFolderForObject((IFolder)concept.eContainer(), concept));
+        assertTrue(ModelUtil.isCorrectFolderForObject((IFolder)concept.eContainer().eContainer(), concept));
         // other business folder
         IFolder folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3eb047a9");
-        assertTrue(ModelUtil.isCorrectFolderForConcept(folder, concept));
+        assertTrue(ModelUtil.isCorrectFolderForObject(folder, concept));
         // application folder
         folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4a8e833a");
-        assertFalse(ModelUtil.isCorrectFolderForConcept(folder, concept));
+        assertFalse(ModelUtil.isCorrectFolderForObject(folder, concept));
         // view
         folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "e64e9b49");
-        assertFalse(ModelUtil.isCorrectFolderForConcept(folder, concept));
+        assertFalse(ModelUtil.isCorrectFolderForObject(folder, concept));
         
         // Relationship
         concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "693");
         // parent folders
-        assertTrue(ModelUtil.isCorrectFolderForConcept((IFolder)concept.eContainer(), concept));
-        assertTrue(ModelUtil.isCorrectFolderForConcept((IFolder)concept.eContainer().eContainer(), concept));
-        assertTrue(ModelUtil.isCorrectFolderForConcept((IFolder)concept.eContainer().eContainer().eContainer(), concept));
+        assertTrue(ModelUtil.isCorrectFolderForObject((IFolder)concept.eContainer(), concept));
+        assertTrue(ModelUtil.isCorrectFolderForObject((IFolder)concept.eContainer().eContainer(), concept));
+        assertTrue(ModelUtil.isCorrectFolderForObject((IFolder)concept.eContainer().eContainer().eContainer(), concept));
         // other relationship folder
         folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3de37d5c");
-        assertTrue(ModelUtil.isCorrectFolderForConcept(folder, concept));
+        assertTrue(ModelUtil.isCorrectFolderForObject(folder, concept));
         // application folder
         folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4a8e833a");
-        assertFalse(ModelUtil.isCorrectFolderForConcept(folder, concept));
+        assertFalse(ModelUtil.isCorrectFolderForObject(folder, concept));
         // view
         folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "e64e9b49");
-        assertFalse(ModelUtil.isCorrectFolderForConcept(folder, concept));
+        assertFalse(ModelUtil.isCorrectFolderForObject(folder, concept));
+        assertTrue(ModelUtil.isCorrectFolderForObject(folder, IArchimateFactory.eINSTANCE.createArchimateDiagramModel()));
     }
     
     @Test
