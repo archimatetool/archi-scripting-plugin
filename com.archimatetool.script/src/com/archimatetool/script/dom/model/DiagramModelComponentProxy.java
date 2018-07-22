@@ -54,7 +54,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     /**
      * @return true if this diagram component references an ArchiMate component
      */
-    private boolean isArchimateConcept() {
+    protected boolean isArchimateConcept() {
         return getEObject() instanceof IDiagramModelArchimateComponent;
     }
     
