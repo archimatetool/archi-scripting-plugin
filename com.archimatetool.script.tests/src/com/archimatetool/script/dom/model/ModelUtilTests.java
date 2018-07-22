@@ -10,6 +10,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 
 import com.archimatetool.model.FolderType;
@@ -234,5 +237,32 @@ public class ModelUtilTests {
         assertEquals("Businessobject", ModelUtil.getCamelCase("BusinessObject"));
     }
     
+    @Test
+    public void getIntValueFromMap() {
+        Map<String, Number> map = new HashMap<>();
+        map.put("key1", 1);
+        map.put("key2", 2.1);
+        
+        assertEquals(1, ModelUtil.getIntValueFromMap(map, "key1", 10));
+        assertEquals(2, ModelUtil.getIntValueFromMap(map, "key2", 10));
+        assertEquals(3, ModelUtil.getIntValueFromMap(map, "key3", 3));
+        
+        // Null map
+        assertEquals(4, ModelUtil.getIntValueFromMap(null, "key4", 4));
+    }
+    
+    @Test
+    public void getStringValueFromMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("key1", "hello");
+        map.put("key2", "there");
+        
+        assertEquals("hello", ModelUtil.getStringValueFromMap(map, "key1", ""));
+        assertEquals("there", ModelUtil.getStringValueFromMap(map, "key2", ""));
+        assertEquals("oscar", ModelUtil.getStringValueFromMap(map, "key3", "oscar"));
+
+        // Null map
+        assertEquals("bogus", ModelUtil.getStringValueFromMap(null, "key4", "bogus"));
+    }
 
 }

@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.ecore.EClass;
@@ -290,5 +291,27 @@ class ModelUtil {
                 .map(String::toLowerCase)
                 .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1))
                 .collect(Collectors.joining());
+    }
+    
+    /**
+     * Get an integer value from a property map.
+     * @param map
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    static int getIntValueFromMap(Map<?, ?> map, String key, int defaultValue) {
+        return (map != null && map.get(key) instanceof Number) ? ((Number)map.get(key)).intValue() : defaultValue;
+    }
+
+    /**
+     * Get a string value from a property map.
+     * @param map
+     * @param key
+     * @param defaultValue
+     * @return
+     */
+    static String getStringValueFromMap(Map<?, ?> map, String key, String defaultValue) {
+        return (map != null && map.get(key) instanceof String) ? (String)map.get(key) : defaultValue;
     }
 }

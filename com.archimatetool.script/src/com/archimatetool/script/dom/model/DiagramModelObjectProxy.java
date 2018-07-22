@@ -49,10 +49,10 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     }
     
     public void setBounds(Map<?, ?> map) {
-        int x = (map.get("x") instanceof Number) ? ((Number)map.get("x")).intValue() : getEObject().getBounds().getX(); //$NON-NLS-1$ //$NON-NLS-2$
-        int y = (map.get("y") instanceof Number) ? ((Number)map.get("y")).intValue() : getEObject().getBounds().getY(); //$NON-NLS-1$ //$NON-NLS-2$
-        int width = (map.get("width") instanceof Number) ? ((Number)map.get("width")).intValue() : getEObject().getBounds().getWidth(); //$NON-NLS-1$ //$NON-NLS-2$
-        int height = (map.get("height") instanceof Number) ? ((Number)map.get("height")).intValue() : getEObject().getBounds().getHeight(); //$NON-NLS-1$ //$NON-NLS-2$
+        int x = ModelUtil.getIntValueFromMap(map, "x", getEObject().getBounds().getX()); //$NON-NLS-1$
+        int y = ModelUtil.getIntValueFromMap(map, "y", getEObject().getBounds().getY()); //$NON-NLS-1$
+        int width = ModelUtil.getIntValueFromMap(map, "width", getEObject().getBounds().getWidth()); //$NON-NLS-1$
+        int height = ModelUtil.getIntValueFromMap(map, "height", getEObject().getBounds().getHeight()); //$NON-NLS-1$
         
         IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
         CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__BOUNDS, bounds));
