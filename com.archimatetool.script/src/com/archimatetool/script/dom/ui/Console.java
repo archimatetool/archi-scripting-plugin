@@ -7,6 +7,7 @@ package com.archimatetool.script.dom.ui;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.StringJoiner;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.PlatformUI;
@@ -78,17 +79,11 @@ public class Console {
             output = "(null)"; //$NON-NLS-1$
         }
         else if(obj instanceof Map<?, ?>) {
-            output = "{"; //$NON-NLS-1$
-            
+            StringJoiner joiner = new StringJoiner(", "); //$NON-NLS-1$
             for(Entry<?, ?> e : ((Map<?, ?>)obj).entrySet()) {
-                output += e.getKey() + ": " + e.getValue() + ", "; //$NON-NLS-1$ //$NON-NLS-2$
+                joiner.add(e.getKey() + ": " + e.getValue()); //$NON-NLS-1$
             }
-            
-            if(output.lastIndexOf(",") != -1) { //$NON-NLS-1$
-                output = output.substring(0, output.lastIndexOf(",")); //$NON-NLS-1$
-            }
-            
-            output += "}"; //$NON-NLS-1$
+            output = "{" + joiner.toString() + "}"; //$NON-NLS-1$ //$NON-NLS-2$
         }
         else {
             output = obj.toString();
