@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.Map;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -87,19 +88,30 @@ public class Model {
     /**
      * Render a View as a String of BASE64 bytes
      * @param dmProxy The DiagramModelProxy
+     * @param formatOne of "PNG", "BMP", "JPG", "JPEG",
+     * @return a string encoded in BASE64
+     * @throws IOException
+     */
+    public String renderViewAsBase64(DiagramModelProxy dmProxy, String format) throws IOException {
+        return renderViewAsBase64(dmProxy, format, null);
+    }
+    
+    /**
+     * Render a View as a String of BASE64 bytes
+     * @param dmProxy The DiagramModelProxy
      * @param format One of "PNG", "BMP", "JPG", "JPEG",
      * @param options can be scale and margin insets
      * @return a string encoded in BASE64
      * @throws IOException
      */
-    public String renderViewAsBase64(DiagramModelProxy dmProxy, String format, int... options) throws IOException {
+    public String renderViewAsBase64(DiagramModelProxy dmProxy, String format, Map<?, ?> options) throws IOException {
         if(dmProxy == null || format == null) {
             throw new ArchiScriptException("Null argument"); //$NON-NLS-1$
         }
         
         // Default options
-        int scale = options.length > 0 ? options[0] : 1;
-        int margin = options.length > 1 ? options[1] : 10;
+        int scale = ModelUtil.getIntValueFromMap(options, "scale", 1); //$NON-NLS-1$
+        int margin = ModelUtil.getIntValueFromMap(options, "margin", 10); //$NON-NLS-1$
         
         // Format
         int imgFormat = SWT.IMAGE_PNG;
