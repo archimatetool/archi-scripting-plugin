@@ -23,6 +23,7 @@ import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
@@ -54,9 +55,7 @@ class ModelUtil {
      */
     static ArchimateElementProxy createElement(IArchimateModel model, String type, String name, IFolder parentFolder) {
         // Ensure all components share the same model
-        if(parentFolder != null && parentFolder.getArchimateModel() != model) {
-            throw new ArchiScriptException("Cannot add to folder with different model!"); //$NON-NLS-1$
-        }
+        checkComponentsInSameModel(model, parentFolder);
         
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(getCamelCase(type));
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
@@ -84,9 +83,7 @@ class ModelUtil {
             IArchimateConcept target, IFolder parentFolder) {
         
         // Ensure all components share the same model
-        if((parentFolder != null && parentFolder.getArchimateModel() != model) || source.getArchimateModel() != model || target.getArchimateModel() != model) {
-            throw new ArchiScriptException("Cannot create relationship with components that belong to different models!"); //$NON-NLS-1$
-        }
+        checkComponentsInSameModel(model, parentFolder, source, target);
         
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(getCamelCase(type));
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateRelationship().isSuperTypeOf(eClass)) { // Check this is the correct type
@@ -113,20 +110,20 @@ class ModelUtil {
     /**
      * Create a new FolderProxy
      */
-    static FolderProxy createFolder(IFolder parent, String name) {
+    static FolderProxy createFolder(IFolder parentFolder, String name) {
         IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
         folder.setName(StringUtils.safeString(name));
         folder.setType(FolderType.USER);
         
-        CommandHandler.executeCommand(new ScriptCommand("Add", parent.getArchimateModel()) { //$NON-NLS-1$
+        CommandHandler.executeCommand(new ScriptCommand("Add", parentFolder.getArchimateModel()) { //$NON-NLS-1$
             @Override
             public void perform() {
-                parent.getFolders().add(folder);
+                parentFolder.getFolders().add(folder);
             }
 
             @Override
             public void undo() {
-                parent.getFolders().remove(folder);
+                parentFolder.getFolders().remove(folder);
             }
         });
         
@@ -138,17 +135,15 @@ class ModelUtil {
      * If concept already has parent folder, it is moved
      * throws ArchiScriptException if incorrect folder type
      */
-    static void addConcept(IArchimateConcept concept, IFolder parent) {
+    static void addConcept(IArchimateConcept concept, IFolder parentFolder) {
         // Ensure all components share the same model
-        if(concept.getArchimateModel() != null && concept.getArchimateModel() != parent.getArchimateModel()) {
-            throw new ArchiScriptException("Cannot add to folder with different model!"); //$NON-NLS-1$
-        }
+        checkComponentsInSameModel(concept, parentFolder);
 
-        if(!isCorrectFolderForObject(parent, concept)) {
+        if(!isCorrectFolderForObject(parentFolder, concept)) {
             throw new ArchiScriptException(Messages.ModelUtil_0);
         }
         
-        CommandHandler.executeCommand(new ScriptCommand("Add", parent.getArchimateModel()) { //$NON-NLS-1$
+        CommandHandler.executeCommand(new ScriptCommand("Add", parentFolder.getArchimateModel()) { //$NON-NLS-1$
             IFolder oldParent = (IFolder)concept.eContainer();
             int oldPosition;
             
@@ -158,12 +153,12 @@ class ModelUtil {
                     oldPosition = oldParent.getElements().indexOf(concept);
                     oldParent.getElements().remove(concept);
                 }
-                parent.getElements().add(concept);
+                parentFolder.getElements().add(concept);
             }
 
             @Override
             public void undo() {
-                parent.getElements().remove(concept);
+                parentFolder.getElements().remove(concept);
                 if(oldParent != null) {
                     oldParent.getElements().add(oldPosition, concept);
                 }
@@ -176,9 +171,7 @@ class ModelUtil {
      */
     static DiagramModelProxy createView(IArchimateModel model, String type, String name, IFolder parentFolder) {
         // Ensure all components share the same model
-        if(parentFolder != null && parentFolder.getArchimateModel() != model) {
-            throw new ArchiScriptException("Cannot add to folder with different model!"); //$NON-NLS-1$
-        }
+        checkComponentsInSameModel(model, parentFolder);
 
         final IDiagramModel[] view = new IDiagramModel[1];
         final IFolder[] parent = new IFolder[1];
@@ -362,5 +355,22 @@ class ModelUtil {
      */
     static String getStringValueFromMap(Map<?, ?> map, String key, String defaultValue) {
         return (map != null && map.get(key) instanceof String) ? (String)map.get(key) : defaultValue;
+    }
+    
+    /**
+     * Check all components belong to the same model
+     */
+    static void checkComponentsInSameModel(IArchimateModelObject... eObjects) {
+        IArchimateModel model = null;
+        
+        for(IArchimateModelObject eObject : eObjects) {
+            if(eObject != null) {
+                IArchimateModel thatModel = eObject.getArchimateModel();
+                if(thatModel != null && model != null && thatModel != model) {
+                    throw new ArchiScriptException("Components belong to different models!"); //$NON-NLS-1$
+                }
+                model = thatModel;
+            }
+        }
     }
 }

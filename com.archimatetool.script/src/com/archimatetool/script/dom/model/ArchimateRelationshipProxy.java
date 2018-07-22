@@ -57,6 +57,9 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
     }
     
     protected ArchimateRelationshipProxy setSource(ArchimateConceptProxy source, boolean updateViews) {
+        // Ensure all components share the same model
+        ModelUtil.checkComponentsInSameModel(getEObject(), source.getEObject());
+        
         if(!ArchimateModelUtils.isValidRelationship(source.getEObject(), getEObject().getTarget(), getEObject().eClass())) {
             throw new ArchiScriptException(NLS.bind(Messages.ArchimateRelationshipProxy_0,
                     new Object[] { getEObject().eClass().getName(), source, getTarget() }));
@@ -116,6 +119,9 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
     }
     
     protected ArchimateRelationshipProxy setTarget(ArchimateConceptProxy target, boolean updateViews) {
+        // Ensure all components share the same model
+        ModelUtil.checkComponentsInSameModel(getEObject(), target.getEObject());
+        
         if(!ArchimateModelUtils.isValidRelationship(getEObject().getSource(), target.getEObject(), getEObject().eClass())) {
             throw new ArchiScriptException(NLS.bind(Messages.ArchimateRelationshipProxy_1,
                     new Object[] { getEObject().eClass().getName(), getSource(), target }));
