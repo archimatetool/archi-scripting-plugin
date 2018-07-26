@@ -12,6 +12,7 @@ import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
@@ -25,6 +26,8 @@ import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.ui.ImageFactory;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
 /**
@@ -156,4 +159,21 @@ public class Model {
         }
     }
 
+    /**
+     * @param relationshipType
+     * @param sourceType
+     * @param targetType
+     * @return True if relationship type is allowed between source and target
+     */
+    public boolean isAllowedRelationship(String relationshipType, String sourceType, String targetType) {
+        EClass relClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(relationshipType));
+        EClass sourceClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(sourceType));
+        EClass targetClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(targetType));
+        
+        if(relClass == null || sourceClass == null || targetClass == null) {
+            throw new ArchiScriptException("Invalid type name."); //$NON-NLS-1$
+        }
+        
+        return ArchimateModelUtils.isValidRelationship(sourceClass, targetClass, relClass);
+    }
 }
