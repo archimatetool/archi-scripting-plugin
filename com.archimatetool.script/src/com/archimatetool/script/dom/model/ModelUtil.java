@@ -224,7 +224,7 @@ class ModelUtil {
             }
         });
         
-        return new DiagramModelProxy(view[0]);
+        return (DiagramModelProxy)EObjectProxy.get(view[0]);
     }
     
     static DiagramModelObjectProxy addArchimateDiagramObject(IDiagramModelContainer parent, IArchimateElement element, int x, int y, int width, int height) {

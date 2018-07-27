@@ -41,7 +41,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     }
     
     public DiagramModelProxy getView() {
-        return new DiagramModelProxy(getEObject().getDiagramModel());
+        return (DiagramModelProxy)EObjectProxy.get(getEObject().getDiagramModel());
     }
     
     /**

@@ -6,19 +6,21 @@
 package com.archimatetool.script;
 
 
+import com.archimatetool.script.dom.model.ArchimateDiagramModelProxyTests;
 import com.archimatetool.script.dom.model.ArchimateElementProxyTests;
 import com.archimatetool.script.dom.model.ArchimateModelProxyTests;
 import com.archimatetool.script.dom.model.ArchimateRelationshipProxyTests;
+import com.archimatetool.script.dom.model.CanvasDiagramModelProxyTests;
 import com.archimatetool.script.dom.model.CurrentModelTests;
 import com.archimatetool.script.dom.model.DiagramModelConnectionProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelNoteProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelObjectProxyTests;
-import com.archimatetool.script.dom.model.DiagramModelProxyTests;
 import com.archimatetool.script.dom.model.EObjectProxyCollectionTests;
 import com.archimatetool.script.dom.model.FolderProxyTests;
 import com.archimatetool.script.dom.model.ModelTests;
 import com.archimatetool.script.dom.model.ModelUtilTests;
 import com.archimatetool.script.dom.model.SelectorFilterFactoryTests;
+import com.archimatetool.script.dom.model.SketchDiagramModelProxyTests;
 
 import junit.framework.TestSuite;
 
@@ -28,12 +30,13 @@ public class AllTests {
     public static junit.framework.Test suite() {
 		TestSuite suite = new TestSuite("com.archimatetool.script");
 
+        suite.addTest(ArchimateDiagramModelProxyTests.suite());
         suite.addTest(ArchimateElementProxyTests.suite());
 		suite.addTest(ArchimateModelProxyTests.suite());
         suite.addTest(ArchimateRelationshipProxyTests.suite());
+        suite.addTest(CanvasDiagramModelProxyTests.suite());
         suite.addTest(CurrentModelTests.suite());
         suite.addTest(DiagramModelConnectionProxyTests.suite());
-        suite.addTest(DiagramModelProxyTests.suite());
         suite.addTest(DiagramModelNoteProxyTests.suite());
         suite.addTest(DiagramModelObjectProxyTests.suite());
         suite.addTest(EObjectProxyCollectionTests.suite());
@@ -42,6 +45,7 @@ public class AllTests {
 		suite.addTest(ModelTests.suite());
         suite.addTest(ModelUtilTests.suite());
         suite.addTest(SelectorFilterFactoryTests.suite());
+        suite.addTest(SketchDiagramModelProxyTests.suite());
 		
         return suite;
 	}

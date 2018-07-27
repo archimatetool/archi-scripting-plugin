@@ -13,11 +13,12 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 
+import com.archimatetool.canvas.model.ICanvasModel;
+import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
-import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IDiagramModelObject;
@@ -27,6 +28,7 @@ import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
+import com.archimatetool.model.ISketchModel;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.AddPropertyCommand;
 import com.archimatetool.script.commands.CommandHandler;
@@ -61,8 +63,16 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
             return new ArchimateRelationshipProxy((IArchimateRelationship)eObject);
         }
         
-        if(eObject instanceof IDiagramModel) {
-            return new DiagramModelProxy((IDiagramModel)eObject);
+        if(eObject instanceof IArchimateDiagramModel) {
+            return new ArchimateDiagramModelProxy((IArchimateDiagramModel)eObject);
+        }
+        
+        if(eObject instanceof ISketchModel) {
+            return new SketchDiagramModelProxy((ISketchModel)eObject);
+        }
+        
+        if(eObject instanceof ICanvasModel) {
+            return new CanvasDiagramModelProxy((ICanvasModel)eObject);
         }
         
         if(eObject instanceof IDiagramModelNote) {
