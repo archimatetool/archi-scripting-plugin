@@ -35,4 +35,6 @@ interface IModelConstants {
     
     String LINE_COLOR = "lineColor";  //$NON-NLS-1$
     String LINE_WIDTH = "lineWidth";  //$NON-NLS-1$
+    
+    String TEXT = "text"; //$NON-NLS-1$
 }

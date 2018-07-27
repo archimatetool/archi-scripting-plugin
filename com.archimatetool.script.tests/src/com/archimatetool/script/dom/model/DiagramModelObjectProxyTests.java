@@ -43,7 +43,7 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     
     private DiagramModelObjectProxy actualTestProxy;
     
-    private ArchimateModelProxy testModelProxy;
+    protected ArchimateModelProxy testModelProxy;
     
     @Before
     public void runOnceBeforeEachTest() {

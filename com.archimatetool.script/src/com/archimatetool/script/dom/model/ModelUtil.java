@@ -238,28 +238,29 @@ class ModelUtil {
      * Create and add a diagram object of type to a container parent at position
      */
     static DiagramModelObjectProxy createDiagramObject(IDiagramModelContainer parent, String type, int x, int y, int width, int height) {
-        EClass eClass = null;
+        IDiagramModelObject dmo = null;
         
         switch(type) {
             case "note": //$NON-NLS-1$
                 if(!(parent.getDiagramModel() instanceof IArchimateDiagramModel)) {
                     throw new ArchiScriptException(Messages.ModelUtil_2);
                 }
-                eClass = IArchimatePackage.eINSTANCE.getDiagramModelNote();
+                // Use Factory for defaults
+                dmo = (IDiagramModelObject)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelNote()).getNewObject();
                 break;
 
             case "group": //$NON-NLS-1$
                 if(parent.getDiagramModel() instanceof ICanvasModel) {
                     throw new ArchiScriptException(Messages.ModelUtil_3);
                 }
-                eClass = IArchimatePackage.eINSTANCE.getDiagramModelGroup();
+                // Use Factory for defaults
+                dmo = (IDiagramModelObject)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelGroup()).getNewObject();
                 break;
 
             default:
                 throw new ArchiScriptException("Unsupported type"); //$NON-NLS-1$
         }
         
-        IDiagramModelObject dmo = (IDiagramModelObject)new ArchimateDiagramModelFactory(eClass).getNewObject();
         return createDiagramObject(parent, dmo, x, y, width, height);
     }
 
@@ -286,7 +287,7 @@ class ModelUtil {
             }
         });
         
-        return new DiagramModelObjectProxy(dmo);
+        return (DiagramModelObjectProxy)EObjectProxy.get(dmo);
     }
 
     /**
