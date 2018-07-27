@@ -28,9 +28,19 @@ public class Messages extends NLS {
 
     public static String DiagramModelComponentProxy_0;
 
+    public static String DiagramModelObjectProxy_0;
+
+    public static String DiagramModelObjectProxy_1;
+
     public static String EObjectProxy_0;
 
     public static String ModelUtil_0;
+
+    public static String ModelUtil_1;
+
+    public static String ModelUtil_2;
+
+    public static String ModelUtil_3;
 
     static {
         // initialize resource bundle

@@ -13,13 +13,18 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EClass;
 import org.junit.Test;
 
 import com.archimatetool.canvas.model.ICanvasPackage;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
+import com.archimatetool.model.IArchimateDiagramModel;
+import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.IBounds;
+import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
@@ -175,6 +180,52 @@ public class ModelUtilTests {
         assertEquals("test", viewProxy.getName());
         assertEquals(ICanvasPackage.eINSTANCE.getCanvasModel(), viewProxy.getEObject().eClass());
         assertSame(parent, viewProxy.getEObject().eContainer());
+    }
+    
+    @Test
+    public void addArchimateDiagramObject() {
+        loadTestModel();
+        
+        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
+        IArchimateElement element = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "528");
+        
+        DiagramModelObjectProxy proxy = ModelUtil.addArchimateDiagramObject(view, element, 10, 15, 100, 200);
+        assertTrue(proxy.getEObject() instanceof IDiagramModelArchimateObject);
+        assertSame(view, proxy.getEObject().eContainer());
+        IBounds bounds = proxy.getEObject().getBounds();
+        assertEquals(10, bounds.getX());
+        assertEquals(15, bounds.getY());
+        assertEquals(100, bounds.getWidth());
+        assertEquals(200, bounds.getHeight());
+    }
+
+    @Test
+    public void createDiagramObject() {
+        loadTestModel();
+        
+        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
+        
+        String[] types = {"note", "group"};
+        EClass[] classes = { IArchimatePackage.eINSTANCE.getDiagramModelNote(), IArchimatePackage.eINSTANCE.getDiagramModelGroup() };
+        
+        for(int i = 0; i < types.length; i++) {
+            DiagramModelObjectProxy proxy = ModelUtil.createDiagramObject(view, types[i], 10, 15, 100, 200);
+            assertTrue(proxy.getEObject().eClass() == classes[i]);
+            assertSame(view, proxy.getEObject().eContainer());
+            IBounds bounds = proxy.getEObject().getBounds();
+            assertEquals(10, bounds.getX());
+            assertEquals(15, bounds.getY());
+            assertEquals(100, bounds.getWidth());
+            assertEquals(200, bounds.getHeight());
+        }
+    }
+
+    @Test(expected=ArchiScriptException.class)
+    public void createDiagramObject_Exception() {
+        loadTestModel();
+        
+        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
+        ModelUtil.createDiagramObject(view, "bogus", 10, 15, 100, 200);
     }
 
     @Test

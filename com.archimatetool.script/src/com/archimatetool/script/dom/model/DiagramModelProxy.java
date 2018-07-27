@@ -10,12 +10,15 @@ import java.util.Iterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.canvas.model.ICanvasModel;
 import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.editor.ui.services.EditorManager;
+import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
+import com.archimatetool.model.ISketchModel;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteFolderObjectCommand;
 
@@ -28,6 +31,20 @@ public class DiagramModelProxy extends EObjectProxy {
     
     DiagramModelProxy(IDiagramModel dm) {
         super(dm);
+    }
+    
+    /**
+     * Add an Archimate element to an ArchiMate View and return the diagram object
+     */
+    public DiagramModelObjectProxy add(ArchimateElementProxy elementProxy, int x, int y, int width, int height) {
+        return ModelUtil.addArchimateDiagramObject(getEObject(), elementProxy.getEObject(), x, y, width, height);
+    }
+    
+    /**
+     * Create and add a diagram object and return the diagram object proxy
+     */
+    public DiagramModelObjectProxy createObject(String type, int x, int y, int width, int height) {
+        return ModelUtil.createDiagramObject(getEObject(), type, x, y, width, height);
     }
     
     @Override
@@ -123,5 +140,17 @@ public class DiagramModelProxy extends EObjectProxy {
                 return DiagramModelProxy.this.viewRefs();
             }
         };
+    }
+    
+    protected boolean isArchimateView() {
+        return getEObject() instanceof IArchimateDiagramModel;
+    }
+    
+    protected boolean isSketchView() {
+        return getEObject() instanceof ISketchModel;
+    }
+
+    protected boolean isCanvasView() {
+        return getEObject() instanceof ICanvasModel;
     }
 }

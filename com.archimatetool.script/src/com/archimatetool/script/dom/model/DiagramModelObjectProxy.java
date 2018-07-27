@@ -16,6 +16,7 @@ import com.archimatetool.model.IBounds;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
+import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteDiagramModelObjectCommand;
 import com.archimatetool.script.commands.SetCommand;
@@ -29,6 +30,28 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     
     DiagramModelObjectProxy(IDiagramModelObject object) {
         super(object);
+    }
+    
+    /**
+     * Add an Archimate element to an ArchiMate View and return the diagram object
+     */
+    public DiagramModelObjectProxy add(ArchimateElementProxy elementProxy, int x, int y, int width, int height) {
+        if(getEObject() instanceof IDiagramModelContainer) {
+            return ModelUtil.addArchimateDiagramObject((IDiagramModelContainer)getEObject(), elementProxy.getEObject(), x, y, width, height);
+        }
+        
+        throw new ArchiScriptException(Messages.DiagramModelObjectProxy_0);
+    }
+    
+    /**
+     * Create and add a diagram object and return the diagram object proxy
+     */
+    public DiagramModelObjectProxy createObject(String type, int x, int y, int width, int height) {
+        if(getEObject() instanceof IDiagramModelContainer) {
+            return ModelUtil.createDiagramObject((IDiagramModelContainer)getEObject(), type, x, y, width, height);
+        }
+        
+        throw new ArchiScriptException(Messages.DiagramModelObjectProxy_1);
     }
     
     @Override

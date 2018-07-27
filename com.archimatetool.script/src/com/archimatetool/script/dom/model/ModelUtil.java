@@ -15,11 +15,14 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.canvas.model.ICanvasFactory;
+import com.archimatetool.canvas.model.ICanvasModel;
+import com.archimatetool.editor.diagram.ArchimateDiagramModelFactory;
 import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
+import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
@@ -27,6 +30,7 @@ import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelContainer;
@@ -221,6 +225,70 @@ class ModelUtil {
         return new DiagramModelProxy(view[0]);
     }
     
+    static DiagramModelObjectProxy addArchimateDiagramObject(IDiagramModelContainer parent, IArchimateElement element, int x, int y, int width, int height) {
+        if(!(parent.getDiagramModel() instanceof IArchimateDiagramModel)) {
+            throw new ArchiScriptException(Messages.ModelUtil_1);
+        }
+        
+        IDiagramModelArchimateObject dmo = ArchimateDiagramModelFactory.createDiagramModelArchimateObject(element);
+        return createDiagramObject(parent, dmo, x, y, width, height);
+    }
+    
+    /**
+     * Create and add a diagram object of type to a container parent at position
+     */
+    static DiagramModelObjectProxy createDiagramObject(IDiagramModelContainer parent, String type, int x, int y, int width, int height) {
+        EClass eClass = null;
+        
+        switch(type) {
+            case "note": //$NON-NLS-1$
+                if(!(parent.getDiagramModel() instanceof IArchimateDiagramModel)) {
+                    throw new ArchiScriptException(Messages.ModelUtil_2);
+                }
+                eClass = IArchimatePackage.eINSTANCE.getDiagramModelNote();
+                break;
+
+            case "group": //$NON-NLS-1$
+                if(parent.getDiagramModel() instanceof ICanvasModel) {
+                    throw new ArchiScriptException(Messages.ModelUtil_3);
+                }
+                eClass = IArchimatePackage.eINSTANCE.getDiagramModelGroup();
+                break;
+
+            default:
+                throw new ArchiScriptException("Unsupported type"); //$NON-NLS-1$
+        }
+        
+        IDiagramModelObject dmo = (IDiagramModelObject)new ArchimateDiagramModelFactory(eClass).getNewObject();
+        return createDiagramObject(parent, dmo, x, y, width, height);
+    }
+
+    /**
+     * Add a diagram object to a container parent at position
+     */
+    private static DiagramModelObjectProxy createDiagramObject(IDiagramModelContainer parent, IDiagramModelObject dmo, int x, int y, int width, int height) {
+        if(dmo.getBounds() == null) { // The ArchimateDiagramModelFactory doesn't add bounds in some cases
+            dmo.setBounds(0, 0, -1, -1);
+        }
+        
+        dmo.getBounds().setLocation(x, y);
+        dmo.getBounds().setSize(width, height);
+        
+        CommandHandler.executeCommand(new ScriptCommand("Add", parent.getDiagramModel().getArchimateModel()) { //$NON-NLS-1$
+            @Override
+            public void perform() {
+                parent.getChildren().add(dmo);
+            }
+
+            @Override
+            public void undo() {
+                parent.getChildren().remove(dmo);
+            }
+        });
+        
+        return new DiagramModelObjectProxy(dmo);
+    }
+
     /**
      * @return true if the given parent folder is the correct folder to contain this object
      */
