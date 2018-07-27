@@ -30,6 +30,8 @@ import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IDiagramModelConnection;
@@ -290,6 +292,43 @@ class ModelUtil {
         return (DiagramModelObjectProxy)EObjectProxy.get(dmo);
     }
 
+    /**
+     * Add an Archimate diagram connection
+     */
+    static DiagramModelConnectionProxy addArchimateDiagramConnection(IArchimateRelationship relation, IDiagramModelArchimateComponent source,
+            IDiagramModelArchimateComponent target) {
+        
+        // Ensure they share the same view
+        if(source.getDiagramModel() != target.getDiagramModel()) {
+            throw new ArchiScriptException(Messages.ModelUtil_4);
+        }
+
+        // Check valid source and target
+        if(source.getArchimateConcept() != relation.getSource() || target.getArchimateConcept() != relation.getTarget()) {
+            throw new ArchiScriptException(Messages.ModelUtil_5);
+        }
+
+        IDiagramModelArchimateConnection dmc = ArchimateDiagramModelFactory.createDiagramModelArchimateConnection(relation);
+        
+        CommandHandler.executeCommand(new ScriptCommand("Add", source.getDiagramModel().getArchimateModel()) { //$NON-NLS-1$
+            @Override
+            public void perform() {
+                dmc.connect(source, target);
+            }
+
+            @Override
+            public void undo() {
+                dmc.disconnect();
+            }
+            
+            @Override
+            public void redo() {
+                dmc.reconnect();
+            }
+        });
+        
+        return new DiagramModelConnectionProxy(dmc);
+    }
     /**
      * @return true if the given parent folder is the correct folder to contain this object
      */

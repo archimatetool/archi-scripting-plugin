@@ -23,7 +23,10 @@ import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IBounds;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
@@ -226,6 +229,29 @@ public class ModelUtilTests {
         
         IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
         ModelUtil.createDiagramObject(view, "bogus", 10, 15, 100, 200);
+    }
+
+    @Test
+    public void addArchimateDiagramConnection() {
+        loadTestModel();
+        
+        IArchimateRelationship relation = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "756");
+
+        IDiagramModelArchimateComponent source = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3790");
+        IDiagramModelArchimateComponent target = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3788");
+        
+        DiagramModelConnectionProxy proxy = ModelUtil.addArchimateDiagramConnection(relation, source, target);
+        assertTrue(proxy.getEObject() instanceof IDiagramModelArchimateConnection);
+    }
+
+    @Test(expected=ArchiScriptException.class)
+    public void addArchimateDiagramConnection_Exception() {
+        loadTestModel();
+        
+        IArchimateRelationship relation = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "756");
+        IDiagramModelArchimateComponent source = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3790");
+        IDiagramModelArchimateComponent target = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3774");
+        ModelUtil.addArchimateDiagramConnection(relation, source, target);
     }
 
     @Test

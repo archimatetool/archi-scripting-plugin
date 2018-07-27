@@ -15,10 +15,12 @@ import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IDiagramModel;
+import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.ISketchModel;
+import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteFolderObjectCommand;
 
@@ -47,6 +49,18 @@ public class DiagramModelProxy extends EObjectProxy {
         return ModelUtil.createDiagramObject(getEObject(), type, x, y, width, height);
     }
     
+    /**
+     * Add an Archimate connection to ArchiMate objects and return thr diagram connection
+     */
+    public DiagramModelConnectionProxy add(ArchimateRelationshipProxy relation, DiagramModelComponentProxy source, DiagramModelComponentProxy target) {
+        if(!source.isArchimateConcept() || !target.isArchimateConcept()) {
+            throw new ArchiScriptException(Messages.DiagramModelProxy_0);
+        }
+        
+        return ModelUtil.addArchimateDiagramConnection(relation.getEObject(), (IDiagramModelArchimateComponent)source.getEObject(),
+                (IDiagramModelArchimateComponent)target.getEObject());
+    }
+
     @Override
     protected IDiagramModel getEObject() {
         return (IDiagramModel)super.getEObject();
