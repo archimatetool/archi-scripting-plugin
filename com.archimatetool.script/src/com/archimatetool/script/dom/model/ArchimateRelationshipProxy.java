@@ -188,31 +188,34 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         }
         
         // Add new relationship
-        ArchimateRelationshipProxy newRelationshipProxy = ModelUtil.createRelationship(getArchimateModel(), type, getName(),
+        ArchimateConceptProxy newConceptProxy = ModelUtil.createRelationship(getArchimateModel(), type, getName(),
                 getSource().getEObject(), getTarget().getEObject(), (IFolder)getEObject().eContainer());
         
-        if(newRelationshipProxy == null) {
+        if(newConceptProxy == null) {
             return this;
         }
         
-        IArchimateRelationship newRelationship = newRelationshipProxy.getEObject();
+        IArchimateConcept newConcept = newConceptProxy.getEObject();
 
         // Copy all properties
         Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
-        newRelationship.getProperties().addAll(props);
+        newConcept.getProperties().addAll(props);
+
+        // Copy Documentation
+        newConcept.setDocumentation(getEObject().getDocumentation());
 
         // Set source relations to this
         for(EObjectProxy proxy : outRels()) {
-            ((ArchimateRelationshipProxy)proxy).setSource(newRelationshipProxy, false);
+            ((ArchimateRelationshipProxy)proxy).setSource(newConceptProxy, false);
         }
 
         // Set target relations to this
         for(EObjectProxy proxy : inRels()) {
-            ((ArchimateRelationshipProxy)proxy).setTarget(newRelationshipProxy, false);
+            ((ArchimateRelationshipProxy)proxy).setTarget(newConceptProxy, false);
         }
 
-        // Store old relationship
-        ArchimateRelationshipProxy oldProxy = new ArchimateRelationshipProxy(getEObject());
+        // Store old proxy
+        ArchimateConceptProxy oldProxy = (ArchimateConceptProxy)EObjectProxy.get(getEObject());
 
         // Update all diagram connections
         for(EObjectProxy proxy : objectRefs()) {
@@ -221,7 +224,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             CommandHandler.executeCommand(new ScriptCommand("type", getArchimateModel()) { //$NON-NLS-1$
                 @Override
                 public void perform() {
-                    dmc.setArchimateConcept(newRelationship);
+                    dmc.setArchimateConcept(newConcept);
                     ModelUtil.refreshDiagramModelComponent(dmc);
                 }
 
@@ -238,7 +241,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             @Override
             public void perform() {
                 getEObject().disconnect();
-                setEObject(newRelationship);
+                setEObject(newConcept);
             }
 
             @Override
@@ -248,7 +251,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             }
         });
 
-        // Delete old relationship
+        // Delete old proxy
         oldProxy.delete();
 
         return this;
