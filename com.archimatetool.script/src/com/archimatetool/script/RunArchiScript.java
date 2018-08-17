@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -43,6 +45,7 @@ public class RunArchiScript {
         
         defineGlobalVariables(engine);
         defineExtensionGlobalVariables(engine);
+        setBindings(engine);
         
         try {
             // Start the console
@@ -88,6 +91,18 @@ public class RunArchiScript {
             engine.put("workbenchwindow", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
             engine.put("shell", PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()); //$NON-NLS-1$
         }
+        
+    }
+    
+    /**
+     * Set/Remove some JS global bindings
+     */
+    private void setBindings(ScriptEngine engine) {
+        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        
+        // Remove these
+        bindings.remove("exit"); //$NON-NLS-1$
+        bindings.remove("quit"); //$NON-NLS-1$
     }
 
     /**
@@ -121,8 +136,17 @@ public class RunArchiScript {
         }
     }
 
-	private void error(Exception x, String string) {
-        System.err.println("Script Error at: " + x.getClass().getName() + ", " +  //$NON-NLS-1$//$NON-NLS-2$
+	private void error(Exception ex, String string) {
+	    if(ex instanceof ScriptException) {
+	        ScriptException sex = (ScriptException)ex;
+	        
+	        if(sex.getMessage().contains("__EXIT__")) { //$NON-NLS-1$
+	            System.out.println("Exited at line number " + sex.getLineNumber()); //$NON-NLS-1$
+	            return;
+	        }
+	    }
+	    
+        System.err.println("Script Error at: " + ex.getClass().getName() + ", " +  //$NON-NLS-1$//$NON-NLS-2$
                 string);
 	}
 }

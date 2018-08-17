@@ -10,6 +10,7 @@ jArchi.fs = jArchiFS;
 
 $ = jArchi;
 
+// window dialog functions
 var window = {
 	alert: function(message) {
 		var MessageDialog = Java.type("org.eclipse.jface.dialogs.MessageDialog");
@@ -64,3 +65,8 @@ var window = {
 	},
 
 };
+
+// Define exit to throw an Exception
+function exit() {
+	throw "__EXIT__";
+}
