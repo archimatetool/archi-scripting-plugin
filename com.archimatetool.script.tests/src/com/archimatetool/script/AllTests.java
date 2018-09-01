@@ -40,7 +40,6 @@ public class AllTests {
         suite.addTest(DiagramModelNoteProxyTests.suite());
         suite.addTest(DiagramModelObjectProxyTests.suite());
         suite.addTest(EObjectProxyCollectionTests.suite());
-        suite.addTest(SelectorFilterFactoryTests.suite());
         suite.addTest(FolderProxyTests.suite());
 		suite.addTest(ModelTests.suite());
         suite.addTest(ModelUtilTests.suite());
