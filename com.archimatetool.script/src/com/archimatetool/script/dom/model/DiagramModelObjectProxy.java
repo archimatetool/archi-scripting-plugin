@@ -72,7 +72,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return map;
     }
     
-    public void setBounds(Map<?, ?> map) {
+    public DiagramModelObjectProxy setBounds(Map<?, ?> map) {
         int x = ModelUtil.getIntValueFromMap(map, "x", getEObject().getBounds().getX()); //$NON-NLS-1$
         int y = ModelUtil.getIntValueFromMap(map, "y", getEObject().getBounds().getY()); //$NON-NLS-1$
         int width = ModelUtil.getIntValueFromMap(map, "width", getEObject().getBounds().getWidth()); //$NON-NLS-1$
@@ -80,6 +80,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         
         IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
         CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__BOUNDS, bounds));
+        
+        return this;
     }
     
     /**
@@ -173,7 +175,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         switch(attribute) {
             case BOUNDS:
                 if(value instanceof Map) {
-                    setBounds((Map<?, ?>)value);
+                    return setBounds((Map<?, ?>)value);
                 }
                 break;
             case FILL_COLOR:
