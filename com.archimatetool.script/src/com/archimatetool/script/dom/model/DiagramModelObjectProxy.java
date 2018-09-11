@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
@@ -124,6 +125,35 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return this;
     }
     
+    public int getOpacity() {
+        // Backward compatibility with Archi 4.2
+        EStructuralFeature feature = getEObject().eClass().getEStructuralFeature("alpha"); //$NON-NLS-1$
+        return feature != null ? (int)getEObject().eGet(feature) : 255;
+        
+        // TODO Replace with this...
+        // return getEObject().getAlpha();
+    }
+    
+    public DiagramModelObjectProxy setOpacity(int value) {
+        if(value < 0) {
+            value = 0;
+        }
+        if(value > 255) {
+            value = 255;
+        }
+        
+        // Backward compatibility with Archi 4.2
+        EStructuralFeature feature = getEObject().eClass().getEStructuralFeature("alpha"); //$NON-NLS-1$
+        if(feature != null) {
+            CommandHandler.executeCommand(new SetCommand(getEObject(), feature, value));
+        }
+        
+        // TODO Replace with this...
+        //getEObject().setAlpha(value);
+        
+        return this;
+    }
+
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {
@@ -131,6 +161,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 return getBounds();
             case FILL_COLOR:
                 return getFillColor();
+            case OPACITY:
+                return getOpacity();
         }
         
         return super.attr(attribute);
@@ -147,6 +179,11 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case FILL_COLOR:
                 if(value == null || value instanceof String) {
                     return setFillColor((String)value);
+                }
+                break;
+            case OPACITY:
+                if(value instanceof Integer) {
+                    return setOpacity((int)value);
                 }
                 break;
         }

@@ -193,7 +193,14 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
         assertEquals(440, bounds.get("width"));
         assertEquals(500, bounds.get("height"));
     }
-
+    
+    @Test
+    public void attr_Opacity() {
+        assertEquals(255, actualTestProxy.attr(IModelConstants.OPACITY));
+        actualTestProxy.attr(IModelConstants.OPACITY, 40);
+        assertEquals(40, actualTestProxy.attr(IModelConstants.OPACITY));
+    }
+    
     @Override
     @Test
     public void delete() {
