@@ -5,9 +5,19 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.emf.ecore.EClass;
+
 import com.archimatetool.model.IArchimateDiagramModel;
+import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.viewpoints.IViewpoint;
+import com.archimatetool.model.viewpoints.ViewpointManager;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.SetCommand;
 
 /**
  * ArchimateDiagramModelProxy wrapper proxy
@@ -44,4 +54,51 @@ public class ArchimateDiagramModelProxy extends DiagramModelProxy {
         return (IArchimateDiagramModel)super.getEObject();
     }
     
+    public Map<String, Object> getViewpoint() {
+        IViewpoint vp = ViewpointManager.INSTANCE.getViewpoint(getEObject().getViewpoint());
+        
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("id", vp.getID()); //$NON-NLS-1$
+        map.put("name", vp.getName()); //$NON-NLS-1$
+        
+        return map;
+    }
+    
+    public ArchimateDiagramModelProxy setViewpoint(String id) {
+        IViewpoint vp = ViewpointManager.INSTANCE.getViewpoint(id);
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ARCHIMATE_DIAGRAM_MODEL__VIEWPOINT, vp.getID()));
+        return this;
+    }
+    
+    public boolean isAllowedConceptForViewpoint(String conceptName) {
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(conceptName));
+        if(eClass != null) {
+            return ViewpointManager.INSTANCE.isAllowedConceptForDiagramModel(getEObject(), eClass);
+        }
+        return false;
+    }
+    
+    @Override
+    protected Object attr(String attribute) {
+        switch(attribute) {
+            case VIEWPOINT:
+                return getViewpoint();
+        }
+        
+        return super.attr(attribute);
+    }
+    
+    @Override
+    protected EObjectProxy attr(String attribute, Object value) {
+        switch(attribute) {
+            case VIEWPOINT:
+                if(value instanceof String) {
+                    return setViewpoint((String)value);
+                }
+                break;
+        }
+        
+        return super.attr(attribute, value);
+    }
+
 }

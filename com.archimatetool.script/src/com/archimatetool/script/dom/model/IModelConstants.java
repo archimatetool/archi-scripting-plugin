@@ -20,6 +20,7 @@ interface IModelConstants {
     
     String CONCEPT = "concept"; //$NON-NLS-1$
     String VIEW = "view"; //$NON-NLS-1$
+    String VIEWPOINT = "viewpoint"; //$NON-NLS-1$
     
     String SOURCE = "source"; //$NON-NLS-1$
     String TARGET = "target"; //$NON-NLS-1$
