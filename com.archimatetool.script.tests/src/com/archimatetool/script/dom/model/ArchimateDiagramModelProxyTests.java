@@ -6,11 +6,13 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
@@ -154,5 +156,40 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
             assertEquals(0, ((IConnectable)eObject).getSourceConnections().size());
             assertEquals(0, ((IConnectable)eObject).getTargetConnections().size());
         }
+    }
+    
+    @Test
+    public void getViewpoint() {
+        Map<String, Object> map = actualTestProxy.getViewpoint();
+        assertEquals("layered", map.get("id"));
+        assertEquals("Layered", map.get("name"));
+        
+        actualTestProxy.setViewpoint("implementation_migration");
+        map = actualTestProxy.getViewpoint();
+        assertEquals("implementation_migration", map.get("id"));
+        assertEquals("Implementation and Migration", map.get("name"));
+    }
+    
+    @Test
+    @SuppressWarnings("unchecked")
+    public void attr_getViewpoint() {
+        Map<String, Object> map = (Map<String, Object>)actualTestProxy.attr("viewpoint");
+        assertEquals("layered", map.get("id"));
+        assertEquals("Layered", map.get("name"));
+        
+        actualTestProxy.attr("viewpoint", "implementation_migration");
+        map = (Map<String, Object>)actualTestProxy.attr("viewpoint");
+        assertEquals("implementation_migration", map.get("id"));
+        assertEquals("Implementation and Migration", map.get("name"));
+    }
+
+    @Test
+    public void isAllowedConceptForViewpoint() {
+        actualTestProxy.setViewpoint("strategy");
+        assertFalse(actualTestProxy.isAllowedConceptForViewpoint("business-actor"));
+        assertFalse(actualTestProxy.isAllowedConceptForViewpoint("node"));
+        assertFalse(actualTestProxy.isAllowedConceptForViewpoint("location"));
+        assertTrue(actualTestProxy.isAllowedConceptForViewpoint("resource"));
+        assertTrue(actualTestProxy.isAllowedConceptForViewpoint("outcome"));
     }
 }
