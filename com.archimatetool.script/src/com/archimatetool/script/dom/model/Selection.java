@@ -25,6 +25,7 @@ import com.archimatetool.script.dom.IArchiScriptDOMFactory;
  */
 public class Selection implements IArchiScriptDOMFactory {
     
+    @Override
     public Object getDOMroot() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         

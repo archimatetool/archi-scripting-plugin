@@ -101,6 +101,7 @@ public class NewFileDialog {
      */
     private class InputValidator implements IInputValidator {
 
+        @Override
         public String isValid(String newText) {
             newText = getNameWithDefaultExtension(newText);
             

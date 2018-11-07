@@ -129,18 +129,22 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
     @Override
     protected Object getInternal() {
         return new Internal() {
+            @Override
             public EObjectProxyCollection outRels() {
                 return ArchimateConceptProxy.this.outRels();
             }
             
+            @Override
             public EObjectProxyCollection inRels() {
                 return ArchimateConceptProxy.this.inRels();
             }
             
+            @Override
             public EObjectProxyCollection viewRefs() {
                 return ArchimateConceptProxy.this.viewRefs();
             }
             
+            @Override
             public EObjectProxyCollection objectRefs() {
                 return ArchimateConceptProxy.this.objectRefs();
             }

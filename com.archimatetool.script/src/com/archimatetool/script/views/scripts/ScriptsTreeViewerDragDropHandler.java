@@ -72,11 +72,13 @@ public class ScriptsTreeViewerDragDropHandler {
     private void registerDragSupport() {
         fViewer.addDragSupport(fDragOperations, sourceTransferTypes, new DragSourceListener() {
             
+            @Override
             public void dragFinished(DragSourceEvent event) {
                 LocalSelectionTransfer.getTransfer().setSelection(null);
                 fIsValidTreeSelection = false; // Reset to default
             }
 
+            @Override
             public void dragSetData(DragSourceEvent event) {
                 // For consistency set the data to the selection even though
                 // the selection is provided by the LocalSelectionTransfer
@@ -84,6 +86,7 @@ public class ScriptsTreeViewerDragDropHandler {
                 event.data = LocalSelectionTransfer.getTransfer().getSelection();
             }
 
+            @Override
             public void dragStart(DragSourceEvent event) {
                 // Drag started from the Tree
                 IStructuredSelection selection = (IStructuredSelection)fViewer.getSelection();
@@ -97,16 +100,20 @@ public class ScriptsTreeViewerDragDropHandler {
     
     private void registerDropSupport() {
         fViewer.addDropSupport(fDropOperations, targetTransferTypes, new DropTargetListener() {
+            @Override
             public void dragEnter(DropTargetEvent event) {
             }
 
+            @Override
             public void dragLeave(DropTargetEvent event) {
             }
 
+            @Override
             public void dragOperationChanged(DropTargetEvent event) {
                 event.detail = getEventDetail(event);
             }
 
+            @Override
             public void dragOver(DropTargetEvent event) {
                 event.detail = getEventDetail(event);
                 
@@ -125,10 +132,12 @@ public class ScriptsTreeViewerDragDropHandler {
                 event.feedback |= DND.FEEDBACK_SCROLL | DND.FEEDBACK_EXPAND;
             }
 
+            @Override
             public void drop(DropTargetEvent event) {
                 doDropOperation(event);
             }
 
+            @Override
             public void dropAccept(DropTargetEvent event) {
             }
             

@@ -270,10 +270,12 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     @Override
     protected Object getInternal() {
         return new IConnectableProxy() {
+            @Override
             public EObjectProxyCollection outRels() {
                 return DiagramModelComponentProxy.this.outRels();
             }
             
+            @Override
             public EObjectProxyCollection inRels() {
                 return DiagramModelComponentProxy.this.inRels();
             }

@@ -72,6 +72,7 @@ public class RunScriptProvider extends AbstractCommandLineProvider {
         return commandLine.hasOption(OPTION_RUN_SCRIPT);
     }
     
+    @Override
     public int getPriority() {
         return PRIORITY_RUN_SCRIPT;
     }

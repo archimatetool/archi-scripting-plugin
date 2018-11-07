@@ -79,6 +79,7 @@ public class NewFolderDialog {
      */
     private class InputValidator implements IInputValidator {
         
+        @Override
         public String isValid(String newText) {
             if("".equals(newText.trim())) { //$NON-NLS-1$
                 return Messages.NewFolderDialog_2;

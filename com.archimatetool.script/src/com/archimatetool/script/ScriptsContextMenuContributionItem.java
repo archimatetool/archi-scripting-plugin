@@ -60,6 +60,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
 
     private void fillItems(MenuManager menuManager, File[] files) {
         Arrays.sort(files, new Comparator<File>() {
+            @Override
             public int compare(File f1, File f2) {
                 if(f1.isDirectory() && f2.isFile()) {
                     return -1;
@@ -106,6 +107,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
         return ext.equals(ScriptFiles.SCRIPT_EXTENSION) || ext.equals(ScriptFiles.LINK_EXTENSION);
     }
     
+    @Override
     public void initialize(IServiceLocator serviceLocator) {
     }
 }

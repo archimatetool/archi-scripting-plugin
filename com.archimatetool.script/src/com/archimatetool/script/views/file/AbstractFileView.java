@@ -96,6 +96,7 @@ implements IContextProvider {
          * Listen to Selections to update local Actions
          */
         getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
+            @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 updateActions(event.getSelection());
             }
@@ -105,6 +106,7 @@ implements IContextProvider {
          * Listen to Double-click Action
          */
         getViewer().addDoubleClickListener(new IDoubleClickListener() {
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 handleDoubleClickAction();
             }
@@ -250,6 +252,7 @@ implements IContextProvider {
         menuMgr.setRemoveAllWhenShown(true);
         
         menuMgr.addMenuListener(new IMenuListener() {
+            @Override
             public void menuAboutToShow(IMenuManager manager) {
                 fillContextMenu(manager);
             }
@@ -438,14 +441,17 @@ implements IContextProvider {
     //                       Contextual Help support
     // =================================================================================
     
+    @Override
     public int getContextChangeMask() {
         return NONE;
     }
 
+    @Override
     public IContext getContext(Object target) {
         return HelpSystem.getContext(HELP_ID);
     }
 
+    @Override
     public String getSearchExpression(Object target) {
         return Messages.AbstractFileView_19;
     }

@@ -20,6 +20,7 @@ import com.archimatetool.script.views.scripts.ScriptsFileViewer;
  */
 public class ShowScriptsViewHandler extends AbstractHandler {
 
+    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         ViewManager.toggleViewPart(ScriptsFileViewer.ID, true);
         return null;

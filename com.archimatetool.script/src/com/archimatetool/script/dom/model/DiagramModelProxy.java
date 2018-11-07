@@ -122,10 +122,12 @@ public abstract class DiagramModelProxy extends EObjectProxy {
     @Override
     protected Object getInternal() {
         return new IReferencedProxy() {
+            @Override
             public EObjectProxyCollection objectRefs() {
                 return DiagramModelProxy.this.objectRefs();
             }
 
+            @Override
             public EObjectProxyCollection viewRefs() {
                 return DiagramModelProxy.this.viewRefs();
             }

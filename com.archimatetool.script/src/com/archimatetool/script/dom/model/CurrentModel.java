@@ -28,6 +28,7 @@ public class CurrentModel implements IArchiScriptDOMFactory {
     
     static ArchimateModelProxy INSTANCE = new ArchimateModelProxy(null);
     
+    @Override
     public Object getDOMroot() {
         // Get and wrap the currently selected model in the UI if there is one
         if(PlatformUI.isWorkbenchRunning()) {

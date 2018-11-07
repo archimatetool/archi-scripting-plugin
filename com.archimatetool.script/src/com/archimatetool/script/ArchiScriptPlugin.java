@@ -62,6 +62,7 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IPartListener
         if(PlatformUI.isWorkbenchRunning()) {
             // This needs to be on a thread
             Display.getDefault().asyncExec(new Runnable() {
+                @Override
                 public void run() {
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(ArchiScriptPlugin.this);
                 }
@@ -74,24 +75,29 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IPartListener
     // Track current workbench parts
     private IWorkbenchPart currentPart;
 
+    @Override
     public void partActivated(IWorkbenchPart part) {
         if(part instanceof ITreeModelView || part instanceof IDiagramModelEditor) {
             currentPart = part;
         }
     }
 
+    @Override
     public void partDeactivated(IWorkbenchPart part) {
     }
 
+    @Override
     public void partBroughtToTop(IWorkbenchPart part) {
     }
 
+    @Override
     public void partClosed(IWorkbenchPart part) {
         if(part instanceof ITreeModelView || part instanceof IDiagramModelEditor) {
             currentPart = null;
         }
     }
 
+    @Override
     public void partOpened(IWorkbenchPart part) {
     }
 

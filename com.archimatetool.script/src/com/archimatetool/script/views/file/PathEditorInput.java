@@ -75,23 +75,28 @@ public class PathEditorInput implements IPathEditorInput {
 		return fFile.equals(other.fFile);
 	}
 	
-	public boolean exists() {
+	@Override
+    public boolean exists() {
 		return fFile.exists();
 	}
 	
-	public ImageDescriptor getImageDescriptor() {
+	@Override
+    public ImageDescriptor getImageDescriptor() {
 		return PlatformUI.getWorkbench().getEditorRegistry().getImageDescriptor(fFile.toString());
 	}
 	
-	public String getName() {
+	@Override
+    public String getName() {
 		return fFile.getName();
 	}
 	
-	public String getToolTipText() {
+	@Override
+    public String getToolTipText() {
 		return fFile.toString();
 	}
 	
-	public IPath getPath() {
+	@Override
+    public IPath getPath() {
 		return fPath;
 	}
 
@@ -102,11 +107,13 @@ public class PathEditorInput implements IPathEditorInput {
 		return fFile;
 	}
 
-	public <T> T getAdapter(Class<T> adapter) {
+	@Override
+    public <T> T getAdapter(Class<T> adapter) {
 		return null;
 	}
 
-	public IPersistableElement getPersistable() {
+	@Override
+    public IPersistableElement getPersistable() {
 		// no persistence
 		return null;
 	}

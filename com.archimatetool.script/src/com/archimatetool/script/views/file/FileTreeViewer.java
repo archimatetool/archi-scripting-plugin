@@ -174,16 +174,20 @@ public abstract class FileTreeViewer extends TreeViewer {
      */
     protected class FileTreeContentProvider implements ITreeContentProvider {
         
+        @Override
         public void inputChanged(Viewer v, Object oldInput, Object newInput) {
         }
         
+        @Override
         public void dispose() {
         }
         
+        @Override
         public Object[] getElements(Object parent) {
             return getChildren(parent);
         }
         
+        @Override
         public Object getParent(Object child) {
             if(child instanceof File) {
                 return ((File)child).getParentFile();
@@ -191,6 +195,7 @@ public abstract class FileTreeViewer extends TreeViewer {
             return null;
         }
         
+        @Override
         public Object [] getChildren(Object parent) {
             if(parent instanceof File) {
                 return ((File)parent).listFiles();
@@ -198,6 +203,7 @@ public abstract class FileTreeViewer extends TreeViewer {
             return new Object[0];
         }
         
+        @Override
         public boolean hasChildren(Object parent) {
             if(parent instanceof File) {
                 File f = (File)parent;

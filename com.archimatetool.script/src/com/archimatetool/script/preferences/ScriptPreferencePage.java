@@ -172,6 +172,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getDefaultInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
     }
     
+    @Override
     public void init(IWorkbench workbench) {
     }
 }
