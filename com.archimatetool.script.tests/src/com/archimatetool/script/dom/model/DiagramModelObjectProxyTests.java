@@ -85,7 +85,7 @@ public class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTest
     @Test
     public void find() {
         EObjectProxyCollection collection = testProxy.find();
-        assertEquals(1, collection.size());
+        assertEquals(0, collection.size());
     }
     
     @Override

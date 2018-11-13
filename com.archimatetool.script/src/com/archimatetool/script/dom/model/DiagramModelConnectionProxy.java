@@ -53,6 +53,12 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
     }
 
     @Override
+    protected EObjectProxyCollection find() {
+        // We don't include connected relationships
+        return new EObjectProxyCollection();
+    }
+    
+    @Override
     protected Object attr(String attribute) {
         switch(attribute) {
             case SOURCE:

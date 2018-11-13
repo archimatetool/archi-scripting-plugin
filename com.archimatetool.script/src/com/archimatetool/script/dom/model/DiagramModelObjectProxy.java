@@ -116,6 +116,13 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return list;
     }
     
+    @Override
+    protected EObjectProxyCollection find() {
+        // We don't include relationships
+        EObjectProxyCollection all = super.find();
+        return all.filter(IModelConstants.ELEMENT);
+    }
+    
     public String getFillColor() {
         return getEObject().getFillColor();
     }
