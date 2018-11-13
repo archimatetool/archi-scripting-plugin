@@ -52,7 +52,7 @@ class SelectorFilterFactory {
         }
         
         // All concepts
-        else if(selector.equals("concept")) { //$NON-NLS-1$
+        else if(selector.equals(IModelConstants.CONCEPT)) {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
@@ -63,7 +63,7 @@ class SelectorFilterFactory {
         }
         
         // All elements
-        else if(selector.equals("element")) { //$NON-NLS-1$
+        else if(selector.equals(IModelConstants.ELEMENT)) {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
@@ -74,7 +74,7 @@ class SelectorFilterFactory {
         }
         
         // All relationships
-        else if(selector.equals("relation") || selector.equals("relationship")) { //$NON-NLS-1$ //$NON-NLS-2$
+        else if(selector.equals(IModelConstants.RELATION) || selector.equals(IModelConstants.RELATIONSHIP)) {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
@@ -85,7 +85,7 @@ class SelectorFilterFactory {
         }
 
         // All views
-        else if(selector.equals("view")) { //$NON-NLS-1$
+        else if(selector.equals(IModelConstants.VIEW)) {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {

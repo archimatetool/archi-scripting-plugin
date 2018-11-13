@@ -19,6 +19,9 @@ interface IModelConstants {
     String TYPE = "type"; //$NON-NLS-1$
     
     String CONCEPT = "concept"; //$NON-NLS-1$
+    String ELEMENT = "element"; //$NON-NLS-1$
+    String RELATION = "relation"; //$NON-NLS-1$
+    String RELATIONSHIP = "relationship"; //$NON-NLS-1$
     String VIEW = "view"; //$NON-NLS-1$
     String VIEWPOINT = "viewpoint"; //$NON-NLS-1$
     
