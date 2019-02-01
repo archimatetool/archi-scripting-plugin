@@ -2,7 +2,7 @@
 <feature
       id="com.archimatetool.script.feature"
       label="Archi Scripting"
-      version="4.0.0.qualifier"
+      version="1.0.0.qualifier"
       provider-name="Phillip Beauvoir &amp; Jean-Baptiste Sarrodie">
 
    <description>
