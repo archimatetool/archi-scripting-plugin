@@ -6,6 +6,9 @@
 package com.archimatetool.script.views.file;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -198,7 +201,17 @@ public abstract class FileTreeViewer extends TreeViewer {
         @Override
         public Object [] getChildren(Object parent) {
             if(parent instanceof File) {
-                return ((File)parent).listFiles();
+                return ((File)parent).listFiles(new FileFilter() {
+                    public boolean accept(File pathname) {
+                        try {
+                            return !Files.isHidden(pathname.toPath());
+                        }
+                        catch(IOException ex) {
+                            ex.printStackTrace();
+                        }
+                        return false;
+                    }
+                });
             }
             return new Object[0];
         }
