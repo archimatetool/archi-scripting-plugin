@@ -202,6 +202,7 @@ public abstract class FileTreeViewer extends TreeViewer {
         public Object [] getChildren(Object parent) {
             if(parent instanceof File) {
                 return ((File)parent).listFiles(new FileFilter() {
+                    @Override
                     public boolean accept(File pathname) {
                         try {
                             return !Files.isHidden(pathname.toPath());
