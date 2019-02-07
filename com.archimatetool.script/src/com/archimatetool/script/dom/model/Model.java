@@ -23,6 +23,7 @@ import org.eclipse.ui.PlatformUI;
 import com.archimatetool.editor.diagram.util.DiagramUtils;
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
+import com.archimatetool.editor.ui.ImageFactory;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
@@ -144,7 +145,7 @@ public class Model {
         
         try {
             ImageLoader loader = new ImageLoader();
-            loader.data = new ImageData[] { image.getImageData() };
+            loader.data = new ImageData[] { image.getImageData(ImageFactory.getImageDeviceZoom()) };
             
             try(ByteArrayOutputStream stream = new ByteArrayOutputStream(1024)) {
                 loader.save(stream, imgFormat);
