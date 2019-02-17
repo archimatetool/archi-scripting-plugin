@@ -11,6 +11,10 @@ Binaries will be made available separately.
 ## Roadmap
 There is no formal roadmap for the moment, development is done through sprints that try to gradually improve the overall value of this plugin. The Focus is currently on user experience.
 
+## Contributing code to Archi and Plug-ins
+
+Please see [How can I contribute code to Archi?](https://github.com/Phillipus/archi/wiki/How-can-I-contribute-code-to-Archi%3F) for general guidance on how to contribute code to Archi and its plug-ins.
+
 ## Archi
 Archi® is a free, open source, cross-platform tool and editor to create ArchiMate models.
 
