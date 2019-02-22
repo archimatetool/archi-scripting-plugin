@@ -94,6 +94,10 @@ public class ArchimateModelProxy extends EObjectProxy {
         return this;
     }
     
+    public String getPath() {
+        return getEObject().getFile() == null ? null : getEObject().getFile().getAbsolutePath();
+    }
+    
     /**
      * Create and add an ArchiMate element and put in default folder
      */

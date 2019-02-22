@@ -159,6 +159,15 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     }
     
     @Test
+    public void getPath() {
+        assertNull(actualTestProxy.getPath());
+        
+        File file = new File("/path/test.archimate");
+        actualTestProxy.getEObject().setFile(file);
+        assertEquals(file.getAbsolutePath(), actualTestProxy.getPath());
+    }
+    
+    @Test
     public void createElement() {
         ArchimateElementProxy proxy = actualTestProxy.createElement("business-actor", "Fido");
         assertNotNull(proxy);
