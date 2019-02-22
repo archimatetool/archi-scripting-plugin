@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
@@ -135,12 +134,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     }
     
     public int getOpacity() {
-        // Backward compatibility with Archi 4.2
-        EStructuralFeature feature = getEObject().eClass().getEStructuralFeature("alpha"); //$NON-NLS-1$
-        return feature != null ? (int)getEObject().eGet(feature) : 255;
-        
-        // TODO Replace with this...
-        // return getEObject().getAlpha();
+        return getEObject().getAlpha();
     }
     
     public DiagramModelObjectProxy setOpacity(int value) {
@@ -151,14 +145,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             value = 255;
         }
         
-        // Backward compatibility with Archi 4.2
-        EStructuralFeature feature = getEObject().eClass().getEStructuralFeature("alpha"); //$NON-NLS-1$
-        if(feature != null) {
-            CommandHandler.executeCommand(new SetCommand(getEObject(), feature, value));
-        }
-        
-        // TODO Replace with this...
-        //getEObject().setAlpha(value);
+        getEObject().setAlpha(value);
         
         return this;
     }

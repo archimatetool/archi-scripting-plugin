@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.ui.components.TreeTextCellEditor;
+
 
 /**
  * File Tree Viewer
