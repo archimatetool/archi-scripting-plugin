@@ -20,4 +20,5 @@ public interface IPreferenceConstants {
     String PREFS_SCRIPTS_FOLDER = "scriptsFolder"; //$NON-NLS-1$
     
     String PREFS_CONSOLE_WORD_WRAP = "consoleWordWrap"; //$NON-NLS-1$
+    String PREFS_CONSOLE_SCROLL_LOCK = "consoleScrollLock"; //$NON-NLS-1$
 }

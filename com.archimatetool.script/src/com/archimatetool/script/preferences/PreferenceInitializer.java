@@ -43,5 +43,6 @@ implements IPreferenceConstants {
 		store.setDefault(PREFS_SCRIPTS_FOLDER, new File(ArchiPlugin.INSTANCE.getUserDataFolder(), "scripts").getAbsolutePath()); //$NON-NLS-1$
 		
 		store.setDefault(PREFS_CONSOLE_WORD_WRAP, true);
+		store.setDefault(PREFS_CONSOLE_SCROLL_LOCK, false);
     }
 }

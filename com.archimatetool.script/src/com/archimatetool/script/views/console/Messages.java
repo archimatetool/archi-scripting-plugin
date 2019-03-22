@@ -14,6 +14,8 @@ public class Messages extends NLS {
     public static String ConsoleView_0;
 
     public static String ConsoleView_1;
+
+    public static String ConsoleView_2;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

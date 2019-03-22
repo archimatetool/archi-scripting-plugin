@@ -23,6 +23,8 @@ public interface IArchiScriptImages {
     
     String ICON_CLEAR_CONSOLE = IMGPATH + "clear.png"; //$NON-NLS-1$
     String ICON_CONSOLE = IMGPATH + "console_view.png"; //$NON-NLS-1$
+    String ICON_CONSOLE_WRAP = IMGPATH + "wordwrap.png"; //$NON-NLS-1$
+    String ICON_CONSOLE_SCROLL_LOCK = IMGPATH + "lock_co.png"; //$NON-NLS-1$
     String ICON_EDIT = IMGPATH + "edit.png"; //$NON-NLS-1$
     String ICON_EXAMPLES = IMGPATH + "examples.png"; //$NON-NLS-1$
     String ICON_LINK_OVERLAY = IMGPATH + "link_ovr.png"; //$NON-NLS-1$
