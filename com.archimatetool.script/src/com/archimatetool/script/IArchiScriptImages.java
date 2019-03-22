@@ -33,4 +33,5 @@ public interface IArchiScriptImages {
     String ICON_RUN = IMGPATH + "run_exc.png"; //$NON-NLS-1$
     String ICON_SCRIPT = IMGPATH + "script.png"; //$NON-NLS-1$
     
+    String ICON_REFRESH_UI_WHEN_RUNNING = IMGPATH + "writeout_co.png"; //$NON-NLS-1$
 }

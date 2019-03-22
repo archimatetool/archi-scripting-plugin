@@ -19,6 +19,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.IArchiScriptImages;
+import com.archimatetool.script.RefreshUIHandler;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 
 
@@ -125,18 +126,28 @@ extends ViewPart {
             StyleRange sr = createStyleRange(string);
             fTextPane.append(string);
             fTextPane.setStyleRange(sr);
+            
+            // Scroll to end
             if(!fActionScrollLock.isChecked()) {
                 fTextPane.setTopIndex(fTextPane.getLineCount() - 1);
             }
+            
+            // Update UI
+            RefreshUIHandler.refresh();
         }
     }
     
     public void setText(String text) {
         if(!fTextPane.isDisposed()) {
             fTextPane.setText(text);
+            
+            // Scroll to end
             if(!fActionScrollLock.isChecked()) {
                 fTextPane.setTopIndex(fTextPane.getLineCount() - 1);
             }
+            
+            // Update UI
+            RefreshUIHandler.refresh();
         }
     }
     

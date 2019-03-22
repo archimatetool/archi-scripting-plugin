@@ -67,6 +67,9 @@ public class RunArchiScript {
             // Normalize filename so that nashorn's load() can run it
             String scriptPath = PlatformUtils.isWindows() ? file.getAbsolutePath().replace('\\', '/') : file.getAbsolutePath();
             
+            // Initialise RefreshUIHandler
+            RefreshUIHandler.init();
+            
             // Evaluate the script
             engine.eval("load('" + scriptPath + "')");  //$NON-NLS-1$//$NON-NLS-2$
         }
@@ -75,6 +78,8 @@ public class RunArchiScript {
         }
         finally {
             ConsoleOutput.end();
+            
+            RefreshUIHandler.finalise();
             
             // Add Commands to UI
             CommandHandler.finalise(FileUtils.getFileNameWithoutExtension(file));

@@ -25,6 +25,8 @@ public class Messages extends NLS {
 
     public static String ScriptsFileViewer_2;
 
+    public static String ScriptsFileViewer_3;
+
     public static String ScriptsTreeViewerDragDropHandler_0;
 
     public static String ScriptsTreeViewerDragDropHandler_1;

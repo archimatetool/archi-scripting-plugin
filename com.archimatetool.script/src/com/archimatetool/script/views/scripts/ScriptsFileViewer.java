@@ -14,6 +14,7 @@ import java.nio.file.StandardCopyOption;
 
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -118,6 +119,28 @@ extends AbstractFileView  {
         manager.add(fActionRun);
         manager.add(new Separator());
         manager.add(fActionShowConsole);
+    }
+    
+    @Override
+    protected void makeLocalMenuActions() {
+        IActionBars actionBars = getViewSite().getActionBars();
+        
+        // Local menu items go here
+        IMenuManager manager = actionBars.getMenuManager();
+        
+        manager.add(new Action(Messages.ScriptsFileViewer_3, IAction.AS_CHECK_BOX) {
+            {
+                //setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_REFRESH_UI_WHEN_RUNNING));
+                setChecked(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT));
+                setToolTipText(getText());
+            }
+            
+            @Override
+            public void run() {
+                ArchiScriptPlugin.INSTANCE.getPreferenceStore().setValue(IPreferenceConstants.PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT, isChecked());
+            }
+        });
+
     }
     
     @Override

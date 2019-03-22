@@ -21,4 +21,6 @@ public interface IPreferenceConstants {
     
     String PREFS_CONSOLE_WORD_WRAP = "consoleWordWrap"; //$NON-NLS-1$
     String PREFS_CONSOLE_SCROLL_LOCK = "consoleScrollLock"; //$NON-NLS-1$
+    
+    String PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT = "refreshUIWhenRunningScript"; //$NON-NLS-1$
 }

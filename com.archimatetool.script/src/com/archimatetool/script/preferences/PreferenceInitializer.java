@@ -44,5 +44,7 @@ implements IPreferenceConstants {
 		
 		store.setDefault(PREFS_CONSOLE_WORD_WRAP, true);
 		store.setDefault(PREFS_CONSOLE_SCROLL_LOCK, false);
+		
+		store.setDefault(PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT, false);
     }
 }
