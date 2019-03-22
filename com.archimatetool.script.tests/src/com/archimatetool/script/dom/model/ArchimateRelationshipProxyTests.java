@@ -15,8 +15,10 @@ import org.junit.Test;
 
 import com.archimatetool.model.IAccessRelationship;
 import com.archimatetool.model.IArchimateFactory;
+import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IAssociationRelationship;
+import com.archimatetool.model.IInfluenceRelationship;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
@@ -137,12 +139,14 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         }
     }
 
+    @Test
     public void setSource() {
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createApplicationComponent());
         actualTestProxy.setSource(proxy);
         assertEquals(proxy.getEObject(), actualTestProxy.getSource().getEObject());
     }
 
+    @Test
     public void setTarget() {
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createArtifact());
         actualTestProxy.setTarget(proxy);
@@ -161,4 +165,43 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         actualTestProxy.setTarget(proxy);
     }
 
+    @Test
+    public void setAccessType() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        IAccessRelationship relationship = IArchimateFactory.eINSTANCE.createAccessRelationship();
+        model.getDefaultFolderForObject(relationship).getElements().add(relationship);
+        ArchimateRelationshipProxy proxy = (ArchimateRelationshipProxy)EObjectProxy.get(relationship);
+        
+        proxy.setAccessType("write");
+        assertEquals("write", proxy.getAccessType());
+        assertEquals(IAccessRelationship.WRITE_ACCESS, relationship.getAccessType());
+        
+        proxy.setAccessType("read");
+        assertEquals("read", proxy.getAccessType());
+        assertEquals(IAccessRelationship.READ_ACCESS, relationship.getAccessType());
+        
+        proxy.setAccessType("access");
+        assertEquals("access", proxy.getAccessType());
+        assertEquals(IAccessRelationship.UNSPECIFIED_ACCESS, relationship.getAccessType());
+        
+        proxy.setAccessType("readwrite");
+        assertEquals("readwrite", proxy.getAccessType());
+        assertEquals(IAccessRelationship.READ_WRITE_ACCESS, relationship.getAccessType());
+        
+        proxy.setAccessType("rubbish");
+        assertEquals("readwrite", proxy.getAccessType());
+        assertEquals(IAccessRelationship.READ_WRITE_ACCESS, relationship.getAccessType());
+    }
+
+    @Test
+    public void setInfluenceStrength() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        IInfluenceRelationship relationship = IArchimateFactory.eINSTANCE.createInfluenceRelationship();
+        model.getDefaultFolderForObject(relationship).getElements().add(relationship);
+        ArchimateRelationshipProxy proxy = (ArchimateRelationshipProxy)EObjectProxy.get(relationship);
+        
+        proxy.setInfluenceStrength("+++");
+        assertEquals("+++", relationship.getStrength());
+        assertEquals("+++", proxy.getInfluenceStrength());
+    }
 }

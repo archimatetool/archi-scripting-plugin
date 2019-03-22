@@ -5,6 +5,9 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Interface for model constants
  * 
@@ -43,4 +46,14 @@ interface IModelConstants {
     String OPACITY = "opacity"; //$NON-NLS-1$
     
     String TEXT = "text"; //$NON-NLS-1$
+    
+    String ACCESS_TYPE = "access-type";  //$NON-NLS-1$
+    List<String> ACCESS_TYPES_LIST = Arrays.asList(new String[] {
+            "write", //$NON-NLS-1$
+            "read", //$NON-NLS-1$
+            "access", //$NON-NLS-1$
+            "readwrite" //$NON-NLS-1$
+    });
+    
+    String INFLUENCE_STRENGTH = "influence-strength"; //$NON-NLS-1$
 }

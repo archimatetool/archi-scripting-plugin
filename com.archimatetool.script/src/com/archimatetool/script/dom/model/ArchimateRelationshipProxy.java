@@ -12,19 +12,23 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
+import com.archimatetool.model.IAccessRelationship;
 import com.archimatetool.model.IArchimateConcept;
+import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.model.IInfluenceRelationship;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DisconnectRelationshipCommand;
 import com.archimatetool.script.commands.ScriptCommand;
+import com.archimatetool.script.commands.SetCommand;
 
 /**
  * Archimate Relationship wrapper proxy
@@ -256,10 +260,47 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
 
         return this;
     }
+    
+    public String getAccessType() {
+        if(getEObject() instanceof IAccessRelationship) {
+            return IModelConstants.ACCESS_TYPES_LIST.get(((IAccessRelationship)getEObject()).getAccessType());
+        }
+        return null;
+    }
+    
+    public EObjectProxy setAccessType(String type) {
+        if(getEObject() instanceof IAccessRelationship) {
+            if(IModelConstants.ACCESS_TYPES_LIST.contains(type)) {
+                int index = IModelConstants.ACCESS_TYPES_LIST.indexOf(type);
+                if(index != -1) {
+                    CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ACCESS_RELATIONSHIP__ACCESS_TYPE, index));
+                }
+            }
+        }
+        return this;
+    }
+    
+    public String getInfluenceStrength() {
+        if(getEObject() instanceof IInfluenceRelationship) {
+            return ((IInfluenceRelationship)getEObject()).getStrength();
+        }
+        return null;
+    }
+    
+    public EObjectProxy setInfluenceStrength(String strength) {
+        if(getEObject() instanceof IInfluenceRelationship) {
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.INFLUENCE_RELATIONSHIP__STRENGTH, strength));
+        }
+        return this;
+    }
 
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {
+            case ACCESS_TYPE:
+                return getAccessType();
+            case INFLUENCE_STRENGTH:
+                return getInfluenceStrength();
             case SOURCE:
                 return getSource();
             case TARGET:
@@ -272,6 +313,14 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
     @Override
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
+            case ACCESS_TYPE:
+                if(value instanceof String) {
+                    return setAccessType((String)value);
+                }
+            case INFLUENCE_STRENGTH:
+                if(value instanceof String) {
+                    return setInfluenceStrength((String)value);
+                }
             case SOURCE:
                 if(value instanceof ArchimateConceptProxy) {
                     return setSource((ArchimateConceptProxy)value);
