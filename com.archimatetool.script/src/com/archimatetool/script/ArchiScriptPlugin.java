@@ -72,7 +72,9 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IPartListener
     
     
     
-    // Track current workbench parts
+    // Track current workbench part to get the current selection
+    // We have to do it this way because if the Script is run from the Scripts Manager View that will be the selection
+    
     private IWorkbenchPart currentPart;
 
     @Override
@@ -92,7 +94,9 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IPartListener
 
     @Override
     public void partClosed(IWorkbenchPart part) {
-        if(part instanceof ITreeModelView || part instanceof IDiagramModelEditor) {
+        // Tricky logic.
+        // Only set this to null if the part being closed is the current part
+        if(part == currentPart) {
             currentPart = null;
         }
     }
