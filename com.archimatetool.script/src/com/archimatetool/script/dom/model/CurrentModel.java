@@ -12,6 +12,7 @@ import com.archimatetool.commandline.CommandLineState;
 import com.archimatetool.editor.ui.services.ViewManager;
 import com.archimatetool.editor.views.tree.ITreeModelView;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 
@@ -33,6 +34,7 @@ public class CurrentModel implements IArchiScriptDOMFactory {
         // Get and wrap the currently selected model in the UI if there is one
         if(PlatformUI.isWorkbenchRunning()) {
             IWorkbenchPart activePart = ArchiScriptPlugin.INSTANCE.getActivePart();
+            IArchimateModel model = null;
             
             // Fallback to tree
             if(activePart == null) {
@@ -40,7 +42,14 @@ public class CurrentModel implements IArchiScriptDOMFactory {
             }
             
             if(activePart != null) {
-                INSTANCE.setEObject(activePart.getAdapter(IArchimateModel.class));
+                model = activePart.getAdapter(IArchimateModel.class);
+            }
+            
+            if(model != null) {
+                INSTANCE.setEObject(model);
+            }
+            else {
+                throw new ArchiScriptException(Messages.CurrentModel_0);
             }
         }
         // Else, if we are running in CLI mode, get the Current Model if there is one
