@@ -10,6 +10,7 @@ import java.io.File;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -64,7 +65,11 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IPartListener
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().addPartListener(ArchiScriptPlugin.this);
+                    IPartService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService();
+                    service.addPartListener(ArchiScriptPlugin.this);
+                    
+                    // Initialise with active part
+                    partActivated(service.getActivePart());
                 }
             });
         }
