@@ -26,6 +26,8 @@ public class Messages extends NLS {
 
     public static String ArchimateRelationshipProxy_1;
 
+    public static String CurrentModel_0;
+
     public static String DiagramModelComponentProxy_0;
 
     public static String DiagramModelObjectProxy_0;
