@@ -145,7 +145,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             value = 255;
         }
         
-        getEObject().setAlpha(value);
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__ALPHA, value));
         
         return this;
     }
