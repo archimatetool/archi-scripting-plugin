@@ -130,6 +130,7 @@ extends ViewPart {
             // Scroll to end
             if(!fActionScrollLock.isChecked()) {
                 fTextPane.setTopIndex(fTextPane.getLineCount() - 1);
+                fTextPane.setCaretOffset(fTextPane.getText().length());
             }
             
             // Update UI
@@ -144,6 +145,7 @@ extends ViewPart {
             // Scroll to end
             if(!fActionScrollLock.isChecked()) {
                 fTextPane.setTopIndex(fTextPane.getLineCount() - 1);
+                fTextPane.setCaretOffset(fTextPane.getText().length());
             }
             
             // Update UI
