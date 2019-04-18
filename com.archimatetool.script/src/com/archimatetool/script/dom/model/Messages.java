@@ -38,17 +38,17 @@ public class Messages extends NLS {
 
     public static String EObjectProxy_0;
 
-    public static String ModelUtil_0;
+    public static String ModelFactory_0;
 
-    public static String ModelUtil_1;
+    public static String ModelFactory_1;
 
-    public static String ModelUtil_2;
+    public static String ModelFactory_2;
 
-    public static String ModelUtil_3;
+    public static String ModelFactory_3;
 
-    public static String ModelUtil_4;
+    public static String ModelFactory_4;
 
-    public static String ModelUtil_5;
+    public static String ModelFactory_5;
 
     static {
         // initialize resource bundle

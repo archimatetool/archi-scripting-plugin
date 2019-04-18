@@ -17,6 +17,7 @@ import com.archimatetool.script.dom.model.DiagramModelNoteProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelObjectProxyTests;
 import com.archimatetool.script.dom.model.EObjectProxyCollectionTests;
 import com.archimatetool.script.dom.model.FolderProxyTests;
+import com.archimatetool.script.dom.model.ModelFactoryTests;
 import com.archimatetool.script.dom.model.ModelTests;
 import com.archimatetool.script.dom.model.ModelUtilTests;
 import com.archimatetool.script.dom.model.SelectorFilterFactoryTests;
@@ -41,6 +42,7 @@ public class AllTests {
         suite.addTest(DiagramModelObjectProxyTests.suite());
         suite.addTest(EObjectProxyCollectionTests.suite());
         suite.addTest(FolderProxyTests.suite());
+        suite.addTest(ModelFactoryTests.suite());
 		suite.addTest(ModelTests.suite());
         suite.addTest(ModelUtilTests.suite());
         suite.addTest(SelectorFilterFactoryTests.suite());

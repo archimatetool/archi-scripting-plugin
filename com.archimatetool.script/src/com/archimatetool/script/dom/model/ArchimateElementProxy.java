@@ -45,7 +45,7 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         }
         
         // Add new Element
-        ArchimateConceptProxy newConceptProxy = ModelUtil.createElement(getArchimateModel(), type, getName(), (IFolder)getEObject().eContainer());
+        ArchimateConceptProxy newConceptProxy = ModelFactory.createElement(getArchimateModel(), type, getName(), (IFolder)getEObject().eContainer());
         
         if(newConceptProxy == null) {
             return this;

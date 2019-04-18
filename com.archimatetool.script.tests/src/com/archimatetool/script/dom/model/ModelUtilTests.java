@@ -7,30 +7,25 @@ package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.ecore.EClass;
 import org.junit.Test;
 
-import com.archimatetool.canvas.model.ICanvasPackage;
-import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateDiagramModel;
-import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
+import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
-import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IBounds;
-import com.archimatetool.model.IDiagramModelArchimateComponent;
-import com.archimatetool.model.IDiagramModelArchimateConnection;
-import com.archimatetool.model.IDiagramModelArchimateObject;
+import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.testingtools.ArchimateTestModel;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -53,207 +48,6 @@ public class ModelUtilTests {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
     }
     
-    @Test
-    public void createElement_WithFolder() {
-        loadTestModel();
-        
-        IFolder folder = testModelProxy.getEObject().getFolder(FolderType.APPLICATION);
-        IFolder subfolder = IArchimateFactory.eINSTANCE.createFolder();
-        subfolder.setType(FolderType.USER);
-        folder.getFolders().add(subfolder);
-        ArchimateElementProxy elementProxy = ModelUtil.createElement(testModelProxy.getArchimateModel(), "application-component", "Fido", subfolder);
-        assertEquals("Fido", elementProxy.getName());
-        assertEquals(IArchimatePackage.eINSTANCE.getApplicationComponent(), elementProxy.getEObject().eClass());
-        assertSame(subfolder, elementProxy.getEObject().eContainer());
-    }
-    
-    @Test
-    public void createElement_FolderIsNull() {
-        loadTestModel();
-        
-        ArchimateElementProxy elementProxy = ModelUtil.createElement(testModelProxy.getArchimateModel(), "application-component", "Fido", null);
-        assertEquals("Fido", elementProxy.getName());
-        assertEquals(IArchimatePackage.eINSTANCE.getApplicationComponent(), elementProxy.getEObject().eClass());
-        assertEquals(testModelProxy.getEObject().getFolder(FolderType.APPLICATION), elementProxy.getEObject().eContainer());
-    }
-    
-    @Test(expected=ArchiScriptException.class)
-    public void createElement_Exception() {
-        loadTestModel();
-        
-        ModelUtil.createElement(testModelProxy.getArchimateModel(), "association-relationship", "Fido", null);
-    }
-
-    @Test
-    public void createRelationship_WithFolder() {
-        loadTestModel();
-        
-        IFolder folder = testModelProxy.getEObject().getFolder(FolderType.RELATIONS);
-        IFolder subfolder = IArchimateFactory.eINSTANCE.createFolder();
-        subfolder.setType(FolderType.USER);
-        folder.getFolders().add(subfolder);
-        IArchimateConcept source = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
-        IArchimateConcept target = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "507");
-        ArchimateRelationshipProxy relationProxy = ModelUtil.createRelationship(testModelProxy.getArchimateModel(), "composition-relationship", "Fido",
-                source, target, subfolder);
-        assertEquals("Fido", relationProxy.getName());
-        assertEquals(IArchimatePackage.eINSTANCE.getCompositionRelationship(), relationProxy.getEObject().eClass());
-        assertSame(subfolder, relationProxy.getEObject().eContainer());
-    }
-    
-    @Test
-    public void createRelationship_FolderIsNull() {
-        loadTestModel();
-        
-        IArchimateConcept source = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
-        IArchimateConcept target = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "507");
-        ArchimateRelationshipProxy relationProxy = ModelUtil.createRelationship(testModelProxy.getArchimateModel(), "composition-relationship", "Fido",
-                source, target, null);
-        assertEquals("Fido", relationProxy.getName());
-        assertEquals(IArchimatePackage.eINSTANCE.getCompositionRelationship(), relationProxy.getEObject().eClass());
-        assertSame(testModelProxy.getEObject().getFolder(FolderType.RELATIONS), relationProxy.getEObject().eContainer());
-    }
-
-    @Test(expected=ArchiScriptException.class)
-    public void createRelationship_Exception() {
-        loadTestModel();
-        
-        IArchimateConcept source = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
-        IArchimateConcept target = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "507");
-        ModelUtil.createRelationship(testModelProxy.getArchimateModel(), "node", "Fido", source, target, null);
-    }
-
-    @Test
-    public void createFolder() {
-        loadTestModel();
-        
-        IFolder parent = testModelProxy.getEObject().getFolder(FolderType.APPLICATION);
-        FolderProxy folderProxy = ModelUtil.createFolder(parent, "Fido");
-        assertEquals("Fido", folderProxy.getName());
-        assertEquals(FolderType.USER, folderProxy.getEObject().getType());
-        assertSame(parent, folderProxy.getEObject().eContainer());
-    }
-    
-    @Test
-    public void addConcept() {
-        loadTestModel();
-        
-        IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
-        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
-        ModelUtil.addConcept(concept, parent);
-        assertSame(parent, concept.eContainer());
-    }
-    
-    @Test
-    public void addConcept_NoExistingParent() {
-        loadTestModel();
-        
-        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
-        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
-        ModelUtil.addConcept(concept, parent);
-        assertSame(parent, concept.eContainer());
-    }
-    
-    @Test(expected=ArchiScriptException.class)
-    public void moveConcept_Exception() {
-        loadTestModel();
-        
-        IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
-        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4a8e833a");
-        ModelUtil.addConcept(concept, parent);
-    }
-    
-    @Test
-    public void createView() {
-        loadTestModel();
-        
-        IFolder parent = testModelProxy.getEObject().getFolder(FolderType.DIAGRAMS);
-
-        DiagramModelProxy viewProxy = ModelUtil.createView(testModelProxy.getEObject(), "archimate", "test", parent);
-        assertEquals("test", viewProxy.getName());
-        assertEquals(IArchimatePackage.eINSTANCE.getArchimateDiagramModel(), viewProxy.getEObject().eClass());
-        assertSame(parent, viewProxy.getEObject().eContainer());
-
-        viewProxy = ModelUtil.createView(testModelProxy.getEObject(), "sketch", "test", parent);
-        assertEquals("test", viewProxy.getName());
-        assertEquals(IArchimatePackage.eINSTANCE.getSketchModel(), viewProxy.getEObject().eClass());
-        assertSame(parent, viewProxy.getEObject().eContainer());
-
-        viewProxy = ModelUtil.createView(testModelProxy.getEObject(), "canvas", "test", parent);
-        assertEquals("test", viewProxy.getName());
-        assertEquals(ICanvasPackage.eINSTANCE.getCanvasModel(), viewProxy.getEObject().eClass());
-        assertSame(parent, viewProxy.getEObject().eContainer());
-    }
-    
-    @Test
-    public void addArchimateDiagramObject() {
-        loadTestModel();
-        
-        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
-        IArchimateElement element = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "528");
-        
-        DiagramModelObjectProxy proxy = ModelUtil.addArchimateDiagramObject(view, element, 10, 15, 100, 200);
-        assertTrue(proxy.getEObject() instanceof IDiagramModelArchimateObject);
-        assertSame(view, proxy.getEObject().eContainer());
-        IBounds bounds = proxy.getEObject().getBounds();
-        assertEquals(10, bounds.getX());
-        assertEquals(15, bounds.getY());
-        assertEquals(100, bounds.getWidth());
-        assertEquals(200, bounds.getHeight());
-    }
-
-    @Test
-    public void createDiagramObject() {
-        loadTestModel();
-        
-        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
-        
-        String[] types = {"note", "group"};
-        EClass[] classes = { IArchimatePackage.eINSTANCE.getDiagramModelNote(), IArchimatePackage.eINSTANCE.getDiagramModelGroup() };
-        
-        for(int i = 0; i < types.length; i++) {
-            DiagramModelObjectProxy proxy = ModelUtil.createDiagramObject(view, types[i], 10, 15, 100, 200);
-            assertTrue(proxy.getEObject().eClass() == classes[i]);
-            assertSame(view, proxy.getEObject().eContainer());
-            IBounds bounds = proxy.getEObject().getBounds();
-            assertEquals(10, bounds.getX());
-            assertEquals(15, bounds.getY());
-            assertEquals(100, bounds.getWidth());
-            assertEquals(200, bounds.getHeight());
-        }
-    }
-
-    @Test(expected=ArchiScriptException.class)
-    public void createDiagramObject_Exception() {
-        loadTestModel();
-        
-        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
-        ModelUtil.createDiagramObject(view, "bogus", 10, 15, 100, 200);
-    }
-
-    @Test
-    public void addArchimateDiagramConnection() {
-        loadTestModel();
-        
-        IArchimateRelationship relation = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "756");
-
-        IDiagramModelArchimateComponent source = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3790");
-        IDiagramModelArchimateComponent target = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3788");
-        
-        DiagramModelConnectionProxy proxy = ModelUtil.addArchimateDiagramConnection(relation, source, target);
-        assertTrue(proxy.getEObject() instanceof IDiagramModelArchimateConnection);
-    }
-
-    @Test(expected=ArchiScriptException.class)
-    public void addArchimateDiagramConnection_Exception() {
-        loadTestModel();
-        
-        IArchimateRelationship relation = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "756");
-        IDiagramModelArchimateComponent source = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3790");
-        IDiagramModelArchimateComponent target = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3774");
-        ModelUtil.addArchimateDiagramConnection(relation, source, target);
-    }
-
     @Test
     public void isCorrectFolderForObject() {
         loadTestModel();
@@ -366,4 +160,112 @@ public class ModelUtilTests {
         assertEquals("bogus", ModelUtil.getStringValueFromMap(null, "key4", "bogus"));
     }
 
+    @Test
+    public void checkComponentsInSameModel() {
+        ArchimateTestModel testModel1 = new ArchimateTestModel();
+        IArchimateModel model = testModel1.createSimpleModel();
+        IArchimateModelObject o1 = (IArchimateModelObject)testModel1.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessActor());
+        IArchimateModelObject o2 = (IArchimateModelObject)testModel1.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessEvent());
+        
+        // Should not throw an exception
+        ModelUtil.checkComponentsInSameModel(model, o1, o2);
+    }
+    
+    @Test(expected = ArchiScriptException.class)
+    public void checkComponentsInSameModel_Exception() {
+        ArchimateTestModel testModel1 = new ArchimateTestModel();
+        IArchimateModel model1 = testModel1.createSimpleModel();
+        
+        ArchimateTestModel testModel2 = new ArchimateTestModel();
+        testModel2.createSimpleModel();
+        IArchimateModelObject o3 = (IArchimateModelObject)testModel2.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessActor());
+        IArchimateModelObject o4 = (IArchimateModelObject)testModel2.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessEvent());
+        
+        ModelUtil.checkComponentsInSameModel(model1, o3, o4);
+    }
+    
+    // ==================================================================================================================================================
+    // TODO!!!!!!!!
+    // Delete these three tests and use the same methods in com.archimatetool.editor.model.DiagramModelUtils when the next version of Archi is released
+    // ==================================================================================================================================================
+    
+    @Test
+    public void getAbsoluteBounds() {
+        IArchimateDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
+        
+        IDiagramModelGroup dmo1 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        dmo1.setBounds(10, 15, 500, 500);
+        dm.getChildren().add(dmo1);
+        
+        IBounds bounds = ModelUtil.getAbsoluteBounds(dmo1);
+        assertEquals(10, bounds.getX());
+        assertEquals(15, bounds.getY());
+        
+        IDiagramModelGroup dmo2 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        dmo2.setBounds(10, 15, 400, 400);
+        dmo1.getChildren().add(dmo2);
+
+        bounds = ModelUtil.getAbsoluteBounds(dmo2);
+        assertEquals(20, bounds.getX());
+        assertEquals(30, bounds.getY());
+        
+        IDiagramModelGroup dmo3 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        dmo3.setBounds(10, 15, 300, 300);
+        dmo2.getChildren().add(dmo3);
+
+        bounds = ModelUtil.getAbsoluteBounds(dmo3);
+        assertEquals(30, bounds.getX());
+        assertEquals(45, bounds.getY());
+    }
+    
+    
+    @Test
+    public void getRelativeBounds() {
+        IArchimateDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
+        
+        // Add main parent diagram model object
+        IDiagramModelGroup dmo1 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        dmo1.setBounds(10, 10, 200, 200);
+        dm.getChildren().add(dmo1);
+        
+        // Add child
+        IDiagramModelGroup dmo2 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        dmo1.getChildren().add(dmo2);
+
+        // Get relative bounds
+        IBounds absoluteBounds = IArchimateFactory.eINSTANCE.createBounds(50, 60, 100, 100);
+        IBounds relativebounds = ModelUtil.getRelativeBounds(absoluteBounds, dmo1);
+        assertEquals(40, relativebounds.getX());
+        assertEquals(50, relativebounds.getY());
+        dmo2.setBounds(relativebounds);
+        
+        IDiagramModelGroup dmo3 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        dmo2.getChildren().add(dmo3);
+
+        absoluteBounds = IArchimateFactory.eINSTANCE.createBounds(90, 75, 500, 500);
+        relativebounds = ModelUtil.getRelativeBounds(absoluteBounds, dmo2);
+        assertEquals(40, relativebounds.getX());
+        assertEquals(15, relativebounds.getY());
+        dmo3.setBounds(relativebounds);
+    }
+ 
+    @Test
+    public void outerBoundsContainsInnerBounds() {
+        IBounds outer = IArchimateFactory.eINSTANCE.createBounds(0, 0, 100, 100);
+        
+        IBounds inner = IArchimateFactory.eINSTANCE.createBounds(0, 0, 100, 100);
+        assertTrue(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
+        
+        inner = IArchimateFactory.eINSTANCE.createBounds(10, 10, 100, 100);
+        assertFalse(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
+        
+        inner = IArchimateFactory.eINSTANCE.createBounds(10, 10, 90, 90);
+        assertTrue(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
+        
+        inner = IArchimateFactory.eINSTANCE.createBounds(-10, -10, 90, 90);
+        assertFalse(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
+
+        inner = IArchimateFactory.eINSTANCE.createBounds(-0, 0, 101, 100);
+        assertFalse(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
+    }
 }

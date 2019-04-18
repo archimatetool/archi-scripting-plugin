@@ -59,7 +59,7 @@ public class FolderProxy extends EObjectProxy {
      * @return
      */
     public FolderProxy createFolder(String name) {
-        return ModelUtil.createFolder(getEObject(), name);
+        return ModelFactory.createFolder(getEObject(), name);
     }
     
     /**
@@ -70,7 +70,7 @@ public class FolderProxy extends EObjectProxy {
      * @return
      */
     public FolderProxy add(ArchimateConceptProxy conceptProxy) {
-        ModelUtil.addConcept(conceptProxy.getEObject(), getEObject());
+        ModelFactory.addConcept(conceptProxy.getEObject(), getEObject());
         return this;
     }
 

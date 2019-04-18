@@ -34,7 +34,14 @@ public abstract class DiagramModelProxy extends EObjectProxy {
      * Create and add a diagram object and return the diagram object proxy
      */
     public DiagramModelObjectProxy createObject(String type, int x, int y, int width, int height) {
-        return ModelUtil.createDiagramObject(getEObject(), type, x, y, width, height);
+        return createObject(type, x, y, width, height, false);
+    }
+    
+    /**
+     * Create and add a diagram object and return the diagram object proxy with nested option
+     */
+    public DiagramModelObjectProxy createObject(String type, int x, int y, int width, int height, boolean autoNest) {
+        return ModelFactory.createDiagramObject(getEObject(), type, x, y, width, height, autoNest);
     }
     
     @Override

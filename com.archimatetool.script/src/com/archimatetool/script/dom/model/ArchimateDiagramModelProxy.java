@@ -34,7 +34,14 @@ public class ArchimateDiagramModelProxy extends DiagramModelProxy {
      * Add an Archimate element to an ArchiMate View and return the diagram object
      */
     public DiagramModelObjectProxy add(ArchimateElementProxy elementProxy, int x, int y, int width, int height) {
-        return ModelUtil.addArchimateDiagramObject(getEObject(), elementProxy.getEObject(), x, y, width, height);
+        return add(elementProxy, x, y, width, height, false);
+    }
+    
+    /**
+     * Add an Archimate element to an ArchiMate View and return the diagram object with nested option
+     */
+    public DiagramModelObjectProxy add(ArchimateElementProxy elementProxy, int x, int y, int width, int height, boolean autoNest) {
+        return ModelFactory.addArchimateDiagramObject(getEObject(), elementProxy.getEObject(), x, y, width, height, autoNest);
     }
     
     /**
@@ -45,7 +52,7 @@ public class ArchimateDiagramModelProxy extends DiagramModelProxy {
             throw new ArchiScriptException(Messages.DiagramModelProxy_0);
         }
         
-        return ModelUtil.addArchimateDiagramConnection(relation.getEObject(), (IDiagramModelArchimateComponent)source.getEObject(),
+        return ModelFactory.addArchimateDiagramConnection(relation.getEObject(), (IDiagramModelArchimateComponent)source.getEObject(),
                 (IDiagramModelArchimateComponent)target.getEObject());
     }
 
