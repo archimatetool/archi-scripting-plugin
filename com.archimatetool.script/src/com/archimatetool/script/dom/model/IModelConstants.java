@@ -31,6 +31,12 @@ interface IModelConstants {
     String SOURCE = "source"; //$NON-NLS-1$
     String TARGET = "target"; //$NON-NLS-1$
     
+    String RELATIVE_BENDPOINTS = "relativeBendpoints"; //$NON-NLS-1$
+    String START_X = "startX"; //$NON-NLS-1$
+    String START_Y = "startY"; //$NON-NLS-1$
+    String END_X = "endX"; //$NON-NLS-1$
+    String END_Y = "endY"; //$NON-NLS-1$
+    
     String BOUNDS = "bounds"; //$NON-NLS-1$
     
     String FILL_COLOR = "fillColor";  //$NON-NLS-1$

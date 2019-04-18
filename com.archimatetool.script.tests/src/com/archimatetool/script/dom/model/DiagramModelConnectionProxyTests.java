@@ -9,6 +9,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +21,7 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.ICompositionRelationship;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
+import com.archimatetool.model.IDiagramModelBendpoint;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.util.ArchimateModelUtils;
@@ -227,4 +232,104 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         assertTrue(connection7.getSourceConnections().isEmpty());
         assertTrue(connection7.getTargetConnections().isEmpty());
     }
+    
+    @Test
+    public void getRelativeBendpoints() {
+        IDiagramModelBendpoint bp1 = IArchimateFactory.eINSTANCE.createDiagramModelBendpoint();
+        bp1.setStartX(1);
+        bp1.setEndX(2);
+        bp1.setStartY(3);
+        bp1.setEndY(4);
+        
+        IDiagramModelBendpoint bp2 = IArchimateFactory.eINSTANCE.createDiagramModelBendpoint();
+        bp2.setStartX(5);
+        bp2.setEndX(6);
+        bp2.setStartY(7);
+        bp2.setEndY(8);
+        
+        actualTestProxy.getEObject().getBendpoints().add(bp1);
+        actualTestProxy.getEObject().getBendpoints().add(bp2);
+        
+        List<Map<String, Integer>> list = actualTestProxy.getRelativeBendpoints();
+        assertEquals(2, list.size());
+        
+        Map<String, Integer> bpp1 = list.get(0);
+        assertEquals(1, (int)bpp1.get(IModelConstants.START_X));
+        assertEquals(2, (int)bpp1.get(IModelConstants.END_X));
+        assertEquals(3, (int)bpp1.get(IModelConstants.START_Y));
+        assertEquals(4, (int)bpp1.get(IModelConstants.END_Y));
+        
+        Map<String, Integer> bpp2 = list.get(1);
+        assertEquals(5, (int)bpp2.get(IModelConstants.START_X));
+        assertEquals(6, (int)bpp2.get(IModelConstants.END_X));
+        assertEquals(7, (int)bpp2.get(IModelConstants.START_Y));
+        assertEquals(8, (int)bpp2.get(IModelConstants.END_Y));
+    }
+    
+    @Test
+    public void addRelativeBendpoint() {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put(IModelConstants.START_X, 1);
+        map.put(IModelConstants.END_X, 2);
+        map.put(IModelConstants.START_Y, 3);
+        map.put(IModelConstants.END_Y, 4);
+        
+        actualTestProxy.addRelativeBendpoint(map, 0);
+
+        List<Map<String, Integer>> list = actualTestProxy.getRelativeBendpoints();
+        assertEquals(1, list.size());
+        
+        Map<String, Integer> bpp1 = list.get(0);
+        assertEquals(1, (int)bpp1.get(IModelConstants.START_X));
+        assertEquals(2, (int)bpp1.get(IModelConstants.END_X));
+        assertEquals(3, (int)bpp1.get(IModelConstants.START_Y));
+        assertEquals(4, (int)bpp1.get(IModelConstants.END_Y));
+    }
+    
+    @Test
+    public void deleteAllBendpoints() {
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        map.put(IModelConstants.START_X, 1);
+        map.put(IModelConstants.END_X, 2);
+        map.put(IModelConstants.START_Y, 3);
+        map.put(IModelConstants.END_Y, 4);
+        
+        actualTestProxy.addRelativeBendpoint(map, 0);
+        actualTestProxy.addRelativeBendpoint(map, 1);
+
+        assertEquals(2, actualTestProxy.getRelativeBendpoints().size());
+        
+        actualTestProxy.deleteAllBendpoints();
+        assertEquals(0, actualTestProxy.getRelativeBendpoints().size());
+    }
+    
+    @Test
+    public void deleteBendpoint() {
+        Map<String, Integer> map1 = new HashMap<String, Integer>();
+        map1.put(IModelConstants.START_X, 1);
+        map1.put(IModelConstants.END_X, 2);
+        map1.put(IModelConstants.START_Y, 3);
+        map1.put(IModelConstants.END_Y, 4);
+        
+        Map<String, Integer> map2 = new HashMap<String, Integer>();
+        map2.put(IModelConstants.START_X, 5);
+        map2.put(IModelConstants.END_X, 6);
+        map2.put(IModelConstants.START_Y, 7);
+        map2.put(IModelConstants.END_Y, 8);
+
+        actualTestProxy.addRelativeBendpoint(map1, 0);
+        actualTestProxy.addRelativeBendpoint(map2, 1);
+
+        assertEquals(2, actualTestProxy.getRelativeBendpoints().size());
+        
+        actualTestProxy.deleteBendpoint(0);
+        assertEquals(1, actualTestProxy.getRelativeBendpoints().size());
+        
+        Map<String, Integer> bpp1 = actualTestProxy.getRelativeBendpoints().get(0);
+        assertEquals(5, (int)bpp1.get(IModelConstants.START_X));
+        assertEquals(6, (int)bpp1.get(IModelConstants.END_X));
+        assertEquals(7, (int)bpp1.get(IModelConstants.START_Y));
+        assertEquals(8, (int)bpp1.get(IModelConstants.END_Y));
+    }
+
 }
