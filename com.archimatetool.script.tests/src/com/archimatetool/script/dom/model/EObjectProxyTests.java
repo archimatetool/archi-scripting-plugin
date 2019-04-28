@@ -289,4 +289,11 @@ public abstract class EObjectProxyTests {
         EObjectProxy proxy = EObjectProxy.get(testEObject);
         assertTrue(proxy.equals(testProxy));
     }
+    
+    @Test
+    public void hashCode_() {
+        EObjectProxy proxy = EObjectProxy.get(testEObject);
+        assertTrue(proxy.hashCode() == testEObject.hashCode());
+    }
+
 }

@@ -6,7 +6,9 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -55,12 +57,17 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     public EObjectProxyCollection find() {
     	EObjectProxyCollection list = new EObjectProxyCollection();
     	
-    	for(EObjectProxy object : this) {
+        // Use a temp LinkedHashSet for uniqueness and speed
+        Set<EObjectProxy> set = new LinkedHashSet<>();
+    	
+        for(EObjectProxy object : this) {
             for(EObjectProxy child : object.find()) {
-                list.addUnique(child);
+                set.add(child);
             }
         }
-        
+    	
+    	list.addAll(set);
+    	
         return list;
     }
     
@@ -85,22 +92,29 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
             return list;
         }
         
-        // Iterate over the collection and filter objects into the list
-        for(EObjectProxy object : this) {
-            if(object != null) {
-	            if(filter.accept(object.getEObject())) {
-	                list.addUnique(object);
-	                
-	                if(filter.isSingle()) {
-	                    return list;
-	                }
-	            }
+        // Single value filter
+        if(filter.isSingle()) {
+            for(EObjectProxy object : this) {
+                if(filter.accept(object.getEObject())) {
+                    list.add(object);
+                    return list;
+                }
             }
+        }
+        else {
+            // Use a temp LinkedHashSet for uniqueness and speed
+            Set<EObjectProxy> set = new LinkedHashSet<>();
+            for(EObjectProxy object : this) {
+                if(filter.accept(object.getEObject())) {
+                    set.add(object);
+                }
+            }
+            list.addAll(set);
         }
         
         return list;
     }
-    
+
     /**
      * Filter the collection and keep only objects that pass the function's test.
      * @param predicate
@@ -112,12 +126,17 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     		return list;
     	}
     	
-    	for(EObjectProxy object : this) {
+        // Use a LinkedHashSet for uniqueness and speed
+        Set<EObjectProxy> set = new LinkedHashSet<>();
+
+        for(EObjectProxy object : this) {
     		if(predicate.test(object)) {
-    			list.addUnique(object);
+    		    set.add(object);
     		}
     	}
     	
+        list.addAll(set);
+        
     	return list;
     }
     
@@ -177,11 +196,16 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     public EObjectProxyCollection children() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
+        // Use a LinkedHashSet for uniqueness and speed
+        Set<EObjectProxy> set = new LinkedHashSet<>();
+        
         for(EObjectProxy object : this) {
             for(EObjectProxy child : object.children()) {
-                list.addUnique(child);
+                set.add(child);
             }
         }
+        
+        list.addAll(set);
         
         return list;
     }
@@ -358,10 +382,10 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
      */
 	public EObjectProxyCollection add(EObjectProxyCollection collection) {
 		if(collection != null) {
-	        // Iterate over the collection and filter objects into the list
-	        for(EObjectProxy object : collection) {
-	            addUnique(object);
-	        }
+	        // Use a LinkedHashSet to ensure uniqueness and speed
+	        Set<EObjectProxy> set = new LinkedHashSet<>();
+	        set.addAll(collection);
+	        addAll(set);
 		}
         
         return this;
@@ -375,12 +399,17 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	public EObjectProxyCollection ends() {
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
+        // Use a LinkedHashSet for uniqueness and speed
+        Set<EObjectProxy> set = new LinkedHashSet<>();
+		
 		for(EObjectProxy object : this) {
 		    if(object instanceof IRelationshipProxy ) {
-		        list.addUnique(((IRelationshipProxy)object).getSource());
-                list.addUnique(((IRelationshipProxy)object).getTarget());
+		        set.add(((IRelationshipProxy)object).getSource());
+		        set.add(((IRelationshipProxy)object).getTarget());
 		    }
         }
+		
+		list.addAll(set);
 		
 		return list;
 	}
@@ -393,11 +422,16 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	public EObjectProxyCollection sourceEnds() {
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
+        // Use a LinkedHashSet for uniqueness and speed
+        Set<EObjectProxy> set = new LinkedHashSet<>();
+		
 		for(EObjectProxy object : this) {
             if(object instanceof IRelationshipProxy) {
-                list.addUnique(((IRelationshipProxy)object).getSource());
+                set.add(((IRelationshipProxy)object).getSource());
             }
         }
+		
+		list.addAll(set);
 		
 		return list;
 	}
@@ -410,11 +444,16 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	public EObjectProxyCollection targetEnds() {
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
+        // Use a LinkedHashSet for uniqueness and speed
+        Set<EObjectProxy> set = new LinkedHashSet<>();
+        
 		for(EObjectProxy object : this) {
             if(object instanceof IRelationshipProxy) {
-                list.addUnique(((IRelationshipProxy)object).getTarget());
+                set.add(((IRelationshipProxy)object).getTarget());
             }
         }
+		
+		list.addAll(set);
 		
 		return list;
 	}
@@ -582,22 +621,4 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 	public EObjectProxyCollection outRels(String selector) {
 		return outRels().filter(selector);
 	}
-
-
-
-    /**
-     * Internal helper method (keep it at the bottom of this class)
-     * Add an object to this list only if it does not already exist in the list and is not null
-     * @param object
-     * @return true if added
-     */
-    boolean addUnique(EObjectProxy object) {
-        if(object != null && !contains(object)) {
-            return add(object);
-        }
-        
-        return false;
-    }
-    
-
 }

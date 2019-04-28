@@ -480,6 +480,12 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
         return getEObject() == ((EObjectProxy)obj).getEObject();
     }
     
+    // Need to use the hashCode of the underlying object because a Java Set will use it for contains()
+    @Override
+    public int hashCode() {
+        return getEObject() == null ? super.hashCode() : getEObject().hashCode();
+    }
+    
     @Override
     public String toString() {
         return getType() + ": " + getName(); //$NON-NLS-1$

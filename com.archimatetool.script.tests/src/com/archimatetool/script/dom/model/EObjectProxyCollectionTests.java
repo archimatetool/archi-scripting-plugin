@@ -16,7 +16,10 @@ import org.junit.Test;
 
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IAssociationRelationship;
+import com.archimatetool.model.IBusinessActor;
 import com.archimatetool.model.IBusinessRole;
+import com.archimatetool.model.IDiagramModelArchimateObject;
+import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 
@@ -124,25 +127,34 @@ public class EObjectProxyCollectionTests {
     }
     
     @Test
+    public void find2() {
+        EObjectProxyCollection collection = new EObjectProxyCollection();
+        
+        // Add a Group containing an ArchiMate diagram object
+        IDiagramModelGroup group = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        IBusinessActor ba = IArchimateFactory.eINSTANCE.createBusinessActor();
+        IDiagramModelArchimateObject dmo = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        dmo.setArchimateConcept(ba);
+        group.getChildren().add(dmo);
+        
+        collection.add(EObjectProxy.get(group));
+        collection.add(EObjectProxy.get(dmo));
+        collection.add(EObjectProxy.get(ba));
+        
+        // Should only have one object (no duplicates)
+        EObjectProxyCollection c = collection.find();
+        assertEquals(1, c.size());
+    }
+
+    @Test
     public void cloneTest() {
         EObjectProxyCollection collection = new EObjectProxyCollection();
-        collection.addUnique(EObjectProxy.get(IArchimateFactory.eINSTANCE.createBusinessRole()));
-        collection.addUnique(EObjectProxy.get(IArchimateFactory.eINSTANCE.createAssignmentRelationship()));
+        collection.add(EObjectProxy.get(IArchimateFactory.eINSTANCE.createBusinessRole()));
+        collection.add(EObjectProxy.get(IArchimateFactory.eINSTANCE.createAssignmentRelationship()));
         
         EObjectProxyCollection clone = (EObjectProxyCollection)collection.clone();
         for(int i = 0; i < collection.size(); i++) {
             assertEquals(collection.get(i), clone.get(i));
         }
     }    
-    
-    @Test
-    public void addUnique() {
-        EObjectProxyCollection collection = new EObjectProxyCollection();
-        IBusinessRole element = IArchimateFactory.eINSTANCE.createBusinessRole();
-        collection.addUnique(EObjectProxy.get(element));
-        collection.addUnique(EObjectProxy.get(element));
-        collection.addUnique(null);
-        assertEquals(1, collection.size());
-        assertEquals(EObjectProxy.get(element), collection.get(0));
-    }
 }
