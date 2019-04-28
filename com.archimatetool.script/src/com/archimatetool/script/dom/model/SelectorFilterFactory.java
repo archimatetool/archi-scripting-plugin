@@ -36,11 +36,11 @@ class SelectorFilterFactory {
     static SelectorFilterFactory INSTANCE = new SelectorFilterFactory();
 
     public ISelectorFilter getFilter(String selector) {
-        if(selector == null) {
+        if(selector == null || "".equals(selector)) { //$NON-NLS-1$
             return null;
         }
         
-        // All
+        // All model concepts, diagram models, and folders
         if(selector.equals("*")) { //$NON-NLS-1$
             return new ISelectorFilter() {
                 @Override
@@ -123,7 +123,7 @@ class SelectorFilterFactory {
             };
         }
         
-        // Find all objects with given type and name
+        // Find all objects with given type (class) and name
         else if(selector.contains(".") && selector.length() > 2) { //$NON-NLS-1$
             if(selector.split("\\.").length != 2) { //$NON-NLS-1$
                 return null;
@@ -138,8 +138,8 @@ class SelectorFilterFactory {
                 public boolean accept(EObject object) {
                     object = getReferencedConcept(object);
                     return object.eClass().getName().equals(type) &&
-                            ((INameable)object).getName().equals(name) &&
-                            (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
+                            (object instanceof INameable) &&
+                            ((INameable)object).getName().equals(name);
                 }
             };
         }
@@ -151,8 +151,7 @@ class SelectorFilterFactory {
                 @Override
                 public boolean accept(EObject object) {
                     object = getReferencedConcept(object);
-                    return object.eClass().getName().equals(type) &&
-                            (object instanceof IArchimateConcept || object instanceof IDiagramModel || object instanceof IFolder);
+                    return object.eClass().getName().equals(type);
                 }
             };
         }

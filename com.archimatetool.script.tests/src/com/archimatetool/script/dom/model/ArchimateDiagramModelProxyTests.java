@@ -91,6 +91,9 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
 
         collection = actualTestProxy.find("*");
         assertEquals(0, collection.size());
+        
+        collection = actualTestProxy.find("diagram-model-group");
+        assertEquals(7, collection.size());
     }
 
     @Override

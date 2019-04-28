@@ -13,7 +13,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 
+import org.eclipse.emf.ecore.EObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,6 +25,7 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.IIdentifier;
 import com.archimatetool.script.ArchiScriptException;
 
 import junit.framework.JUnit4TestAdapter;
@@ -101,6 +104,9 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         
         EObjectProxyCollection collection = testModelProxy.find("garbage");
         assertEquals(0, collection.size());
+        
+        collection = testModelProxy.find("diagram-model-group");
+        assertEquals(0, collection.size());
 
         collection = testModelProxy.find("*");
         assertEquals(340, collection.size());
@@ -119,11 +125,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
 
         collection = testModelProxy.find("view");
         assertEquals(17, collection.size());
-
-        collection = testModelProxy.find("#66a2171b");
-        assertEquals(1, collection.size());
-        assertEquals("66a2171b", collection.get(0).getId());
-
+        
         collection = testModelProxy.find(".Business");
         assertEquals(2, collection.size());
         
@@ -132,6 +134,22 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         
         collection = testModelProxy.find("business-role");
         assertEquals(5, collection.size());
+    }
+    
+    @Test
+    public void find_Selector_IDs() {
+        ArchimateModelProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        
+        // Test we can find every object by its ID
+        for(Iterator<EObject> iter = testModelProxy.getEObject().eAllContents(); iter.hasNext();) {
+            EObject eObject = iter.next();
+            if(eObject instanceof IIdentifier) {
+                String id = ((IIdentifier)eObject).getId();
+                EObjectProxyCollection collection = testModelProxy.find("#" + id);
+                assertEquals(1, collection.size());
+                assertEquals(id, collection.get(0).getId());
+            }
+        }
     }
 
     @Test
