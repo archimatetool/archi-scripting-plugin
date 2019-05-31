@@ -45,13 +45,21 @@ public class ArchimateDiagramModelProxy extends DiagramModelProxy {
     }
     
     /**
-     * Add an Archimate connection to ArchiMate objects and return thr diagram connection
+     * Add an Archimate connection between two diagram components and return the diagram connection
      */
     public DiagramModelConnectionProxy add(ArchimateRelationshipProxy relation, DiagramModelComponentProxy source, DiagramModelComponentProxy target) {
         if(!source.isArchimateConcept() || !target.isArchimateConcept()) {
             throw new ArchiScriptException(Messages.DiagramModelProxy_0);
         }
         
+        // Ensure that source and target diagram components belong to this diagram model
+        if(source.getEObject().getDiagramModel() != getEObject()) {
+            throw new ArchiScriptException(Messages.ArchimateDiagramModelProxy_0);
+        }
+        if(target.getEObject().getDiagramModel() != getEObject()) {
+            throw new ArchiScriptException(Messages.ArchimateDiagramModelProxy_1);
+        }
+
         return ModelFactory.addArchimateDiagramConnection(relation.getEObject(), (IDiagramModelArchimateComponent)source.getEObject(),
                 (IDiagramModelArchimateComponent)target.getEObject());
     }

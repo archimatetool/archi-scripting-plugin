@@ -226,6 +226,9 @@ class ModelFactory {
     static DiagramModelObjectProxy addArchimateDiagramObject(IDiagramModelContainer parent, IArchimateElement element,
             int x, int y, int width, int height, boolean autoNest) {
         
+        // Ensure all components share the same model
+        ModelUtil.checkComponentsInSameModel(parent, element);
+
         if(!(parent.getDiagramModel() instanceof IArchimateDiagramModel)) {
             throw new ArchiScriptException(Messages.ModelFactory_1);
         }
@@ -306,6 +309,9 @@ class ModelFactory {
     static DiagramModelConnectionProxy addArchimateDiagramConnection(IArchimateRelationship relation, IDiagramModelArchimateComponent source,
             IDiagramModelArchimateComponent target) {
         
+        // Ensure all components share the same model
+        ModelUtil.checkComponentsInSameModel(relation, source, target);
+
         // Ensure they share the same view
         if(source.getDiagramModel() != target.getDiagramModel()) {
             throw new ArchiScriptException(Messages.ModelFactory_4);
