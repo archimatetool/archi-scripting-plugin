@@ -18,6 +18,7 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IBusinessActor;
 import com.archimatetool.model.IBusinessRole;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.script.ArchiScriptException;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -142,4 +143,84 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
         }
     }
 
+    @Test
+    public void merge() {
+        // Set up
+        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_MERGE);
+        
+        IArchimateElement replacementElement = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(),
+                "76aa9eb3-8cdd-471c-81e4-965d94e12dd9");
+        ArchimateElementProxy replacementProxy = (ArchimateElementProxy)EObjectProxy.get(replacementElement);
+        
+        IArchimateElement otherElement = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(),
+                "ad78af0a-24ce-44b2-b512-35f6f77204e3");
+        ArchimateElementProxy otherProxy = (ArchimateElementProxy)EObjectProxy.get(otherElement);
+        
+        // Confirmation tests
+        
+        // Documentation
+        assertEquals("Doc1", replacementProxy.getDocumentation());
+        
+        // Properties
+        assertEquals(1, replacementElement.getProperties().size());
+        
+        // Diagram References
+        EObjectProxyCollection refs = replacementProxy.objectRefs();
+        assertEquals(2, refs.size());
+        for(EObjectProxy eObjectProxy : refs) {
+            DiagramModelObjectProxy dmoProxy = (DiagramModelObjectProxy)eObjectProxy;
+            assertEquals(replacementElement, dmoProxy.getReferencedConcept());
+        }
+        
+        refs = otherProxy.objectRefs();
+        assertEquals(2, refs.size());
+        for(EObjectProxy eObjectProxy : refs) {
+            DiagramModelObjectProxy dmoProxy = (DiagramModelObjectProxy)eObjectProxy;
+            assertEquals(otherElement, dmoProxy.getReferencedConcept());
+        }
+        
+        // Relations
+        assertEquals(0, replacementElement.getSourceRelationships().size());
+        assertEquals(1, replacementElement.getTargetRelationships().size());
+
+        // Merge
+        replacementProxy.merge(otherProxy);
+        
+        // Post-operation tests
+
+        // Documentation
+        assertEquals("Doc1\nDoc2", replacementProxy.getDocumentation());
+        
+        // Properties
+        assertEquals(3, replacementElement.getProperties().size());
+
+        // Diagram References
+        refs = replacementProxy.objectRefs();
+        assertEquals(4, refs.size());
+        for(EObjectProxy eObjectProxy : refs) {
+            DiagramModelObjectProxy dmoProxy = (DiagramModelObjectProxy)eObjectProxy;
+            assertEquals(replacementElement, dmoProxy.getReferencedConcept());
+        }
+
+        assertEquals(0, otherProxy.objectRefs().size());
+        
+        // Relations
+        assertEquals(1, replacementElement.getSourceRelationships().size());
+        assertEquals(2, replacementElement.getTargetRelationships().size());
+    }
+    
+    @Test (expected=ArchiScriptException.class)
+    public void mergeThrowsExceptionOnWrongType() {
+        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_MERGE);
+        
+        IArchimateElement replacementElement = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(),
+                "76aa9eb3-8cdd-471c-81e4-965d94e12dd9");
+        ArchimateElementProxy replacementProxy = (ArchimateElementProxy)EObjectProxy.get(replacementElement);
+        
+        IArchimateElement otherElement = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(),
+                "a3a16448-0760-4d5c-860e-d9f8826340a6");
+        ArchimateElementProxy otherProxy = (ArchimateElementProxy)EObjectProxy.get(otherElement);
+        
+        replacementProxy.merge(otherProxy);
+    }
 }

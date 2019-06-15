@@ -220,7 +220,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
 
         // Store old proxy
         ArchimateConceptProxy oldProxy = (ArchimateConceptProxy)EObjectProxy.get(getEObject());
-
+        
         // Update all diagram connections
         for(EObjectProxy proxy : objectRefs()) {
             IDiagramModelArchimateConnection dmc = (IDiagramModelArchimateConnection)proxy.getEObject();
@@ -228,14 +228,24 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             CommandHandler.executeCommand(new ScriptCommand("type", getArchimateModel()) { //$NON-NLS-1$
                 @Override
                 public void perform() {
+                    // Safety to deregister listeners on the concept and update the UI
+                    dmc.disconnect();
+                    
                     dmc.setArchimateConcept(newConcept);
-                    ModelUtil.refreshDiagramModelComponent(dmc);
+                    
+                    // Reconnect and update UI
+                    dmc.reconnect();
                 }
 
                 @Override
                 public void undo() {
+                    // Safety to deregister listeners on the concept and update the UI
+                    dmc.disconnect();
+                    
                     dmc.setArchimateConcept(oldProxy.getEObject());
-                    ModelUtil.refreshDiagramModelComponent(dmc);
+                    
+                    // Reconnect and update UI
+                    dmc.reconnect();
                 }
             });
         }

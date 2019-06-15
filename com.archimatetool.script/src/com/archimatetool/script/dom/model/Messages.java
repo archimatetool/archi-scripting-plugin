@@ -13,6 +13,8 @@ public class Messages extends NLS {
     public static String ArchimateDiagramModelProxy_0;
 
     public static String ArchimateDiagramModelProxy_1;
+    
+    public static String ArchimateElementProxy_0;
 
     public static String ArchimateModelProxy_0;
 
