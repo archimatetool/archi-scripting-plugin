@@ -90,7 +90,7 @@ public abstract class FileTreeViewer extends TreeViewer {
                 }
                 else {
                     // Alphabetic order otherwise
-                    return f1.getAbsolutePath().compareToIgnoreCase(f2.getAbsolutePath());
+                    return f1.getName().compareToIgnoreCase(f2.getName());
                 }
             }
         });

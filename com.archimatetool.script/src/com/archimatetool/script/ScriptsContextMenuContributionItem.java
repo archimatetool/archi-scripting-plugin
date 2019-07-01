@@ -69,7 +69,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
                 if(f1.isDirectory() && f2.isFile()) {
                     return -1;
                 }
-                return f1.compareTo(f2);
+                return f1.getName().compareToIgnoreCase(f2.getName());
             }
         });
         
