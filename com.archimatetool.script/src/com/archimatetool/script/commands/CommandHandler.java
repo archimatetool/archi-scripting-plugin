@@ -13,6 +13,7 @@ import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.osgi.util.NLS;
 
+import com.archimatetool.editor.model.commands.NonNotifyingCompoundCommand;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.script.RefreshUIHandler;
 
@@ -40,7 +41,7 @@ public class CommandHandler {
         if(stack != null) {
             CompoundCommand compound = compoundcommands.get(stack);
             if(compound == null) {
-                compound = new CompoundCommand(Messages.CommandHandler_0);
+                compound = new NonNotifyingCompoundCommand(Messages.CommandHandler_0);
                 compoundcommands.put(stack, compound);
             }
             compound.add(cmd);
