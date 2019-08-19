@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
 
+import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.util.ArchimateResourceFactory;
 
@@ -48,6 +49,12 @@ public class TestsHelper {
         }
         
         return null;
+    }
+    
+    static ArchimateModelProxy createTestModel() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        model.setDefaults();
+        return (ArchimateModelProxy)EObjectProxy.get(model);
     }
     
     private static File getLocalBundleFolder(String bundleName, String path) {

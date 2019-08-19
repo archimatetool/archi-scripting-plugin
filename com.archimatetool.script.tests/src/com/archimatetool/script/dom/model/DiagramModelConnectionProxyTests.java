@@ -101,6 +101,7 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         assertEquals(0, collection.size());
     }
 
+    @Override
     @Test
     public void getConcept() {
         assertTrue(actualTestProxy.getConcept().getEObject() instanceof ICompositionRelationship);

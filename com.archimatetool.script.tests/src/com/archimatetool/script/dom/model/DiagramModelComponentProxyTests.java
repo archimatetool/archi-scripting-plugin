@@ -7,6 +7,7 @@ package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -44,6 +45,11 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
     @Test
     public void attr_ArchimateConcept() {
         assertEquals(((DiagramModelComponentProxy)testProxy).getConcept(), testProxy.attr(IModelConstants.CONCEPT));
+    }
+    
+    @Test
+    public void getConcept() {
+        assertNull(((DiagramModelComponentProxy)testProxy).getConcept());
     }
 
     @Test(expected=ArchiScriptException.class)

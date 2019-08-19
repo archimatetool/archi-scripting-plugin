@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EObject;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IBounds;
+import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
@@ -57,6 +58,11 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     @Override
     protected IDiagramModelObject getEObject() {
         return (IDiagramModelObject)super.getEObject();
+    }
+    
+    @Override
+    protected boolean isArchimateConcept() {
+        return getEObject() instanceof IDiagramModelArchimateObject;
     }
     
     public Map<String, Integer> getBounds() {

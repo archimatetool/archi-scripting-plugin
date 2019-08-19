@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelBendpoint;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.ILineObject;
@@ -35,6 +36,11 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
     @Override
     protected IDiagramModelConnection getEObject() {
         return (IDiagramModelConnection)super.getEObject();
+    }
+    
+    @Override
+    protected boolean isArchimateConcept() {
+        return getEObject() instanceof IDiagramModelArchimateConnection;
     }
     
     @Override

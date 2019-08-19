@@ -6,6 +6,7 @@
 package com.archimatetool.script;
 
 
+import com.archimatetool.script.dom.model.ArchimateDiagramModelObjectProxyTests;
 import com.archimatetool.script.dom.model.ArchimateDiagramModelProxyTests;
 import com.archimatetool.script.dom.model.ArchimateElementProxyTests;
 import com.archimatetool.script.dom.model.ArchimateModelProxyTests;
@@ -14,7 +15,6 @@ import com.archimatetool.script.dom.model.CanvasDiagramModelProxyTests;
 import com.archimatetool.script.dom.model.CurrentModelTests;
 import com.archimatetool.script.dom.model.DiagramModelConnectionProxyTests;
 import com.archimatetool.script.dom.model.DiagramModelNoteProxyTests;
-import com.archimatetool.script.dom.model.DiagramModelObjectProxyTests;
 import com.archimatetool.script.dom.model.EObjectProxyCollectionTests;
 import com.archimatetool.script.dom.model.FolderProxyTests;
 import com.archimatetool.script.dom.model.ModelFactoryTests;
@@ -31,6 +31,7 @@ public class AllTests {
     public static junit.framework.Test suite() {
 		TestSuite suite = new TestSuite("com.archimatetool.script");
 
+        suite.addTest(ArchimateDiagramModelObjectProxyTests.suite());
         suite.addTest(ArchimateDiagramModelProxyTests.suite());
         suite.addTest(ArchimateElementProxyTests.suite());
 		suite.addTest(ArchimateModelProxyTests.suite());
@@ -39,7 +40,6 @@ public class AllTests {
         suite.addTest(CurrentModelTests.suite());
         suite.addTest(DiagramModelConnectionProxyTests.suite());
         suite.addTest(DiagramModelNoteProxyTests.suite());
-        suite.addTest(DiagramModelObjectProxyTests.suite());
         suite.addTest(EObjectProxyCollectionTests.suite());
         suite.addTest(FolderProxyTests.suite());
         suite.addTest(ModelFactoryTests.suite());
