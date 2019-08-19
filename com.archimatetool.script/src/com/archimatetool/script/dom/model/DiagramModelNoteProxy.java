@@ -6,7 +6,10 @@
 package com.archimatetool.script.dom.model;
 
 import com.archimatetool.editor.utils.StringUtils;
+import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IDiagramModelNote;
+import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.SetCommand;
 
 /**
  * Diagram Model Note wrapper proxy
@@ -25,7 +28,8 @@ public class DiagramModelNoteProxy extends DiagramModelObjectProxy {
     }
     
     public void setText(String text) {
-        getEObject().setContent(StringUtils.safeString(text));
+        CommandHandler.executeCommand(new SetCommand(getEObject(),
+                IArchimatePackage.Literals.TEXT_CONTENT__CONTENT, StringUtils.safeString(text)));
     }
     
     public String getText() {
