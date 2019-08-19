@@ -5,6 +5,8 @@
  */
 package com.archimatetool.script.commands;
 
+import com.archimatetool.editor.preferences.IPreferenceConstants;
+import com.archimatetool.editor.preferences.Preferences;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelContainer;
@@ -21,6 +23,10 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
     private IArchimateElement oldElement;
     private IDiagramModelContainer parent;
     private int index;
+    
+    // The figure type needs to be as set in user preferences for this type of concept
+    int oldType;
+    int newType;
 
     /**
      * @param element The element to set on the dmo
@@ -32,6 +38,9 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
         this.element = element;
         this.dmo = dmo;
         oldElement = dmo.getArchimateElement();
+        
+        oldType = dmo.getType();
+        newType = Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_FIGURE_PREFIX + element.eClass().getName());
         
         // Store current state
         parent = (IDiagramModelContainer)dmo.eContainer();
@@ -51,6 +60,9 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
         // Set it
         dmo.setArchimateElement(element);
         
+        // Set figure type
+        dmo.setType(newType);
+        
         // And re-attach which will also update the UI
         parent.getChildren().add(index, dmo);
     }
@@ -63,6 +75,9 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
         
         // Set it back
         dmo.setArchimateElement(oldElement);
+        
+        // Set figure type
+        dmo.setType(oldType);
         
         // And re-attach which will also update the UI
         parent.getChildren().add(index, dmo);
