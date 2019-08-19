@@ -78,7 +78,7 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         // Set all diagram objects to the new element
         for(EObjectProxy dmoProxy : objectRefs()) {
             CommandHandler.executeCommand(new SetElementOnDiagramModelObjectCommand(newElement,
-                    (IDiagramModelArchimateObject)dmoProxy.getEObject()));
+                    (IDiagramModelArchimateObject)dmoProxy.getEObject(), true));
         }
 
         // Set this eObject
@@ -126,7 +126,7 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         // Set all diagram objects to this element
         for(EObjectProxy dmoProxy : other.objectRefs()) {
             CommandHandler.executeCommand(new SetElementOnDiagramModelObjectCommand(getEObject(),
-                    (IDiagramModelArchimateObject)dmoProxy.getEObject()));
+                    (IDiagramModelArchimateObject)dmoProxy.getEObject(), false));
         }
         
         // Set source relations of the others to this

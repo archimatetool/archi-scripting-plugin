@@ -12,7 +12,7 @@ import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelContainer;
 
 /**
- * Set the Diagram Model Object's element to the given element
+ * Set the Diagram Model Object's IArchimateElement to the given element
  * 
  * @author Phillip Beauvoir
  */
@@ -24,21 +24,24 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
     private IDiagramModelContainer parent;
     private int index;
     
-    // The figure type needs to be as set in user preferences for this type of concept
-    int oldType;
-    int newType;
+    // The figure type can be as set in user preferences
+    private boolean setDefaultFigureType;
+    private int oldType;
+    private int newType;
 
     /**
      * @param element The element to set on the dmo
      * @param dmo The dmo to set the element on
+     * @param setDefaultFigureType if true set this diagram model object's figure type as set in user Preferences
      */
-    public SetElementOnDiagramModelObjectCommand(IArchimateElement element, IDiagramModelArchimateObject dmo) {
+    public SetElementOnDiagramModelObjectCommand(IArchimateElement element, IDiagramModelArchimateObject dmo, boolean setDefaultFigureType) {
         super("setConcept", element.getArchimateModel()); //$NON-NLS-1$
         
         this.element = element;
         this.dmo = dmo;
         oldElement = dmo.getArchimateElement();
         
+        this.setDefaultFigureType = setDefaultFigureType;
         oldType = dmo.getType();
         newType = Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_FIGURE_PREFIX + element.eClass().getName());
         
@@ -61,7 +64,9 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
         dmo.setArchimateElement(element);
         
         // Set figure type
-        dmo.setType(newType);
+        if(setDefaultFigureType) {
+            dmo.setType(newType);
+        }
         
         // And re-attach which will also update the UI
         parent.getChildren().add(index, dmo);
@@ -77,7 +82,9 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
         dmo.setArchimateElement(oldElement);
         
         // Set figure type
-        dmo.setType(oldType);
+        if(setDefaultFigureType) {
+            dmo.setType(oldType);
+        }
         
         // And re-attach which will also update the UI
         parent.getChildren().add(index, dmo);
