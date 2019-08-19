@@ -21,8 +21,6 @@ import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IBounds;
-import com.archimatetool.model.IDiagramModelComponent;
-import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IFolder;
@@ -125,28 +123,6 @@ class ModelUtil {
         return true;
     }
     
-    /**
-     * If a DiagramModelComponent needs a refresh in a View, this does the trick/
-     * It simply deletes the model component and adds it again causing a MVC refresh
-     * @param dmc
-     */
-    static void refreshDiagramModelComponent(IDiagramModelComponent dmc) {
-        if(PlatformUI.isWorkbenchRunning()) {
-            IDiagramModelContainer parent = (IDiagramModelContainer)dmc.eContainer();
-            if(parent != null) {
-                if(dmc instanceof IDiagramModelObject) {
-                    int index = parent.getChildren().indexOf(dmc);
-                    parent.getChildren().remove(dmc);
-                    parent.getChildren().add(index, (IDiagramModelObject)dmc);
-                }
-                else if(dmc instanceof IDiagramModelConnection) {
-                    ((IDiagramModelConnection)dmc).disconnect();
-                    ((IDiagramModelConnection)dmc).reconnect();
-                }
-            }
-        }
-    }
-
     static void openModelInUI(IArchimateModel model) {
         if(model != null && PlatformUI.isWorkbenchRunning()) {
             // If the model has already been loaded by a load() command

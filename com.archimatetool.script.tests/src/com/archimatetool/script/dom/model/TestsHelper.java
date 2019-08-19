@@ -28,6 +28,7 @@ public class TestsHelper {
     private static File testFolder;
     
     static File TEST_MODEL_FILE_ARCHISURANCE = new File(getTestDataFolder(), "Archisurance.archimate");
+    static File TEST_MODEL_MERGE = new File(getTestDataFolder(), "mergetest.archimate");
 
     static File getTestDataFolder() {
         if(testFolder == null) {
