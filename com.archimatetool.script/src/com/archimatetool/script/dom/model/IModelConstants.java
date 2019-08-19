@@ -51,6 +51,8 @@ interface IModelConstants {
     
     String OPACITY = "opacity"; //$NON-NLS-1$
     
+    String FIGURE_TYPE = "figureType"; //$NON-NLS-1$
+    
     String TEXT = "text"; //$NON-NLS-1$
     
     String ACCESS_TYPE = "access-type";  //$NON-NLS-1$

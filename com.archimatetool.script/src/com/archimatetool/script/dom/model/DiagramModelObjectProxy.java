@@ -10,6 +10,9 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.archimatetool.editor.ui.factory.IArchimateElementUIProvider;
+import com.archimatetool.editor.ui.factory.IObjectUIProvider;
+import com.archimatetool.editor.ui.factory.ObjectUIFactory;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IBounds;
@@ -156,6 +159,33 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return this;
     }
 
+    public DiagramModelObjectProxy setFigureType(int value) {
+        // If this is an ArchiMate type...
+        if(isArchimateConcept()) {
+            // And we support alternate figures for this diagram model object...
+            IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProviderForClass(getConcept().getEObject().eClass());
+            if(provider instanceof IArchimateElementUIProvider && ((IArchimateElementUIProvider)provider).hasAlternateFigure()) {
+                if(value < 0) {
+                    value = 0;
+                }
+                if(value > 1) {
+                    value = 1;
+                }          
+                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_ARCHIMATE_OBJECT__TYPE, value));
+            }
+        }
+        
+        return this;
+    }
+    
+    public int getFigureType() {
+        if(isArchimateConcept()) {
+            return ((IDiagramModelArchimateObject)getEObject()).getType();
+        }
+        
+        return 0;
+    }
+    
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {
@@ -165,6 +195,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 return getFillColor();
             case OPACITY:
                 return getOpacity();
+            case FIGURE_TYPE:
+                return getFigureType();
         }
         
         return super.attr(attribute);
@@ -186,6 +218,11 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case OPACITY:
                 if(value instanceof Integer) {
                     return setOpacity((int)value);
+                }
+                break;
+            case FIGURE_TYPE:
+                if(value instanceof Integer) {
+                    return setFigureType((int)value);
                 }
                 break;
         }
