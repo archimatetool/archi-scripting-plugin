@@ -64,6 +64,8 @@ public class Messages extends NLS {
 
     public static String ModelFactory_5;
 
+    public static String ModelFactory_6;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -21,6 +21,7 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IBounds;
+import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
@@ -132,32 +133,71 @@ public class ModelFactoryTests {
     }
     
     @Test
-    public void addConcept() {
+    public void addObject_Concept() {
         loadTestModel();
         
         IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
         IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
-        ModelFactory.addConcept(concept, parent);
+        ModelFactory.addObject(parent, concept);
         assertSame(parent, concept.eContainer());
     }
     
     @Test
-    public void addConcept_NoExistingParent() {
+    public void addObject_Concept_NoExistingParent() {
         loadTestModel();
         
         IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
         IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
-        ModelFactory.addConcept(concept, parent);
+        ModelFactory.addObject(parent, concept);
         assertSame(parent, concept.eContainer());
     }
     
     @Test(expected=ArchiScriptException.class)
-    public void moveConcept_Exception() {
+    public void addObject_Concept_Exception() {
         loadTestModel();
         
         IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
         IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4a8e833a");
-        ModelFactory.addConcept(concept, parent);
+        ModelFactory.addObject(parent, concept);
+    }
+    
+    @Test
+    public void addObject_View() {
+        loadTestModel();
+        
+        IDiagramModel dm = (IDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3641");
+        
+        IFolder newParent = IArchimateFactory.eINSTANCE.createFolder();
+        newParent.setType(FolderType.USER);
+        newParent.setName("Test");
+        ((IFolder)dm.eContainer()).getFolders().add(newParent);
+        
+        ModelFactory.addObject(newParent, dm);
+        assertSame(newParent, dm.eContainer());
+    }
+    
+    @Test
+    public void addFolder() {
+        loadTestModel();
+        
+        IFolder topFolder = testModelProxy.getArchimateModel().getFolder(FolderType.BUSINESS);
+        
+        // Add folder to diagrams folder
+        IFolder folder1 = IArchimateFactory.eINSTANCE.createFolder();
+        folder1.setType(FolderType.USER);
+        folder1.setName("Test");
+        topFolder.getFolders().add(folder1);
+        
+        // Add another folder to diagrams folder
+        IFolder folder2 = IArchimateFactory.eINSTANCE.createFolder();
+        folder2.setType(FolderType.USER);
+        folder2.setName("Test 2");
+        folder1.getFolders().add(folder2);
+        
+        // Add the second folder to the first folder
+        ModelFactory.addFolder(topFolder, folder2);
+        
+        assertSame(topFolder, folder2.eContainer());
     }
     
     @Test

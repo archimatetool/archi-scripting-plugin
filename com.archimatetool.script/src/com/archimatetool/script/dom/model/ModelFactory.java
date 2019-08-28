@@ -20,6 +20,7 @@ import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IBounds;
@@ -129,36 +130,72 @@ class ModelFactory {
     }
     
     /**
-     * Add a concept to a folder
-     * If concept already has parent folder, it is moved
+     * Add an object to a folder
+     * If the object already has parent folder, it is moved
      * throws ArchiScriptException if incorrect folder type
      */
-    static void addConcept(IArchimateConcept concept, IFolder parentFolder) {
+    static void addObject(IFolder parentFolder, IArchimateModelObject object) {
         // Ensure all components share the same model
-        ModelUtil.checkComponentsInSameModel(concept, parentFolder);
+        ModelUtil.checkComponentsInSameModel(parentFolder, object);
 
-        if(!ModelUtil.isCorrectFolderForObject(parentFolder, concept)) {
+        if(!ModelUtil.isCorrectFolderForObject(parentFolder, object)) {
             throw new ArchiScriptException(Messages.ModelFactory_0);
         }
         
         CommandHandler.executeCommand(new ScriptCommand("Add", parentFolder.getArchimateModel()) { //$NON-NLS-1$
-            IFolder oldParent = (IFolder)concept.eContainer();
+            IFolder oldParent = (IFolder)object.eContainer();
             int oldPosition;
             
             @Override
             public void perform() {
                 if(oldParent != null) {
-                    oldPosition = oldParent.getElements().indexOf(concept);
-                    oldParent.getElements().remove(concept);
+                    oldPosition = oldParent.getElements().indexOf(object);
+                    oldParent.getElements().remove(object);
                 }
-                parentFolder.getElements().add(concept);
+                parentFolder.getElements().add(object);
             }
 
             @Override
             public void undo() {
-                parentFolder.getElements().remove(concept);
+                parentFolder.getElements().remove(object);
                 if(oldParent != null) {
-                    oldParent.getElements().add(oldPosition, concept);
+                    oldParent.getElements().add(oldPosition, object);
+                }
+            }
+        });
+    }
+    
+    /**
+     * Add an subfolder to a folder
+     * If the folder already has parent folder, it is moved
+     * throws ArchiScriptException if incorrect folder type
+     */
+    static void addFolder(IFolder parentFolder, IFolder folder) {
+        // Ensure all components share the same model
+        ModelUtil.checkComponentsInSameModel(parentFolder, folder);
+
+        if(!ModelUtil.canAddFolder(parentFolder, folder)) {
+            throw new ArchiScriptException(Messages.ModelFactory_6);
+        }
+        
+        CommandHandler.executeCommand(new ScriptCommand("Add", parentFolder.getArchimateModel()) { //$NON-NLS-1$
+            IFolder oldParent = (IFolder)folder.eContainer();
+            int oldPosition;
+            
+            @Override
+            public void perform() {
+                if(oldParent != null) {
+                    oldPosition = oldParent.getFolders().indexOf(folder);
+                    oldParent.getFolders().remove(folder);
+                }
+                parentFolder.getFolders().add(folder);
+            }
+
+            @Override
+            public void undo() {
+                parentFolder.getFolders().remove(folder);
+                if(oldParent != null) {
+                    oldParent.getFolders().add(oldPosition, folder);
                 }
             }
         });

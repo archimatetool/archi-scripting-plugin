@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
@@ -83,6 +84,34 @@ public class ModelUtilTests {
         folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "e64e9b49");
         assertFalse(ModelUtil.isCorrectFolderForObject(folder, concept));
         assertTrue(ModelUtil.isCorrectFolderForObject(folder, IArchimateFactory.eINSTANCE.createArchimateDiagramModel()));
+    }
+    
+    @Test
+    public void canAddFolder() {
+        loadTestModel();
+        
+        IFolder businessFolder = testModelProxy.getArchimateModel().getFolder(FolderType.BUSINESS);
+        IFolder applicationFolder = testModelProxy.getArchimateModel().getFolder(FolderType.APPLICATION);
+        
+        // Only user folder types
+        assertFalse(ModelUtil.canAddFolder(businessFolder, applicationFolder));
+        
+        IFolder userFolder1 = IArchimateFactory.eINSTANCE.createFolder();
+        businessFolder.getFolders().add(userFolder1);
+        
+        // Not the same parent folder
+        assertFalse(ModelUtil.canAddFolder(businessFolder, userFolder1));
+        
+        // Can't move to a descendant
+        IFolder userFolder2 = IArchimateFactory.eINSTANCE.createFolder();
+        userFolder1.getFolders().add(userFolder2);
+        
+        assertFalse(ModelUtil.canAddFolder(userFolder2, userFolder1));
+        
+        // Common ancestor
+        assertFalse(ModelUtil.canAddFolder(applicationFolder, userFolder1));
+        
+        assertTrue(ModelUtil.canAddFolder(businessFolder, userFolder2));
     }
     
     @Test

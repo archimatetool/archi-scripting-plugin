@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.IEditorModelManager;
+import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
@@ -72,10 +73,11 @@ class ModelUtil {
      * @return true if the given parent folder is the correct folder to contain this object
      */
     static boolean isCorrectFolderForObject(IFolder folder, EObject eObject) {
-        if(folder == null) {
+        if(folder == null || eObject == null) {
             return false;
         }
         
+        // Check that the object is in the correct main category folder 
         IFolder topFolder = folder.getArchimateModel().getDefaultFolderForObject(eObject);
         if(folder == topFolder) {
             return true;
@@ -89,6 +91,41 @@ class ModelUtil {
         }
         
         return false;
+    }
+    
+    /**
+     * @return true if we can add folder to parent folder
+     */
+    static boolean canAddFolder(IFolder parent, IFolder folder) {
+        // Only user folder types
+        if(folder.getType() != FolderType.USER) {
+            return false;
+        }
+        
+        // Not the same parent folder
+        if(folder.eContainer() == parent) {
+            return false;
+        }
+        
+        // Can't move to a descendant
+        EObject f = parent;
+        while(f instanceof IFolder) {
+            if(f == folder) {
+                return false;
+            }
+            f = f.eContainer();
+        }
+        
+        // Common ancestor
+        while(parent.eContainer() instanceof IFolder) {
+            parent = (IFolder)parent.eContainer();
+        }
+
+        while(folder.eContainer() instanceof IFolder) {
+            folder = (IFolder)folder.eContainer();
+        }
+        
+        return (parent == folder);
     }
     
     /**

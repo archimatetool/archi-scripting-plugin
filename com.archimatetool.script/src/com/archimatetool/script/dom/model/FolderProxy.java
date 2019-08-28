@@ -70,7 +70,31 @@ public class FolderProxy extends EObjectProxy {
      * @return
      */
     public FolderProxy add(ArchimateConceptProxy conceptProxy) {
-        ModelFactory.addConcept(conceptProxy.getEObject(), getEObject());
+        ModelFactory.addObject(getEObject(), conceptProxy.getEObject());
+        return this;
+    }
+    
+    /**
+     * Add diagramProxy to this folder.
+     * If diagramProxy already has a parent then diagramProxy is moved to this folder
+     * throws ArchiScriptException if incorrect folder type
+     * @param diagramProxy
+     * @return
+     */
+    public FolderProxy add(DiagramModelProxy diagramProxy) {
+        ModelFactory.addObject(getEObject(), diagramProxy.getEObject());
+        return this;
+    }
+    
+    /**
+     * Add folderProxy to this folder.
+     * If folderProxy already has a parent then folderProxy is moved to this folder
+     * throws ArchiScriptException if incorrect folder type
+     * @param folderProxy
+     * @return
+     */
+    public FolderProxy add(FolderProxy folderProxy) {
+        ModelFactory.addFolder(getEObject(), folderProxy.getEObject());
         return this;
     }
 
