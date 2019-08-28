@@ -14,6 +14,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
+import com.archimatetool.editor.model.ModelChecker;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.ModelVersion;
@@ -87,11 +88,28 @@ public class ArchimateModelProxy extends EObjectProxy {
     public ArchimateModelProxy save() throws IOException {
         if(getEObject() != null && getEObject().getFile() != null) {
             getEObject().setVersion(ModelVersion.VERSION);
+            checkModel();
             IArchiveManager archiveManager = (IArchiveManager)getEObject().getAdapter(IArchiveManager.class);
             archiveManager.saveModel();
         }
         
         return this;
+    }
+    
+    private void checkModel() throws IOException {
+        // Model Checker
+        ModelChecker checker = new ModelChecker(getEObject());
+        
+        if(!checker.checkAll()) {
+            for(String m : checker.getErrorMessages()) {
+                String logMessage = "Model Integrity Error.";  //$NON-NLS-1$
+                logMessage += " \'" + getEObject().getName() + "\':"; //$NON-NLS-1$ //$NON-NLS-2$
+                logMessage += " " + m; //$NON-NLS-1$
+                System.err.println(logMessage);
+            }
+
+            throw new IOException("Model has lost integrity. Check console for details."); //$NON-NLS-1$
+        }
     }
     
     public String getPath() {
