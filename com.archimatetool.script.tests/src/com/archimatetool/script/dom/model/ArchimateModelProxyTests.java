@@ -81,6 +81,18 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         actualTestProxy.setAsCurrent();
         assertEquals(actualTestProxy, CurrentModel.INSTANCE);
     }
+    
+    @Override
+    @Test
+    public void children() {
+        EObjectProxyCollection collection = actualTestProxy.children();
+        assertEquals(actualTestProxy.getEObject().getFolders().size(), collection.size());
+        
+        // Should be top-level folders
+        for(EObjectProxy eObjectProxy : collection) {
+            assertTrue(eObjectProxy instanceof FolderProxy);
+        }
+    }
 
     @Override
     @Test

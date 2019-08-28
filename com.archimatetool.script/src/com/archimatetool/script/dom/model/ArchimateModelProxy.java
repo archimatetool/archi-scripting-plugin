@@ -17,6 +17,7 @@ import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.model.ModelChecker;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.IFolder;
 import com.archimatetool.model.ModelVersion;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
@@ -218,6 +219,17 @@ public class ArchimateModelProxy extends EObjectProxy {
         }
         
         return super.attr(attribute, value);
+    }
+    
+    @Override
+    protected EObjectProxyCollection children() {
+        EObjectProxyCollection list = new EObjectProxyCollection();
+        
+        for(IFolder folder : getEObject().getFolders()) {
+            list.add(EObjectProxy.get(folder));
+        }
+        
+        return list;
     }
     
     /**
