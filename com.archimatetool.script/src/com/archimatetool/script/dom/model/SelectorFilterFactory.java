@@ -125,11 +125,12 @@ class SelectorFilterFactory {
         
         // Find all objects with given type (class) and name
         else if(selector.contains(".") && selector.length() > 2) { //$NON-NLS-1$
-            if(selector.split("\\.").length != 2) { //$NON-NLS-1$
+            String[] s = selector.split("\\.", 2); //$NON-NLS-1$
+            
+            if(s.length != 2) {
                 return null;
             }
             
-            String[] s = selector.split("\\."); //$NON-NLS-1$
             String type = ModelUtil.getCamelCase(s[0]);
             String name = s[1];
             

@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -36,6 +37,7 @@ public class SelectorFilterFactoryTests {
     @Test
     public void accept_All() {
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("*");
+        assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
@@ -61,6 +63,7 @@ public class SelectorFilterFactoryTests {
     @Test
     public void accept_Concept() {
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("concept");
+        assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
@@ -85,6 +88,7 @@ public class SelectorFilterFactoryTests {
     @Test
     public void accept_Element() {
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("element");
+        assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
 
@@ -109,6 +113,7 @@ public class SelectorFilterFactoryTests {
     @Test
     public void accept_Relation() {
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("relation");
+        assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
 
@@ -133,6 +138,7 @@ public class SelectorFilterFactoryTests {
     @Test
     public void accept_View() {
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("view");
+        assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createSketchModel()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createArchimateDiagramModel()));
@@ -154,9 +160,11 @@ public class SelectorFilterFactoryTests {
         concept.setId("123");
         
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("#123");
+        assertNotNull(filter);
         assertTrue(filter.accept(concept));
         
         filter = SelectorFilterFactory.INSTANCE.getFilter("#1234");
+        assertNotNull(filter);
         assertFalse(filter.accept(concept));
     }
     
@@ -169,11 +177,13 @@ public class SelectorFilterFactoryTests {
         dmo.setArchimateConcept(concept);
 
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(".foo");
+        assertNotNull(filter);
 
         assertTrue(filter.accept(concept));
         assertTrue(filter.accept(dmo));
         
         filter = SelectorFilterFactory.INSTANCE.getFilter(".foot");
+        assertNotNull(filter);
         assertFalse(filter.accept(concept));
     }
     
@@ -183,12 +193,28 @@ public class SelectorFilterFactoryTests {
         concept.setName("foo");
         
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("business-role.foo");
+        assertNotNull(filter);
         assertTrue(filter.accept(concept));
         
         filter = SelectorFilterFactory.INSTANCE.getFilter("business-actor.foo");
+        assertNotNull(filter);
         assertFalse(filter.accept(concept));
     }
     
+    @Test
+    public void accept_TypeName_With_Dots() {
+        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
+        concept.setName("foo.bar.pok");
+        
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("business-role.foo.bar.pok");
+        assertNotNull(filter);
+        assertTrue(filter.accept(concept));
+        
+        filter = SelectorFilterFactory.INSTANCE.getFilter("business-actor.foo.bar.pok");
+        assertNotNull(filter);
+        assertFalse(filter.accept(concept));
+    }
+
     @Test
     public void accept_Type() {
         IArchimateConcept element = IArchimateFactory.eINSTANCE.createBusinessRole();
@@ -197,19 +223,24 @@ public class SelectorFilterFactoryTests {
         IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
         
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("business-role");
+        assertNotNull(filter);
         assertTrue(filter.accept(element));
         filter = SelectorFilterFactory.INSTANCE.getFilter("business-actor");
         assertFalse(filter.accept(element));
         
         filter = SelectorFilterFactory.INSTANCE.getFilter("association-relationship");
+        assertNotNull(filter);
         assertTrue(filter.accept(relation));
         filter = SelectorFilterFactory.INSTANCE.getFilter("influence-relationship");
+        assertNotNull(filter);
         assertFalse(filter.accept(relation));
     
         filter = SelectorFilterFactory.INSTANCE.getFilter("archimate-diagram-model");
+        assertNotNull(filter);
         assertTrue(filter.accept(dm));
         
         filter = SelectorFilterFactory.INSTANCE.getFilter("folder");
+        assertNotNull(filter);
         assertTrue(filter.accept(folder));
     }
 
