@@ -13,14 +13,17 @@ package com.archimatetool.script.preferences;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 public interface IPreferenceConstants {
     
-    String PREFS_EDITOR = "scriptEditor"; //$NON-NLS-1$
-    String PREFS_DOUBLE_CLICK_BEHAVIOUR = "doubleClickBehaviour"; //$NON-NLS-1$
-    String PREFS_SCRIPTS_FOLDER = "scriptsFolder"; //$NON-NLS-1$
+    String PREFS_EDITOR = "scriptEditor";
+    String PREFS_DOUBLE_CLICK_BEHAVIOUR = "doubleClickBehaviour";
+    String PREFS_SCRIPTS_FOLDER = "scriptsFolder";
     
-    String PREFS_CONSOLE_WORD_WRAP = "consoleWordWrap"; //$NON-NLS-1$
-    String PREFS_CONSOLE_SCROLL_LOCK = "consoleScrollLock"; //$NON-NLS-1$
+    String PREFS_CONSOLE_WORD_WRAP = "consoleWordWrap";
+    String PREFS_CONSOLE_SCROLL_LOCK = "consoleScrollLock";
     
-    String PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT = "refreshUIWhenRunningScript"; //$NON-NLS-1$
+    String PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT = "refreshUIWhenRunningScript";
+    
+    String PREFS_ES6 = "es6";
 }

@@ -27,7 +27,10 @@ import com.archimatetool.editor.utils.FileUtils;
 import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.dom.IArchiScriptDOMFactory;
+import com.archimatetool.script.preferences.IPreferenceConstants;
 import com.archimatetool.script.views.console.ConsoleOutput;
+
+import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 
 /**
@@ -41,7 +44,15 @@ public class RunArchiScript {
 	}
 	
 	public void run() {
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript"); //$NON-NLS-1$
+        ScriptEngine engine;
+        
+        if(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_ES6)) {
+            NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+            engine = factory.getScriptEngine("--language=es6"); //$NON-NLS-1$
+        }
+        else {
+            engine = new ScriptEngineManager().getEngineByName("JavaScript"); //$NON-NLS-1$
+        }
         
         defineGlobalVariables(engine);
         defineExtensionGlobalVariables(engine);
