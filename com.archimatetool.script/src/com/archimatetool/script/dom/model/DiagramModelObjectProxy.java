@@ -117,7 +117,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         
         if(getEObject() instanceof IDiagramModelContainer) {
             for(IDiagramModelObject dmo : ((IDiagramModelContainer)getEObject()).getChildren()) {
-                list.add(new DiagramModelObjectProxy(dmo));
+                list.add(EObjectProxy.get(dmo));
             }
         }
         
