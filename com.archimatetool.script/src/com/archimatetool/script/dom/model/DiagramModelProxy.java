@@ -62,7 +62,7 @@ public abstract class DiagramModelProxy extends EObjectProxy {
         
         // Immediate children IDiagramModelObject
         for(IDiagramModelObject dmo : getEObject().getChildren()) {
-            list.add(new DiagramModelObjectProxy(dmo));
+            list.add(EObjectProxy.get(dmo));
         }
         
         // All connections
