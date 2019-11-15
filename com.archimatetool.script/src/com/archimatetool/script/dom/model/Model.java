@@ -8,8 +8,10 @@ package com.archimatetool.script.dom.model;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
@@ -86,6 +88,34 @@ public class Model {
         }
         
         throw new ArchiScriptException(NLS.bind(Messages.ArchimateModelProxy_2, path));
+    }
+    
+    /**
+     * @param modelProxy
+     * @return true if modelProxy is loaded in the models tree
+     */
+    public boolean isModelLoaded(ArchimateModelProxy modelProxy) {
+        if(PlatformUI.isWorkbenchRunning() && modelProxy != null) {
+            return IEditorModelManager.INSTANCE.getModels()
+                                        .stream()
+                                        .anyMatch(model -> model.equals(modelProxy.getArchimateModel()));
+        }
+        
+        return false;
+    }
+    
+    /**
+     * @return a list of loaded models
+     */
+    public List<ArchimateModelProxy> getLoadedModels() {
+        List<ArchimateModelProxy> models = new ArrayList<ArchimateModelProxy>();
+        
+        if(PlatformUI.isWorkbenchRunning()) {
+            IEditorModelManager.INSTANCE.getModels()
+                                        .forEach(model -> models.add(new ArchimateModelProxy(model)));
+        }
+
+        return models;
     }
     
     /**

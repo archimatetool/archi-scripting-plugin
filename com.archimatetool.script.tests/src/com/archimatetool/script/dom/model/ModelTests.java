@@ -11,6 +11,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.eclipse.gef.commands.CommandStack;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,6 +53,19 @@ public class ModelTests {
     public void load() {
         ArchimateModelProxy proxy = model.load(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
         assertNotNull(proxy.getEObject());
+    }    
+
+    @Test
+    public void isModelLoaded() {
+        ArchimateModelProxy proxy = model.load(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
+        assertFalse(model.isModelLoaded(proxy));
+        assertFalse(model.isModelLoaded(null));
+    }    
+
+    @Test
+    public void getLoadedModels() {
+        List<ArchimateModelProxy> proxy = model.getLoadedModels();
+        assertTrue(proxy.isEmpty());
     }    
 
     @Test
