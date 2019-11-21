@@ -249,7 +249,14 @@ extends AbstractFileView  {
                 if(newFile != null) {
                     // Copy new template file over
                     try {
-                        URL urlNewFile = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("templates/new.ajs"); //$NON-NLS-1$
+                    	URL urlNewFile;
+                    	if (ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_SCRIPTS_SUPPORT) == IPreferenceConstants.PREFS_GROOVY) {
+                    		urlNewFile = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("templates/new.groovy"); //$NON-NLS-1$                    		
+                    	}
+                    	else
+                    	{
+                    		urlNewFile = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("templates/new.ajs"); //$NON-NLS-1$	
+                    	}
                         InputStream in = urlNewFile.openStream();
                         Files.copy(in, newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                         in.close();

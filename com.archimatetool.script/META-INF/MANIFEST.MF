@@ -24,3 +24,6 @@ Export-Package: com.archimatetool.script,
  com.archimatetool.script.views.file,
  com.archimatetool.script.views.scripts
 Automatic-Module-Name: com.archimatetool.script
+Bundle-ClassPath: libs/groovy-2.5.8.jar,
+ .,
+ libs/groovy-jsr223-2.5.8.jar

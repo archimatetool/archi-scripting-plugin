@@ -6,9 +6,15 @@
 package com.archimatetool.script;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -16,6 +22,8 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.codehaus.groovy.jsr223.GroovyScriptEngineFactory;
+import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -30,6 +38,8 @@ import com.archimatetool.script.dom.IArchiScriptDOMFactory;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 import com.archimatetool.script.views.console.ConsoleOutput;
 
+import groovy.lang.GroovyClassLoader;
+import groovyjarjarpicocli.CommandLine.ParentCommand;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 
 
@@ -45,44 +55,38 @@ public class RunArchiScript {
 	
 	public void run() {
         ScriptEngine engine;
+        ScriptStarter starter;
         
-        if(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_ES6)) {
-            NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+        switch (ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_SCRIPTS_SUPPORT)) {
+		case IPreferenceConstants.PREFS_JAVASCRIPT_ES6:
+			NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
             engine = factory.getScriptEngine("--language=es6"); //$NON-NLS-1$
-        }
-        else {
-            engine = new ScriptEngineManager().getEngineByName("JavaScript"); //$NON-NLS-1$
-        }
+            starter = new JavascriptStarter();
+			break;
+		case IPreferenceConstants.PREFS_GROOVY:
+			engine = new ScriptEngineManager().getEngineByName("groovy"); //$NON-NLS-1$
+			GroovyClassLoader cl = ((GroovyScriptEngineImpl) engine).getClassLoader();
+			Arrays.asList(new File(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER)).listFiles((dir, name) -> name.endsWith(".jar"))).forEach(jar -> {
+				try {
+					cl.addURL(jar.toURI().toURL());
+				} catch (MalformedURLException e) {
+				}
+			});
+			starter = new GroovyStarter();
+			break;
+		case IPreferenceConstants.PREFS_JAVASCRIPT_ES5:
+		default:
+			engine = new ScriptEngineManager().getEngineByName("JavaScript"); //$NON-NLS-1$
+			starter = new JavascriptStarter();
+			break;
+		}
         
         defineGlobalVariables(engine);
         defineExtensionGlobalVariables(engine);
         setBindings(engine);
         
         try {
-            // Start the console
-            ConsoleOutput.start();
-            
-            // Initialize jArchi using the provided init.js script
-            URL initURL = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("js/init.js"); //$NON-NLS-1$
-            try(InputStreamReader initReader = new InputStreamReader(initURL.openStream());) {
-                engine.eval(initReader);
-            }
-        	
-            // Initialise CommandHandler
-            CommandHandler.init();
-            
-            if(ScriptFiles.isLinkedFile(file)) {
-                file = ScriptFiles.resolveLinkFile(file);
-            }
-            
-            // Normalize filename so that nashorn's load() can run it
-            String scriptPath = PlatformUtils.isWindows() ? file.getAbsolutePath().replace('\\', '/') : file.getAbsolutePath();
-            
-            // Initialise RefreshUIHandler
-            RefreshUIHandler.init();
-            
-            // Evaluate the script
-            engine.eval("load('" + scriptPath + "')");  //$NON-NLS-1$//$NON-NLS-2$
+            starter.start(engine, file);
         }
         catch(ScriptException | IOException ex) {
             error(ex, ex.toString());
@@ -157,7 +161,8 @@ public class RunArchiScript {
 	        ScriptException sex = (ScriptException)ex;
 	        
 	        if(sex.getMessage().contains("__EXIT__")) { //$NON-NLS-1$
-	            System.out.println("Exited at line number " + sex.getLineNumber()); //$NON-NLS-1$
+	        	// Customize message when scitping engine don't set the line number
+	            System.out.println(sex.getLineNumber() == -1 ? "Exited on exit function" : "Exited at line number " + sex.getLineNumber()); //$NON-NLS-1$
 	            return;
 	        }
 	    }
