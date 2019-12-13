@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
@@ -18,13 +19,22 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -32,10 +42,13 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
+import com.archimatetool.editor.actions.AbstractDropDownAction;
 import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.IArchiScriptImages;
+import com.archimatetool.script.IScriptEngineProvider;
+import com.archimatetool.script.JSProvider;
 import com.archimatetool.script.ScriptFiles;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 import com.archimatetool.script.views.file.AbstractFileView;
@@ -104,16 +117,70 @@ extends AbstractFileView  {
         fActionShowConsole = new ShowConsoleAction();
         
         // Icon
-        fActionNewFile.setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_SCRIPT));
+        IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderByID(JSProvider.ID);
+        fActionNewFile.setImageDescriptor(provider.getImageDescriptor());
     }
     
     @Override
     protected void makeLocalToolBarActions() {
-        super.makeLocalToolBarActions();
-
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
 
+        manager.add(new Separator(IWorkbenchActionConstants.NEW_GROUP));
+        
+        List<IScriptEngineProvider> installedProviders = IScriptEngineProvider.INSTANCE.getInstalledProviders();
+        
+        // If we have more than one installed provider show a drop-down box
+        if(installedProviders.size() > 1) {
+            AbstractDropDownAction dropDownAction = new AbstractDropDownAction(Messages.ScriptsFileViewer_4) {
+                // TODO: After Archi 4.7 remove this method as it is implemented in AbstractDropDownAction
+                @Override
+                public void runWithEvent(Event event) {
+                    ToolItem ti = (ToolItem)event.widget;
+                    Rectangle bounds = ti.getBounds();
+                    Control control = ti.getParent();
+                    Menu menu = getMenu(control);
+                    Point point = control.toDisplay(new Point(bounds.x, bounds.height));
+                    menu.setLocation(point);
+                    menu.setVisible(true);
+                }
+                
+                @Override
+                public ImageDescriptor getImageDescriptor() {
+                    return IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_NEW);
+                }
+            };
+            manager.add(dropDownAction);
+
+            for(IScriptEngineProvider provider : installedProviders) {
+                dropDownAction.add(new Action(NLS.bind(Messages.ScriptsFileViewer_5, provider.getName()), provider.getImageDescriptor()) {
+                    @Override
+                    public void run() {
+                        handleNewScriptAction(provider);
+                    }
+                });
+            }
+
+            dropDownAction.add(new Separator());
+            dropDownAction.add(fActionNewFolder);
+        }
+        // Else show simple menu items if we have only one provider
+        else {
+            IScriptEngineProvider provider = installedProviders.get(0);
+            manager.add(new Action(NLS.bind(Messages.ScriptsFileViewer_6, provider.getName()), provider.getImageDescriptor()) {
+                @Override
+                public void run() {
+                    handleNewScriptAction(provider);
+                }
+            });
+            
+            manager.add(fActionNewFolder);
+        }
+
+        manager.add(new Separator(IWorkbenchActionConstants.EDIT_START));
+        
+        manager.add(fActionEdit);
+        
         manager.appendToGroup(IWorkbenchActionConstants.NEW_GROUP, new Separator("extra")); //$NON-NLS-1$
         
         manager.add(fActionRun);
@@ -153,12 +220,37 @@ extends AbstractFileView  {
     
     @Override
     protected void fillContextMenu(IMenuManager manager) {
-        super.fillContextMenu(manager);
         boolean isEmpty = getViewer().getSelection().isEmpty();
 
-        if(!isEmpty) {
-            manager.appendToGroup(IWorkbenchActionConstants.EDIT_START, fActionRun);
+        IMenuManager newMenu = new MenuManager(Messages.ScriptsFileViewer_4, "new"); //$NON-NLS-1$
+        manager.add(newMenu);
+
+        for(IScriptEngineProvider provider : IScriptEngineProvider.INSTANCE.getInstalledProviders()) {
+            newMenu.add(new Action(NLS.bind(Messages.ScriptsFileViewer_5, provider.getName()), provider.getImageDescriptor()) {
+                @Override
+                public void run() {
+                    handleNewScriptAction(provider);
+                }
+            });
         }
+
+        newMenu.add(new Separator());
+        newMenu.add(fActionNewFolder);
+        manager.add(new Separator());
+
+        if(!isEmpty) {
+            manager.add(new Separator(IWorkbenchActionConstants.EDIT_START));
+            manager.add(fActionEdit);
+            manager.add(fActionRun);
+            manager.add(new Separator(IWorkbenchActionConstants.EDIT_END));
+            manager.add(fActionDelete);
+            manager.add(fActionRename);
+        }
+        
+        manager.add(fActionRefresh);
+        
+        // Other plug-ins can contribute their actions here
+        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     }
     
     @Override
@@ -226,11 +318,10 @@ extends AbstractFileView  {
         }
     }
     
-    @Override
     /**
-     * New File event happened
+     * New Script
      */
-    protected void handleNewFileAction() {
+    protected void handleNewScriptAction(IScriptEngineProvider provider) {
         File parent = (File)((IStructuredSelection)getViewer().getSelection()).getFirstElement();
 
         if(parent == null) {
@@ -241,18 +332,21 @@ extends AbstractFileView  {
         }
         
         if(parent.exists()) {
-            NewFileDialog dialog = new NewFileDialog(getViewSite().getShell(), parent);
-            dialog.setDefaultExtension(ScriptFiles.SCRIPT_EXTENSION);
+            NewFileDialog dialog = new NewFileDialog(getViewSite().getShell(), parent,
+                    NLS.bind(Messages.ScriptsFileViewer_6, provider.getName()));
+            dialog.setDefaultExtension(provider.getSupportedFileExtensions()[0]);
             
             if(dialog.open()) {
                 File newFile = dialog.getFile();
                 if(newFile != null) {
                     // Copy new template file over
                     try {
-                        URL urlNewFile = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("templates/new.ajs"); //$NON-NLS-1$
-                        InputStream in = urlNewFile.openStream();
-                        Files.copy(in, newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        in.close();
+                        URL urlNewFile = provider.getNewFile();
+                        if(urlNewFile != null) {
+                            InputStream in = urlNewFile.openStream();
+                            Files.copy(in, newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            in.close();
+                        }
                     }
                     catch(IOException ex) {
                         ex.printStackTrace();

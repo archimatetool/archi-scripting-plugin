@@ -13,6 +13,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -82,13 +83,14 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
                     fillItems(subMenu, file.listFiles());
                 }
                 else {
-                    menuManager.add(new Action(FileUtils.getFileNameWithoutExtension(file),
-                            IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_SCRIPT)) {
-
+                    IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
+                    ImageDescriptor imageDescriptor = provider.getImageDescriptor();
+                    
+                    menuManager.add(new Action(FileUtils.getFileNameWithoutExtension(file), imageDescriptor) {
                         @Override
                         public void run() {
-                            RunArchiScript script = new RunArchiScript(file);
-                            script.run();
+                            RunArchiScript runner = new RunArchiScript(file);
+                            runner.run();
                         }
                     });
                 }
@@ -106,9 +108,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
             return false;
         }
         
-        String ext = FileUtils.getFileExtension(file);
-        
-        return ext.equals(ScriptFiles.SCRIPT_EXTENSION) || ext.equals(ScriptFiles.LINK_EXTENSION);
+        return IScriptEngineProvider.INSTANCE.getProviderForFile(file) != null;
     }
     
     @Override

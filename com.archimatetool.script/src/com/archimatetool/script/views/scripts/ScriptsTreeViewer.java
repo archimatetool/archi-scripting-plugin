@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.archimatetool.editor.utils.FileUtils;
 import com.archimatetool.script.IArchiScriptImages;
+import com.archimatetool.script.IScriptEngineProvider;
 import com.archimatetool.script.ScriptFiles;
 import com.archimatetool.script.views.file.FileTreeViewer;
 
@@ -47,13 +48,14 @@ public class ScriptsTreeViewer extends FileTreeViewer {
     protected class ScriptsTreeLabelProvider extends FileTreeLabelProvider {
         @Override
         public Image getImage(File file) {
-            if(ScriptFiles.isScriptFile(file)) {
-                return IArchiScriptImages.ImageFactory.getImage(IArchiScriptImages.ICON_SCRIPT);
+            Image image = super.getImage(file);
+            
+            IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
+            if(provider != null) {
+                image = provider.getImage();
             }
             
             if(ScriptFiles.isLinkedFile(file)) {
-                Image image = IArchiScriptImages.ImageFactory.getImage(IArchiScriptImages.ICON_SCRIPT);
-                
                 try {
                     if(!ScriptFiles.resolveLinkFile(file).exists()) {
                         return IArchiScriptImages.ImageFactory.getOverlayImage(image,
@@ -64,16 +66,22 @@ public class ScriptsTreeViewer extends FileTreeViewer {
                     ex.printStackTrace();
                 }
                 
-                return IArchiScriptImages.ImageFactory.getOverlayImage(image,
-                        IArchiScriptImages.ICON_LINK_OVERLAY, IDecoration.BOTTOM_RIGHT);
+                if(provider != null) {
+                    return IArchiScriptImages.ImageFactory.getOverlayImage(image,
+                            IArchiScriptImages.ICON_LINK_OVERLAY, IDecoration.BOTTOM_RIGHT);
+                }
+                else {
+                    return IArchiScriptImages.ImageFactory.getOverlayImage(super.getImage(file),
+                            IArchiScriptImages.ICON_LINK_WARN_OVERLAY, IDecoration.BOTTOM_RIGHT);
+                }
             }
-            
-            return super.getImage(file);
+
+            return image;
         }
         
         @Override
         public String getText(File file) {
-            if(ScriptFiles.isScriptFile(file) || ScriptFiles.isLinkedFile(file)) {
+            if(ScriptFiles.isScriptFile(file)) {
                 return FileUtils.getFileNameWithoutExtension(file);
             }
             

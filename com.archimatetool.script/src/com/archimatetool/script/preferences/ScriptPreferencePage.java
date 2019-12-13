@@ -55,7 +55,12 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
             Messages.ScriptPreferencePage_6
     };
     
-    private Button fES6Button;
+    private Combo fJSCombo;
+    
+    private String[] JS_VERSIONS = {
+            Messages.ScriptPreferencePage_10,
+            Messages.ScriptPreferencePage_11,
+    };
     
 	public ScriptPreferencePage() {
 		setPreferenceStore(ArchiScriptPlugin.INSTANCE.getPreferenceStore());
@@ -127,12 +132,14 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         gd.horizontalSpan = 2;
         fDoubleClickBehaviourCombo.setLayoutData(gd);
         
-        // ES6
-        fES6Button = new Button(settingsGroup, SWT.CHECK);
-        fES6Button.setText(Messages.ScriptPreferencePage_10);
+        // JS Versions
+        label = new Label(settingsGroup, SWT.NULL);
+        label.setText(Messages.ScriptPreferencePage_12);
+        fJSCombo = new Combo(settingsGroup, SWT.READ_ONLY);
+        fJSCombo.setItems(JS_VERSIONS);
         gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 3;
-        fES6Button.setLayoutData(gd);
+        gd.horizontalSpan = 2;
+        fJSCombo.setLayoutData(gd);
         
         setValues();
         
@@ -164,7 +171,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         fScriptsFolderTextField.setText(getPreferenceStore().getString(PREFS_SCRIPTS_FOLDER));
         fEditorPathTextField.setText(getPreferenceStore().getString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
-        fES6Button.setSelection(getPreferenceStore().getBoolean(PREFS_ES6));
+        fJSCombo.select(getPreferenceStore().getInt(PREFS_JS_ENGINE));
     }
     
     @Override
@@ -172,7 +179,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         getPreferenceStore().setValue(PREFS_SCRIPTS_FOLDER, fScriptsFolderTextField.getText());
         getPreferenceStore().setValue(PREFS_EDITOR, fEditorPathTextField.getText());
         getPreferenceStore().setValue(PREFS_DOUBLE_CLICK_BEHAVIOUR, fDoubleClickBehaviourCombo.getSelectionIndex());
-        getPreferenceStore().setValue(PREFS_ES6, fES6Button.getSelection());
+        getPreferenceStore().setValue(PREFS_JS_ENGINE, fJSCombo.getSelectionIndex());
         
         return true;
     }
@@ -182,7 +189,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         fScriptsFolderTextField.setText(getPreferenceStore().getDefaultString(PREFS_SCRIPTS_FOLDER));
         fEditorPathTextField.setText(getPreferenceStore().getDefaultString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getDefaultInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
-        fES6Button.setSelection(getPreferenceStore().getDefaultBoolean(PREFS_ES6));
+        fJSCombo.select(getPreferenceStore().getDefaultInt(PREFS_JS_ENGINE));
     }
     
     @Override

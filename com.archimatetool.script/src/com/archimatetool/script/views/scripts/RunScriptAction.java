@@ -11,6 +11,7 @@ import org.eclipse.jface.action.Action;
 
 import com.archimatetool.script.IArchiScriptImages;
 import com.archimatetool.script.RunArchiScript;
+import com.archimatetool.script.ScriptFiles;
 
 
 /**
@@ -28,14 +29,14 @@ public class RunScriptAction extends Action {
     
     public void setFile(File file) {
         fFile = file;
-        setEnabled(file != null && !file.isDirectory() && file.exists());
+        setEnabled(ScriptFiles.isScriptFile(file));
     }
 
     @Override
     public void run() {
         if(isEnabled()) {
-            RunArchiScript script = new RunArchiScript(fFile);
-            script.run();
+            RunArchiScript runner = new RunArchiScript(fFile);
+            runner.run();
         }
     }
 }

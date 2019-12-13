@@ -29,6 +29,7 @@ public interface IArchiScriptImages {
     String ICON_FOLDER = IMGPATH + "folder.png"; //$NON-NLS-1$
     String ICON_LINK_OVERLAY = IMGPATH + "link_ovr.png"; //$NON-NLS-1$
     String ICON_LINK_WARN_OVERLAY = IMGPATH + "linkwarn_ovr.png"; //$NON-NLS-1$
+    String ICON_NEW = IMGPATH + "newfile_wiz.png"; //$NON-NLS-1$
     String ICON_REFRESH = IMGPATH + "refresh.png"; //$NON-NLS-1$
     String ICON_RUN = IMGPATH + "run_exc.png"; //$NON-NLS-1$
     String ICON_SCRIPT = IMGPATH + "script.png"; //$NON-NLS-1$

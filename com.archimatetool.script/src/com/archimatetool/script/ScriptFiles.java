@@ -14,16 +14,14 @@ import java.nio.file.Files;
  */
 public class ScriptFiles {
 	
-    public static final String SCRIPT_EXTENSION = ".ajs";  //$NON-NLS-1$
-    public static final String SCRIPT_WILDCARD_EXTENSION = "*.ajs";  //$NON-NLS-1$
     public static final String LINK_EXTENSION = ".link";  //$NON-NLS-1$
     
 	public static boolean isScriptFile(File file) {
-        return file.isFile() && file.getName().toLowerCase().endsWith(SCRIPT_EXTENSION);
+        return file != null && file.isFile() && IScriptEngineProvider.INSTANCE.getProviderForFile(file) != null;
     }
 	
     public static boolean isLinkedFile(File file) {
-	    return file.isFile() && file.getName().toLowerCase().endsWith(LINK_EXTENSION);
+	    return file != null && file.isFile() && file.getName().toLowerCase().endsWith(LINK_EXTENSION);
 	}
 	
 	public static File resolveLinkFile(File file) throws IOException {

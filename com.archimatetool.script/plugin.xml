@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="dom" name="DOM for Archi scripts" schema="schema/dom.exsd"/>
+   <extension-point id="scriptEngineProvider" name="Script Engine Provider" schema="schema/scriptEngineProvider.exsd"/>
    <extension
          point="org.eclipse.ui.commands">
       <command
@@ -132,6 +133,20 @@
             class="com.archimatetool.script.Startup"></startup>
    </extension>
    <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.archimatetool.script.preferences.ScriptPreferencePage"
+            id="com.archimatetool.script.preferences.ScriptPreferencePage"
+            name="%page.name">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.archimatetool.script.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
          point="com.archimatetool.script.dom">
       <dom
             class="com.archimatetool.script.dom.model.Selection"
@@ -165,18 +180,10 @@
       </dom>
    </extension>
    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            class="com.archimatetool.script.preferences.ScriptPreferencePage"
-            id="com.archimatetool.script.preferences.ScriptPreferencePage"
-            name="%page.name">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="com.archimatetool.script.preferences.PreferenceInitializer">
-      </initializer>
+         point="com.archimatetool.script.scriptEngineProvider">
+      <provider
+            class="com.archimatetool.script.JSProvider">
+      </provider>
    </extension>
 
 </plugin>

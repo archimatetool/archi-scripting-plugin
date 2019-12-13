@@ -19,8 +19,6 @@ public class Messages extends NLS {
 
     public static String AbstractFileView_11;
 
-    public static String AbstractFileView_15;
-
     public static String AbstractFileView_16;
 
     public static String AbstractFileView_17;
@@ -41,8 +39,6 @@ public class Messages extends NLS {
 
     public static String AbstractFileView_9;
 
-    public static String NewFileDialog_0;
-
     public static String NewFileDialog_1;
 
     public static String NewFileDialog_2;
@@ -61,15 +57,6 @@ public class Messages extends NLS {
 
     public static String NewFolderDialog_4;
 
-    public static String RenameFileDialog_0;
-
-    public static String RenameFileDialog_1;
-
-    public static String RenameFileDialog_2;
-
-    public static String RenameFileDialog_3;
-
-    public static String RenameFileDialog_4;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

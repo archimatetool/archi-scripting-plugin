@@ -40,17 +40,20 @@ public class NewFileDialog {
      */
     private String fDefaultExtension;
     
+    private String fTitle;
+    
 	/**
 	 * Constructor
 	 * @param parentFolder Parent File to add to
 	 */
-	public NewFileDialog(Shell shell, File parentFolder) {
+	public NewFileDialog(Shell shell, File parentFolder, String title) {
 	    fShell = shell;
 	    fParentFolder = parentFolder;
+	    fTitle = title;
 	}
 	
 	/**
-	 * Set the default file extension to use in case user does not provide onw
+	 * Set the default file extension to use in case user does not provide one
 	 * @param extension with the "." if one is required
 	 */
 	public void setDefaultExtension(String extension) {
@@ -70,7 +73,7 @@ public class NewFileDialog {
      */
     public boolean open() {
         InputDialog dialog = new InputDialog(fShell,
-                Messages.NewFileDialog_0,
+                fTitle,
                 Messages.NewFileDialog_1,
                 "", //$NON-NLS-1$
                 new InputValidator());
@@ -103,11 +106,11 @@ public class NewFileDialog {
 
         @Override
         public String isValid(String newText) {
-            newText = getNameWithDefaultExtension(newText);
-            
             if("".equals(newText.trim())) { //$NON-NLS-1$
                 return Messages.NewFileDialog_2;
             }
+            
+            newText = getNameWithDefaultExtension(newText);
             
             File file = new File(fParentFolder, newText);
             if(file.exists()) {

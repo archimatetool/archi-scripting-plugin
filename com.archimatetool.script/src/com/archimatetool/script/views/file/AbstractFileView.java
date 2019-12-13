@@ -15,9 +15,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -31,7 +29,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -274,16 +271,14 @@ implements IContextProvider {
      * Make Local Toolbar items
      */
     protected void makeLocalToolBarActions() {
-        IActionBars bars = getViewSite().getActionBars();
-        IToolBarManager manager = bars.getToolBarManager();
-
-        manager.add(new Separator(IWorkbenchActionConstants.NEW_GROUP));
-        manager.add(fActionNewFile);
-        manager.add(fActionNewFolder);
-        manager.add(new Separator(IWorkbenchActionConstants.EDIT_START));
-        manager.add(fActionEdit);
     }
     
+    /**
+     * Fill context menu
+     */
+    protected void fillContextMenu(IMenuManager manager) {
+    }
+
     /**
      * Update the Local Actions depending on the selection 
      * @param selection
@@ -297,30 +292,6 @@ implements IContextProvider {
         fActionEdit.setEnabled(!isEmpty && !file.isDirectory() && file.exists());
     }
     
-    protected void fillContextMenu(IMenuManager manager) {
-        boolean isEmpty = getViewer().getSelection().isEmpty();
-
-        IMenuManager newMenu = new MenuManager(Messages.AbstractFileView_15, "new"); //$NON-NLS-1$
-        manager.add(newMenu);
-
-        newMenu.add(fActionNewFile);
-        newMenu.add(fActionNewFolder);
-        manager.add(new Separator());
-
-        if(!isEmpty) {
-            manager.add(new Separator(IWorkbenchActionConstants.EDIT_START));
-            manager.add(fActionEdit);
-            manager.add(new Separator(IWorkbenchActionConstants.EDIT_END));
-            manager.add(fActionDelete);
-            manager.add(fActionRename);
-        }
-        
-        manager.add(fActionRefresh);
-        
-        // Other plug-ins can contribute their actions here
-        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-    }
-
     /**
      * @return The Viewer
      */
@@ -424,17 +395,20 @@ implements IContextProvider {
     /**
      * Double click event happened
      */
-    abstract protected void handleDoubleClickAction();
+    protected void handleDoubleClickAction() {
+    }
 
     /**
      * Edit event happened
      */
-    abstract protected void handleEditAction();
+    protected void handleEditAction() {
+    }
     
     /**
      * New File event happened
      */
-    abstract protected void handleNewFileAction();
+    protected void handleNewFileAction() {
+    }
     
 
     // =================================================================================

@@ -25,5 +25,5 @@ public interface IPreferenceConstants {
     
     String PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT = "refreshUIWhenRunningScript";
     
-    String PREFS_ES6 = "es6";
+    String PREFS_JS_ENGINE = "jsEngine";
 }
