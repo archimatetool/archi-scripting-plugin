@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Archi JRuby Scripting
+Bundle-SymbolicName: com.archimatetool.script.jruby;singleton:=true
+Bundle-Localization: plugin
+Bundle-Version: 0.1.0.qualifier
+Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
+Require-Bundle: com.archimatetool.editor,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ com.archimatetool.script
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Activator: com.archimatetool.script.jruby.JRubyPlugin
+Automatic-Module-Name: com.archimatetool.script
+Bundle-ClassPath: com.archimatetool.script.jruby.jar,
+ lib/jruby.jar
+Export-Package: com.archimatetool.script.jruby
