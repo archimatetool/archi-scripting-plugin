@@ -33,6 +33,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.ui.components.TreeTextCellEditor;
+import com.archimatetool.script.IArchiScriptImages;
 
 
 /**
@@ -250,7 +251,7 @@ public abstract class FileTreeViewer extends TreeViewer {
         
         public Image getImage(File file) {
             if(file.isDirectory()) {
-                return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+                return IArchiScriptImages.ImageFactory.getImage(IArchiScriptImages.ICON_FOLDER);
             }
             return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
         }
