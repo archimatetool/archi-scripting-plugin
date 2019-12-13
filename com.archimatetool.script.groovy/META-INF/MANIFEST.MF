@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Archi Groovy Scripting
+Bundle-SymbolicName: com.archimatetool.script.groovy;singleton:=true
+Bundle-Localization: plugin
+Bundle-Version: 0.1.0.qualifier
+Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
+Require-Bundle: com.archimatetool.editor,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ com.archimatetool.script
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-Activator: com.archimatetool.script.groovy.GroovyPlugin
+Automatic-Module-Name: com.archimatetool.script
+Bundle-ClassPath: com.archimatetool.script.groovy.jar,
+ lib/groovy-3.0.0-rc-1.jar,
+ lib/groovy-jsr223-3.0.0-rc-1.jar
+Export-Package: com.archimatetool.script.groovy
