@@ -85,10 +85,8 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         Label label = new Label(settingsGroup, SWT.NULL);
         label.setText(Messages.ScriptPreferencePage_8 + ":"); //$NON-NLS-1$
         
-        fScriptsFolderTextField = new Text(settingsGroup, SWT.BORDER | SWT.SINGLE);
+        fScriptsFolderTextField = UIUtils.createSingleTextControl(settingsGroup, SWT.BORDER, false);
         fScriptsFolderTextField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        // Single text control so strip CRLFs
-        UIUtils.conformSingleTextControl(fScriptsFolderTextField);
         
         Button folderButton = new Button(settingsGroup, SWT.PUSH);
         folderButton.setText(Messages.ScriptPreferencePage_2);
@@ -106,10 +104,8 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         label = new Label(settingsGroup, SWT.NULL);
         label.setText(Messages.ScriptPreferencePage_1);
         
-        fEditorPathTextField = new Text(settingsGroup, SWT.BORDER | SWT.SINGLE);
+        fEditorPathTextField = UIUtils.createSingleTextControl(settingsGroup, SWT.BORDER, false);
         fEditorPathTextField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        // Single text control so strip CRLFs
-        UIUtils.conformSingleTextControl(fEditorPathTextField);
         
         Button fileButton = new Button(settingsGroup, SWT.PUSH);
         fileButton.setText(Messages.ScriptPreferencePage_2);
