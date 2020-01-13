@@ -16,6 +16,7 @@ import com.archimatetool.model.IAccessRelationship;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
+import com.archimatetool.model.IAssociationRelationship;
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
@@ -271,6 +272,8 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         return this;
     }
     
+    // Access Type
+    
     public String getAccessType() {
         if(getEObject() instanceof IAccessRelationship) {
             return IModelConstants.ACCESS_TYPES_LIST.get(((IAccessRelationship)getEObject()).getAccessType());
@@ -290,6 +293,8 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         return this;
     }
     
+    // Influence Strength
+    
     public String getInfluenceStrength() {
         if(getEObject() instanceof IInfluenceRelationship) {
             return ((IInfluenceRelationship)getEObject()).getStrength();
@@ -303,6 +308,22 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         }
         return this;
     }
+    
+    // Association Directed
+    
+    public boolean isAssociationDirected() {
+        if(getEObject() instanceof IAssociationRelationship) {
+            return ((IAssociationRelationship)getEObject()).isDirected();
+        }
+        return false;
+    }
+    
+    public EObjectProxy setAssociationDirected(boolean directed) {
+        if(getEObject() instanceof IAssociationRelationship) {
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ASSOCIATION_RELATIONSHIP__DIRECTED, directed));
+        }
+        return this;
+    }
 
     @Override
     protected Object attr(String attribute) {
@@ -311,6 +332,8 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
                 return getAccessType();
             case INFLUENCE_STRENGTH:
                 return getInfluenceStrength();
+            case ASSOCIATION_DIRECTED:
+                return isAssociationDirected();
             case SOURCE:
                 return getSource();
             case TARGET:
@@ -330,6 +353,10 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             case INFLUENCE_STRENGTH:
                 if(value instanceof String) {
                     return setInfluenceStrength((String)value);
+                }
+            case ASSOCIATION_DIRECTED:
+                if(value instanceof Boolean) {
+                    return setAssociationDirected((Boolean)value);
                 }
             case SOURCE:
                 if(value instanceof ArchimateConceptProxy) {

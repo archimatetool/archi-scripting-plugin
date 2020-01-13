@@ -64,4 +64,6 @@ interface IModelConstants {
     });
     
     String INFLUENCE_STRENGTH = "influence-strength"; //$NON-NLS-1$
+    
+    String ASSOCIATION_DIRECTED = "association-directed"; //$NON-NLS-1$
 }

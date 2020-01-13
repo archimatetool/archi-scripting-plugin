@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -191,6 +192,9 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         proxy.setAccessType("rubbish");
         assertEquals("readwrite", proxy.getAccessType());
         assertEquals(IAccessRelationship.READ_WRITE_ACCESS, relationship.getAccessType());
+        
+        proxy.attr(IModelConstants.ACCESS_TYPE, "read");
+        assertEquals("read", proxy.attr(IModelConstants.ACCESS_TYPE));
     }
 
     @Test
@@ -203,5 +207,27 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         proxy.setInfluenceStrength("+++");
         assertEquals("+++", relationship.getStrength());
         assertEquals("+++", proxy.getInfluenceStrength());
+        
+        proxy.attr(IModelConstants.INFLUENCE_STRENGTH, "---");
+        assertEquals("---", proxy.attr(IModelConstants.INFLUENCE_STRENGTH));
     }
+    
+    @Test
+    public void setAssociationDirected() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        IAssociationRelationship relationship = IArchimateFactory.eINSTANCE.createAssociationRelationship();
+        model.getDefaultFolderForObject(relationship).getElements().add(relationship);
+        ArchimateRelationshipProxy proxy = (ArchimateRelationshipProxy)EObjectProxy.get(relationship);
+        
+        assertFalse(relationship.isDirected());
+        assertFalse(proxy.isAssociationDirected());
+        
+        proxy.setAssociationDirected(true);
+        assertTrue(relationship.isDirected());
+        assertTrue(proxy.isAssociationDirected());
+        
+        proxy.attr(IModelConstants.ASSOCIATION_DIRECTED, false);
+        assertFalse((Boolean)proxy.attr(IModelConstants.ASSOCIATION_DIRECTED));
+    }
+
 }
