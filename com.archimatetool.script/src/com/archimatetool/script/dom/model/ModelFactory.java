@@ -30,6 +30,7 @@ import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
+import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
@@ -272,6 +273,26 @@ class ModelFactory {
         
         IDiagramModelArchimateObject dmo = ArchimateDiagramModelFactory.createDiagramModelArchimateObject(element);
         return createDiagramObject(parent, dmo, x, y, width, height, autoNest);
+    }
+    
+    /**
+     * Create and add a view reference to another view
+     */
+    static DiagramModelObjectProxy createViewReference(IDiagramModelContainer parent, IDiagramModel dm,
+            int x, int y, int width, int height, boolean autoNest) {
+        
+        // Ensure all components share the same model
+        ModelUtil.checkComponentsInSameModel(parent, dm);
+        
+        // Ensure that the dm is not the same
+        if(parent.getDiagramModel() == dm) {
+            throw new ArchiScriptException(Messages.ModelFactory_7);
+        }
+
+        IDiagramModelReference dmRef = IArchimateFactory.eINSTANCE.createDiagramModelReference();
+        dmRef.setReferencedModel(dm);
+        
+        return createDiagramObject(parent, dmRef, x, y, width, height, autoNest);
     }
     
     /**

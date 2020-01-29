@@ -58,6 +58,17 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         throw new ArchiScriptException(Messages.DiagramModelObjectProxy_1);
     }
     
+    /**
+     * Create and add a view reference to another view and return the diagram object proxy
+     */
+    public DiagramModelObjectProxy createViewReference(DiagramModelProxy dmRef, int x, int y, int width, int height) {
+        if(getEObject() instanceof IDiagramModelContainer) {
+            return ModelFactory.createViewReference((IDiagramModelContainer)getEObject(), dmRef.getEObject(), x, y, width, height, false);
+        }
+        
+        throw new ArchiScriptException(Messages.DiagramModelObjectProxy_1);
+    }
+
     @Override
     protected IDiagramModelObject getEObject() {
         return (IDiagramModelObject)super.getEObject();
