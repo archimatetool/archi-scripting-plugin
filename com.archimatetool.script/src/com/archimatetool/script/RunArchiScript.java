@@ -38,16 +38,11 @@ public class RunArchiScript {
 	}
 	
 	public void run() {
-        // Start the console
-        ConsoleOutput.start();
-
         // Get the provider for this file type
 	    IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
         
 	    if(provider == null) {
-	        System.err.println(NLS.bind("Script Provider not found for file: {0}", file)); //$NON-NLS-1$
-	        ConsoleOutput.end();
-	        return;
+	        throw new RuntimeException(NLS.bind("Script Provider not found for file: {0}", file)); //$NON-NLS-1$
 	    }
 	    
 	    ScriptEngine engine = provider.createScriptEngine();
@@ -56,6 +51,9 @@ public class RunArchiScript {
         defineExtensionGlobalVariables(engine);
         setBindings(engine);
         
+        // Start the console *after* the script engine has been created to avoid showing warning messages
+        ConsoleOutput.start();
+
         // Initialise CommandHandler
         CommandHandler.init();
 
