@@ -10,16 +10,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.archimatetool.editor.model.commands.FeatureCommand;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelBendpoint;
 import com.archimatetool.model.IDiagramModelConnection;
-import com.archimatetool.model.ILineObject;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DisconnectConnectionCommand;
 import com.archimatetool.script.commands.ScriptCommand;
+import com.archimatetool.script.commands.ScriptCommandWrapper;
 import com.archimatetool.script.commands.SetCommand;
 
 /**
@@ -63,6 +64,16 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         }
         
         CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_WIDTH, width));
+        return this;
+    }
+    
+    public boolean isLabelVisible() {
+        return getEObject().getFeatures().getBoolean(IDiagramModelConnection.FEATURE_NAME_VISIBLE, true);
+    }
+    
+    public DiagramModelComponentProxy setLabelVisible(boolean visible) {
+        CommandHandler.executeCommand(new ScriptCommandWrapper(new FeatureCommand("", getEObject(), //$NON-NLS-1$
+                IDiagramModelConnection.FEATURE_NAME_VISIBLE, visible, true), getEObject()));
         return this;
     }
     
@@ -171,6 +182,8 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
                 return getSource();
             case TARGET:
                 return getTarget();
+            case LABEL_VISIBLE:
+                return isLabelVisible();
             case RELATIVE_BENDPOINTS:
                 return getRelativeBendpoints();
         }
@@ -184,6 +197,11 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
             case LINE_WIDTH:
                 if(value instanceof Integer) {
                     return setLineWidth((int)value);
+                }
+                break;
+            case LABEL_VISIBLE:
+                if(value instanceof Boolean) {
+                    return setLabelVisible((boolean)value);
                 }
                 break;
         }

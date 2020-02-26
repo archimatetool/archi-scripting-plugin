@@ -13,58 +13,61 @@ import java.util.List;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 interface IModelConstants {
 
-    String ID = "id"; //$NON-NLS-1$
-    String NAME = "name"; //$NON-NLS-1$
-    String DOCUMENTATION = "documentation"; //$NON-NLS-1$
-    String PURPOSE = "purpose"; //$NON-NLS-1$
-    String TYPE = "type"; //$NON-NLS-1$
+    String ID = "id";
+    String NAME = "name";
+    String DOCUMENTATION = "documentation";
+    String PURPOSE = "purpose";
+    String TYPE = "type";
     
-    String CONCEPT = "concept"; //$NON-NLS-1$
-    String ELEMENT = "element"; //$NON-NLS-1$
-    String RELATION = "relation"; //$NON-NLS-1$
-    String RELATIONSHIP = "relationship"; //$NON-NLS-1$
-    String VIEW = "view"; //$NON-NLS-1$
-    String VIEWPOINT = "viewpoint"; //$NON-NLS-1$
+    String CONCEPT = "concept";
+    String ELEMENT = "element";
+    String RELATION = "relation";
+    String RELATIONSHIP = "relationship";
+    String VIEW = "view";
+    String VIEWPOINT = "viewpoint";
     
-    String SOURCE = "source"; //$NON-NLS-1$
-    String TARGET = "target"; //$NON-NLS-1$
+    String SOURCE = "source";
+    String TARGET = "target";
     
-    String RELATIVE_BENDPOINTS = "relativeBendpoints"; //$NON-NLS-1$
-    String START_X = "startX"; //$NON-NLS-1$
-    String START_Y = "startY"; //$NON-NLS-1$
-    String END_X = "endX"; //$NON-NLS-1$
-    String END_Y = "endY"; //$NON-NLS-1$
+    String RELATIVE_BENDPOINTS = "relativeBendpoints";
+    String START_X = "startX";
+    String START_Y = "startY";
+    String END_X = "endX";
+    String END_Y = "endY";
     
-    String BOUNDS = "bounds"; //$NON-NLS-1$
+    String BOUNDS = "bounds";
     
-    String FILL_COLOR = "fillColor";  //$NON-NLS-1$
+    String FILL_COLOR = "fillColor"; 
     
-    String FONT_COLOR = "fontColor";  //$NON-NLS-1$
-    String FONT_SIZE = "fontSize";  //$NON-NLS-1$
-    String FONT_STYLE = "fontStyle";  //$NON-NLS-1$
-    String FONT_NAME = "fontName";  //$NON-NLS-1$
+    String FONT_COLOR = "fontColor"; 
+    String FONT_SIZE = "fontSize"; 
+    String FONT_STYLE = "fontStyle"; 
+    String FONT_NAME = "fontName"; 
     
-    String LINE_COLOR = "lineColor";  //$NON-NLS-1$
-    String LINE_WIDTH = "lineWidth";  //$NON-NLS-1$
+    String LINE_COLOR = "lineColor"; 
+    String LINE_WIDTH = "lineWidth"; 
     
-    String OPACITY = "opacity"; //$NON-NLS-1$
-    String OUTLINE_OPACITY = "outlineOpacity"; //$NON-NLS-1$
+    String OPACITY = "opacity";
+    String OUTLINE_OPACITY = "outlineOpacity";
     
-    String FIGURE_TYPE = "figureType"; //$NON-NLS-1$
+    String LABEL_VISIBLE = "labelVisible";
     
-    String TEXT = "text"; //$NON-NLS-1$
+    String FIGURE_TYPE = "figureType";
     
-    String ACCESS_TYPE = "access-type";  //$NON-NLS-1$
+    String TEXT = "text";
+    
+    String ACCESS_TYPE = "access-type"; 
     List<String> ACCESS_TYPES_LIST = Arrays.asList(new String[] {
-            "write", //$NON-NLS-1$
-            "read", //$NON-NLS-1$
-            "access", //$NON-NLS-1$
-            "readwrite" //$NON-NLS-1$
+            "write",
+            "read",
+            "access",
+            "readwrite"
     });
     
-    String INFLUENCE_STRENGTH = "influence-strength"; //$NON-NLS-1$
+    String INFLUENCE_STRENGTH = "influence-strength";
     
-    String ASSOCIATION_DIRECTED = "association-directed"; //$NON-NLS-1$
+    String ASSOCIATION_DIRECTED = "association-directed";
 }

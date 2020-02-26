@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -157,6 +158,13 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         assertEquals(1, actualTestProxy.attr(IModelConstants.LINE_WIDTH));
         actualTestProxy.attr(IModelConstants.LINE_WIDTH, 4);
         assertEquals(3, actualTestProxy.attr(IModelConstants.LINE_WIDTH));
+    }
+    
+    @Test
+    public void attr_LabelVisible() {
+        assertTrue((boolean)actualTestProxy.attr(IModelConstants.LABEL_VISIBLE));
+        actualTestProxy.attr(IModelConstants.LABEL_VISIBLE, false);
+        assertFalse((boolean)actualTestProxy.attr(IModelConstants.LABEL_VISIBLE));
     }
     
     @Test
