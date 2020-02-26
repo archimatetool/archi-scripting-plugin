@@ -41,10 +41,6 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         return new JUnit4TestAdapter(ArchimateDiagramModelObjectProxyTests.class);
     }
     
-    protected DiagramModelObjectProxy actualTestProxy;
-    
-    protected ArchimateModelProxy testModelProxy;
-    
     @Before
     public void runOnceBeforeEachTest() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
@@ -173,14 +169,6 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertEquals(20, bounds.get("y"));
         assertEquals(440, bounds.get("width"));
         assertEquals(500, bounds.get("height"));
-    }
-    
-    @Override
-    @Test
-    public void attr_Opacity() {
-        assertEquals(255, actualTestProxy.attr(IModelConstants.OPACITY));
-        actualTestProxy.attr(IModelConstants.OPACITY, 40);
-        assertEquals(40, actualTestProxy.attr(IModelConstants.OPACITY));
     }
     
     @Test
