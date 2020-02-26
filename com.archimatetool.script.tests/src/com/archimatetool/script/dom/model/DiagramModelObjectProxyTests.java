@@ -71,4 +71,11 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
         actualTestProxy.attr(IModelConstants.OPACITY, 40);
         assertEquals(40, actualTestProxy.attr(IModelConstants.OPACITY));
     }
+
+    @Test
+    public void attr_OutlineOpacity() {
+        assertEquals(255, actualTestProxy.attr(IModelConstants.OUTLINE_OPACITY));
+        actualTestProxy.attr(IModelConstants.OUTLINE_OPACITY, 40);
+        assertEquals(40, actualTestProxy.attr(IModelConstants.OUTLINE_OPACITY));
+    }
 }

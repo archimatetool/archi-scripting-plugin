@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
 import com.archimatetool.editor.ui.factory.IArchimateElementUIProvider;
 import com.archimatetool.editor.ui.factory.IObjectUIProvider;
 import com.archimatetool.editor.ui.factory.ObjectUIFactory;
@@ -23,6 +24,7 @@ import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteDiagramModelObjectCommand;
+import com.archimatetool.script.commands.ScriptCommandWrapper;
 import com.archimatetool.script.commands.SetCommand;
 
 /**
@@ -170,6 +172,23 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return this;
     }
 
+    public int getOutlineOpacity() {
+        return getEObject().getLineAlpha();
+    }
+    
+    public DiagramModelObjectProxy setOutlineOpacity(int value) {
+        if(value < 0) {
+            value = 0;
+        }
+        if(value > 255) {
+            value = 255;
+        }
+        
+        CommandHandler.executeCommand(new ScriptCommandWrapper(new DiagramModelObjectOutlineAlphaCommand(getEObject(), value), getEObject()));
+        
+        return this;
+    }
+
     public DiagramModelObjectProxy setFigureType(int value) {
         // If this is an ArchiMate type...
         if(isArchimateConcept()) {
@@ -206,6 +225,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 return getFillColor();
             case OPACITY:
                 return getOpacity();
+            case OUTLINE_OPACITY:
+                return getOutlineOpacity();
             case FIGURE_TYPE:
                 return getFigureType();
         }
@@ -229,6 +250,11 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case OPACITY:
                 if(value instanceof Integer) {
                     return setOpacity((int)value);
+                }
+                break;
+            case OUTLINE_OPACITY:
+                if(value instanceof Integer) {
+                    return setOutlineOpacity((int)value);
                 }
                 break;
             case FIGURE_TYPE:

@@ -50,6 +50,7 @@ interface IModelConstants {
     String LINE_WIDTH = "lineWidth";  //$NON-NLS-1$
     
     String OPACITY = "opacity"; //$NON-NLS-1$
+    String OUTLINE_OPACITY = "outlineOpacity"; //$NON-NLS-1$
     
     String FIGURE_TYPE = "figureType"; //$NON-NLS-1$
     
