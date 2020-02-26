@@ -63,7 +63,6 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         }
         
         CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_WIDTH, width));
-        ((ILineObject)getEObject()).setLineWidth(width);
         return this;
     }
     
