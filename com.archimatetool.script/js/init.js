@@ -10,6 +10,11 @@ jArchi.fs = jArchiFS;
 
 $ = jArchi;
 
+// Application args
+function getArgs() {
+	return Java.type("org.eclipse.core.runtime.Platform").getApplicationArgs();
+}
+
 // window dialog functions
 var window = {
 	alert: function(message) {
