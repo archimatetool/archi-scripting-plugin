@@ -15,6 +15,20 @@ function getArgs() {
 	return Java.type("org.eclipse.core.runtime.Platform").getApplicationArgs();
 }
 
+// Run a system command
+function exec() {
+	// Split arguments into an array of args
+	var args = Array.prototype.slice.call(arguments);
+	
+	var platform = Java.type("org.eclipse.core.runtime.Platform").getOS();
+	if(platform == "macosx") {
+		args = ["open", "-a"].concat(args[0]); // for some reason, Mac will only accept one argument
+	}
+
+	var runtime = Java.type("java.lang.Runtime").getRuntime();
+	runtime.exec(args);
+}
+
 // window dialog functions
 var window = {
 	alert: function(message) {
