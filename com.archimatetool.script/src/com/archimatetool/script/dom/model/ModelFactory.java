@@ -53,14 +53,19 @@ class ModelFactory {
      * Create a new ArchimateElementProxy, adding it to a parentFolder
      * If parentFolder is null use default folder
      */
-    static ArchimateElementProxy createElement(IArchimateModel model, String type, String name, IFolder parentFolder) {
+    static ArchimateElementProxy createElement(IArchimateModel model, String type, String name, IFolder parentFolder, String id) {
         // Ensure all components share the same model
         ModelUtil.checkComponentsInSameModel(model, parentFolder);
         
         EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(type));
         if(eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass)) { // Check this is the correct type
             IArchimateElement element = (IArchimateElement)IArchimateFactory.eINSTANCE.create(eClass);
+            
             element.setName(StringUtils.safeString(name));
+            
+            if(StringUtils.isSet(id)) {
+            	element.setId(id);
+            }
             
             // Check folder is correct for type, if not use default folder
             if(parentFolder == null || !ModelUtil.isCorrectFolderForObject(parentFolder, element)) {

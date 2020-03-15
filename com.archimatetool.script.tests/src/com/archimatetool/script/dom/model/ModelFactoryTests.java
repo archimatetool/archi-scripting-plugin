@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -59,8 +60,9 @@ public class ModelFactoryTests {
         IFolder subfolder = IArchimateFactory.eINSTANCE.createFolder();
         subfolder.setType(FolderType.USER);
         folder.getFolders().add(subfolder);
-        ArchimateElementProxy elementProxy = ModelFactory.createElement(testModelProxy.getArchimateModel(), "application-component", "Fido", subfolder);
+        ArchimateElementProxy elementProxy = ModelFactory.createElement(testModelProxy.getArchimateModel(), "application-component", "Fido", subfolder, null);
         assertEquals("Fido", elementProxy.getName());
+        assertNotNull(elementProxy.getId());
         assertEquals(IArchimatePackage.eINSTANCE.getApplicationComponent(), elementProxy.getEObject().eClass());
         assertSame(subfolder, elementProxy.getEObject().eContainer());
     }
@@ -69,17 +71,26 @@ public class ModelFactoryTests {
     public void createElement_FolderIsNull() {
         loadTestModel();
         
-        ArchimateElementProxy elementProxy = ModelFactory.createElement(testModelProxy.getArchimateModel(), "application-component", "Fido", null);
+        ArchimateElementProxy elementProxy = ModelFactory.createElement(testModelProxy.getArchimateModel(), "application-component", "Fido", null, null);
         assertEquals("Fido", elementProxy.getName());
+        assertNotNull(elementProxy.getId());
         assertEquals(IArchimatePackage.eINSTANCE.getApplicationComponent(), elementProxy.getEObject().eClass());
         assertEquals(testModelProxy.getEObject().getFolder(FolderType.APPLICATION), elementProxy.getEObject().eContainer());
     }
     
+    @Test
+    public void createElement_WithID() {
+        loadTestModel();
+        
+        ArchimateElementProxy elementProxy = ModelFactory.createElement(testModelProxy.getArchimateModel(), "application-component", "Fido", null, "123");
+        assertEquals("123", elementProxy.getId());
+    }
+
     @Test(expected=ArchiScriptException.class)
     public void createElement_Exception() {
         loadTestModel();
         
-        ModelFactory.createElement(testModelProxy.getArchimateModel(), "association-relationship", "Fido", null);
+        ModelFactory.createElement(testModelProxy.getArchimateModel(), "association-relationship", "Fido", null, null);
     }
 
     @Test
