@@ -22,11 +22,7 @@ public class AddPropertyCommand extends ScriptCommand {
     public AddPropertyCommand(IProperties eObject, String key, String value) {
         super("property", eObject); //$NON-NLS-1$
         this.eObject = eObject;
-        
-        // TODO use IArchimateFactory.eINSTANCE.createProperty(key, value);
-        property = IArchimateFactory.eINSTANCE.createProperty();
-        property.setKey(key);
-        property.setValue(value);
+        property = IArchimateFactory.eINSTANCE.createProperty(key, value);
     }
 
     @Override

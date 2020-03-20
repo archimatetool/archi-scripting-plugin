@@ -56,10 +56,6 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
         // This will effectively remove the concept listener from the Edit Part
         parent.getChildren().remove(dmo);
         
-        // Have to remove referenced dmo first
-        // TODO: Remove this line because in Archi 4.5 and greater this is done in dmo.setArchimateElement(element)
-        oldElement.getReferencingDiagramObjects().remove(dmo);
-        
         // Set it
         dmo.setArchimateElement(element);
         

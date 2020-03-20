@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
@@ -52,8 +53,8 @@ class ModelUtil {
             
             if(eObject instanceof IDiagramModelContainer) {
                 IDiagramModelObject dmo = (IDiagramModelObject)eObject;
-                IBounds dmoBounds = getAbsoluteBounds(dmo);
-                if(outerBoundsContainsInnerBounds(dmoBounds, bounds)) {
+                IBounds dmoBounds = DiagramModelUtils.getAbsoluteBounds(dmo);
+                if(DiagramModelUtils.outerBoundsContainsInnerBounds(dmoBounds, bounds)) {
                     parent = (IDiagramModelContainer)eObject;
                 }
             }
@@ -61,7 +62,7 @@ class ModelUtil {
         
         // Convert back to relative co-ords
         if(parent instanceof IDiagramModelObject) {
-            IBounds newBounds = getRelativeBounds(bounds, (IDiagramModelObject)parent);
+            IBounds newBounds = DiagramModelUtils.getRelativeBounds(bounds, (IDiagramModelObject)parent);
             bounds.setX(newBounds.getX());
             bounds.setY(newBounds.getY());
         }
@@ -236,53 +237,4 @@ class ModelUtil {
         }
     }
     
-    // ==================================================================================================================================================
-    // TODO!!!!!!!!
-    // Delete these three methods and use the same methods in com.archimatetool.editor.model.DiagramModelUtils when the next version of Archi is released
-    // ==================================================================================================================================================
-    
-    static IBounds getAbsoluteBounds(IDiagramModelObject dmo) {
-        IBounds bounds = dmo.getBounds().getCopy();
-        
-        EObject container = dmo.eContainer();
-        while(container instanceof IDiagramModelObject) {
-            IDiagramModelObject parent = (IDiagramModelObject)container;
-            IBounds parentBounds = parent.getBounds().getCopy();
-            
-            bounds.setX(bounds.getX() + parentBounds.getX());
-            bounds.setY(bounds.getY() + parentBounds.getY());
-            
-            container = container.eContainer();
-        }
-
-        return bounds;
-    }
-    
-    static IBounds getRelativeBounds(IBounds absoluteBounds, IDiagramModelObject parent) {
-        IBounds bounds = absoluteBounds.getCopy();
-        
-        do {
-            IBounds parentBounds = parent.getBounds();
-            
-            bounds.setX(bounds.getX() - parentBounds.getX());
-            bounds.setY(bounds.getY() - parentBounds.getY());
-            
-            parent = (parent.eContainer() instanceof IDiagramModelObject) ? (IDiagramModelObject)parent.eContainer() : null;
-        }
-        while(parent != null);
-
-        return bounds;
-    }
-
-    
-    static boolean outerBoundsContainsInnerBounds(IBounds outer, IBounds inner) {
-        return (outer.getX() <= inner.getX()) && (inner.getX() + inner.getWidth() <= outer.getX() + outer.getWidth())
-                && (outer.getY() <= inner.getY()) && (inner.getY() + inner.getHeight() <= outer.getY() + outer.getHeight());
-    }
-
-    // ==================================================================================================================================================
-    // END TODO!!!!!!!!
-    // ==================================================================================================================================================
-    
-
 }

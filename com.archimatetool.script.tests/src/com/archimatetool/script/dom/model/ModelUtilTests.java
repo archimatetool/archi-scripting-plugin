@@ -16,13 +16,10 @@ import org.junit.Test;
 
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
-import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
-import com.archimatetool.model.IBounds;
-import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
@@ -211,90 +208,5 @@ public class ModelUtilTests {
         IArchimateModelObject o4 = (IArchimateModelObject)testModel2.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessEvent());
         
         ModelUtil.checkComponentsInSameModel(model1, o3, o4);
-    }
-    
-    // ==================================================================================================================================================
-    // TODO!!!!!!!!
-    // Delete these three tests and use the same methods in com.archimatetool.editor.model.DiagramModelUtils when the next version of Archi is released
-    // ==================================================================================================================================================
-    
-    @Test
-    public void getAbsoluteBounds() {
-        IArchimateDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
-        
-        IDiagramModelGroup dmo1 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
-        dmo1.setBounds(10, 15, 500, 500);
-        dm.getChildren().add(dmo1);
-        
-        IBounds bounds = ModelUtil.getAbsoluteBounds(dmo1);
-        assertEquals(10, bounds.getX());
-        assertEquals(15, bounds.getY());
-        
-        IDiagramModelGroup dmo2 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
-        dmo2.setBounds(10, 15, 400, 400);
-        dmo1.getChildren().add(dmo2);
-
-        bounds = ModelUtil.getAbsoluteBounds(dmo2);
-        assertEquals(20, bounds.getX());
-        assertEquals(30, bounds.getY());
-        
-        IDiagramModelGroup dmo3 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
-        dmo3.setBounds(10, 15, 300, 300);
-        dmo2.getChildren().add(dmo3);
-
-        bounds = ModelUtil.getAbsoluteBounds(dmo3);
-        assertEquals(30, bounds.getX());
-        assertEquals(45, bounds.getY());
-    }
-    
-    
-    @Test
-    public void getRelativeBounds() {
-        IArchimateDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
-        
-        // Add main parent diagram model object
-        IDiagramModelGroup dmo1 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
-        dmo1.setBounds(10, 10, 200, 200);
-        dm.getChildren().add(dmo1);
-        
-        // Add child
-        IDiagramModelGroup dmo2 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
-        dmo1.getChildren().add(dmo2);
-
-        // Get relative bounds
-        IBounds absoluteBounds = IArchimateFactory.eINSTANCE.createBounds(50, 60, 100, 100);
-        IBounds relativebounds = ModelUtil.getRelativeBounds(absoluteBounds, dmo1);
-        assertEquals(40, relativebounds.getX());
-        assertEquals(50, relativebounds.getY());
-        dmo2.setBounds(relativebounds);
-        
-        IDiagramModelGroup dmo3 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
-        dmo2.getChildren().add(dmo3);
-
-        absoluteBounds = IArchimateFactory.eINSTANCE.createBounds(90, 75, 500, 500);
-        relativebounds = ModelUtil.getRelativeBounds(absoluteBounds, dmo2);
-        assertEquals(40, relativebounds.getX());
-        assertEquals(15, relativebounds.getY());
-        dmo3.setBounds(relativebounds);
-    }
- 
-    @Test
-    public void outerBoundsContainsInnerBounds() {
-        IBounds outer = IArchimateFactory.eINSTANCE.createBounds(0, 0, 100, 100);
-        
-        IBounds inner = IArchimateFactory.eINSTANCE.createBounds(0, 0, 100, 100);
-        assertTrue(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
-        
-        inner = IArchimateFactory.eINSTANCE.createBounds(10, 10, 100, 100);
-        assertFalse(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
-        
-        inner = IArchimateFactory.eINSTANCE.createBounds(10, 10, 90, 90);
-        assertTrue(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
-        
-        inner = IArchimateFactory.eINSTANCE.createBounds(-10, -10, 90, 90);
-        assertFalse(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
-
-        inner = IArchimateFactory.eINSTANCE.createBounds(-0, 0, 101, 100);
-        assertFalse(ModelUtil.outerBoundsContainsInnerBounds(outer, inner));
     }
 }
