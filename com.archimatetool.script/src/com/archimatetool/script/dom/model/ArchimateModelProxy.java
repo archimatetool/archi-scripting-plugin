@@ -121,28 +121,14 @@ public class ArchimateModelProxy extends EObjectProxy {
      * Create and add an ArchiMate element and put in default folder
      */
     public ArchimateElementProxy createElement(String type, String name) {
-        return ModelFactory.createElement(getEObject(), type, name, null, null);
-    }
-    
-    /**
-     * Create and add an ArchiMate element with id and put in default folder
-     */
-    public ArchimateElementProxy createElement(String type, String name, String id) {
-        return ModelFactory.createElement(getEObject(), type, name, null, id);
+        return ModelFactory.createElement(getEObject(), type, name, null);
     }
     
     /**
      * Create and add an ArchiMate element and put in folder
      */
     public ArchimateElementProxy createElement(String type, String name, FolderProxy parentFolder) {
-        return ModelFactory.createElement(getEObject(), type, name, parentFolder.getEObject(), null);
-    }
-    
-    /**
-     * Create and add an ArchiMate element with id and put in folder
-     */
-    public ArchimateElementProxy createElement(String type, String name, FolderProxy parentFolder, String id) {
-        return ModelFactory.createElement(getEObject(), type, name, parentFolder.getEObject(), id);
+        return ModelFactory.createElement(getEObject(), type, name, parentFolder.getEObject());
     }
     
     /**
