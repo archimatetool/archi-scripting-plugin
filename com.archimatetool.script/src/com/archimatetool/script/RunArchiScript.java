@@ -132,16 +132,13 @@ public class RunArchiScript {
     }
 
 	private void error(Exception ex, String string) {
-	    if(ex instanceof ScriptException) {
-	        ScriptException sex = (ScriptException)ex;
-	        
-	        if(sex.getMessage().contains("__EXIT__")) { //$NON-NLS-1$
-	            System.out.println("Exited at line number " + sex.getLineNumber()); //$NON-NLS-1$
-	            return;
-	        }
+	    // The init.js function exit() works by throwing an exception with message "__EXIT__"
+	    if(ex instanceof ScriptException && ex.getMessage().contains("__EXIT__")) { //$NON-NLS-1$
+	        System.out.println("Exited"); //$NON-NLS-1$
 	    }
-	    
-        System.err.println("Script Error at: " + ex.getClass().getName() + ", " +  //$NON-NLS-1$//$NON-NLS-2$
-                string);
+	    // Other exception
+	    else {
+	        System.err.println("Script Error at: " + ex.getClass().getName() + ", " + string);  //$NON-NLS-1$//$NON-NLS-2$
+	    }
 	}
 }
