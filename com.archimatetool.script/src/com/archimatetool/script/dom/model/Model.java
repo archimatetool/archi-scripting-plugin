@@ -138,8 +138,12 @@ public class Model {
      * @throws IOException
      */
     public String renderViewAsBase64(DiagramModelProxy dmProxy, String format, Map<?, ?> options) throws IOException {
-        if(dmProxy == null || format == null) {
-            throw new ArchiScriptException("Null argument"); //$NON-NLS-1$
+        if(dmProxy == null) {
+            throw new ArchiScriptException("renderViewAsBase64 - View is null"); //$NON-NLS-1$
+        }
+        
+        if(format == null) {
+            throw new ArchiScriptException("renderViewAsBase64 - Format is null"); //$NON-NLS-1$
         }
         
         // Default options
