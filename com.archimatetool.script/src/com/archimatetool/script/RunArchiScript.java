@@ -6,7 +6,6 @@
 package com.archimatetool.script;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -66,7 +65,7 @@ public class RunArchiScript {
             }
             provider.run(file, engine);
         }
-        catch(ArchiScriptException | ScriptException | IOException ex) {
+        catch(Throwable ex) {
             error(ex);
         }
         finally {
@@ -131,7 +130,7 @@ public class RunArchiScript {
         }
     }
 
-	private void error(Exception ex) {
+	private void error(Throwable ex) {
 	    // The init.js function exit() works by throwing an exception with message "__EXIT__"
 	    if(ex instanceof ScriptException && ex.getMessage().contains("__EXIT__")) { //$NON-NLS-1$
 	        System.out.println("Exited"); //$NON-NLS-1$
