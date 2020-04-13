@@ -21,6 +21,7 @@ import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
+import com.archimatetool.model.IFeature;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IInfluenceRelationship;
 import com.archimatetool.model.IProperty;
@@ -193,30 +194,34 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         }
         
         // Add new relationship
-        ArchimateConceptProxy newConceptProxy = ModelFactory.createRelationship(getArchimateModel(), type, getName(),
+        ArchimateRelationshipProxy newRelationshipProxy = ModelFactory.createRelationship(getArchimateModel(), type, getName(),
                 getSource().getEObject(), getTarget().getEObject(), (IFolder)getEObject().eContainer());
         
-        if(newConceptProxy == null) {
+        if(newRelationshipProxy == null) {
             return this;
         }
         
-        IArchimateConcept newConcept = newConceptProxy.getEObject();
+        IArchimateRelationship newRelationship = newRelationshipProxy.getEObject();
 
         // Copy all properties
         Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
-        newConcept.getProperties().addAll(props);
+        newRelationship.getProperties().addAll(props);
+
+        // Copy all features
+        Collection<IFeature> features = EcoreUtil.copyAll(getEObject().getFeatures());
+        newRelationship.getFeatures().addAll(features);
 
         // Copy Documentation
-        newConcept.setDocumentation(getEObject().getDocumentation());
+        newRelationship.setDocumentation(getEObject().getDocumentation());
 
         // Set source relations to this
         for(EObjectProxy proxy : outRels()) {
-            ((ArchimateRelationshipProxy)proxy).setSource(newConceptProxy, false);
+            ((ArchimateRelationshipProxy)proxy).setSource(newRelationshipProxy, false);
         }
 
         // Set target relations to this
         for(EObjectProxy proxy : inRels()) {
-            ((ArchimateRelationshipProxy)proxy).setTarget(newConceptProxy, false);
+            ((ArchimateRelationshipProxy)proxy).setTarget(newRelationshipProxy, false);
         }
 
         // Store old proxy
@@ -232,7 +237,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
                     // Safety to deregister listeners on the concept and update the UI
                     dmc.disconnect();
                     
-                    dmc.setArchimateConcept(newConcept);
+                    dmc.setArchimateRelationship(newRelationship);
                     
                     // Reconnect and update UI
                     dmc.reconnect();
@@ -256,7 +261,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             @Override
             public void perform() {
                 getEObject().disconnect();
-                setEObject(newConcept);
+                setEObject(newRelationship);
             }
 
             @Override

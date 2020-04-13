@@ -12,6 +12,7 @@ import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IDiagramModelArchimateObject;
+import com.archimatetool.model.IFeature;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.script.ArchiScriptException;
@@ -59,6 +60,10 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
         newElement.getProperties().addAll(props);
         
+        // Copy Features to new element
+        Collection<IFeature> features = EcoreUtil.copyAll(getEObject().getFeatures());
+        newElement.getFeatures().addAll(features);
+
         // Copy Documentation to new element
         newElement.setDocumentation(getEObject().getDocumentation());
 

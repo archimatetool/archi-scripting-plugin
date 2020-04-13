@@ -91,7 +91,12 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
 
     @Test
     public void setType() {
-        // TODO a proper test on object in test model
+        actualTestProxy.setName("Type Test");
+        actualTestProxy.setDocumentation("Documentation");
+        actualTestProxy.prop("p1", "v1");
+        actualTestProxy.prop("p2", "v2");
+        actualTestProxy.getEObject().getFeatures().putString("f1", "v1");
+        actualTestProxy.getEObject().getFeatures().putString("f2", "v2");
         
         assertTrue(actualTestProxy.getEObject() instanceof IBusinessActor);
         assertEquals(3, actualTestProxy.outRels().size());
@@ -100,11 +105,17 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
 
         ArchimateElementProxy newElementProxy = actualTestProxy.setType("business-role");
         
-        assertSame(newElementProxy, testProxy);
+        assertSame(newElementProxy, actualTestProxy);
         assertTrue(newElementProxy.getEObject() instanceof IBusinessRole);
-        assertEquals(3, actualTestProxy.outRels().size());
-        assertEquals(6, actualTestProxy.inRels().size());
-        assertEquals(3, actualTestProxy.objectRefs().size());
+        
+        assertEquals("Type Test", newElementProxy.getName());
+        assertEquals("Documentation", newElementProxy.getDocumentation());
+        assertEquals(2, newElementProxy.prop().size());
+        assertEquals(2, newElementProxy.getEObject().getFeatures().size());
+        
+        assertEquals(3, newElementProxy.outRels().size());
+        assertEquals(6, newElementProxy.inRels().size());
+        assertEquals(3, newElementProxy.objectRefs().size());
     }
 
     @Test

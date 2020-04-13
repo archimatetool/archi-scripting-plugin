@@ -94,20 +94,31 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
 
     @Test
     public void setType() {
-        // TODO a proper test on object in test model
+        actualTestProxy.setName("Type Test");
+        actualTestProxy.setDocumentation("Documentation");
+        actualTestProxy.prop("p1", "v1");
+        actualTestProxy.prop("p2", "v2");
+        actualTestProxy.getEObject().getFeatures().putString("f1", "v1");
+        actualTestProxy.getEObject().getFeatures().putString("f2", "v2");
 
         assertTrue(actualTestProxy.getEObject() instanceof IAccessRelationship);
         assertEquals(0, actualTestProxy.outRels().size());
         assertEquals(0, actualTestProxy.inRels().size());
         assertEquals(1, actualTestProxy.objectRefs().size());
 
-        ArchimateRelationshipProxy newElementProxy = actualTestProxy.setType("association-relationship");
+        ArchimateRelationshipProxy newRelationshipProxy = actualTestProxy.setType("association-relationship");
         
-        assertSame(newElementProxy, testProxy);
-        assertTrue(newElementProxy.getEObject() instanceof IAssociationRelationship);
-        assertEquals(0, actualTestProxy.outRels().size());
-        assertEquals(0, actualTestProxy.inRels().size());
-        assertEquals(1, actualTestProxy.objectRefs().size());
+        assertSame(newRelationshipProxy, actualTestProxy);
+        assertTrue(newRelationshipProxy.getEObject() instanceof IAssociationRelationship);
+        
+        assertEquals("Type Test", newRelationshipProxy.getName());
+        assertEquals("Documentation", newRelationshipProxy.getDocumentation());
+        assertEquals(2, newRelationshipProxy.prop().size());
+        assertEquals(2, newRelationshipProxy.getEObject().getFeatures().size());
+        
+        assertEquals(0, newRelationshipProxy.outRels().size());
+        assertEquals(0, newRelationshipProxy.inRels().size());
+        assertEquals(1, newRelationshipProxy.objectRefs().size());
     }
 
     @Test
