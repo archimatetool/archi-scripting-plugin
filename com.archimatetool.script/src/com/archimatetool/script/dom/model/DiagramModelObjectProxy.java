@@ -11,6 +11,8 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
+import com.archimatetool.editor.preferences.IPreferenceConstants;
+import com.archimatetool.editor.preferences.Preferences;
 import com.archimatetool.editor.ui.factory.IArchimateElementUIProvider;
 import com.archimatetool.editor.ui.factory.IObjectUIProvider;
 import com.archimatetool.editor.ui.factory.ObjectUIFactory;
@@ -99,6 +101,14 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         int width = ModelUtil.getIntValueFromMap(map, "width", getEObject().getBounds().getWidth()); //$NON-NLS-1$
         int height = ModelUtil.getIntValueFromMap(map, "height", getEObject().getBounds().getHeight()); //$NON-NLS-1$
         
+        if(width == -1) {
+            width = Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH);
+        }
+        
+        if(height == -1) {
+            height = Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT);
+        }
+
         IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
         CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__BOUNDS, bounds));
         

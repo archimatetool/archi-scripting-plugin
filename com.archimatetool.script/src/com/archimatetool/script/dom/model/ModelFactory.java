@@ -12,6 +12,8 @@ import org.eclipse.ui.PlatformUI;
 import com.archimatetool.canvas.model.ICanvasFactory;
 import com.archimatetool.canvas.model.ICanvasModel;
 import com.archimatetool.editor.diagram.ArchimateDiagramModelFactory;
+import com.archimatetool.editor.preferences.IPreferenceConstants;
+import com.archimatetool.editor.preferences.Preferences;
 import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.FolderType;
@@ -332,6 +334,14 @@ class ModelFactory {
      */
     private static DiagramModelObjectProxy createDiagramObject(IDiagramModelContainer parent, IDiagramModelObject dmo,
             int x, int y, int width, int height, boolean autoNest) {
+        
+        if(width == -1) {
+            width = Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH);
+        }
+        
+        if(height == -1) {
+            height = Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT);
+        }
         
         // Create new bounds for object
         IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);

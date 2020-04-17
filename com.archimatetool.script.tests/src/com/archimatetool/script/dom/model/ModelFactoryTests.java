@@ -13,6 +13,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.junit.Test;
 
 import com.archimatetool.canvas.model.ICanvasPackage;
+import com.archimatetool.editor.preferences.IPreferenceConstants;
+import com.archimatetool.editor.preferences.Preferences;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateDiagramModel;
@@ -238,6 +240,24 @@ public class ModelFactoryTests {
         assertEquals(15, bounds.getY());
         assertEquals(100, bounds.getWidth());
         assertEquals(200, bounds.getHeight());
+    }
+
+    @Test
+    public void addArchimateDiagramObjectUsesPreferencesWidthAndHeight() {
+        loadTestModel();
+        
+        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
+        IArchimateElement element = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "528");
+        
+        DiagramModelObjectProxy proxy = ModelFactory.addArchimateDiagramObject(view, element, 10, 15, -1, -1, false);
+        assertTrue(proxy.getEObject() instanceof IDiagramModelArchimateObject);
+        assertSame(view, proxy.getEObject().eContainer());
+        
+        IBounds bounds = proxy.getEObject().getBounds();
+        assertEquals(10, bounds.getX());
+        assertEquals(15, bounds.getY());
+        assertEquals(Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.getWidth());
+        assertEquals(Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.getHeight());
     }
 
     @Test

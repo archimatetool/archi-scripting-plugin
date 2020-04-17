@@ -10,11 +10,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.archimatetool.editor.preferences.IPreferenceConstants;
+import com.archimatetool.editor.preferences.Preferences;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
@@ -127,6 +130,23 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertEquals(25, (int)bounds.get("y"));
         assertEquals(101, (int)bounds.get("width"));
         assertEquals(60, (int)bounds.get("height"));
+    }
+    
+    @Test
+    public void setBoundsUsesPreferencesWidthAndHeight() {
+        Map<String, Integer> bounds = new HashMap<String, Integer>();
+        bounds.put("x", 10);
+        bounds.put("y", 20);
+        bounds.put("width", -1);
+        bounds.put("height", -1);
+        
+        actualTestProxy.setBounds(bounds);
+        
+        bounds = actualTestProxy.getBounds();
+        assertEquals(10, (int)bounds.get("x"));
+        assertEquals(20, (int)bounds.get("y"));
+        assertEquals(Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), (int)bounds.get("width"));
+        assertEquals(Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), (int)bounds.get("height"));
     }
     
     @Override
