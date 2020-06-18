@@ -9,6 +9,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -43,6 +44,9 @@ extends ViewPart {
         fTextPane.setEditable(false);
         fTextPane.setTabs(40);
         fTextPane.setWordWrap(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP));
+        
+        // TODO - allow user to set the font in a preference
+        fTextPane.setFont(JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT));
         
         fActionClear = new Action(Messages.ConsoleView_0) {
             {
