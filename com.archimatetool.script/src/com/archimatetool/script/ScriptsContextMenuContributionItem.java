@@ -67,10 +67,18 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
         Arrays.sort(files, new Comparator<File>() {
             @Override
             public int compare(File f1, File f2) {
-                if(f1.isDirectory() && f2.isFile()) {
+                if(f1.isDirectory() && !f2.isDirectory()) {
+                    // Directory before non-directory
                     return -1;
                 }
-                return f1.getName().compareToIgnoreCase(f2.getName());
+                else if(!f1.isDirectory() && f2.isDirectory()) {
+                    // Non-directory after directory
+                    return 1;
+                }
+                else {
+                    // Alphabetic order otherwise
+                    return f1.getName().compareToIgnoreCase(f2.getName());
+                }
             }
         });
         
