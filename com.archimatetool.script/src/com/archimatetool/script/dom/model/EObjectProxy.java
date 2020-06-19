@@ -20,6 +20,7 @@ import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModelConnection;
+import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDocumentable;
@@ -79,6 +80,10 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
             return new DiagramModelNoteProxy((IDiagramModelNote)eObject);
         }
         
+        if(eObject instanceof IDiagramModelGroup) {
+            return new DiagramModelGroupProxy((IDiagramModelGroup)eObject);
+        }
+
         if(eObject instanceof IDiagramModelObject) {
             return new DiagramModelObjectProxy((IDiagramModelObject)eObject);
         }

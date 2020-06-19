@@ -19,15 +19,15 @@ import junit.framework.JUnit4TestAdapter;
 
 
 /**
- * DiagramModelNoteProxy Tests
+ * DiagramModelGroupProxyTests Tests
  * 
  * @author Phillip Beauvoir
  */
 @SuppressWarnings("nls")
-public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
+public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     
     public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DiagramModelNoteProxyTests.class);
+        return new JUnit4TestAdapter(DiagramModelGroupProxyTests.class);
     }
     
     private ArchimateModelProxy modelProxy;
@@ -37,16 +37,16 @@ public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
     public void runOnceBeforeEachTest() {
         modelProxy = TestsHelper.createTestModel();
         viewProxy = modelProxy.createArchimateView("test");
-        testProxy = viewProxy.createObject("note", 0, 0, 100, 100);
+        testProxy = viewProxy.createObject("group", 0, 0, 100, 100);
         testEObject = (IArchimateModelObject)testProxy.getEObject();
-        actualTestProxy = (DiagramModelNoteProxy)testProxy;
+        actualTestProxy = (DiagramModelGroupProxy)testProxy;
     }
 
     @Override
     @Test
     public void get_ReturnsCorrectProxy() {
         EObjectProxy proxy = EObjectProxy.get(testEObject);
-        assertTrue(proxy instanceof DiagramModelNoteProxy);
+        assertTrue(proxy instanceof DiagramModelGroupProxy);
     }
 
     @Override
@@ -58,8 +58,11 @@ public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
     @Override
     @Test
     public void children() {
-        EObjectProxyCollection collection = testProxy.children();
-        assertTrue(collection.isEmpty());
+        assertTrue(testProxy.children().isEmpty());
+        
+        DiagramModelObjectProxy noteProxy = ((DiagramModelObjectProxy)testProxy).createObject("note", 0, 0, 20, 20);
+        assertEquals(1, testProxy.children().size());
+        assertEquals(noteProxy, testProxy.children().first());
     }
     
     @Override
@@ -80,17 +83,5 @@ public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
     @Test
     public void parents() {
         assertNotNull(testProxy.parents());
-    }
-
-    @Test
-    public void attr_Text() {
-        testProxy.attr(IModelConstants.TEXT, "Hello");
-        assertEquals("Hello", testProxy.attr(IModelConstants.TEXT));
-    }
-
-    @Test
-    public void setText() {
-        ((DiagramModelNoteProxy)testProxy).setText("Hello");
-        assertEquals("Hello", ((DiagramModelNoteProxy)testProxy).getText());
     }
 }

@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModelObject;
+import com.archimatetool.model.IDocumentable;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
@@ -84,8 +85,10 @@ public abstract class EObjectProxyTests {
 
     @Test
     public void setDocumentation() {
-        testProxy.setDocumentation("doc");
-        assertEquals("doc", testProxy.getDocumentation());
+        if(testProxy instanceof IDocumentable) {
+            testProxy.setDocumentation("doc");
+            assertEquals("doc", testProxy.getDocumentation());
+        }
     }
     
     @Test
@@ -280,8 +283,10 @@ public abstract class EObjectProxyTests {
 
     @Test
     public void attr_Documentation() {
-        testProxy.attr(IModelConstants.DOCUMENTATION, "doc");
-        assertEquals("doc", testProxy.attr(IModelConstants.DOCUMENTATION));
+        if(testProxy instanceof IDocumentable) {
+            testProxy.attr(IModelConstants.DOCUMENTATION, "doc");
+            assertEquals("doc", testProxy.attr(IModelConstants.DOCUMENTATION));
+        }
     }
 
     @Test

@@ -179,6 +179,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertEquals(null, testProxy.attr(IModelConstants.FILL_COLOR));
     }
 
+    @Override
     @Test
     public void attr_Bounds() {
         IDiagramModelObject dmo = (IDiagramModelObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3707");

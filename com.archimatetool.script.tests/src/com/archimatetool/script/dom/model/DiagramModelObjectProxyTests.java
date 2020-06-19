@@ -9,6 +9,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.junit.Test;
 
 import junit.framework.JUnit4TestAdapter;
@@ -45,6 +47,15 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
 
         collection = testProxy.find("*");
         assertEquals(0, collection.size());
+    }
+
+    @Test
+    public void attr_Bounds() {
+        Map<?, ?> bounds = (Map<?, ?>)testProxy.attr(IModelConstants.BOUNDS);
+        assertEquals(0, bounds.get("x"));
+        assertEquals(0, bounds.get("y"));
+        assertEquals(100, bounds.get("width"));
+        assertEquals(100, bounds.get("height"));
     }
 
     @Override
