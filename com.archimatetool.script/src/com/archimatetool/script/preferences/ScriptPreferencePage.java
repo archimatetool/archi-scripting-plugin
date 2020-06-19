@@ -11,6 +11,7 @@ import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -20,6 +21,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -28,7 +30,9 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.ui.UIUtils;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
+import com.archimatetool.script.views.console.ConsoleView;
 
 
 /**
@@ -48,6 +52,10 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     private Text fEditorPathTextField;
     
     private Combo fDoubleClickBehaviourCombo;
+    
+    private Label fConsoleFontLabel;
+    private FontData fDefaultConsoleFontData = ConsoleView.DEFAULT_FONT.getFontData()[0];
+    private FontData fConsoleFontData = fDefaultConsoleFontData;
     
     private String[] DOUBLE_CLICK_BEHAVIOURS = {
             Messages.ScriptPreferencePage_4,
@@ -137,6 +145,29 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         gd.horizontalSpan = 2;
         fJSCombo.setLayoutData(gd);
         
+        // Console font
+        label = new Label(settingsGroup, SWT.NULL);
+        label.setText(Messages.ScriptPreferencePage_13);
+        fConsoleFontLabel = new Label(settingsGroup, SWT.NULL);
+        fConsoleFontLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        Button button = new Button(settingsGroup, SWT.PUSH);
+        button.setLayoutData(new GridData(SWT.RIGHT));
+        button.setText(Messages.ScriptPreferencePage_2);
+        button.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                FontDialog dialog = new FontDialog(getShell());
+                dialog.setFontList(new FontData[] { fDefaultConsoleFontData });
+                
+                FontData fd = dialog.open();
+                if(fd != null) {
+                    fConsoleFontData = fd;
+                    updateFontLabel();
+                }
+            }
+        });
+        
         setValues();
         
         return client;
@@ -168,6 +199,12 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         fEditorPathTextField.setText(getPreferenceStore().getString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
         fJSCombo.select(getPreferenceStore().getInt(PREFS_JS_ENGINE));
+        
+        String fontName = getPreferenceStore().getString(PREFS_CONSOLE_FONT);
+        if(StringUtils.isSet(fontName)) {
+            fConsoleFontData = new FontData(fontName);
+        }
+        updateFontLabel();
     }
     
     @Override
@@ -176,6 +213,8 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         getPreferenceStore().setValue(PREFS_EDITOR, fEditorPathTextField.getText());
         getPreferenceStore().setValue(PREFS_DOUBLE_CLICK_BEHAVIOUR, fDoubleClickBehaviourCombo.getSelectionIndex());
         getPreferenceStore().setValue(PREFS_JS_ENGINE, fJSCombo.getSelectionIndex());
+        
+        getPreferenceStore().setValue(PREFS_CONSOLE_FONT, fDefaultConsoleFontData.equals(fConsoleFontData) ? "" : fConsoleFontData.toString()); //$NON-NLS-1$
         
         return true;
     }
@@ -186,6 +225,13 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         fEditorPathTextField.setText(getPreferenceStore().getDefaultString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getDefaultInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
         fJSCombo.select(getPreferenceStore().getDefaultInt(PREFS_JS_ENGINE));
+        
+        fConsoleFontData = fDefaultConsoleFontData;
+        updateFontLabel();
+    }
+    
+    private void updateFontLabel() {
+        fConsoleFontLabel.setText(fConsoleFontData.getName() + " " + fConsoleFontData.getHeight()); //$NON-NLS-1$
     }
     
     @Override

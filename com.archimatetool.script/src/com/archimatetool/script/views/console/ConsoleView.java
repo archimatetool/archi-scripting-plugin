@@ -10,14 +10,18 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
+import com.archimatetool.editor.ui.FontFactory;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.IArchiScriptImages;
 import com.archimatetool.script.RefreshUIHandler;
@@ -33,10 +37,18 @@ extends ViewPart {
     public static String ID = ArchiScriptPlugin.PLUGIN_ID + ".consoleView"; //$NON-NLS-1$
     public static String HELP_ID = ArchiScriptPlugin.PLUGIN_ID + ".consoleViewHelp"; //$NON-NLS-1$
 
+    public static Font DEFAULT_FONT = JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
+    
     private IAction fActionClear, fActionWordWrap, fActionScrollLock;
     
     private StyledText fTextPane;
     private Color fTextColor;
+    
+    private IPropertyChangeListener prefsListener = (event) -> {
+        if(IPreferenceConstants.PREFS_CONSOLE_FONT == event.getProperty()) {
+            setFontFromPreferences();
+        }
+    };
     
     @Override
     public void createPartControl(Composite parent) {
@@ -44,9 +56,8 @@ extends ViewPart {
         fTextPane.setEditable(false);
         fTextPane.setTabs(40);
         fTextPane.setWordWrap(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP));
-        
-        // TODO - allow user to set the font in a preference
-        fTextPane.setFont(JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT));
+
+        setFontFromPreferences();
         
         fActionClear = new Action(Messages.ConsoleView_0) {
             {
@@ -89,6 +100,8 @@ extends ViewPart {
         
         makeLocalMenuActions();
         makeLocalToolBarActions();
+        
+        ArchiScriptPlugin.INSTANCE.getPreferenceStore().addPropertyChangeListener(prefsListener);
     }
     
     public void setTextColor(Color color) {
@@ -163,5 +176,21 @@ extends ViewPart {
         sr.start = fTextPane.getCharCount();
         sr.length = string.length();
         return sr;
+    }
+    
+    private void setFontFromPreferences() {
+        String fontName = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_CONSOLE_FONT);
+        if(!StringUtils.isSet(fontName)) {
+            fTextPane.setFont(DEFAULT_FONT);
+        }
+        else {
+            fTextPane.setFont(FontFactory.get(fontName));
+        }
+    }
+    
+    @Override
+    public void dispose() {
+        super.dispose();
+        ArchiScriptPlugin.INSTANCE.getPreferenceStore().removePropertyChangeListener(prefsListener);
     }
 }
