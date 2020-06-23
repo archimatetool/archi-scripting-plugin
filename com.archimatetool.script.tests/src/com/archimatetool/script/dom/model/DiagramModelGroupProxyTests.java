@@ -84,4 +84,12 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     public void parents() {
         assertNotNull(testProxy.parents());
     }
+
+    @Test
+    public void attr_BorderType() {
+        assertEquals(0, actualTestProxy.attr(IModelConstants.BORDER_TYPE));
+        actualTestProxy.attr(IModelConstants.BORDER_TYPE, 1);
+        assertEquals(1, actualTestProxy.attr(IModelConstants.BORDER_TYPE));
+    }
+
 }

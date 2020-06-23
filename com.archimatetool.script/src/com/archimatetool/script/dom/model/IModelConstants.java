@@ -59,6 +59,11 @@ interface IModelConstants {
     
     String TEXT = "text";
     
+    String TEXT_ALIGNMENT = "textAlignment";
+    String TEXT_POSITION = "textPosition";
+    
+    String BORDER_TYPE = "borderType";
+    
     String ACCESS_TYPE = "access-type"; 
     List<String> ACCESS_TYPES_LIST = Arrays.asList(new String[] {
             "write",

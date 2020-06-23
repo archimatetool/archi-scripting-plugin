@@ -23,6 +23,8 @@ import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
+import com.archimatetool.model.ITextAlignment;
+import com.archimatetool.model.ITextPosition;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteDiagramModelObjectCommand;
@@ -226,6 +228,38 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return 0;
     }
     
+    public DiagramModelObjectProxy setTextAlignment(int alignment) {
+        if(alignment != ITextAlignment.TEXT_ALIGNMENT_CENTER
+                && alignment != ITextAlignment.TEXT_ALIGNMENT_LEFT
+                && alignment != ITextAlignment.TEXT_ALIGNMENT_RIGHT) {
+            throw new ArchiScriptException(Messages.DiagramModelObjectProxy_2);
+        }
+        
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.TEXT_ALIGNMENT__TEXT_ALIGNMENT, alignment));
+        
+        return this;
+    }
+    
+    public Object getTextAlignment() {
+        return getEObject().getTextAlignment();
+    }
+    
+    public DiagramModelObjectProxy setTextPosition(int position) {
+        if(getEObject() instanceof ITextPosition) {
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.TEXT_POSITION__TEXT_POSITION, position));
+        }
+        
+        return this;
+    }
+    
+    public Object getTextPosition() {
+        if(getEObject() instanceof ITextPosition) {
+            return ((ITextPosition)getEObject()).getTextPosition();
+        }
+        
+        return null;
+    }
+    
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {
@@ -239,6 +273,10 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 return getOutlineOpacity();
             case FIGURE_TYPE:
                 return getFigureType();
+            case TEXT_ALIGNMENT:
+                return getTextAlignment();
+            case TEXT_POSITION:
+                return getTextPosition();
         }
         
         return super.attr(attribute);
@@ -270,6 +308,16 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case FIGURE_TYPE:
                 if(value instanceof Integer) {
                     return setFigureType((int)value);
+                }
+                break;
+            case TEXT_ALIGNMENT:
+                if(value instanceof Integer) {
+                    return setTextAlignment((int)value);
+                }
+                break;
+            case TEXT_POSITION:
+                if(value instanceof Integer) {
+                    return setTextPosition((int)value);
                 }
                 break;
         }

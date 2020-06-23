@@ -89,3 +89,28 @@ var window = {
 function exit() {
 	throw "__EXIT__";
 }
+
+// Constants
+
+TEXT_ALIGNMENT = {
+    LEFT : 1,
+    CENTER : 2,
+    RIGHT : 4
+};
+Object.freeze(TEXT_ALIGNMENT);
+
+TEXT_POSITION = {
+    TOP : 0,
+    CENTER : 1,
+    BOTTOM : 2
+};
+Object.freeze(TEXT_POSITION);
+
+BORDER = {
+    TABBED : 0,
+    DOGEAR : 0,
+    RECTANGLE : 1,
+    NONE : 2
+};
+Object.freeze(BORDER);
+

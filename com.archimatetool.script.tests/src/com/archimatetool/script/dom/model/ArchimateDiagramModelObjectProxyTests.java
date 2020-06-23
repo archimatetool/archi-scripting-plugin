@@ -217,6 +217,14 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     
     @Override
     @Test
+    public void attr_TextAlignment() {
+        assertEquals(2, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
+        assertEquals(4, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+    }
+    
+    @Override
+    @Test
     public void delete() {
         IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
         IArchimateDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();

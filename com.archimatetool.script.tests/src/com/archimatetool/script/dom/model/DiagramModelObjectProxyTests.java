@@ -89,4 +89,19 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
         actualTestProxy.attr(IModelConstants.OUTLINE_OPACITY, 40);
         assertEquals(40, actualTestProxy.attr(IModelConstants.OUTLINE_OPACITY));
     }
+    
+    @Test
+    public void attr_TextAlignment() {
+        assertEquals(1, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
+        assertEquals(4, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+    }
+    
+    @Test
+    public void attr_TextPosition() {
+        assertEquals(0, actualTestProxy.attr(IModelConstants.TEXT_POSITION));
+        actualTestProxy.attr(IModelConstants.TEXT_POSITION, 2);
+        assertEquals(2, actualTestProxy.attr(IModelConstants.TEXT_POSITION));
+    }
+
 }
