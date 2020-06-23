@@ -92,4 +92,12 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
         assertEquals(1, actualTestProxy.attr(IModelConstants.BORDER_TYPE));
     }
 
+    @Override
+    @Test
+    public void attr_TextAlignment() {
+        assertEquals(1, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
+        assertEquals(4, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+    }
+
 }
