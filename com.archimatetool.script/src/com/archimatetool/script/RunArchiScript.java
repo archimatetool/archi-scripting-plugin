@@ -87,6 +87,9 @@ public class RunArchiScript {
             engine.put("workbench", PlatformUI.getWorkbench()); //$NON-NLS-1$
             engine.put("workbenchwindow", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
             engine.put("shell", PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()); //$NON-NLS-1$
+            
+            // directory of user scripts folder
+            engine.put("__SCRIPTS_DIR__", ArchiScriptPlugin.INSTANCE.getUserScriptsFolder().getAbsolutePath() + File.separator); //$NON-NLS-1$
         }
     }
     
