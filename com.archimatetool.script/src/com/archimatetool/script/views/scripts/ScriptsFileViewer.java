@@ -69,6 +69,8 @@ extends AbstractFileView  {
     
     private RunScriptAction fActionRun;
     private IAction fActionShowConsole;
+    private MarkFolderHiddenAction fActionHideFolder;
+
     
     /**
      * Application Preferences Listener
@@ -115,6 +117,9 @@ extends AbstractFileView  {
         
         // Show Console
         fActionShowConsole = new ShowConsoleAction();
+        
+        // Mark folder as hidden/visible in context menu
+        fActionHideFolder = new MarkFolderHiddenAction();
         
         // Icon
         IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderByID(JSProvider.ID);
@@ -211,16 +216,18 @@ extends AbstractFileView  {
     }
     
     @Override
-    public void updateActions(ISelection selection) {
-        super.updateActions(selection);
+    public void updateActions(ISelection s) {
+        super.updateActions(s);
         
-        File file = (File)((IStructuredSelection)selection).getFirstElement();
-        fActionRun.setFile(file);
+        IStructuredSelection selection = (IStructuredSelection)s;
+        
+        fActionRun.setFile((File)selection.getFirstElement());        
+        fActionHideFolder.setSelection(selection.toArray());
     }
     
     @Override
     protected void fillContextMenu(IMenuManager manager) {
-        boolean isEmpty = getViewer().getSelection().isEmpty();
+        IStructuredSelection selection = (IStructuredSelection)getViewer().getSelection();
 
         IMenuManager newMenu = new MenuManager(Messages.ScriptsFileViewer_4, "new"); //$NON-NLS-1$
         manager.add(newMenu);
@@ -238,13 +245,18 @@ extends AbstractFileView  {
         newMenu.add(fActionNewFolder);
         manager.add(new Separator());
 
-        if(!isEmpty) {
+        if(!selection.isEmpty()) {
             manager.add(new Separator(IWorkbenchActionConstants.EDIT_START));
             manager.add(fActionEdit);
             manager.add(fActionRun);
             manager.add(new Separator(IWorkbenchActionConstants.EDIT_END));
             manager.add(fActionDelete);
             manager.add(fActionRename);
+            
+            if(fActionHideFolder.shouldShow(selection.toArray())) {
+                manager.add(fActionHideFolder);
+                manager.add(new Separator());
+            }
         }
         
         manager.add(fActionRefresh);

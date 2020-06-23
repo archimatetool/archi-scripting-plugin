@@ -11,6 +11,10 @@ public class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "com.archimatetool.script.views.scripts.messages"; //$NON-NLS-1$
 
+    public static String MarkFolderHiddenAction_0;
+
+    public static String MarkFolderHiddenAction_1;
+
     public static String RestoreExampleScriptsAction_0;
 
     public static String RestoreExampleScriptsAction_1;

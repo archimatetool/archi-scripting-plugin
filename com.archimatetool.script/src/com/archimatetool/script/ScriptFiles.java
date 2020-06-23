@@ -12,9 +12,12 @@ import java.nio.file.Files;
 /**
  * ScriptFiles
  */
+@SuppressWarnings("nls")
 public class ScriptFiles {
 	
-    public static final String LINK_EXTENSION = ".link";  //$NON-NLS-1$
+    public static final String LINK_EXTENSION = ".link";
+    
+    public static final String HIDDEN_MARKER_FILE = ".hidden";
     
 	public static boolean isScriptFile(File file) {
         return file != null && file.isFile() && IScriptEngineProvider.INSTANCE.getProviderForFile(file) != null;
