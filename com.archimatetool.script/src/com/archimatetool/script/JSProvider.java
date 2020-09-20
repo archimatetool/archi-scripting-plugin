@@ -26,6 +26,7 @@ import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
 /**
  * JS Provider
  */
+@SuppressWarnings("removal")
 public class JSProvider implements IScriptEngineProvider {
     
     public static String ID = "com.archimatetool.script.provider.js"; //$NON-NLS-1$
