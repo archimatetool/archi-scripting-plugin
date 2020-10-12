@@ -75,4 +75,13 @@ interface IModelConstants {
     String INFLUENCE_STRENGTH = "influence-strength";
     
     String ASSOCIATION_DIRECTED = "association-directed";
+    
+    // View types
+    String VIEW_ARCHIMATE = "archimate";
+    String VIEW_SKETCH = "sketch";
+    String VIEW_CANVAS = "canvas";
+    
+    // Object typee
+    String DIAGRAM_MODEL_GROUP = "diagram-model-group";
+    String DIAGRAM_MODEL_NOTE = "diagram-model-note";
 }

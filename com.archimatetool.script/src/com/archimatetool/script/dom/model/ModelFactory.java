@@ -46,7 +46,7 @@ import com.archimatetool.script.commands.ScriptCommand;
  * 
  * @author Phillip Beauvoir
  */
-class ModelFactory {
+class ModelFactory implements IModelConstants {
     
     private ModelFactory() {
     }
@@ -215,15 +215,15 @@ class ModelFactory {
         final IFolder[] parent = new IFolder[1];
         
         switch(type) {
-            case "archimate":  //$NON-NLS-1$
+            case VIEW_ARCHIMATE:
                 view[0] = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
                 break;
 
-            case "sketch":  //$NON-NLS-1$
+            case VIEW_SKETCH:
                 view[0] = IArchimateFactory.eINSTANCE.createSketchModel();
                 break;
 
-            case "canvas":  //$NON-NLS-1$
+            case VIEW_CANVAS:
                 view[0] = ICanvasFactory.eINSTANCE.createCanvasModel();
                 break;
 
@@ -306,7 +306,8 @@ class ModelFactory {
         IDiagramModelObject dmo = null;
         
         switch(type) {
-            case "note": //$NON-NLS-1$
+            case DIAGRAM_MODEL_NOTE:
+            case "note": //Backward compatibility  //$NON-NLS-1$
                 if(!(parent.getDiagramModel() instanceof IArchimateDiagramModel)) {
                     throw new ArchiScriptException(Messages.ModelFactory_2);
                 }
@@ -314,7 +315,8 @@ class ModelFactory {
                 dmo = (IDiagramModelObject)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelNote()).getNewObject();
                 break;
 
-            case "group": //$NON-NLS-1$
+            case DIAGRAM_MODEL_GROUP:
+            case "group": //Backward compatibility //$NON-NLS-1$
                 if(parent.getDiagramModel() instanceof ICanvasModel) {
                     throw new ArchiScriptException(Messages.ModelFactory_3);
                 }

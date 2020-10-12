@@ -37,7 +37,7 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     public void runOnceBeforeEachTest() {
         modelProxy = TestsHelper.createTestModel();
         viewProxy = modelProxy.createArchimateView("test");
-        testProxy = viewProxy.createObject("group", 0, 0, 100, 100);
+        testProxy = viewProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 0, 0, 100, 100);
         testEObject = (IArchimateModelObject)testProxy.getEObject();
         actualTestProxy = (DiagramModelGroupProxy)testProxy;
     }
@@ -60,7 +60,7 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     public void children() {
         assertTrue(testProxy.children().isEmpty());
         
-        DiagramModelObjectProxy noteProxy = ((DiagramModelObjectProxy)testProxy).createObject("note", 0, 0, 20, 20);
+        DiagramModelObjectProxy noteProxy = ((DiagramModelObjectProxy)testProxy).createObject(IModelConstants.DIAGRAM_MODEL_NOTE, 0, 0, 20, 20);
         assertEquals(1, testProxy.children().size());
         assertEquals(noteProxy, testProxy.children().first());
     }

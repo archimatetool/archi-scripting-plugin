@@ -208,17 +208,17 @@ public class ModelFactoryTests {
         
         IFolder parent = testModelProxy.getEObject().getFolder(FolderType.DIAGRAMS);
 
-        DiagramModelProxy viewProxy = ModelFactory.createView(testModelProxy.getEObject(), "archimate", "test", parent);
+        DiagramModelProxy viewProxy = ModelFactory.createView(testModelProxy.getEObject(), IModelConstants.VIEW_ARCHIMATE, "test", parent);
         assertEquals("test", viewProxy.getName());
         assertEquals(IArchimatePackage.eINSTANCE.getArchimateDiagramModel(), viewProxy.getEObject().eClass());
         assertSame(parent, viewProxy.getEObject().eContainer());
 
-        viewProxy = ModelFactory.createView(testModelProxy.getEObject(), "sketch", "test", parent);
+        viewProxy = ModelFactory.createView(testModelProxy.getEObject(), IModelConstants.VIEW_SKETCH, "test", parent);
         assertEquals("test", viewProxy.getName());
         assertEquals(IArchimatePackage.eINSTANCE.getSketchModel(), viewProxy.getEObject().eClass());
         assertSame(parent, viewProxy.getEObject().eContainer());
 
-        viewProxy = ModelFactory.createView(testModelProxy.getEObject(), "canvas", "test", parent);
+        viewProxy = ModelFactory.createView(testModelProxy.getEObject(), IModelConstants.VIEW_CANVAS, "test", parent);
         assertEquals("test", viewProxy.getName());
         assertEquals(ICanvasPackage.eINSTANCE.getCanvasModel(), viewProxy.getEObject().eClass());
         assertSame(parent, viewProxy.getEObject().eContainer());
@@ -288,7 +288,7 @@ public class ModelFactoryTests {
         
         IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
         
-        String[] types = {"note", "group"};
+        String[] types = {"diagram-model-note", "diagram-model-group"};
         EClass[] classes = { IArchimatePackage.eINSTANCE.getDiagramModelNote(), IArchimatePackage.eINSTANCE.getDiagramModelGroup() };
         
         for(int i = 0; i < types.length; i++) {

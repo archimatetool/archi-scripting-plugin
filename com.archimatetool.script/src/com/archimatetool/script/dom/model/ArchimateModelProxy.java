@@ -149,42 +149,42 @@ public class ArchimateModelProxy extends EObjectProxy {
      * Create and add an ArchiMate View and put in default folder
      */
     public ArchimateDiagramModelProxy createArchimateView(String name) {
-        return (ArchimateDiagramModelProxy)ModelFactory.createView(getEObject(), "archimate", name, null); //$NON-NLS-1$
+        return (ArchimateDiagramModelProxy)ModelFactory.createView(getEObject(), VIEW_ARCHIMATE, name, null);
     }
 
     /**
      * Create and add an ArchiMate View and put in specified folder
      */
     public ArchimateDiagramModelProxy createArchimateView(String name, FolderProxy parentFolder) {
-        return (ArchimateDiagramModelProxy)ModelFactory.createView(getEObject(), "archimate", name, parentFolder.getEObject()); //$NON-NLS-1$
+        return (ArchimateDiagramModelProxy)ModelFactory.createView(getEObject(), VIEW_ARCHIMATE, name, parentFolder.getEObject());
     }
     
     /**
      * Create and add an Sketch View and put in default folder
      */
     public SketchDiagramModelProxy createSketchView(String name) {
-        return (SketchDiagramModelProxy)ModelFactory.createView(getEObject(), "sketch", name, null); //$NON-NLS-1$
+        return (SketchDiagramModelProxy)ModelFactory.createView(getEObject(), VIEW_SKETCH, name, null);
     }
 
     /**
      * Create and add an Sketch View and put in specified folder
      */
     public SketchDiagramModelProxy createSketchView(String name, FolderProxy parentFolder) {
-        return (SketchDiagramModelProxy)ModelFactory.createView(getEObject(), "sketch", name, parentFolder.getEObject()); //$NON-NLS-1$
+        return (SketchDiagramModelProxy)ModelFactory.createView(getEObject(), VIEW_SKETCH, name, parentFolder.getEObject());
     }
 
     /**
      * Create and add a Canvas View and put in default folder
      */
     public CanvasDiagramModelProxy createCanvasView(String name) {
-        return (CanvasDiagramModelProxy)ModelFactory.createView(getEObject(), "canvas", name, null); //$NON-NLS-1$
+        return (CanvasDiagramModelProxy)ModelFactory.createView(getEObject(), VIEW_CANVAS, name, null);
     }
 
     /**
      * Create and add an Canvas View and put in specified folder
      */
     public CanvasDiagramModelProxy createCanvasView(String name, FolderProxy parentFolder) {
-        return (CanvasDiagramModelProxy)ModelFactory.createView(getEObject(), "canvas", name, parentFolder.getEObject()); //$NON-NLS-1$
+        return (CanvasDiagramModelProxy)ModelFactory.createView(getEObject(), VIEW_CANVAS, name, parentFolder.getEObject());
     }
 
     /**
