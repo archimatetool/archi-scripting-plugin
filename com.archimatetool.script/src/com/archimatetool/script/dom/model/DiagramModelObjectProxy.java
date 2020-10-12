@@ -8,8 +8,6 @@ package com.archimatetool.script.dom.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.emf.ecore.EObject;
-
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
 import com.archimatetool.editor.preferences.Preferences;
@@ -22,7 +20,6 @@ import com.archimatetool.model.IBounds;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
-import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.ITextAlignment;
 import com.archimatetool.model.ITextPosition;
 import com.archimatetool.script.ArchiScriptException;
@@ -67,7 +64,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     /**
      * Create and add a view reference to another view and return the diagram object proxy
      */
-    public DiagramModelObjectProxy createViewReference(DiagramModelProxy dmRef, int x, int y, int width, int height) {
+    public DiagramModelReferenceProxy createViewReference(DiagramModelProxy dmRef, int x, int y, int width, int height) {
         if(getEObject() instanceof IDiagramModelContainer) {
             return ModelFactory.createViewReference((IDiagramModelContainer)getEObject(), dmRef.getEObject(), x, y, width, height, false);
         }
@@ -117,22 +114,6 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return this;
     }
     
-    /**
-     * @return true if this diagram component references a Diagram Model
-     */
-    private boolean isDiagramModelReference() {
-        return getEObject() instanceof IDiagramModelReference;
-    }
-    
-    @Override
-    protected EObject getReferencedConcept() {
-        if(isDiagramModelReference()) {
-            return ((IDiagramModelReference)getEObject()).getReferencedModel();
-        }
-
-        return super.getReferencedConcept();
-    }
-
     /**
      * @return child node diagram objects of this diagram object (if any)
      */

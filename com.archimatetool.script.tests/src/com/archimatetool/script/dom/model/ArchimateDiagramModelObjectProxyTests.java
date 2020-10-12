@@ -26,7 +26,6 @@ import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IDiagramModelObject;
-import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.util.ArchimateModelUtils;
 
 import junit.framework.JUnit4TestAdapter;
@@ -96,11 +95,6 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         IDiagramModelGroup group = (IDiagramModelGroup)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4096");
         DiagramModelObjectProxy groupProxy = new DiagramModelObjectProxy(group);
         assertSame(groupProxy.getEObject(), groupProxy.getReferencedConcept());
-        
-        // Diagram model reference
-        IDiagramModelReference ref = (IDiagramModelReference)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3657");
-        DiagramModelObjectProxy refProxy = new DiagramModelObjectProxy(ref);
-        assertSame(ref.getReferencedModel(), refProxy.getReferencedConcept());
     }
     
     @Override

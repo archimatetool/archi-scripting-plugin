@@ -47,7 +47,7 @@ public abstract class DiagramModelProxy extends EObjectProxy {
     /**
      * Create and add a view reference to another view and return the diagram object proxy
      */
-    public DiagramModelObjectProxy createViewReference(DiagramModelProxy dmRef, int x, int y, int width, int height) {
+    public DiagramModelReferenceProxy createViewReference(DiagramModelProxy dmRef, int x, int y, int width, int height) {
         return ModelFactory.createViewReference(getEObject(), dmRef.getEObject(), x, y, width, height, false);
     }
     
