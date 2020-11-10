@@ -158,7 +158,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 FontDialog dialog = new FontDialog(getShell());
-                dialog.setFontList(new FontData[] { fDefaultConsoleFontData });
+                dialog.setFontList(new FontData[] { fConsoleFontData });
                 
                 FontData fd = dialog.open();
                 if(fd != null) {
