@@ -11,13 +11,16 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateElement;
+import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IFeature;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.model.IJunction;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.ScriptCommand;
+import com.archimatetool.script.commands.SetCommand;
 import com.archimatetool.script.commands.SetElementOnDiagramModelObjectCommand;
 
 /**
@@ -145,5 +148,53 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         }
 
         return this;
+    }
+    
+    // Junction type
+    
+    public String getJunctionType() {
+        if(getEObject() instanceof IJunction) {
+            String type = ((IJunction)getEObject()).getType();
+            return IJunction.AND_JUNCTION_TYPE.equals(type) ? "and" : type; //$NON-NLS-1$
+        }
+        return null;
+    }
+    
+    public EObjectProxy setJunctionType(String type) {
+        if(getEObject() instanceof IJunction && type != null) {
+            type = type.toLowerCase();
+            if(IModelConstants.JUNCTION_TYPES_LIST.contains(type)) {
+                if("and".equals(type)) { //$NON-NLS-1$
+                    type = IJunction.AND_JUNCTION_TYPE; // Internal Junction type "and" is the empty string ""
+                }
+                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.JUNCTION__TYPE, type));
+            }
+        }
+        
+        return this;
+    }
+
+    // Attr
+    
+    @Override
+    protected Object attr(String attribute) {
+        switch(attribute) {
+            case JUNCTION_TYPE:
+                return getJunctionType();
+        }
+        
+        return super.attr(attribute);
+    }
+
+    @Override
+    protected EObjectProxy attr(String attribute, Object value) {
+        switch(attribute) {
+            case JUNCTION_TYPE:
+                if(value instanceof String) {
+                    return setJunctionType((String)value);
+                }
+        }
+        
+        return super.attr(attribute, value);
     }
 }

@@ -15,8 +15,10 @@ import org.junit.Test;
 
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
+import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IBusinessActor;
 import com.archimatetool.model.IBusinessRole;
+import com.archimatetool.model.IJunction;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
@@ -233,5 +235,30 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
         ArchimateElementProxy otherProxy = (ArchimateElementProxy)EObjectProxy.get(otherElement);
         
         replacementProxy.merge(otherProxy);
+    }
+    
+    @Test
+    public void setJunctionType() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        IJunction junction = IArchimateFactory.eINSTANCE.createJunction();
+        model.getDefaultFolderForObject(junction).getElements().add(junction);
+        ArchimateElementProxy proxy = (ArchimateElementProxy)EObjectProxy.get(junction);
+        
+        proxy.setJunctionType("or");
+        assertEquals(IJunction.OR_JUNCTION_TYPE, proxy.getJunctionType());
+        assertEquals(IJunction.OR_JUNCTION_TYPE, junction.getType());
+        
+        proxy.setJunctionType("and");
+        assertEquals("and", proxy.getJunctionType());
+        assertEquals(IJunction.AND_JUNCTION_TYPE, junction.getType());
+        
+        proxy.setJunctionType(null);
+        assertEquals("and", proxy.getJunctionType());
+        
+        proxy.attr(IModelConstants.JUNCTION_TYPE, "AND");
+        assertEquals("and", proxy.attr(IModelConstants.JUNCTION_TYPE));
+        
+        proxy.attr(IModelConstants.JUNCTION_TYPE, "OR");
+        assertEquals(IJunction.OR_JUNCTION_TYPE, proxy.attr(IModelConstants.JUNCTION_TYPE));
     }
 }

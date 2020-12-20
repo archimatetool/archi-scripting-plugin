@@ -76,6 +76,12 @@ interface IModelConstants {
     
     String ASSOCIATION_DIRECTED = "association-directed";
     
+    String JUNCTION_TYPE = "junction-type";
+    List<String> JUNCTION_TYPES_LIST = Arrays.asList(new String[] {
+            "and",
+            "or"
+    });
+
     // View types
     String VIEW_ARCHIMATE = "archimate";
     String VIEW_SKETCH = "sketch";
