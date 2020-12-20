@@ -184,10 +184,18 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         model.getDefaultFolderForObject(relationship).getElements().add(relationship);
         ArchimateRelationshipProxy proxy = (ArchimateRelationshipProxy)EObjectProxy.get(relationship);
         
+        proxy.setAccessType(null);
+        assertEquals("write", proxy.getAccessType());
+        assertEquals(IAccessRelationship.WRITE_ACCESS, relationship.getAccessType());
+        
         proxy.setAccessType("write");
         assertEquals("write", proxy.getAccessType());
         assertEquals(IAccessRelationship.WRITE_ACCESS, relationship.getAccessType());
         
+        proxy.setAccessType("WRITE");
+        assertEquals("write", proxy.getAccessType());
+        assertEquals(IAccessRelationship.WRITE_ACCESS, relationship.getAccessType());
+
         proxy.setAccessType("read");
         assertEquals("read", proxy.getAccessType());
         assertEquals(IAccessRelationship.READ_ACCESS, relationship.getAccessType());
@@ -204,7 +212,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         assertEquals("readwrite", proxy.getAccessType());
         assertEquals(IAccessRelationship.READ_WRITE_ACCESS, relationship.getAccessType());
         
-        proxy.attr(IModelConstants.ACCESS_TYPE, "read");
+        proxy.attr(IModelConstants.ACCESS_TYPE, "READ");
         assertEquals("read", proxy.attr(IModelConstants.ACCESS_TYPE));
     }
 

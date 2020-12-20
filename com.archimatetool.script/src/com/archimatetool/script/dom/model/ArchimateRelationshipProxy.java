@@ -287,7 +287,9 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
     }
     
     public EObjectProxy setAccessType(String type) {
-        if(getEObject() instanceof IAccessRelationship) {
+        if(getEObject() instanceof IAccessRelationship && type != null) {
+            type = type.toLowerCase();
+            
             if(IModelConstants.ACCESS_TYPES_LIST.contains(type)) {
                 int index = IModelConstants.ACCESS_TYPES_LIST.indexOf(type);
                 if(index != -1) {
