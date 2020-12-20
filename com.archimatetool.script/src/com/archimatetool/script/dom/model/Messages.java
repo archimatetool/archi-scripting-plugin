@@ -32,6 +32,10 @@ public class Messages extends NLS {
 
     public static String ArchimateRelationshipProxy_1;
 
+    public static String ArchimateRelationshipProxy_2;
+
+    public static String ArchimateRelationshipProxy_3;
+
     public static String CurrentModel_0;
 
     public static String DiagramModelComponentProxy_0;
