@@ -58,6 +58,8 @@ public class Messages extends NLS {
 
     public static String EObjectProxy_0;
 
+    public static String EObjectProxy_1;
+
     public static String ModelFactory_0;
 
     public static String ModelFactory_1;
