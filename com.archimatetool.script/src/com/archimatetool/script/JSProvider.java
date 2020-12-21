@@ -48,11 +48,33 @@ public class JSProvider implements IScriptEngineProvider {
 
     @Override
     public ScriptEngine createScriptEngine() {
-        if(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE) == 0) {
-            return new ScriptEngineManager().getEngineByName("JavaScript"); //$NON-NLS-1$
-        }
-        else {
-            return new NashornScriptEngineFactory().getScriptEngine("--language=es6"); //$NON-NLS-1$
+        switch((ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE))) {
+            case 0:
+                return new ScriptEngineManager().getEngineByName("Nashorn"); //$NON-NLS-1$
+
+            case 1:
+                return new NashornScriptEngineFactory().getScriptEngine("--language=es6"); //$NON-NLS-1$
+
+            case 2:
+                // Need to set this either here or in runtime
+                System.getProperties().put("polyglot.js.nashorn-compat", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+
+                ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js"); //$NON-NLS-1$
+
+                // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
+//                Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+//                bindings.put("polyglot.js.allowHostAccess", true);
+//                bindings.put("polyglot.js.allowIO", true);
+//                bindings.put("polyglot.js.allowNativeAccess", true);
+//                bindings.put("polyglot.js.allowCreateThread", true);
+//                bindings.put("polyglot.js.allowHostClassLookup", true);
+//                bindings.put("polyglot.js.allowHostClassLoading", true);
+//                bindings.put("polyglot.js.allowAllAccess", true);
+
+                return engine;
+
+            default:
+                return null;
         }
     }
 

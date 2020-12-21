@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.core.runtime,
  com.archimatetool.commandline;bundle-version="4.6.0",
  com.archimatetool.help;bundle-version="4.6.0",
  com.archimatetool.editor.browser;bundle-version="4.6.0",
- com.archimatetool.canvas;bundle-version="4.6.0"
+ com.archimatetool.canvas;bundle-version="4.6.0",
+ com.ibm.icu
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: com.archimatetool.script.ArchiScriptPlugin
@@ -27,3 +28,9 @@ Export-Package: com.archimatetool.script,
  com.archimatetool.script.views.file,
  com.archimatetool.script.views.scripts
 Automatic-Module-Name: com.archimatetool.script
+Bundle-ClassPath: .,
+ lib/graal-sdk-20.3.0.jar,
+ lib/js-20.3.0.jar,
+ lib/js-scriptengine-20.3.0.jar,
+ lib/regex-20.3.0.jar,
+ lib/truffle-api-20.3.0.jar

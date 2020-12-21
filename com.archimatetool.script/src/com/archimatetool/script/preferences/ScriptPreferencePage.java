@@ -68,6 +68,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     private String[] JS_VERSIONS = {
             Messages.ScriptPreferencePage_10,
             Messages.ScriptPreferencePage_11,
+            Messages.ScriptPreferencePage_14
     };
     
 	public ScriptPreferencePage() {
