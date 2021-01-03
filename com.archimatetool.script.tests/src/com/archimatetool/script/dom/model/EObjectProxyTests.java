@@ -277,6 +277,9 @@ public abstract class EObjectProxyTests {
         try {
             testProxy.setLabelExpression("${name}");
             assertEquals("${name}", testProxy.getLabelExpression());
+            
+            testProxy.attr(IModelConstants.LABEL_EXPRESSION, "${documentation}");
+            assertEquals("${documentation}", testProxy.attr(IModelConstants.LABEL_EXPRESSION));
         }
         // Will throw exception if this object doesn't support setLabelExpression()
         catch(ArchiScriptException ex) {
@@ -291,6 +294,7 @@ public abstract class EObjectProxyTests {
         try {
             testProxy.setLabelExpression("${name}"); 
             assertEquals(testProxy.getName(), testProxy.getLabelValue());
+            assertEquals(testProxy.getName(), testProxy.attr(IModelConstants.LABEL_VALUE));
         }
         // Will throw exception if this object doesn't support setLabelExpression()
         catch(ArchiScriptException ex) {

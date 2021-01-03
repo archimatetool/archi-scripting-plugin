@@ -87,7 +87,11 @@ interface IModelConstants {
     String VIEW_SKETCH = "sketch";
     String VIEW_CANVAS = "canvas";
     
-    // Object typee
+    // Object types
     String DIAGRAM_MODEL_GROUP = "diagram-model-group";
     String DIAGRAM_MODEL_NOTE = "diagram-model-note";
+    
+    // Label Expressions
+    String LABEL_EXPRESSION = "label-expression";
+    String LABEL_VALUE = "label-value";
 }

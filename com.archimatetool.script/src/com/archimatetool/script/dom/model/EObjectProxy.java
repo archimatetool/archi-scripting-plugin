@@ -490,6 +490,12 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
             case DOCUMENTATION:
                 return getDocumentation();
                 
+            case LABEL_EXPRESSION:
+                return getLabelExpression();
+                
+            case LABEL_VALUE:
+                return getLabelValue();
+
             default:
                 return null;
         }
@@ -505,6 +511,11 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
             case DOCUMENTATION:
                 if(value instanceof String) {
                     return setDocumentation((String)value);
+                }
+
+            case LABEL_EXPRESSION:
+                if(value instanceof String) {
+                    return setLabelExpression((String)value);
                 }
         }
         
