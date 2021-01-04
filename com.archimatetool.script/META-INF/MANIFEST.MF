@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Archi Scripting
 Bundle-SymbolicName: com.archimatetool.script;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 0.8.0.qualifier
+Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.archimatetool.canvas;bundle-version="4.6.0",
  com.ibm.icu
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Activator: com.archimatetool.script.ArchiScriptPlugin
 Export-Package: com.archimatetool.script,
  com.archimatetool.script.commands,
