@@ -27,6 +27,7 @@ import com.archimatetool.script.views.console.ConsoleOutput;
 /**
  * Script Runner
  */
+@SuppressWarnings("nls")
 public class RunArchiScript {
 	private File file;
 
@@ -43,6 +44,10 @@ public class RunArchiScript {
 	    }
 	    
 	    ScriptEngine engine = provider.createScriptEngine();
+	    
+	    if(engine == null) {
+            throw new RuntimeException(NLS.bind("Script Engine not found for file: {0}", file)); //$NON-NLS-1$
+        }
         
         defineGlobalVariables(engine);
         defineExtensionGlobalVariables(engine);
@@ -81,13 +86,13 @@ public class RunArchiScript {
     private void defineGlobalVariables(ScriptEngine engine) {
         // Eclipse ones - these are needed for calling UI methods such as opening dialogs, windows, etc
         if(PlatformUI.isWorkbenchRunning()) {
-            engine.put("workbench", PlatformUI.getWorkbench()); //$NON-NLS-1$
-            engine.put("workbenchwindow", PlatformUI.getWorkbench().getActiveWorkbenchWindow()); //$NON-NLS-1$
-            engine.put("shell", PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell()); //$NON-NLS-1$
+            engine.put("workbench", PlatformUI.getWorkbench());
+            engine.put("workbenchwindow", PlatformUI.getWorkbench().getActiveWorkbenchWindow());
+            engine.put("shell", PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell());
         }
 
         // directory of user scripts folder
-        engine.put("__SCRIPTS_DIR__", ArchiScriptPlugin.INSTANCE.getUserScriptsFolder().getAbsolutePath() + File.separator); //$NON-NLS-1$
+        engine.put("__SCRIPTS_DIR__", ArchiScriptPlugin.INSTANCE.getUserScriptsFolder().getAbsolutePath() + File.separator);
     }
     
     /**
@@ -99,8 +104,8 @@ public class RunArchiScript {
         for(IExtension extension : point.getExtensions()) {
             for(IConfigurationElement element : extension.getConfigurationElements()) {
                 try { 
-                    String variableName = element.getAttribute("variableName"); //$NON-NLS-1$
-                    Object domObject = element.createExecutableExtension("class"); //$NON-NLS-1$
+                    String variableName = element.getAttribute("variableName");
+                    Object domObject = element.createExecutableExtension("class");
 
                     // If the class object implements IArchiScriptDOMFactory then call its getDOMroot() method as a proxy.
                     // Useful if the factory needs to instantiate the dom class object in a non-simple way.
@@ -121,12 +126,12 @@ public class RunArchiScript {
 
 	private void error(Throwable ex) {
 	    // The init.js function exit() works by throwing an exception with message "__EXIT__"
-	    if(ex instanceof ScriptException && ex.getMessage().contains("__EXIT__")) { //$NON-NLS-1$
-	        System.out.println("Exited"); //$NON-NLS-1$
+	    if(ex instanceof ScriptException && ex.getMessage().contains("__EXIT__")) {
+	        System.out.println("Exited");
 	    }
 	    // Other exception
 	    else {
-	        System.err.println("Script Error: " + ex.toString());  //$NON-NLS-1$
+	        System.err.println("Script Error: " + ex.toString());
 	    }
 	}
 }
