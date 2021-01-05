@@ -55,16 +55,18 @@ public class JSProvider implements IScriptEngineProvider {
         switch((ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE))) {
             case 0:
                 engine = new ScriptEngineManager().getEngineByName("Nashorn"); //$NON-NLS-1$
+                break;
 
             case 1:
                 engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6"); //$NON-NLS-1$
+                break;
 
             case 2:
                 // Need to set this either here or in runtime
                 System.getProperties().put("polyglot.js.nashorn-compat", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 
                 engine = new ScriptEngineManager().getEngineByName("graal.js"); //$NON-NLS-1$
-
+                
                 // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
 //                Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
 //                bindings.put("polyglot.js.allowHostAccess", true);
@@ -74,6 +76,7 @@ public class JSProvider implements IScriptEngineProvider {
 //                bindings.put("polyglot.js.allowHostClassLookup", true);
 //                bindings.put("polyglot.js.allowHostClassLoading", true);
 //                bindings.put("polyglot.js.allowAllAccess", true);
+                break;
                 
             default:
                 engine = new ScriptEngineManager().getEngineByName("Nashorn"); //$NON-NLS-1$
