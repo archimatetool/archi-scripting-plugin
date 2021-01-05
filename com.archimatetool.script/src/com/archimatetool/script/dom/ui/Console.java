@@ -20,6 +20,7 @@ import com.archimatetool.script.views.console.ConsoleView;
 /**
  * Represents the Script "console" dom object
  */
+@SuppressWarnings("nls")
 public class Console {
     
     // Cache the current color here in case the viewer is not yet instantiated
@@ -62,28 +63,39 @@ public class Console {
     }
     
     public void println(Object obj) {
-        print(obj + "\n"); //$NON-NLS-1$
+        if(obj == null) {
+            print("(null)\n"); 
+            return;
+        }
+        
+        print(obj + "\n");
     }
     
     public void log(Object... objs) {
+        if(objs == null) {
+            print("(null)\n"); 
+            return;
+        }
+        
         for(Object o : objs) {
             print(o);
         }
+        
         print("\n"); //$NON-NLS-1$
     }
 
     public void print(Object obj) {
-        String output = ""; //$NON-NLS-1$
+        String output = "";
         
         if(obj == null) {
-            output = "(null)"; //$NON-NLS-1$
+            output = "(null)";
         }
         else if(obj instanceof Map<?, ?>) {
-            StringJoiner joiner = new StringJoiner(", "); //$NON-NLS-1$
+            StringJoiner joiner = new StringJoiner(", ");
             for(Entry<?, ?> e : ((Map<?, ?>)obj).entrySet()) {
-                joiner.add(e.getKey() + ": " + e.getValue()); //$NON-NLS-1$
+                joiner.add(e.getKey() + ": " + e.getValue());
             }
-            output = "{" + joiner.toString() + "}"; //$NON-NLS-1$ //$NON-NLS-2$
+            output = "{" + joiner.toString() + "}";
         }
         else {
             output = obj.toString();
@@ -112,7 +124,7 @@ public class Console {
     }
     
     public void clear() {
-        setText(""); //$NON-NLS-1$
+        setText("");
     }
 
     public void setTextColor(int red, int green, int blue) {
