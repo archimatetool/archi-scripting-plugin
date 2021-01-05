@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -48,18 +50,20 @@ public class JSProvider implements IScriptEngineProvider {
 
     @Override
     public ScriptEngine createScriptEngine() {
+        ScriptEngine engine = null;
+        
         switch((ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE))) {
             case 0:
-                return new ScriptEngineManager().getEngineByName("Nashorn"); //$NON-NLS-1$
+                engine = new ScriptEngineManager().getEngineByName("Nashorn"); //$NON-NLS-1$
 
             case 1:
-                return new NashornScriptEngineFactory().getScriptEngine("--language=es6"); //$NON-NLS-1$
+                engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6"); //$NON-NLS-1$
 
             case 2:
                 // Need to set this either here or in runtime
                 System.getProperties().put("polyglot.js.nashorn-compat", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 
-                ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js"); //$NON-NLS-1$
+                engine = new ScriptEngineManager().getEngineByName("graal.js"); //$NON-NLS-1$
 
                 // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
 //                Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
@@ -70,12 +74,27 @@ public class JSProvider implements IScriptEngineProvider {
 //                bindings.put("polyglot.js.allowHostClassLookup", true);
 //                bindings.put("polyglot.js.allowHostClassLoading", true);
 //                bindings.put("polyglot.js.allowAllAccess", true);
-
-                return engine;
-
+                
             default:
-                return null;
+                engine = new ScriptEngineManager().getEngineByName("Nashorn"); //$NON-NLS-1$
         }
+        
+        if(engine != null) {
+            setBindings(engine);
+        }
+        
+        return engine;
+    }
+    
+    /**
+     * Set/Remove some JS global bindings
+     */
+    private void setBindings(ScriptEngine engine) {
+        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+        
+        // Remove these
+        bindings.remove("exit"); //$NON-NLS-1$
+        bindings.remove("quit"); //$NON-NLS-1$
     }
 
     @Override

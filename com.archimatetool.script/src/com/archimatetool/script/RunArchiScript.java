@@ -7,8 +7,6 @@ package com.archimatetool.script;
 
 import java.io.File;
 
-import javax.script.Bindings;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
@@ -48,7 +46,6 @@ public class RunArchiScript {
         
         defineGlobalVariables(engine);
         defineExtensionGlobalVariables(engine);
-        setBindings(engine);
         
         // Start the console *after* the script engine has been created to avoid showing warning messages
         ConsoleOutput.start();
@@ -93,17 +90,6 @@ public class RunArchiScript {
         }
     }
     
-    /**
-     * Set/Remove some JS global bindings
-     */
-    private void setBindings(ScriptEngine engine) {
-        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-        
-        // Remove these
-        bindings.remove("exit"); //$NON-NLS-1$
-        bindings.remove("quit"); //$NON-NLS-1$
-    }
-
     /**
      * Declared DOM extensions are registered
      */
