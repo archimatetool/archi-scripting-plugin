@@ -48,6 +48,9 @@ public class RunArchiScript {
 	    if(engine == null) {
             throw new RuntimeException(NLS.bind("Script Engine not found for file: {0}", file)); //$NON-NLS-1$
         }
+	    
+	    // Set the script engine class name in a System Property in case we need to know what the engine is elsewhere
+        System.getProperties().put("script.engine", engine.getClass().getName());
         
         defineGlobalVariables(engine);
         defineExtensionGlobalVariables(engine);

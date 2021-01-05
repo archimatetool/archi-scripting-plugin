@@ -5,7 +5,6 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
@@ -82,10 +81,10 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return getEObject() instanceof IDiagramModelArchimateObject;
     }
     
-    public Map<String, Integer> getBounds() {
+    public Map<String, Object> getBounds() {
         IBounds b = getEObject().getBounds();
         
-        HashMap<String, Integer> map = new HashMap<>();
+        Map<String, Object> map = ProxyUtil.createMap();
         map.put("x", b.getX()); //$NON-NLS-1$
         map.put("y", b.getY()); //$NON-NLS-1$
         map.put("width", b.getWidth()); //$NON-NLS-1$

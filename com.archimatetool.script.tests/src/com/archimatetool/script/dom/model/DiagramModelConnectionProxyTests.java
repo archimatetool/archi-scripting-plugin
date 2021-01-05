@@ -259,25 +259,25 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         actualTestProxy.getEObject().getBendpoints().add(bp1);
         actualTestProxy.getEObject().getBendpoints().add(bp2);
         
-        List<Map<String, Integer>> list = actualTestProxy.getRelativeBendpoints();
+        List<Map<String, Object>> list = actualTestProxy.getRelativeBendpoints();
         assertEquals(2, list.size());
         
-        Map<String, Integer> bpp1 = list.get(0);
-        assertEquals(1, (int)bpp1.get(IModelConstants.START_X));
-        assertEquals(2, (int)bpp1.get(IModelConstants.END_X));
-        assertEquals(3, (int)bpp1.get(IModelConstants.START_Y));
-        assertEquals(4, (int)bpp1.get(IModelConstants.END_Y));
+        Map<String, Object> bpp1 = list.get(0);
+        assertEquals(1, bpp1.get(IModelConstants.START_X));
+        assertEquals(2, bpp1.get(IModelConstants.END_X));
+        assertEquals(3, bpp1.get(IModelConstants.START_Y));
+        assertEquals(4, bpp1.get(IModelConstants.END_Y));
         
-        Map<String, Integer> bpp2 = list.get(1);
-        assertEquals(5, (int)bpp2.get(IModelConstants.START_X));
-        assertEquals(6, (int)bpp2.get(IModelConstants.END_X));
-        assertEquals(7, (int)bpp2.get(IModelConstants.START_Y));
-        assertEquals(8, (int)bpp2.get(IModelConstants.END_Y));
+        Map<String, Object> bpp2 = list.get(1);
+        assertEquals(5, bpp2.get(IModelConstants.START_X));
+        assertEquals(6, bpp2.get(IModelConstants.END_X));
+        assertEquals(7, bpp2.get(IModelConstants.START_Y));
+        assertEquals(8, bpp2.get(IModelConstants.END_Y));
     }
     
     @Test
     public void addRelativeBendpoint() {
-        Map<String, Integer> map = new HashMap<String, Integer>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put(IModelConstants.START_X, 1);
         map.put(IModelConstants.END_X, 2);
         map.put(IModelConstants.START_Y, 3);
@@ -285,14 +285,14 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         
         actualTestProxy.addRelativeBendpoint(map, 0);
 
-        List<Map<String, Integer>> list = actualTestProxy.getRelativeBendpoints();
+        List<Map<String, Object>> list = actualTestProxy.getRelativeBendpoints();
         assertEquals(1, list.size());
         
-        Map<String, Integer> bpp1 = list.get(0);
-        assertEquals(1, (int)bpp1.get(IModelConstants.START_X));
-        assertEquals(2, (int)bpp1.get(IModelConstants.END_X));
-        assertEquals(3, (int)bpp1.get(IModelConstants.START_Y));
-        assertEquals(4, (int)bpp1.get(IModelConstants.END_Y));
+        Map<String, Object> bpp1 = list.get(0);
+        assertEquals(1, bpp1.get(IModelConstants.START_X));
+        assertEquals(2, bpp1.get(IModelConstants.END_X));
+        assertEquals(3, bpp1.get(IModelConstants.START_Y));
+        assertEquals(4, bpp1.get(IModelConstants.END_Y));
     }
     
     @Test
@@ -334,11 +334,11 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         actualTestProxy.deleteBendpoint(0);
         assertEquals(1, actualTestProxy.getRelativeBendpoints().size());
         
-        Map<String, Integer> bpp1 = actualTestProxy.getRelativeBendpoints().get(0);
-        assertEquals(5, (int)bpp1.get(IModelConstants.START_X));
-        assertEquals(6, (int)bpp1.get(IModelConstants.END_X));
-        assertEquals(7, (int)bpp1.get(IModelConstants.START_Y));
-        assertEquals(8, (int)bpp1.get(IModelConstants.END_Y));
+        Map<String, Object> bpp1 = actualTestProxy.getRelativeBendpoints().get(0);
+        assertEquals(5, bpp1.get(IModelConstants.START_X));
+        assertEquals(6, bpp1.get(IModelConstants.END_X));
+        assertEquals(7, bpp1.get(IModelConstants.START_Y));
+        assertEquals(8, bpp1.get(IModelConstants.END_Y));
     }
 
 }

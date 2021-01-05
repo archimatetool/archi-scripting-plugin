@@ -15,6 +15,11 @@ function getArgs() {
 	return Java.type("org.eclipse.core.runtime.Platform").getApplicationArgs();
 }
 
+// Return current script engine class name
+function getScriptEngine() {
+	return Java.type("java.lang.System").getProperty("script.engine");
+}
+
 // Run a system command
 function exec() {
 	// Split arguments into an array of args
