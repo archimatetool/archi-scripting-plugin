@@ -6,33 +6,32 @@ function jArchi (obj) {
 }
 
 jArchi.model = jArchiModel;
+
 jArchi.fs = jArchiFS;
 
-$ = jArchi;
+jArchi.process = {
+	engine: Java.type("java.lang.System").getProperty("script.engine"),
+	argv: Java.type("org.eclipse.core.runtime.Platform").getApplicationArgs(),
+	platform: Java.type("org.eclipse.core.runtime.Platform").getOS()
+};
+Object.freeze(jArchi.process);
 
-// Application args
-function getArgs() {
-	return Java.type("org.eclipse.core.runtime.Platform").getApplicationArgs();
-}
-
-// Return current script engine class name
-function getScriptEngine() {
-	return Java.type("java.lang.System").getProperty("script.engine");
-}
-
-// Run a system command
-function exec() {
-	// Split arguments into an array of args
-	var args = Array.prototype.slice.call(arguments);
+jArchi.child_process = {
+	exec: function() {
+		// Split arguments into an array of args
+		var args = Array.prototype.slice.call(arguments);
+		
+		var platform = Java.type("org.eclipse.core.runtime.Platform").getOS();
+		if(platform == "macosx") {
+			args = ["open", "-a"].concat(args[0]); // for some reason, Mac will only accept one argument
+		}
 	
-	var platform = Java.type("org.eclipse.core.runtime.Platform").getOS();
-	if(platform == "macosx") {
-		args = ["open", "-a"].concat(args[0]); // for some reason, Mac will only accept one argument
+		var runtime = Java.type("java.lang.Runtime").getRuntime();
+		runtime.exec(args);
 	}
-
-	var runtime = Java.type("java.lang.Runtime").getRuntime();
-	runtime.exec(args);
 }
+
+$ = jArchi;
 
 // window dialog functions
 var window = {
@@ -94,6 +93,18 @@ var window = {
 function exit() {
 	throw "__EXIT__";
 }
+
+// Legacy functions marked as deprecated
+function exec() {
+	console.log("WARNING: exec() is deprecated and will be removed in the future. Use $.child_process.exec() instead.");
+	$.child_process.exec.apply(this, arguments);
+}
+
+function getArgs() {
+	console.log("WARNING: getArgs() is deprecated and will be removed in the future. Use $.process.argv instead.");
+	return $.process.argv;
+}
+
 
 // Constants
 
