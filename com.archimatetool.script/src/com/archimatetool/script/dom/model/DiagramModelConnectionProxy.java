@@ -106,16 +106,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
             throw new ArchiScriptException(Messages.DiagramModelConnectionProxy_0 + index);
         }
         
-        int startX = ModelUtil.getIntValueFromMap(map, START_X, 0);
-        int startY = ModelUtil.getIntValueFromMap(map, START_Y, 0);
-        int endX = ModelUtil.getIntValueFromMap(map, END_X, 0);
-        int endY = ModelUtil.getIntValueFromMap(map, END_Y, 0);
-        
-        IDiagramModelBendpoint bp = IArchimateFactory.eINSTANCE.createDiagramModelBendpoint();
-        bp.setStartX(startX);
-        bp.setStartY(startY);
-        bp.setEndX(endX);
-        bp.setEndY(endY);
+        IDiagramModelBendpoint bp = createBendpointFromMap(map);
         
         CommandHandler.executeCommand(new ScriptCommand(Messages.DiagramModelConnectionProxy_1, getEObject()) {
             @Override
@@ -126,6 +117,30 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
             @Override
             public void undo() {
                 getEObject().getBendpoints().remove(bp);
+            }
+        });
+        
+        return this;
+    }
+    
+    public DiagramModelConnectionProxy setRelativeBendpoint(Map<?, ?> map, int index) {
+        if(index < 0 || index >= getEObject().getBendpoints().size()) {
+            throw new ArchiScriptException(Messages.DiagramModelConnectionProxy_0 + index);
+        }
+        
+        IDiagramModelBendpoint bp = createBendpointFromMap(map);
+        
+        CommandHandler.executeCommand(new ScriptCommand(Messages.DiagramModelConnectionProxy_1, getEObject()) {
+            IDiagramModelBendpoint previous;
+            
+            @Override
+            public void perform() {
+                previous = getEObject().getBendpoints().set(index, bp);
+            }
+            
+            @Override
+            public void undo() {
+                getEObject().getBendpoints().set(index, previous);
             }
         });
         
@@ -162,6 +177,24 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         });
         
         return this;
+    }
+    
+    /**
+     * Create a bendpoint from a Map's members
+     */
+    private IDiagramModelBendpoint createBendpointFromMap(Map<?, ?> map) {
+        int startX = ModelUtil.getIntValueFromMap(map, START_X, 0);
+        int startY = ModelUtil.getIntValueFromMap(map, START_Y, 0);
+        int endX = ModelUtil.getIntValueFromMap(map, END_X, 0);
+        int endY = ModelUtil.getIntValueFromMap(map, END_Y, 0);
+        
+        IDiagramModelBendpoint bp = IArchimateFactory.eINSTANCE.createDiagramModelBendpoint();
+        bp.setStartX(startX);
+        bp.setStartY(startY);
+        bp.setEndX(endX);
+        bp.setEndY(endY);
+
+        return bp;
     }
     
     // ===========================================

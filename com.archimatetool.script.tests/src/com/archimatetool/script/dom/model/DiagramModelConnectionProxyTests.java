@@ -22,7 +22,6 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.ICompositionRelationship;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
-import com.archimatetool.model.IDiagramModelBendpoint;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.util.ArchimateModelUtils;
@@ -244,64 +243,46 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     
     @Test
     public void getRelativeBendpoints() {
-        IDiagramModelBendpoint bp1 = IArchimateFactory.eINSTANCE.createDiagramModelBendpoint();
-        bp1.setStartX(1);
-        bp1.setEndX(2);
-        bp1.setStartY(3);
-        bp1.setEndY(4);
-        
-        IDiagramModelBendpoint bp2 = IArchimateFactory.eINSTANCE.createDiagramModelBendpoint();
-        bp2.setStartX(5);
-        bp2.setEndX(6);
-        bp2.setStartY(7);
-        bp2.setEndY(8);
-        
-        actualTestProxy.getEObject().getBendpoints().add(bp1);
-        actualTestProxy.getEObject().getBendpoints().add(bp2);
+        Map<String, Object> map = createBendpoint(1, 2, 3, 4);
+        Map<String, Object> map2 = createBendpoint(5, 6, 7, 8);
+        actualTestProxy.addRelativeBendpoint(map, 0);
+        actualTestProxy.addRelativeBendpoint(map2, 1);
         
         List<Map<String, Object>> list = actualTestProxy.getRelativeBendpoints();
         assertEquals(2, list.size());
         
-        Map<String, Object> bpp1 = list.get(0);
-        assertEquals(1, bpp1.get(IModelConstants.START_X));
-        assertEquals(2, bpp1.get(IModelConstants.END_X));
-        assertEquals(3, bpp1.get(IModelConstants.START_Y));
-        assertEquals(4, bpp1.get(IModelConstants.END_Y));
-        
-        Map<String, Object> bpp2 = list.get(1);
-        assertEquals(5, bpp2.get(IModelConstants.START_X));
-        assertEquals(6, bpp2.get(IModelConstants.END_X));
-        assertEquals(7, bpp2.get(IModelConstants.START_Y));
-        assertEquals(8, bpp2.get(IModelConstants.END_Y));
+        checkBendpoint(map, list.get(0));
+        checkBendpoint(map2, list.get(1));
     }
     
     @Test
     public void addRelativeBendpoint() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put(IModelConstants.START_X, 1);
-        map.put(IModelConstants.END_X, 2);
-        map.put(IModelConstants.START_Y, 3);
-        map.put(IModelConstants.END_Y, 4);
-        
+        Map<String, Object> map = createBendpoint(1, 2, 3, 4);
         actualTestProxy.addRelativeBendpoint(map, 0);
 
         List<Map<String, Object>> list = actualTestProxy.getRelativeBendpoints();
         assertEquals(1, list.size());
-        
-        Map<String, Object> bpp1 = list.get(0);
-        assertEquals(1, bpp1.get(IModelConstants.START_X));
-        assertEquals(2, bpp1.get(IModelConstants.END_X));
-        assertEquals(3, bpp1.get(IModelConstants.START_Y));
-        assertEquals(4, bpp1.get(IModelConstants.END_Y));
+        checkBendpoint(map, list.get(0));
     }
     
     @Test
+    public void setRelativeBendpoint() {
+        Map<String, Object> map = createBendpoint(1, 2, 3, 4);
+        actualTestProxy.addRelativeBendpoint(map, 0);
+
+        List<Map<String, Object>> list = actualTestProxy.getRelativeBendpoints();
+        assertEquals(1, list.size());
+        checkBendpoint(map, list.get(0));
+        
+        Map<String, Object> map2 = createBendpoint(5, 6, 7, 8);
+        actualTestProxy.setRelativeBendpoint(map2, 0);
+        assertEquals(1, list.size());
+        checkBendpoint(map2, actualTestProxy.getRelativeBendpoints().get(0));
+    }
+    
+   @Test
     public void deleteAllBendpoints() {
-        Map<String, Integer> map = new HashMap<String, Integer>();
-        map.put(IModelConstants.START_X, 1);
-        map.put(IModelConstants.END_X, 2);
-        map.put(IModelConstants.START_Y, 3);
-        map.put(IModelConstants.END_Y, 4);
+        Map<String, Object> map = createBendpoint(1, 2, 3, 4);
         
         actualTestProxy.addRelativeBendpoint(map, 0);
         actualTestProxy.addRelativeBendpoint(map, 1);
@@ -314,17 +295,8 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     
     @Test
     public void deleteBendpoint() {
-        Map<String, Integer> map1 = new HashMap<String, Integer>();
-        map1.put(IModelConstants.START_X, 1);
-        map1.put(IModelConstants.END_X, 2);
-        map1.put(IModelConstants.START_Y, 3);
-        map1.put(IModelConstants.END_Y, 4);
-        
-        Map<String, Integer> map2 = new HashMap<String, Integer>();
-        map2.put(IModelConstants.START_X, 5);
-        map2.put(IModelConstants.END_X, 6);
-        map2.put(IModelConstants.START_Y, 7);
-        map2.put(IModelConstants.END_Y, 8);
+        Map<String, Object> map1 = createBendpoint(1, 2, 3, 4);
+        Map<String, Object> map2 = createBendpoint(5, 6, 7, 8);
 
         actualTestProxy.addRelativeBendpoint(map1, 0);
         actualTestProxy.addRelativeBendpoint(map2, 1);
@@ -332,13 +304,27 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         assertEquals(2, actualTestProxy.getRelativeBendpoints().size());
         
         actualTestProxy.deleteBendpoint(0);
+        
         assertEquals(1, actualTestProxy.getRelativeBendpoints().size());
         
-        Map<String, Object> bpp1 = actualTestProxy.getRelativeBendpoints().get(0);
-        assertEquals(5, bpp1.get(IModelConstants.START_X));
-        assertEquals(6, bpp1.get(IModelConstants.END_X));
-        assertEquals(7, bpp1.get(IModelConstants.START_Y));
-        assertEquals(8, bpp1.get(IModelConstants.END_Y));
+        checkBendpoint(map2, actualTestProxy.getRelativeBendpoints().get(0));
     }
 
+    private Map<String, Object> createBendpoint(int startX, int endX, int startY, int endY) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        
+        map.put(IModelConstants.START_X, startX);
+        map.put(IModelConstants.END_X, endX);
+        map.put(IModelConstants.START_Y, startY);
+        map.put(IModelConstants.END_Y, endY);
+        
+        return map;
+    }
+    
+    private void checkBendpoint(Map<String, Object> expected, Map<String, Object> actual) {
+        assertEquals(expected.get(IModelConstants.START_X), actual.get(IModelConstants.START_X));
+        assertEquals(expected.get(IModelConstants.END_X), actual.get(IModelConstants.END_X));
+        assertEquals(expected.get(IModelConstants.START_Y), actual.get(IModelConstants.START_Y));
+        assertEquals(expected.get(IModelConstants.END_Y), actual.get(IModelConstants.END_Y));
+    }
 }
