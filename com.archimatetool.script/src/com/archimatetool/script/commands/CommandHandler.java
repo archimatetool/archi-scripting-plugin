@@ -26,8 +26,12 @@ public class CommandHandler {
     
     private static Map<CommandStack, CompoundCommand> compoundcommands;
     
-    public static void init() {
+    // The name of the script to display in Undo/Redo command
+    private static String name;
+    
+    public static void init(String scriptName) {
         compoundcommands = new HashMap<CommandStack, CompoundCommand>();
+        name = NLS.bind(Messages.CommandHandler_1, scriptName);
     }
 
     public static void executeCommand(ScriptCommand cmd) {
@@ -41,7 +45,7 @@ public class CommandHandler {
         if(stack != null) {
             CompoundCommand compound = compoundcommands.get(stack);
             if(compound == null) {
-                compound = new NonNotifyingCompoundCommand(Messages.CommandHandler_0);
+                compound = new NonNotifyingCompoundCommand(name);
                 compoundcommands.put(stack, compound);
             }
             compound.add(cmd);
@@ -53,17 +57,18 @@ public class CommandHandler {
         RefreshUIHandler.refresh();
     }
 
-    public static void finalise(String scriptName) {
+    public static void finalise() {
         if(compoundcommands == null) {
             return;
         }
         
-        // This simply calls empty execute() methods since perform() has already been called, but puts the commmands on the stack
+        // This simply calls empty execute() methods since perform() has already been called
+        // It puts the commmands on the CommandStack for each model so that Undo/Redo is enabled
         for(Entry<CommandStack, CompoundCommand> e : compoundcommands.entrySet()) {
-            e.getValue().setLabel(NLS.bind(Messages.CommandHandler_1, scriptName));
             e.getKey().execute(e.getValue());
         }
+        
+        // Set this to null so that it can be garbage collected, otherwise we will have a memory leak
+        compoundcommands = null;
     }
-    
-    
 }

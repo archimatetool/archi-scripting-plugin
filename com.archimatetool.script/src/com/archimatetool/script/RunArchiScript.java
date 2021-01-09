@@ -59,7 +59,7 @@ public class RunArchiScript {
         ConsoleOutput.start();
 
         // Initialise CommandHandler
-        CommandHandler.init();
+        CommandHandler.init(FileUtils.getFileNameWithoutExtension(file));
 
         // Initialise RefreshUIHandler
         RefreshUIHandler.init();
@@ -74,12 +74,14 @@ public class RunArchiScript {
             error(ex);
         }
         finally {
+            // End writing to the Console
             ConsoleOutput.end();
             
+            // Finalise RefreshUIHandler
             RefreshUIHandler.finalise();
             
-            // Add Commands to UI
-            CommandHandler.finalise(FileUtils.getFileNameWithoutExtension(file));
+            // Run the Commands on the CommandStack to enable Undo/Redo
+            CommandHandler.finalise();
         }
 	}
 	
