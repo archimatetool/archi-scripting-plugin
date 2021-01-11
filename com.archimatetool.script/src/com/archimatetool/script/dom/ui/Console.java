@@ -62,45 +62,35 @@ public class Console {
         }
     }
     
-    public void println(Object obj) {
-        if(obj == null) {
-            print("(null)\n"); 
-            return;
-        }
-        
-        print(obj + "\n");
+    public void log(Object obj) {
+        toConsole(toString(obj) + "\n");
     }
     
     public void log(Object... objs) {
+        // Null
         if(objs == null) {
-            print("(null)\n"); 
+            println(null); 
             return;
         }
         
+        StringJoiner joiner = new StringJoiner(" ");
+        
         for(Object o : objs) {
-            print(o);
+            joiner.add(toString(o));
         }
         
-        print("\n"); //$NON-NLS-1$
+        toConsole(joiner.toString() + "\n");
     }
 
     public void print(Object obj) {
-        String output = "";
-        
-        if(obj == null) {
-            output = "(null)";
-        }
-        else if(obj instanceof Map<?, ?>) {
-            StringJoiner joiner = new StringJoiner(", ");
-            for(Entry<?, ?> e : ((Map<?, ?>)obj).entrySet()) {
-                joiner.add(e.getKey() + ": " + e.getValue());
-            }
-            output = "{" + joiner.toString() + "}";
-        }
-        else {
-            output = obj.toString();
-        }
-        
+        toConsole(toString(obj));
+    }
+    
+    public void println(Object obj) {
+        toConsole(toString(obj) + "\n");
+    }
+    
+    private void toConsole(String output) {
         ConsoleView viewer = findConsoleViewer();
         
         if(viewer != null) {
@@ -110,6 +100,25 @@ public class Console {
         else {
             System.out.print(output);
         }
+    }
+    
+    private String toString(Object obj) {
+        // Null
+        if(obj == null) {
+            return "(null)";
+        }
+        
+        // Map
+        if(obj instanceof Map<?, ?>) {
+            StringJoiner joiner = new StringJoiner(", ");
+            for(Entry<?, ?> e : ((Map<?, ?>)obj).entrySet()) {
+                joiner.add(e.getKey() + ": " + e.getValue());
+            }
+            return "{" + joiner.toString() + "}";
+        }
+        
+        // Object
+        return obj.toString();
     }
     
     public void error(Object error) {
