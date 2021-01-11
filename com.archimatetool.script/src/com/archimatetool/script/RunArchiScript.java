@@ -6,21 +6,19 @@
 package com.archimatetool.script;
 
 import java.io.File;
+import java.util.Map.Entry;
 
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.utils.FileUtils;
 import com.archimatetool.script.commands.CommandHandler;
-import com.archimatetool.script.dom.IArchiScriptDOMFactory;
+import com.archimatetool.script.dom.DomExtensionFactory;
+import com.archimatetool.script.dom.IArchiScriptBinding;
 import com.archimatetool.script.views.console.ConsoleOutput;
 
 
@@ -82,6 +80,13 @@ public class RunArchiScript {
             
             // Run the Commands on the CommandStack to enable Undo/Redo
             CommandHandler.finalise();
+            
+            // Dispose any resources that a binding object may be holding onto
+            for(Object binding : engine.getBindings(ScriptContext.ENGINE_SCOPE).values()) {
+                if(binding instanceof IArchiScriptBinding) {
+                    ((IArchiScriptBinding)binding).dispose();
+                }
+            }
         }
 	}
 	
@@ -104,28 +109,8 @@ public class RunArchiScript {
      * Declared DOM extensions are registered
      */
     private void defineExtensionGlobalVariables(ScriptEngine engine) {
-        IExtensionPoint point = Platform.getExtensionRegistry().getExtensionPoint(IArchiScriptDOMFactory.EXTENSION_ID);
-        
-        for(IExtension extension : point.getExtensions()) {
-            for(IConfigurationElement element : extension.getConfigurationElements()) {
-                try { 
-                    String variableName = element.getAttribute("variableName");
-                    Object domObject = element.createExecutableExtension("class");
-
-                    // If the class object implements IArchiScriptDOMFactory then call its getDOMroot() method as a proxy.
-                    // Useful if the factory needs to instantiate the dom class object in a non-simple way.
-                    if(domObject instanceof IArchiScriptDOMFactory) {
-                        domObject = ((IArchiScriptDOMFactory)domObject).getDOMroot();
-                    }
-
-                    if(variableName != null && domObject != null) {
-                        engine.put(variableName, domObject);
-                    }
-                }
-                catch(CoreException ex) {
-                    ex.printStackTrace();
-                } 
-            }
+        for(Entry<String, Object> entry : DomExtensionFactory.getDOMExtensions().entrySet()) {
+            engine.put(entry.getKey(), entry.getValue());
         }
     }
 

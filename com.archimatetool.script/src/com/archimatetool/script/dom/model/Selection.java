@@ -13,22 +13,19 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.script.ArchiScriptPlugin;
-import com.archimatetool.script.dom.IArchiScriptDOMFactory;
+import com.archimatetool.script.dom.IArchiScriptBinding;
 
 /**
- * Selection dom object
+ * The "selection" dom object
  * 
  * Represents a collection of currently selected EObjects in the UI (models tree)
  * If Archi is not running an empty collection is returned
  * 
  * @author Phillip Beauvoir
  */
-public class Selection implements IArchiScriptDOMFactory {
+public class Selection extends EObjectProxyCollection implements IArchiScriptBinding {
     
-    @Override
-    public Object getDOMroot() {
-        EObjectProxyCollection list = new EObjectProxyCollection();
-        
+    public Selection() {
         if(PlatformUI.isWorkbenchRunning()) {
             ISelection selection = ArchiScriptPlugin.INSTANCE.getCurrentSelection();
             
@@ -45,14 +42,16 @@ public class Selection implements IArchiScriptDOMFactory {
                     if(o instanceof EObject) {
                         EObjectProxy proxy = EObjectProxy.get((EObject)o);
                         if(proxy != null) {
-                            list.add(proxy);
+                            add(proxy);
                         }
                     }
                 }
             }
         }
-        
-        return list;
     }
-
+    
+    @Override
+    public void dispose() {
+        clear(); // Set this to null because of possible Nashorn memory leak. GraalVM doesn't need it.
+    }
 }

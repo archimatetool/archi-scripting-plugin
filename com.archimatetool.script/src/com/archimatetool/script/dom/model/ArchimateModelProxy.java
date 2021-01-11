@@ -237,7 +237,7 @@ public class ArchimateModelProxy extends EObjectProxy {
      * @return
      */
     public ArchimateModelProxy setAsCurrent() {
-        CurrentModel.INSTANCE.setEObject(getEObject());
+        CurrentModel.setAsCurrentModel(this);
         return this;
     }
 

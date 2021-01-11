@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.script.ArchiScriptException;
-import com.archimatetool.script.dom.DomExtensionHelper;
+import com.archimatetool.script.dom.DomExtensionFactory;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -45,7 +45,7 @@ public class ModelTests {
     
     @Test
     public void getDOMroot_ReturnsCorrectObject() throws Exception {
-        Object domObject = DomExtensionHelper.getDomObject("com.archimatetool.script.model"); //$NON-NLS-1$
+        Object domObject = DomExtensionFactory.getDOMExtensions().get("jArchiModel");
         assertTrue(domObject instanceof Model);
     }
 

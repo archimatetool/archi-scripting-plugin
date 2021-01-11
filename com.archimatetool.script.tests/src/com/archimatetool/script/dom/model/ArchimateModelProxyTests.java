@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -67,19 +68,17 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     
     @Test
     public void setAsCurrent() {
-        IArchimateModel model = null;
+        // Create our own instance as the singleton won't be loaded
+        CurrentModel currentModel = new CurrentModel();
         
         // Initially this will be null and so will throw an ArchiScriptException
-        try {
-            model = CurrentModel.INSTANCE.getEObject();
-        }
-        catch(ArchiScriptException ex) {
-        }
-        
-        assertNull(model);
+        assertThrows(ArchiScriptException.class, () -> {
+            currentModel.getEObject();
+        });
         
         actualTestProxy.setAsCurrent();
-        assertEquals(actualTestProxy, CurrentModel.INSTANCE);
+        assertEquals(actualTestProxy, currentModel);
+        assertEquals(actualTestProxy.getEObject(), currentModel.getEObject());
     }
     
     @Override

@@ -5,13 +5,13 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.archimatetool.script.dom.DomExtensionHelper;
-import com.archimatetool.script.dom.IArchiScriptDOMFactory;
+import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.dom.DomExtensionFactory;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -21,6 +21,7 @@ import junit.framework.JUnit4TestAdapter;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 public class CurrentModelTests {
     
     public static junit.framework.Test suite() {
@@ -29,10 +30,13 @@ public class CurrentModelTests {
     
     @Test
     public void getDOMroot_ReturnsCorrectObject() throws Exception {
-        Object domObject = DomExtensionHelper.getDomObject("com.archimatetool.script.currentmodel"); //$NON-NLS-1$
+        Object domObject = DomExtensionFactory.getDOMExtensions().get("model");
         assertTrue(domObject instanceof CurrentModel);
-        ArchimateModelProxy model = (ArchimateModelProxy)((IArchiScriptDOMFactory)domObject).getDOMroot();
-        assertSame(CurrentModel.INSTANCE, model);
+        
+        // Initially this will be null and so should throw an ArchiScriptException
+        assertThrows(ArchiScriptException.class, () -> {
+            ((CurrentModel)domObject).getEObject();
+        });
     }
 
 }

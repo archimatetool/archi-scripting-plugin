@@ -14,35 +14,34 @@ import com.archimatetool.editor.views.tree.ITreeModelView;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.ArchiScriptPlugin;
-import com.archimatetool.script.dom.IArchiScriptDOMFactory;
+import com.archimatetool.script.dom.IArchiScriptBinding;
 
 /**
- * Current model object
+ * This represents the current model, or "model" dom object.
  * 
- * Represents the current model
- * This can be the selected model in focus if run in the UI, or the current model if run from the ACLI
- * It can be loaded from file, or created anew.
+ * This can be the selected model in focus if run in the UI
+ * or just the current model in the script
+ * or the current model if run from the ACLI
  * 
  * @author Phillip Beauvoir
  */
-public class CurrentModel implements IArchiScriptDOMFactory {
+public class CurrentModel extends ArchimateModelProxy implements IArchiScriptBinding {
     
-    static ArchimateModelProxy INSTANCE = new ArchimateModelProxy(null) {
-        @Override
-        protected IArchimateModel getEObject() {
-            // Throw this exception rather than a NPE if current model has not been set
-            IArchimateModel model = super.getEObject();
-            if(model == null) {
-                throw new ArchiScriptException(Messages.CurrentModel_0);
-            }
-            return model;
-        }
-    };
+    private static CurrentModel instance;
     
-    @Override
-    public Object getDOMroot() {
-        // Get and wrap the currently selected model in the UI if there is one
-        // Note that this *can* be null as we need to initialise the CurrentModel instance in all cases
+    /**
+     * Set the singleton instance's underlying model to the one in modelProxy
+     */
+    static void setAsCurrentModel(ArchimateModelProxy modelProxy) {
+        instance.setEObject(modelProxy.getEObject());
+    }
+    
+    public CurrentModel() {
+        super(null);
+        
+        instance = this;
+        
+        // If the workbench is running determine if there is an active part containing an IArchimateModel we can set this to
         if(PlatformUI.isWorkbenchRunning()) {
             IWorkbenchPart activePart = ArchiScriptPlugin.INSTANCE.getActivePart();
             
@@ -51,16 +50,30 @@ public class CurrentModel implements IArchiScriptDOMFactory {
                 activePart = ViewManager.findViewPart(ITreeModelView.ID);
             }
             
+            // Set model
             if(activePart != null) {
-                INSTANCE.setEObject(activePart.getAdapter(IArchimateModel.class));
+                setEObject(activePart.getAdapter(IArchimateModel.class));
             }
         }
         // Else, if we are running in CLI mode, get the Current Model if there is one
         else {
-            INSTANCE.setEObject(CommandLineState.getModel());
+            setEObject(CommandLineState.getModel());
         }
-        
-        return INSTANCE;
     }
     
+    @Override
+    protected IArchimateModel getEObject() {
+        // Throw this exception rather than a NPE if the current model has not been set
+        IArchimateModel model = super.getEObject();
+        if(model == null) {
+            throw new ArchiScriptException(Messages.CurrentModel_0);
+        }
+        return model;
+    }
+    
+    @Override
+    public void dispose() {
+        instance = null;    // Definitely need to set this to null for both Nashorn and GraalVM
+        setEObject(null);   // Set this to null because of a Nashorn memory leak
+    }
 }
