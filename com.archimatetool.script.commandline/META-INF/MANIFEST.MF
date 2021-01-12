@@ -8,5 +8,5 @@ Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
 Require-Bundle: com.archimatetool.commandline;bundle-version="4.7.1",
  com.archimatetool.script;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Automatic-Module-Name: com.archimatetool.script.commandline
