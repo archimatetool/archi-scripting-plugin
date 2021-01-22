@@ -8,6 +8,7 @@ package com.archimatetool.script.views.scripts;
 import java.io.File;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 
 import com.archimatetool.script.IArchiScriptImages;
 import com.archimatetool.script.RunArchiScript;
@@ -35,8 +36,13 @@ public class RunScriptAction extends Action {
     @Override
     public void run() {
         if(isEnabled()) {
-            RunArchiScript runner = new RunArchiScript(fFile);
-            runner.run();
+            try {
+                RunArchiScript runner = new RunArchiScript(fFile);
+                runner.run();
+            }
+            catch(Exception ex) {
+                MessageDialog.openError(null, Messages.RunScriptAction_1, ex.getMessage());
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.ISharedImages;
@@ -97,8 +98,13 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
                     menuManager.add(new Action(FileUtils.getFileNameWithoutExtension(file), imageDescriptor) {
                         @Override
                         public void run() {
-                            RunArchiScript runner = new RunArchiScript(file);
-                            runner.run();
+                            try {
+                                RunArchiScript runner = new RunArchiScript(file);
+                                runner.run();
+                            }
+                            catch(Exception ex) {
+                                MessageDialog.openError(null, Messages.ScriptsContextMenuContributionItem_0, ex.getMessage());
+                            }
                         }
                     });
                 }

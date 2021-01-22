@@ -6,6 +6,8 @@ public class Messages extends NLS {
 
     private static final String BUNDLE_NAME = "com.archimatetool.script.messages"; //$NON-NLS-1$
 
+    public static String ScriptsContextMenuContributionItem_0;
+
     public static String WorkbenchNotRunningException_0;
     static {
         // initialize resource bundle
