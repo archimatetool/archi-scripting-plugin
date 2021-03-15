@@ -48,32 +48,31 @@ public class ScriptsTreeViewer extends FileTreeViewer {
     protected class ScriptsTreeLabelProvider extends FileTreeLabelProvider {
         @Override
         public Image getImage(File file) {
+            // Get default image
             Image image = super.getImage(file);
             
+            // If we have a provider get the provider's image
             IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
             if(provider != null) {
                 image = provider.getImage();
             }
             
+            // If it's a linked file...
             if(ScriptFiles.isLinkedFile(file)) {
+                // If the linked file exists add the link overlay
                 try {
-                    if(!ScriptFiles.resolveLinkFile(file).exists()) {
+                    if(ScriptFiles.resolveLinkFile(file).exists()) {
                         return IArchiScriptImages.ImageFactory.getOverlayImage(image,
-                                IArchiScriptImages.ICON_LINK_WARN_OVERLAY, IDecoration.BOTTOM_RIGHT);
+                                IArchiScriptImages.ICON_LINK_OVERLAY, IDecoration.BOTTOM_RIGHT);
                     }
                 }
                 catch(IOException ex) {
                     ex.printStackTrace();
                 }
                 
-                if(provider != null) {
-                    return IArchiScriptImages.ImageFactory.getOverlayImage(image,
-                            IArchiScriptImages.ICON_LINK_OVERLAY, IDecoration.BOTTOM_RIGHT);
-                }
-                else {
-                    return IArchiScriptImages.ImageFactory.getOverlayImage(super.getImage(file),
-                            IArchiScriptImages.ICON_LINK_WARN_OVERLAY, IDecoration.BOTTOM_RIGHT);
-                }
+                // Else add the warning overlay
+                return IArchiScriptImages.ImageFactory.getOverlayImage(super.getImage(file),
+                        IArchiScriptImages.ICON_LINK_WARN_OVERLAY, IDecoration.BOTTOM_RIGHT);
             }
 
             return image;
