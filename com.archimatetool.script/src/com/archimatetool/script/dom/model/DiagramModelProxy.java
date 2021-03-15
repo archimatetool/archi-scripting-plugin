@@ -12,10 +12,12 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.editor.ui.services.EditorManager;
+import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
+import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteFolderObjectCommand;
 
@@ -56,6 +58,21 @@ public abstract class DiagramModelProxy extends EObjectProxy {
      */
     public DiagramModelReferenceProxy createViewReference(DiagramModelProxy dmRef, int x, int y, int width, int height, boolean autoNest) {
         return ModelFactory.createViewReference(getEObject(), dmRef.getEObject(), x, y, width, height, autoNest);
+    }
+    
+    /**
+     * Create and add a plain connection between two diagram components in this view and return the diagram connection
+     */
+    public DiagramModelConnectionProxy createConnection(DiagramModelComponentProxy source, DiagramModelComponentProxy target) {
+        // Ensure that source and target diagram components belong to this diagram model
+        if(source.getEObject().getDiagramModel() != getEObject()) {
+            throw new ArchiScriptException(Messages.DiagramModelProxy_1);
+        }
+        if(target.getEObject().getDiagramModel() != getEObject()) {
+            throw new ArchiScriptException(Messages.DiagramModelProxy_2);
+        }
+        
+        return ModelFactory.createDiagramConnection((IConnectable)source.getEObject(), (IConnectable)target.getEObject());
     }
     
     @Override

@@ -26,10 +26,12 @@ import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IBounds;
+import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
+import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
@@ -393,6 +395,47 @@ class ModelFactory implements IModelConstants {
         }
 
         IDiagramModelArchimateConnection dmc = ArchimateDiagramModelFactory.createDiagramModelArchimateConnection(relation);
+        
+        CommandHandler.executeCommand(new ScriptCommand("Add", source.getDiagramModel().getArchimateModel()) { //$NON-NLS-1$
+            @Override
+            public void perform() {
+                dmc.connect(source, target);
+            }
+
+            @Override
+            public void undo() {
+                dmc.disconnect();
+            }
+            
+            @Override
+            public void redo() {
+                dmc.reconnect();
+            }
+        });
+        
+        return new DiagramModelConnectionProxy(dmc);
+    }
+
+    /**
+     * Add a plain diagram connection
+     */
+    static DiagramModelConnectionProxy createDiagramConnection(IConnectable source, IConnectable target) {
+        // Ensure they share the same view
+        if(source.getDiagramModel() != target.getDiagramModel()) {
+            throw new ArchiScriptException(Messages.ModelFactory_4);
+        }
+        
+        // Cannot connect between two ArchiMate objects
+        if(source instanceof IDiagramModelArchimateComponent && target instanceof IDiagramModelArchimateComponent) {
+            throw new ArchiScriptException(Messages.ModelFactory_8);
+        }
+        
+        // Cannot connect if source or target is a plain connection
+        if(source.eClass() == IArchimatePackage.eINSTANCE.getDiagramModelConnection() || target.eClass() == IArchimatePackage.eINSTANCE.getDiagramModelConnection()) {
+            throw new ArchiScriptException(Messages.ModelFactory_9);
+        }
+        
+        IDiagramModelConnection dmc = (IDiagramModelConnection)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelConnection()).getNewObject();
         
         CommandHandler.executeCommand(new ScriptCommand("Add", source.getDiagramModel().getArchimateModel()) { //$NON-NLS-1$
             @Override

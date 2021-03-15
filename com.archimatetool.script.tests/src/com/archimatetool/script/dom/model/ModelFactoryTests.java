@@ -7,6 +7,7 @@ package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.emf.ecore.EClass;
@@ -27,6 +28,8 @@ import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
+import com.archimatetool.model.IDiagramModelGroup;
+import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.util.ArchimateModelUtils;
@@ -334,4 +337,39 @@ public class ModelFactoryTests {
         ModelFactory.addArchimateDiagramConnection(relation, source, target);
     }
 
+    @Test
+    public void createDiagramConnection() {
+        loadTestModel();
+        
+        IDiagramModelArchimateComponent source = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3790");
+        IDiagramModelArchimateComponent target = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3788");
+        IDiagramModelNote note = IArchimateFactory.eINSTANCE.createDiagramModelNote();
+        source.getDiagramModel().getChildren().add(note);
+        IDiagramModelGroup group = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        source.getDiagramModel().getChildren().add(group);
+        
+        // Cannot create plain connection between two ArchiMate concepts
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createDiagramConnection(source, target);
+        });
+        
+        DiagramModelConnectionProxy proxy1 = ModelFactory.createDiagramConnection(note, group);
+        assertTrue(proxy1.getEObject().eClass() == IArchimatePackage.eINSTANCE.getDiagramModelConnection());
+        
+        DiagramModelConnectionProxy proxy2 = ModelFactory.createDiagramConnection(group, source);
+        assertTrue(proxy2.getEObject().eClass() == IArchimatePackage.eINSTANCE.getDiagramModelConnection());
+        
+        DiagramModelConnectionProxy proxy3 = ModelFactory.createDiagramConnection(note, target);
+        assertTrue(proxy3.getEObject().eClass() == IArchimatePackage.eINSTANCE.getDiagramModelConnection());
+        
+        // Cannot create connection if one end is a plain connection
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createDiagramConnection(proxy1.getEObject(), target);
+        });
+        
+        // Cannot create connection if one end is a plain connection
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createDiagramConnection(source, proxy1.getEObject());
+        });
+    }
 }
