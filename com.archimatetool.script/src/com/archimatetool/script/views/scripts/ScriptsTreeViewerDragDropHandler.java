@@ -16,8 +16,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
+import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
@@ -99,20 +99,7 @@ public class ScriptsTreeViewerDragDropHandler {
     }
     
     private void registerDropSupport() {
-        fViewer.addDropSupport(fDropOperations, targetTransferTypes, new DropTargetListener() {
-            @Override
-            public void dragEnter(DropTargetEvent event) {
-            }
-
-            @Override
-            public void dragLeave(DropTargetEvent event) {
-            }
-
-            @Override
-            public void dragOperationChanged(DropTargetEvent event) {
-                event.detail = getEventDetail(event);
-            }
-
+        fViewer.addDropSupport(fDropOperations, targetTransferTypes, new DropTargetAdapter() {
             @Override
             public void dragOver(DropTargetEvent event) {
                 event.detail = getEventDetail(event);
@@ -122,14 +109,12 @@ public class ScriptsTreeViewerDragDropHandler {
                     return;
                 }
                 
-                if(isFileDragOperation(event.currentDataType)) {
-                    event.detail |= DND.DROP_COPY;
-                }
-                else {
-                    event.detail |= DND.DROP_MOVE;
-                }
-
                 event.feedback |= DND.FEEDBACK_SCROLL | DND.FEEDBACK_EXPAND;
+            }
+
+            @Override
+            public void dragOperationChanged(DropTargetEvent event) {
+                event.detail = getEventDetail(event);
             }
 
             @Override
@@ -137,14 +122,17 @@ public class ScriptsTreeViewerDragDropHandler {
                 doDropOperation(event);
             }
 
-            @Override
-            public void dropAccept(DropTargetEvent event) {
-            }
-            
             private int getEventDetail(DropTargetEvent event) {
-                return isValidSelection(event) && isValidDropTarget(event) ? DND.DROP_MOVE : DND.DROP_NONE;
+                if(!isValidSelection(event) || !isValidDropTarget(event)) {
+                    return DND.DROP_NONE;
+                }
+                
+                if(isFileDragOperation(event.currentDataType)) {
+                    return DND.DROP_COPY;
+                }
+                
+                return DND.DROP_MOVE;
             }
-            
         });
     }
     
