@@ -7,6 +7,7 @@ package com.archimatetool.script.dom.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
@@ -195,6 +196,14 @@ public class ArchimateModelProxy extends EObjectProxy {
     public ArchimateModelProxy openInUI() {
         ModelUtil.openModelInUI(getEObject());
         return this;
+    }
+    
+    
+    /**
+     * @return a list of all loaded image paths in this model
+     */
+    public List<String> getImagePaths() {
+        return ModelUtil.getArchiveManager(getArchimateModel()).getLoadedImagePaths();
     }
     
     @Override

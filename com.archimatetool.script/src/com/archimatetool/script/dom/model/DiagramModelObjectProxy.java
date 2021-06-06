@@ -5,7 +5,11 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
+
+import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
@@ -18,7 +22,9 @@ import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IBounds;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelContainer;
+import com.archimatetool.model.IDiagramModelImageProvider;
 import com.archimatetool.model.IDiagramModelObject;
+import com.archimatetool.model.IIconic;
 import com.archimatetool.model.ITextAlignment;
 import com.archimatetool.model.ITextPosition;
 import com.archimatetool.script.ArchiScriptException;
@@ -208,6 +214,10 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return 0;
     }
     
+    // =================================================================================================
+    // Text alignment and positions
+    // =================================================================================================
+    
     public DiagramModelObjectProxy setTextAlignment(int alignment) {
         if(alignment != ITextAlignment.TEXT_ALIGNMENT_CENTER
                 && alignment != ITextAlignment.TEXT_ALIGNMENT_LEFT
@@ -240,6 +250,62 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return null;
     }
     
+    // =================================================================================================
+    // Images and image position
+    // =================================================================================================
+
+    public void setImagePath(String imagePath) {
+        if(getEObject() instanceof IDiagramModelImageProvider) {
+            if(imagePath != null && !ModelUtil.getArchiveManager(getArchimateModel()).getImagePaths().contains(imagePath)) {
+                throw new ArchiScriptException(NLS.bind("Image path ''{0}'' does not exist", imagePath)); //$NON-NLS-1$
+            }
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH, imagePath));
+        }
+        else {
+            throw new ArchiScriptException("Does not support images"); //$NON-NLS-1$
+        }
+    }
+    
+    public String setImageFromFile(String filePath) throws IOException {
+        if(getEObject() instanceof IDiagramModelImageProvider) {
+            File file = new File(filePath);
+            if(file.exists()) {
+                String imagePath = ModelUtil.getArchiveManager(getArchimateModel()).addImageFromFile(file);
+                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH, imagePath));
+                return imagePath;
+            }
+            else {
+                throw new ArchiScriptException(NLS.bind("File ''{0}'' does not exist", file)); //$NON-NLS-1$
+            }
+        }
+        else {
+            throw new ArchiScriptException("Does not support images"); //$NON-NLS-1$
+        }
+    }
+    
+    public void setImagePosition(int position) {
+        if(getEObject() instanceof IIconic) {
+            if(position < IIconic.ICON_POSITION_TOP_LEFT || position > IIconic.ICON_POSITION_BOTTOM_RIGHT) {
+                throw new ArchiScriptException(NLS.bind("Image position {0} out of range", position)); //$NON-NLS-1$
+            }
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ICONIC__IMAGE_POSITION, position));
+        }
+        else {
+            throw new ArchiScriptException("Does not support image position"); //$NON-NLS-1$
+        }
+    }
+    
+    public int getImagePosition() {
+        if(getEObject() instanceof IIconic) {
+            return ((IIconic)getEObject()).getImagePosition();
+        }
+        return 0;
+    }
+    
+    // =================================================================================================
+    // Attr
+    // =================================================================================================
+
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {

@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
+import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
@@ -237,4 +238,15 @@ class ModelUtil {
         }
     }
     
+    /**
+     * Return the IArchiveManager for a model
+     * @throws ArchiScriptException if null
+     */
+    static IArchiveManager getArchiveManager(IArchimateModel model) {
+        IArchiveManager archiveManager = (IArchiveManager)model.getAdapter(IArchiveManager.class);
+        if(archiveManager == null) {
+            throw new ArchiScriptException("Could not load ArchiveManager"); //$NON-NLS-1$
+        }
+        return archiveManager;
+    }
 }
