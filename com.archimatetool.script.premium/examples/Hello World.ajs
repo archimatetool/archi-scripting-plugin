@@ -1,0 +1,24 @@
+/*
+ * Hello World
+ * 
+ * Open a message window
+ * 
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */
+
+text = "Hello World from Archi Scripting!\n\n";
+text += "The quick brown fox jumped over the lazy dog's back. ";
+text += "Now is the time for all good men to come to the aid of their country.";
+
+window.alert(text); 	

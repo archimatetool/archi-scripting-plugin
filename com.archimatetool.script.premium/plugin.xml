@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="com.archimatetool.script.premium.RestoreExampleScriptsHandler"
+            id="com.archimatetool.script.examples.restoreExamplesCommand"
+            name="Restore Example Scripts">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="true"
+            locationURI="toolbar:com.archimatetool.script.scriptsView?after=extra">
+         <command
+               commandId="com.archimatetool.script.examples.restoreExamplesCommand"
+               icon="img/examples.png"
+               label="Restore Example Scripts"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+
+</plugin>

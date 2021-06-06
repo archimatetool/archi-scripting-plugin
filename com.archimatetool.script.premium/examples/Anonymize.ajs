@@ -1,0 +1,64 @@
+/*
+ * Anonymize
+ * 
+ * Anonymize names and texts
+ * 
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */
+
+ // Include Lorem.js rom https://github.com/oliver-moran/lorem.js
+load('https://raw.githubusercontent.com/oliver-moran/lorem.js/master/lorem.min.js');
+
+// We don't want any comma
+Lorem.settings.comma.rate = 10000000000;
+
+// Replace name by a new one with the same number of words
+anonymize_name = function(e) {
+    if (e.name.length != 0) {
+        var wordCount = e.name.split(" ").length;
+        Lorem.settings.sentence.min = wordCount;
+        Lorem.settings.sentence.max = wordCount;
+        // Generate a new name and remove trailing dot
+        e.name = Lorem.getSentence().slice(0, - 1); // + ' (' + e.type + ')';
+    }
+}
+
+// Replace documentation with two Lorem paragraphs
+// Replace properties' value
+anonymize_doc_prop = function(e) {    
+    if (e.documentation.length != 0) {
+        Lorem.settings.sentence.min = 5;
+        Lorem.settings.sentence.max = 20;
+        Lorem.settings.paragraph.min = 2;
+        Lorem.settings.paragraph.max = 7;
+        e.documentation = Lorem.getParagraph(true) + "\n\n" + Lorem.getParagraph();
+    }
+    
+    e.prop().forEach(function(key) {
+        Lorem.settings.sentence.min = 2;
+        Lorem.settings.sentence.max = 5;
+        e.prop(key, Lorem.getSentence().slice(0, - 1));
+    })
+}
+
+// Loop on all concepts
+$('concept').each(function(concept) {
+    anonymize_name(concept);
+    anonymize_doc_prop(concept);
+})
+
+// Loop on all views
+$('view').each(function(view) {
+    anonymize_doc_prop(view);
+})

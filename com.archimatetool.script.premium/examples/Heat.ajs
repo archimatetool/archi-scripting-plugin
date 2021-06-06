@@ -1,0 +1,59 @@
+/*
+ * Heat
+ * 
+ * Set the colour of elements depending on a property value
+ * 
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */ 
+
+// Amplify elements that have the property "maturity" with a value between 0 and 100
+amplifyElementColor("maturity", 0, 100);
+
+// Amplify the red/green color of elements with a given property key with a value between minValue and maxValue
+function amplifyElementColor(propertyKey, minValue, maxValue) {
+    // Iterate through all elements in the model
+    $("element").forEach(function(element) {
+        // Find the property value with the given propertyKey
+        var value = element.prop(propertyKey);
+        // If within scope, change color of element's view instances
+        if(value && value >= minValue && value <= maxValue) {
+            // Set all view instances of the element's color according to the property value
+            $(element).objectRefs().attr("fillColor", getColorValue(value, maxValue));
+        }
+    });
+}
+
+// Helper function - convert a value to a color between red and green.
+function getColorValue(num, maxValue) {
+    var red = Math.round(255 - (255 * (num / maxValue)));
+    var green = Math.round(255 * (num / maxValue));
+    var blue = 0;
+    
+    return convertRGBToHexString(red, green, blue);
+}
+
+// Helper function - convert rgb values to a hex color string. Format is #rrggbb
+function convertRGBToHexString(red, green, blue) {
+    red = red.toString(16);
+    if(red.length == 1) red = "0" + red;
+
+    green = green.toString(16);
+    if(green.length == 1) green = "0" + green;
+
+    blue = blue.toString(16);
+    if(blue.length == 1) blue = "0" + blue;
+
+    return '#' + red + green + blue;
+}
+

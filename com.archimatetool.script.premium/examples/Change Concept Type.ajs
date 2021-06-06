@@ -1,0 +1,23 @@
+/*
+ * Change Concept Type
+ *
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */
+ 
+// Get all Business Actors in the current selection and change the type to Business Role
+// If changing the type breaks any relationship rules an exception is thrown
+selection.filter("business-actor").each(function(e) {
+    e.concept.type = "business-role";
+    e.name += " (changed)";
+});

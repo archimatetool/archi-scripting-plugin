@@ -1,0 +1,57 @@
+/*
+ * Console
+ * 
+ * console: is the name of the Archi Script console
+ * Supported functions are:
+ *
+ * console.show()
+ * console.hide()
+ * console.setText(String)
+ * console.println(Object)
+ * console.print(Object)
+ * console.log(Object...)
+ * console.error(Object)
+ * console.clear()
+ * console.setTextColor(int, int, int)
+ * console.setDefaultTextColor()
+
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */
+
+console.show();
+
+console.setTextColor(255, 0, 0);
+console.log("Hello World in Red!");
+
+console.setTextColor(0, 255, 0);
+console.log("Hello World in Green!");
+
+console.setTextColor(0, 0, 255);
+console.log("Hello World in Blue!");
+
+console.log("");
+
+console.setDefaultTextColor();
+console.log("Hello World in Default colour!");
+
+console.log("");
+
+// console.printError in red
+try {
+    console.log("This is an error in red: ");
+    console.noMethod();
+}
+catch(err) {
+    console.error(err);
+}

@@ -1,0 +1,58 @@
+/*
+ * Export View to Image examples
+ * 
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */
+
+
+// ===================================================================================================
+// Take each View in the selected model and generate a basic HTML page containing the Views as images
+// ===================================================================================================
+
+// Make some html
+var html = "<html><body><h1>All Views in " + model.name + "</h1>";
+
+// Iterate through each view
+$("view").each(function(view) {
+    // Get the Base64 bytes of the view in PNG format. Can use "PNG", "BMP", "JPG" or "GIF"
+    var bytes = $.model.renderViewAsBase64(view, "PNG");
+
+    // Embed in the html
+    html += "<h2>" + view.name + "</h2>" + "<img src=\"data:image/png;base64," + bytes + "\">";
+});
+
+// Close the html
+html += "</body></html>";
+
+// Open a Browser in Archi and display the result
+var browser = Browser.open("http://localhost/" + model.name, model.name);
+browser.setText(html);
+
+
+// ===================================================================================================
+// An example of writing a view as an image to file using options for renderViewAsBase64
+// ===================================================================================================
+
+// Get the first view in the model
+var view = $("view").first();
+// Get the Base64 bytes of the view in PNG format. Can use "PNG", "BMP", "JPG" or "GIF"
+// Options are scale (1 - 4) and margin (pixel value)
+var bytes = $.model.renderViewAsBase64(view, "PNG", {scale: 1, margin: 20});
+
+// Ask for a file name
+var fileName = window.promptSaveFile( { title: "Save View", filterExtensions: [ "*.png" ], fileName: view.name + ".png" } );
+if(fileName) {
+    // Write to file
+    $.fs.writeFile(fileName, bytes, "BASE64");
+}

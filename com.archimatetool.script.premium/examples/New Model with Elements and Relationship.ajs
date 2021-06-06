@@ -1,0 +1,58 @@
+/*
+ * Create a new model and add two elements and a relationship
+ *
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */
+
+console.show();
+
+// Create a new model and set it as the current model
+$.model.create("Test Model").setAsCurrent();
+console.log("Created model: " + model.name);
+console.log("ID is: ", model.id);
+
+// Create a Business Actor
+var actor = model.createElement("business-actor", "Oscar");
+console.log("Created new element: ", actor.name);
+
+// Create a Business Role
+var role = model.createElement("business-role", "Cat");
+console.log("Created new element: ", role.name);
+
+// Create a relationship
+
+// We can check that the relationship is allowed by calling $.model.isAllowedRelationship()
+var allowed = $.model.isAllowedRelationship("assignment-relationship", "business-actor", "business-role");
+if(allowed) {
+    var relationship = model.createRelationship("assignment-relationship", "Assigned to", actor, role);
+    console.log("Created new relationship: ", relationship.type);
+}
+else {
+    console.log("Not allowed relationship!");
+}
+
+// List elements in model
+console.log("Elements in model:");
+
+$("element").each(function(element) {
+    console.log(element.name);
+});
+
+// Add an ArchiMate view to the default "Views" folder
+var view = model.createArchimateView("New View");
+console.log("Created view - ", view);
+
+// Open in UI
+console.log("Opening model in tree...");
+model.openInUI();

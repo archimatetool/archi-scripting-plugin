@@ -1,0 +1,46 @@
+/*
+ * Folder Management Examples
+ * 
+ * Create child folders and create and move elements in these folders
+ *
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */
+
+console.show();
+
+// Create a new model and set it as the current model
+$.model.create("Test Model").setAsCurrent();
+console.log("Created model: " + model.name);
+
+// Find the "Business" folder using a selector
+var businessFolder = $("folder.Business").first();
+console.log("Found folder: " + businessFolder);
+
+// Create some new child folders
+var myFolder = businessFolder.createFolder("My Folder");
+console.log("Created folder: " + myFolder);
+
+var anotherFolder = businessFolder.createFolder("Another Folder");
+console.log("Created folder: " + myFolder);
+
+// Create a Business Actor in this folder
+var actor = model.createElement("business-actor", "Oscar", myFolder);
+console.log("Created new element: " + actor.name);
+
+// To move the element to the other folder uncomment this
+// anotherFolder.add(actor);
+
+// Open in UI
+console.log("Opening model in tree...");
+model.openInUI();

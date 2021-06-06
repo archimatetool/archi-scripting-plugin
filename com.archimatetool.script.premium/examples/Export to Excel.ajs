@@ -1,0 +1,78 @@
+/*
+ * Example to export model elements to Excel
+ * 
+ * Uses MyExcel https://github.com/jsegarra1971/MyExcel
+ * 
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */
+
+// Load MyExcel and JSZip JS file
+load(__DIR__ + "lib/jszip-101.js");
+load(__DIR__ + "lib/myexcel.js");
+
+// Show output in the console
+console.show();
+console.clear()
+console.log("> Starting Excel Export");
+
+// Create a new Excel file with a default font and colour
+var excel = $JExcel.new("Calibri 12 #333333");
+
+// Add a new sheet with a name
+excel.set( { sheet:0, value:"Elements" } );
+
+// Set up some headers
+var headers = [
+	"Name",
+	"Documentation",
+	"ID",
+	"Type"
+];        
+
+// Format the header with a style
+var formatHeader = excel.addStyle ({
+    fill: "#dddddd",
+	border: "thin, thin, thin, thin #555555",
+	font: "Calibri 12 #000000 B",
+});
+
+// Set the headers
+for(var i = 0; i < headers.length; i++) {
+    excel.set(0, i, 0, headers[i], formatHeader);
+    excel.set(0, i, undefined, "auto"); // column width is auto
+}
+
+var current_row = 1;
+
+// Loop through all elements and set cells to elememt info
+$("element").each(function(e) {
+	excel.set(0, 0, current_row, e.name);
+	excel.set(0, 1, current_row, e.documentation);
+	excel.set(0, 2, current_row, e.id);
+	excel.set(0, 3, current_row, e.type);
+
+	current_row++;
+});
+
+// Open a dialog to let the user choose where to save the generated file
+var defaultFileName = model.name ? model.name + ".xlsx" : "Exported Model.xlsx"; // Default file name
+var exportFile = window.promptSaveFile({ title: "Export to Excel", filterExtensions: [ "*.xlsx" ], fileName: defaultFileName } );
+
+if(exportFile != null) {
+	excel.generate(exportFile);
+	console.log("> Export done");
+}
+else {
+	console.log("> Export cancelled");
+}

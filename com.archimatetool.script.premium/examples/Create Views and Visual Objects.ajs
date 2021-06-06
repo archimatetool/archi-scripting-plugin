@@ -1,0 +1,73 @@
+/*
+ * Create Views and Visual Objects
+ * 
+ * Create views, boxes and connections
+ *
+ * (c) 2018 Jean-Baptiste Sarrodie, Phillip Beauvoir
+ * 
+ * This work is licensed under the HUMANS Licence described below.
+ * 
+ * The HUMANS (Help Us Make Archi Noteworthy & Sustainable) licence goal is to bring happiness
+ * to both Archi users and developers. This means that we would like users of
+ * jArchi to donate something and get this useful script as a gift in return (and feel great!).
+ *
+ * The only restrictions that apply are:
+ *  - You can't redistribute this script.
+ *  - You can't use this script for commercial purposes unless you obtained it from the official Archi distribution channels.
+ * 
+ */
+
+console.show();
+
+// Create a new model and set it as the current model
+$.model.create("Test Model").setAsCurrent();
+console.log("Created model: ", model.name);
+
+// Add some ArchiMate elements to the Model
+var actor = model.createElement("business-actor", "Oscar");
+console.log("Added - ", actor);
+var role = model.createElement("business-role", "Cat");
+console.log("Added - ", role);
+
+// Add an ArchiMate relationship to the Model
+var relationship = model.createRelationship("assignment-relationship", "", actor, role);
+
+// Add an ArchiMate view to the default "Views" folder
+var archimateView = model.createArchimateView("View 1");
+console.log("Created view - ", archimateView);
+
+// Set the Viewpoint
+archimateView.viewpoint = "layered";
+console.log("Set viewpoint to - ", archimateView.viewpoint.name);
+
+// Add some objects to the ArchiMate view containing the elements (-1 = default width and height)
+var object1 = archimateView.add(actor, 10, 10, -1, -1);
+var object2 = archimateView.add(role, 200, 10, -1, -1);
+
+// Add a visual connection containing the relationship
+var connection = archimateView.add(relationship, object1, object2);
+console.log("Created connection - ", connection);
+
+// Add a note
+var note = archimateView.createObject("note", 10, 200, -1, -1);
+note.setText("This is a note.\n\nHello World!");
+
+// Add a group
+var group = archimateView.createObject("group", 10, 300, -1, -1);
+group.setName("My Group");
+
+// Add a Sketch view to the default "Views" folder
+var sketchView = model.createSketchView("View 2");
+console.log("Created view - ", sketchView);
+
+// Adding objects to Sketch View not yet implemented (except for Group)
+
+// Add a Canvas view to the default "Views" folder
+var canvasView = model.createCanvasView("View 3");
+console.log("Created view - ", canvasView);
+
+// Adding objects to Canvas View not yet implemented
+
+// Open in UI
+console.log("Opening model in tree...");
+model.openInUI();
