@@ -122,6 +122,13 @@ TEXT_POSITION = {
 };
 Object.freeze(TEXT_POSITION);
 
+CONNECION_TEXT_POSITION = {
+    SOURCE : 0,
+    MIDDLE : 1,
+    TARGET : 2
+};
+Object.freeze(TEXT_POSITION);
+
 BORDER = {
     TABBED : 0,
     DOGEAR : 0,

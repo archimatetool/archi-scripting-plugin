@@ -76,6 +76,21 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         return this;
     }
     
+    public DiagramModelComponentProxy setTextPosition(int position) {
+        if(position < 0) {
+            position = 0;
+        }
+        if(position > 2) {
+            position = 2;
+        }
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_CONNECTION__TEXT_POSITION, position));
+        return this;
+    }
+    
+    public int getTextPosition() {
+        return getEObject().getTextPosition();
+    }
+    
     // ===========================================
     // Bendpoints
     // ===========================================
@@ -216,6 +231,8 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
                 return getTarget();
             case LABEL_VISIBLE:
                 return isLabelVisible();
+            case TEXT_POSITION:
+                return getTextPosition();
             case RELATIVE_BENDPOINTS:
                 return getRelativeBendpoints();
         }
@@ -234,6 +251,11 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
             case LABEL_VISIBLE:
                 if(value instanceof Boolean) {
                     return setLabelVisible((boolean)value);
+                }
+                break;
+            case TEXT_POSITION:
+                if(value instanceof Integer) {
+                    return setTextPosition((int)value);
                 }
                 break;
         }

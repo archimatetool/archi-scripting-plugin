@@ -167,6 +167,13 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     }
     
     @Test
+    public void attr_TextPosition() {
+        assertEquals(IDiagramModelConnection.CONNECTION_TEXT_POSITION_MIDDLE, actualTestProxy.attr(IModelConstants.TEXT_POSITION));
+        actualTestProxy.attr(IModelConstants.TEXT_POSITION, 0);
+        assertEquals(0, actualTestProxy.attr(IModelConstants.TEXT_POSITION));
+    }
+
+    @Test
     public void attr_Source() {
         assertEquals("3831", ((EObjectProxy)actualTestProxy.attr(IModelConstants.SOURCE)).getId());
     }
