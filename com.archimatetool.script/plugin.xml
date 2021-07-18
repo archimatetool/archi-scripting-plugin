@@ -10,6 +10,11 @@
             id="com.archimatetool.scripts.command.showScriptsView"
             name="%command.name">
       </command>
+      <command
+            defaultHandler="com.archimatetool.script.ShowScriptsConsoleHandler"
+            id="com.archimatetool.scripts.command.showScriptsConsole"
+            name="%command.name.0">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -26,6 +31,16 @@
                label="%command.label"
                style="push">
          </command>
+         <command
+               commandId="com.archimatetool.scripts.command.showScriptsConsole"
+               icon="img/console_view.png"
+               label="%command.label.0"
+               style="push">
+         </command>
+         <separator
+               name="com.archimatetool.script.menu.separator2"
+               visible="true">
+         </separator>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -35,6 +50,11 @@
             <command
                   commandId="com.archimatetool.scripts.command.showScriptsView"
                   icon="img/script.png"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.archimatetool.scripts.command.showScriptsConsole"
+                  icon="img/console_view.png"
                   style="push">
             </command>
             <separator

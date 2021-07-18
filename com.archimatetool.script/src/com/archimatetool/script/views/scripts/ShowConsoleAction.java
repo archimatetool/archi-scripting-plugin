@@ -24,6 +24,6 @@ public class ShowConsoleAction extends Action {
     
     @Override
     public void run() {
-        ViewManager.showViewPart(ConsoleView.ID, true);
+        ViewManager.toggleViewPart(ConsoleView.ID, false);
     }
 }
