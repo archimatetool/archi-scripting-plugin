@@ -17,7 +17,12 @@
  * 
  */
 
- // Include Lorem.js rom https://github.com/oliver-moran/lorem.js
+var confirm = window.confirm("Are you sure you want to run the Anonymize script?\nThis will change all names, properties and documentation text in the model!");
+if(confirm == 0) {
+    exit();;
+}
+
+// Include Lorem.js rom https://github.com/oliver-moran/lorem.js
 load('https://raw.githubusercontent.com/oliver-moran/lorem.js/master/lorem.min.js');
 
 // We don't want any comma
