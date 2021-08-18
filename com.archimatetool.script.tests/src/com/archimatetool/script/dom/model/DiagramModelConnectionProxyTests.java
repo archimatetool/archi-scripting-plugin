@@ -25,6 +25,7 @@ import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.script.ArchiScriptException;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -171,6 +172,34 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         assertEquals(IDiagramModelConnection.CONNECTION_TEXT_POSITION_MIDDLE, actualTestProxy.attr(IModelConstants.TEXT_POSITION));
         actualTestProxy.attr(IModelConstants.TEXT_POSITION, 0);
         assertEquals(0, actualTestProxy.attr(IModelConstants.TEXT_POSITION));
+    }
+
+    @Test
+    public void attr_Style( ) {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        IArchimateDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
+        model.getDefaultFolderForObject(dm).getElements().add(dm);
+
+        IDiagramModelGroup group1 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        IDiagramModelGroup group2 = IArchimateFactory.eINSTANCE.createDiagramModelGroup();
+        
+        dm.getChildren().add(group1);
+        dm.getChildren().add(group2);
+
+        IDiagramModelConnection dmc = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
+        dmc.connect(group1, group2);
+        DiagramModelConnectionProxy proxy = (DiagramModelConnectionProxy)EObjectProxy.get(dmc);
+        
+        assertEquals(0, proxy.attr(IModelConstants.STYLE));
+        proxy.attr(IModelConstants.STYLE, 4);
+        assertEquals(4, proxy.attr(IModelConstants.STYLE));
+    }
+    
+    @Test(expected=ArchiScriptException.class)
+    public void attr_Style_NotArchiMateConnection( ) {
+        assertEquals(0, actualTestProxy.attr(IModelConstants.STYLE));
+        actualTestProxy.attr(IModelConstants.STYLE, 4);
+        assertEquals(4, actualTestProxy.attr(IModelConstants.STYLE));
     }
 
     @Test

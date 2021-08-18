@@ -129,6 +129,21 @@ CONNECION_TEXT_POSITION = {
 };
 Object.freeze(TEXT_POSITION);
 
+CONNECTION_STYLE = {
+	LINE_SOLID : 0,
+	ARROW_FILL_TARGET : 1,      // 1 << 0
+    LINE_DASHED : 2,            // 1 << 1
+    LINE_DOTTED : 4,            // 1 << 2
+    
+    ARROW_NONE : 0,
+    ARROW_FILL_SOURCE : 8,      // 1 << 3
+    ARROW_HOLLOW_TARGET : 16,   // 1 << 4
+    ARROW_HOLLOW_SOURCE : 32,   // 1 << 5
+    ARROW_LINE_TARGET : 64,     // 1 << 6
+    ARROW_LINE_SOURCE : 128     // 1 << 7
+};
+Object.freeze(CONNECTION_STYLE);
+
 BORDER = {
     TABBED : 0,
     DOGEAR : 0,

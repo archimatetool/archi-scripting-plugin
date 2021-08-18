@@ -64,6 +64,8 @@ interface IModelConstants {
     
     String BORDER_TYPE = "borderType";
     
+    String STYLE = "style";
+    
     String ACCESS_TYPE = "access-type"; 
     List<String> ACCESS_TYPES_LIST = Arrays.asList(new String[] {
             "write",

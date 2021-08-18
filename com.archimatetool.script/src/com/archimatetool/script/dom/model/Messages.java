@@ -48,6 +48,8 @@ public class Messages extends NLS {
 
     public static String DiagramModelConnectionProxy_3;
 
+    public static String DiagramModelConnectionProxy_4;
+
     public static String DiagramModelGroupProxy_0;
 
     public static String DiagramModelNoteProxy_0;

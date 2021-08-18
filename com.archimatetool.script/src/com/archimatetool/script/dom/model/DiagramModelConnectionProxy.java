@@ -53,7 +53,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         return (DiagramModelComponentProxy)EObjectProxy.get(getEObject().getTarget());
     }
     
-    public DiagramModelComponentProxy setLineWidth(int value) {
+    public DiagramModelConnectionProxy setLineWidth(int value) {
         int width = value;
         if(width < 0) {
             width = 1;
@@ -70,13 +70,13 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         return getEObject().getFeatures().getBoolean(IDiagramModelConnection.FEATURE_NAME_VISIBLE, true);
     }
     
-    public DiagramModelComponentProxy setLabelVisible(boolean visible) {
+    public DiagramModelConnectionProxy setLabelVisible(boolean visible) {
         CommandHandler.executeCommand(new ScriptCommandWrapper(new FeatureCommand("", getEObject(), //$NON-NLS-1$
                 IDiagramModelConnection.FEATURE_NAME_VISIBLE, visible, true), getEObject()));
         return this;
     }
     
-    public DiagramModelComponentProxy setTextPosition(int position) {
+    public DiagramModelConnectionProxy setTextPosition(int position) {
         if(position < 0) {
             position = 0;
         }
@@ -89,6 +89,19 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
     
     public int getTextPosition() {
         return getEObject().getTextPosition();
+    }
+    
+    public DiagramModelConnectionProxy setStyle(int style) {
+        if(isArchimateConcept()) {
+            throw new ArchiScriptException(Messages.DiagramModelConnectionProxy_4);
+        }
+        
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_CONNECTION__TYPE, style));
+        return this;
+    }
+    
+    public int getStyle() {
+        return getEObject().getType();
     }
     
     // ===========================================
@@ -235,6 +248,8 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
                 return getTextPosition();
             case RELATIVE_BENDPOINTS:
                 return getRelativeBendpoints();
+            case STYLE:
+                return getStyle();
         }
         
         return super.attr(attribute);
@@ -256,6 +271,11 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
             case TEXT_POSITION:
                 if(value instanceof Integer) {
                     return setTextPosition((int)value);
+                }
+                break;
+            case STYLE:
+                if(value instanceof Integer) {
+                    return setStyle((int)value);
                 }
                 break;
         }
