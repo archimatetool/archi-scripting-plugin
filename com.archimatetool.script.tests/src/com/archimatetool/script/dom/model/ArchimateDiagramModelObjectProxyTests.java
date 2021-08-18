@@ -200,7 +200,8 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     
     @Test
     public void attr_FigureTypeCannotSet() {
-        testEObject = (IDiagramModelArchimateObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4072");
+        testEObject = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        ((IDiagramModelArchimateObject)testEObject).setArchimateElement(IArchimateFactory.eINSTANCE.createBusinessObject());
         actualTestProxy = (DiagramModelObjectProxy)EObjectProxy.get(testEObject);
         
         assertEquals(0, actualTestProxy.attr(IModelConstants.FIGURE_TYPE));
