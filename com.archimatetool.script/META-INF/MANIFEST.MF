@@ -12,8 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.archimatetool.commandline;bundle-version="4.7.1",
  com.archimatetool.help;bundle-version="4.7.1",
  com.archimatetool.editor.browser;bundle-version="4.7.1",
- com.archimatetool.canvas;bundle-version="4.7.1",
- com.ibm.icu
+ com.archimatetool.canvas;bundle-version="4.7.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: com.archimatetool.script.ArchiScriptPlugin
@@ -34,3 +33,6 @@ Bundle-ClassPath: .,
  lib/js-scriptengine-20.3.0.jar,
  lib/regex-20.3.0.jar,
  lib/truffle-api-20.3.0.jar
+Import-Package: com.ibm.icu.number;version="67.1.0",
+ com.ibm.icu.text;version="67.1.0",
+ com.ibm.icu.util;version="67.1.0"
