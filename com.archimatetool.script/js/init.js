@@ -12,8 +12,15 @@ jArchi.fs = jArchiFS;
 jArchi.process = {
 	engine: Java.type("java.lang.System").getProperty("script.engine"),
 	argv: Java.type("org.eclipse.core.runtime.Platform").getApplicationArgs(),
-	platform: Java.type("org.eclipse.core.runtime.Platform").getOS()
+	platform: Java.type("org.eclipse.core.runtime.Platform").getOS(),
+	release: {
+		archiName: Java.type("org.eclipse.core.runtime.Platform").getBundle("com.archimatetool.editor").getHeaders().get("Bundle-Name"),
+		archiVersion: Java.type("org.eclipse.core.runtime.Platform").getBundle("com.archimatetool.editor").getHeaders().get("Bundle-Version"),
+		jArchiName: Java.type("org.eclipse.core.runtime.Platform").getBundle("com.archimatetool.script").getHeaders().get("Bundle-Name"),
+		jArchiVersion: Java.type("org.eclipse.core.runtime.Platform").getBundle("com.archimatetool.script").getHeaders().get("Bundle-Version")
+	}
 };
+Object.freeze(jArchi.process.release);
 Object.freeze(jArchi.process);
 
 jArchi.child_process = {
