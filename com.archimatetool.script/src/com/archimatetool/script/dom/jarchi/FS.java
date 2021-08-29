@@ -40,7 +40,7 @@ public class FS {
         }
         else {
             File file = new File(path);
-            file.createNewFile();
+            createParentFolder(file);
 
             try(OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), encoding)) {
                 writer.write(text);
@@ -57,11 +57,19 @@ public class FS {
      */
     private void writeBinFile(String path, String base64text) throws IOException {
         File file = new File(path);
-        file.createNewFile();
+        createParentFolder(file);
         
         try(FileOutputStream writer = new FileOutputStream(file)) {
             writer.write(Base64.getDecoder().decode(base64text));
             writer.flush();
         }
+    }
+    
+    /**
+     * Ensure parent folder exists by creating it
+     */
+    private boolean createParentFolder(File file) {
+        File parent = file.getParentFile();
+        return parent != null ? parent.mkdirs() : false;
     }
 }
