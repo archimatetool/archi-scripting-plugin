@@ -54,7 +54,7 @@ extends ViewPart {
     public void createPartControl(Composite parent) {
         fTextPane = new StyledText(parent, SWT.H_SCROLL | SWT.V_SCROLL);
         fTextPane.setEditable(false);
-        fTextPane.setTabs(40);
+        fTextPane.setTabs(4);
         fTextPane.setWordWrap(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP));
 
         setFontFromPreferences();
