@@ -124,7 +124,7 @@ public class RunArchiScript {
 	        System.err.println("Script Error: " + ex.toString());
 	        
 	        // Print first few lines of the stack trace
-	        final int max = 4;
+	        final int max = 12;
 	        StackTraceElement[] elements = ex.getStackTrace();
 	        for(int i = 0; i < max && i < elements.length; i++) {
                 System.err.println("\tat " + elements[i]);
