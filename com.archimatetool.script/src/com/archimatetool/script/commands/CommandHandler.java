@@ -45,7 +45,12 @@ public class CommandHandler {
         if(stack != null) {
             CompoundCommand compound = compoundcommands.get(stack);
             if(compound == null) {
-                compound = new NonNotifyingCompoundCommand(name);
+                compound = new NonNotifyingCompoundCommand(name) {
+                    @Override
+                    public boolean canExecute() {
+                        return true; // Always return true so that all commands do their dummy execute() command
+                    }
+                };
                 compoundcommands.put(stack, compound);
             }
             compound.add(cmd);
