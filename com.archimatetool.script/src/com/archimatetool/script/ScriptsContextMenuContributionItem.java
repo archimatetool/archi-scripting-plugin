@@ -22,6 +22,7 @@ import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 
 import com.archimatetool.editor.utils.FileUtils;
+import com.archimatetool.editor.utils.StringUtils;
 
 
 /**
@@ -86,7 +87,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
         for(File file : files) {
             if(doShowFile(file)) {
                 if(file.isDirectory()) {
-                    MenuManager subMenu = new MenuManager(file.getName());
+                    MenuManager subMenu = new MenuManager(StringUtils.escapeAmpersandsInText(file.getName()));
                     subMenu.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FOLDER));
                     menuManager.add(subMenu);
                     fillItems(subMenu, file.listFiles());
@@ -95,7 +96,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
                     IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
                     ImageDescriptor imageDescriptor = provider.getImageDescriptor();
                     
-                    menuManager.add(new Action(FileUtils.getFileNameWithoutExtension(file), imageDescriptor) {
+                    menuManager.add(new Action(StringUtils.escapeAmpersandsInText(FileUtils.getFileNameWithoutExtension(file)), imageDescriptor) {
                         @Override
                         public void run() {
                             try {
