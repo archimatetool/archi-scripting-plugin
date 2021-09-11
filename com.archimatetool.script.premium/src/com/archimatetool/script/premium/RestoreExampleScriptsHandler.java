@@ -1,3 +1,8 @@
+/**
+ * This program and the accompanying materials
+ * are made available under the terms of the License
+ * which accompanies this distribution in the file LICENSE.txt
+ */
 package com.archimatetool.script.premium;
 
 import java.io.File;
@@ -38,24 +43,8 @@ public class RestoreExampleScriptsHandler extends AbstractHandler {
             }
         }
         
-        Enumeration<URL> enm = ArchiScriptPremiumPlugin.INSTANCE.getBundle().findEntries("examples", //$NON-NLS-1$
-                "*.*", true); //$NON-NLS-1$
-        
-        if(enm == null) {
-            return null;
-        }
-        
         try {
-            while(enm.hasMoreElements()) {
-                URL url = enm.nextElement();
-                
-                File filePath = new File(ArchiScriptPlugin.INSTANCE.getUserScriptsFolder(), url.getPath());
-                filePath.mkdirs();
-                
-                InputStream in = url.openStream();
-                Files.copy(in, new File(ArchiScriptPlugin.INSTANCE.getUserScriptsFolder(), url.getFile()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                in.close();
-            }
+            copyFiles("*.*js"); //$NON-NLS-1$
         }
         catch(IOException ex) {
             ex.printStackTrace();
@@ -64,10 +53,30 @@ public class RestoreExampleScriptsHandler extends AbstractHandler {
         }
         finally {
             ScriptsFileViewer viewer = (ScriptsFileViewer)HandlerUtil.getActivePart(event);
-            viewer.getViewer().refresh();
+            if(viewer != null) {
+                viewer.getViewer().refresh();
+            }
         }
         
         return null;
     }
 
+    private void copyFiles(String filePattern) throws IOException {
+        // Note - if a directory has a "." in it, it is treated as a file!
+        Enumeration<URL> enm = ArchiScriptPremiumPlugin.INSTANCE.getBundle().findEntries("examples", filePattern, true); //$NON-NLS-1$
+        if(enm == null) {
+            return;
+        }
+        
+        while(enm.hasMoreElements()) {
+            URL url = enm.nextElement();
+            
+            File file = new File(ArchiScriptPlugin.INSTANCE.getUserScriptsFolder(), url.getPath());
+            file.getParentFile().mkdirs();
+            
+            try(InputStream in = url.openStream()) {
+                Files.copy(in, new File(ArchiScriptPlugin.INSTANCE.getUserScriptsFolder(), url.getFile()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+    }
 }
