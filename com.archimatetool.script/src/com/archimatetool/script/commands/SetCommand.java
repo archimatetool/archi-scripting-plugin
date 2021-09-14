@@ -9,15 +9,22 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com.archimatetool.editor.model.commands.EObjectFeatureCommand;
+import com.archimatetool.editor.model.commands.FeatureCommand;
+import com.archimatetool.model.IFeatures;
 
 /**
- * SetCommand
+ * Set Command is a ScriptCommandWrapper wrapping two types of Command: EObjectFeatureCommand and FeatureCommand
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 public class SetCommand extends ScriptCommandWrapper {
 
     public SetCommand(EObject eObject, EStructuralFeature feature, Object newValue) {
-        super(new EObjectFeatureCommand("Script", eObject, feature, newValue), eObject); //$NON-NLS-1$
+        super(new EObjectFeatureCommand("Script", eObject, feature, newValue), eObject);
+    }
+    
+    public SetCommand(IFeatures featuresObject, String name, Object value, Object defaultValue) {
+        super(new FeatureCommand("Script", featuresObject, name, value, defaultValue), featuresObject);
     }
 }

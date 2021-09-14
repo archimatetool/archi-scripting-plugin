@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.archimatetool.editor.model.commands.FeatureCommand;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
@@ -19,7 +18,6 @@ import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DisconnectConnectionCommand;
 import com.archimatetool.script.commands.ScriptCommand;
-import com.archimatetool.script.commands.ScriptCommandWrapper;
 import com.archimatetool.script.commands.SetCommand;
 
 /**
@@ -71,8 +69,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
     }
     
     public DiagramModelConnectionProxy setLabelVisible(boolean visible) {
-        CommandHandler.executeCommand(new ScriptCommandWrapper(new FeatureCommand("", getEObject(), //$NON-NLS-1$
-                IDiagramModelConnection.FEATURE_NAME_VISIBLE, visible, true), getEObject()));
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IDiagramModelConnection.FEATURE_NAME_VISIBLE, visible, true));
         return this;
     }
     

@@ -16,6 +16,8 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.editor.model.IEditorModelManager;
+import com.archimatetool.editor.ui.factory.IObjectUIProvider;
+import com.archimatetool.editor.ui.factory.ObjectUIFactory;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateModel;
@@ -237,4 +239,17 @@ class ModelUtil {
         }
     }
     
+    /**
+     * @param featureName The feature in question
+     * @return True if this object should expose a feature
+     */
+    static boolean shouldExposeFeature(EObject eObject, String featureName) {
+        IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProvider(eObject);
+        
+        if(provider != null) {
+            return provider.shouldExposeFeature(featureName);
+        }
+        
+        return true;
+    }
 }
