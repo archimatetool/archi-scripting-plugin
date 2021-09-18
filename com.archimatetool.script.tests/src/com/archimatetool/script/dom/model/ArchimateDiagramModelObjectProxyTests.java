@@ -16,8 +16,8 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
-import com.archimatetool.editor.preferences.Preferences;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
@@ -138,8 +138,8 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         bounds = actualTestProxy.getBounds();
         assertEquals(10, bounds.get("x"));
         assertEquals(20, bounds.get("y"));
-        assertEquals(Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.get("width"));
-        assertEquals(Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.get("height"));
+        assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.get("width"));
+        assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.get("height"));
     }
     
     @Override

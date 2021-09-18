@@ -14,8 +14,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.junit.Test;
 
 import com.archimatetool.canvas.model.ICanvasPackage;
+import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
-import com.archimatetool.editor.preferences.Preferences;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateDiagramModel;
@@ -259,8 +259,8 @@ public class ModelFactoryTests {
         IBounds bounds = proxy.getEObject().getBounds();
         assertEquals(10, bounds.getX());
         assertEquals(15, bounds.getY());
-        assertEquals(Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.getWidth());
-        assertEquals(Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.getHeight());
+        assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.getWidth());
+        assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.getHeight());
     }
 
     @Test

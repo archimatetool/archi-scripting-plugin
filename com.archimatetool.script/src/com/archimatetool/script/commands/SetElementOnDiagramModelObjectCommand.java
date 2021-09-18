@@ -5,8 +5,8 @@
  */
 package com.archimatetool.script.commands;
 
+import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
-import com.archimatetool.editor.preferences.Preferences;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelContainer;
@@ -43,7 +43,7 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
         
         this.setDefaultFigureType = setDefaultFigureType;
         oldType = dmo.getType();
-        newType = Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_FIGURE_PREFIX + element.eClass().getName());
+        newType = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_FIGURE_PREFIX + element.eClass().getName());
         
         // Store current state
         parent = (IDiagramModelContainer)dmo.eContainer();

@@ -7,9 +7,9 @@ package com.archimatetool.script.dom.model;
 
 import java.util.Map;
 
+import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
-import com.archimatetool.editor.preferences.Preferences;
 import com.archimatetool.editor.ui.factory.IArchimateElementUIProvider;
 import com.archimatetool.editor.ui.factory.IObjectUIProvider;
 import com.archimatetool.editor.ui.factory.ObjectUIFactory;
@@ -100,11 +100,11 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         int height = ModelUtil.getIntValueFromMap(map, "height", getEObject().getBounds().getHeight()); //$NON-NLS-1$
         
         if(width == -1) {
-            width = Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH);
+            width = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH);
         }
         
         if(height == -1) {
-            height = Preferences.STORE.getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT);
+            height = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT);
         }
 
         IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
