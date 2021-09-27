@@ -15,6 +15,16 @@
             id="com.archimatetool.scripts.command.showScriptsConsole"
             name="%command.name.0">
       </command>
+      <command
+            defaultHandler="com.archimatetool.script.RunScriptHandler"
+            id="com.archimatetool.scripts.command.runScript"
+            name="%command.name.1">
+         <commandParameter
+               id="com.archimatetool.scripts.command.runScript.param1"
+               name="scriptfile"
+               optional="false">
+         </commandParameter>
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
