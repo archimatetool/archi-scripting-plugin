@@ -14,6 +14,7 @@ import javax.script.ScriptException;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
+import org.graalvm.polyglot.PolyglotException;
 
 import com.archimatetool.editor.utils.FileUtils;
 import com.archimatetool.script.commands.CommandHandler;
@@ -124,11 +125,24 @@ public class RunArchiScript {
 	        System.err.println("Script Error: " + ex.toString());
 	        
 	        // Print first few lines of the stack trace
-	        final int max = 12;
 	        StackTraceElement[] elements = ex.getStackTrace();
-	        for(int i = 0; i < max && i < elements.length; i++) {
-                System.err.println("\tat " + elements[i]);
-            }
+	        for(int i = 0; i < getStackTraceLines(ex) && i < elements.length; i++) {
+	            System.err.println("\tat " + elements[i]);
+	        }
 	    }
+	}
+	
+	private int getStackTraceLines(Throwable ex) {
+	    // GraalVM exception
+	    if(ex instanceof ScriptException && ex.getCause() instanceof PolyglotException) {
+	        return 0;
+	    }
+	    
+	    // NPE
+	    if(ex instanceof NullPointerException || ex.getCause() instanceof NullPointerException) {
+            return 12;
+        }
+	    
+	    return 2;
 	}
 }
