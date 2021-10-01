@@ -33,6 +33,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.ui.components.TreeTextCellEditor;
+import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.script.IArchiScriptImages;
 
 
@@ -49,7 +50,7 @@ public abstract class FileTreeViewer extends TreeViewer {
      * Constructor
      */
     public FileTreeViewer(File rootFolder, Composite parent) {
-        super(parent, SWT.MULTI);
+        super(parent, SWT.MULTI | (PlatformUtils.isAppleSilicon() ? SWT.BORDER : SWT.NONE));
         
         fRootFolder = rootFolder;
         
