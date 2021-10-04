@@ -14,6 +14,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.services.ViewManager;
+import com.archimatetool.script.views.console.ConsoleOutput;
 import com.archimatetool.script.views.console.ConsoleView;
 
 
@@ -39,6 +40,7 @@ public class Console {
     public void show() {
         if(PlatformUI.isWorkbenchRunning()) {
             ViewManager.showViewPart(ConsoleView.ID, true);
+            ConsoleOutput.start(); // Ensure Console is re-directing output
         }
     }
     
@@ -48,6 +50,7 @@ public class Console {
     public void hide() {
         if(PlatformUI.isWorkbenchRunning()) {
             ViewManager.hideViewPart(ConsoleView.ID);
+            ConsoleOutput.end(); // Ensure Console is re-directing output
         }
     }
     
