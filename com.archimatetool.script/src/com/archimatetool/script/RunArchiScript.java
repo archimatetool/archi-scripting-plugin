@@ -138,6 +138,11 @@ public class RunArchiScript {
 	        return 0;
 	    }
 	    
+	    // ArchiScriptException
+	    if(ex instanceof ArchiScriptException || ex.getCause() instanceof ArchiScriptException) {
+            return 0;
+        }
+	    
 	    // NPE
 	    if(ex instanceof NullPointerException || ex.getCause() instanceof NullPointerException) {
             return 12;
