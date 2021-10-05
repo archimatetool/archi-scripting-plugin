@@ -12,7 +12,6 @@ import java.util.StringJoiner;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.ui.PlatformUI;
 
-import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.services.ViewManager;
 import com.archimatetool.script.views.console.ConsoleOutput;
 import com.archimatetool.script.views.console.ConsoleView;
@@ -24,8 +23,8 @@ import com.archimatetool.script.views.console.ConsoleView;
 @SuppressWarnings("nls")
 public class Console {
     
-    // Cache the current color here in case the viewer is not yet instantiated
-    private Color currentColor;
+    private Color currentColor = null;
+    private Color errorColor = new Color(255, 0, 0);
     
     public Console() {
     }
@@ -128,7 +127,7 @@ public class Console {
         show();
         
         Color oldColor = currentColor;
-        currentColor = ColorFactory.get(255, 0, 0);
+        currentColor = errorColor;
         
         println(error.toString());
         
@@ -140,7 +139,7 @@ public class Console {
     }
 
     public void setTextColor(int red, int green, int blue) {
-        currentColor = ColorFactory.get(red, green, blue);
+        currentColor = new Color(red, green, blue);
     }
     
     public void setDefaultTextColor() {
