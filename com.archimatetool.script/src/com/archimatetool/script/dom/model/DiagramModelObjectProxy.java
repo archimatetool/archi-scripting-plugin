@@ -181,6 +181,22 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return this;
     }
 
+    public int getGradient() {
+        return getEObject().getGradient();
+    }
+    
+    public DiagramModelObjectProxy setGradient(int value) {
+        if(value < -1 || value > 3) {
+            value = -1;
+        }
+        
+        if(ModelUtil.shouldExposeFeature(getEObject(), IDiagramModelObject.FEATURE_GRADIENT)) {
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IDiagramModelObject.FEATURE_GRADIENT, value, IDiagramModelObject.FEATURE_GRADIENT_DEFAULT));
+        }
+        
+        return this;
+    }
+    
     public DiagramModelObjectProxy setFigureType(int value) {
         // If this is an ArchiMate type...
         if(isArchimateConcept()) {
@@ -251,6 +267,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 return getOpacity();
             case OUTLINE_OPACITY:
                 return getOutlineOpacity();
+            case GRADIENT:
+                return getGradient();
             case FIGURE_TYPE:
                 return getFigureType();
             case TEXT_ALIGNMENT:
@@ -283,6 +301,11 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case OUTLINE_OPACITY:
                 if(value instanceof Integer) {
                     return setOutlineOpacity((int)value);
+                }
+                break;
+            case GRADIENT:
+                if(value instanceof Integer) {
+                    return setGradient((int)value);
                 }
                 break;
             case FIGURE_TYPE:

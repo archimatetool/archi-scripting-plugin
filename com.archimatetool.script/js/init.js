@@ -159,3 +159,11 @@ BORDER = {
 };
 Object.freeze(BORDER);
 
+GRADIENT = {
+    NONE : -1,
+    TOP : 0,
+    LEFT : 1,
+    RIGHT : 2,
+    BOTTOM : 3
+};
+Object.freeze(GRADIENT);

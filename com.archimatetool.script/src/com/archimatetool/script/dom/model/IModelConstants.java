@@ -64,6 +64,8 @@ interface IModelConstants {
     
     String BORDER_TYPE = "borderType";
     
+    String GRADIENT = "gradient";
+    
     String STYLE = "style";
     
     String ACCESS_TYPE = "access-type"; 

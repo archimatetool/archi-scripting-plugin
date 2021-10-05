@@ -91,6 +91,13 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
     }
     
     @Test
+    public void attr_Gradient() {
+        assertEquals(-1, actualTestProxy.attr(IModelConstants.GRADIENT));
+        actualTestProxy.attr(IModelConstants.GRADIENT, 3);
+        assertEquals(3, actualTestProxy.attr(IModelConstants.GRADIENT));
+    }
+
+    @Test
     public void attr_TextAlignment() {
         assertEquals(2, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
         actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
