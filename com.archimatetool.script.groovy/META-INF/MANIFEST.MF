@@ -5,12 +5,12 @@ Bundle-SymbolicName: com.archimatetool.script.groovy;singleton:=true
 Bundle-Localization: plugin
 Bundle-Version: 0.1.0.qualifier
 Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
-Require-Bundle: com.archimatetool.editor,
+Require-Bundle: com.archimatetool.editor;bundle-version="4.9.0",
  org.eclipse.core.runtime,
  org.eclipse.ui,
- com.archimatetool.script
+ com.archimatetool.script;bundle-version="1.2.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Activator: com.archimatetool.script.groovy.GroovyPlugin
 Automatic-Module-Name: com.archimatetool.script
 Bundle-ClassPath: com.archimatetool.script.groovy.jar,

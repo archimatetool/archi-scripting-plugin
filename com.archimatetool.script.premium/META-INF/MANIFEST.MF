@@ -3,12 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Archi Scripting (jArchi) Examples
 Bundle-SymbolicName: com.archimatetool.script.premium;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
- com.archimatetool.script
+ com.archimatetool.script;bundle-version="1.2.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Activator: com.archimatetool.script.premium.ArchiScriptPremiumPlugin
 Automatic-Module-Name: com.archimatetool.script

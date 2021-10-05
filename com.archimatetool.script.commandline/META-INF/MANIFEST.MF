@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Archi Scripting (jArchi) Command Line
 Bundle-SymbolicName: com.archimatetool.script.commandline;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 1.1.1.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: Phillip Beauvoir & Jean-Baptiste Sarrodie
-Require-Bundle: com.archimatetool.commandline;bundle-version="4.7.1",
- com.archimatetool.script;bundle-version="1.1.0"
+Require-Bundle: com.archimatetool.commandline;bundle-version="4.9.0",
+ com.archimatetool.script;bundle-version="1.2.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Automatic-Module-Name: com.archimatetool.script.commandline
