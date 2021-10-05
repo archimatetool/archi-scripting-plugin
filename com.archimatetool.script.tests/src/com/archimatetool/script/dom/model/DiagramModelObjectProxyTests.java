@@ -7,11 +7,15 @@ package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+
+import com.archimatetool.script.ArchiScriptException;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -111,4 +115,23 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
         assertEquals(2, actualTestProxy.attr(IModelConstants.TEXT_POSITION));
     }
 
+    @Test
+    public void attr_ImagePosition() {
+        assertEquals(2, actualTestProxy.attr(IModelConstants.IMAGE_POSITION));
+        actualTestProxy.attr(IModelConstants.IMAGE_POSITION, 1);
+        assertEquals(1, actualTestProxy.attr(IModelConstants.IMAGE_POSITION));
+    }
+
+    @Test
+    public void attr_Image() {
+        assertEquals(null, actualTestProxy.attr(IModelConstants.IMAGE));
+        
+        // Should throw an exception if image path references non existing image
+        assertThrows(ArchiScriptException.class, () -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("path", "imgpath");
+            actualTestProxy.attr(IModelConstants.IMAGE, map);
+        });
+    }
+    
 }

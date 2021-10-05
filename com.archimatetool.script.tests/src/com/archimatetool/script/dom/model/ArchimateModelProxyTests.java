@@ -247,4 +247,24 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         ArchimateElementProxy target = actualTestProxy.createElement("BusinessRole", "Role");
         actualTestProxy.createRelationship("AccessRelationship", "Fido", source, target);
     }
+    
+    @Test
+    public void getSpecializations() {
+        ProfileProxy proxy1 = actualTestProxy.createSpecialization("Spec", "business-actor", null);
+        ProfileProxy proxy2 = actualTestProxy.createSpecialization("Spec2", "business-object", null);
+        
+        assertEquals(2, actualTestProxy.getSpecializations().size());
+        assertEquals(proxy1, actualTestProxy.getSpecializations().get(0));
+        assertEquals(proxy2, actualTestProxy.getSpecializations().get(1));
+    }
+    
+    @Test
+    public void findSpecialization() {
+        ProfileProxy proxy1 = actualTestProxy.createSpecialization("Spec", "business-actor", null);
+        ProfileProxy proxy2 = actualTestProxy.createSpecialization("Spec2", "business-object", null);
+        
+        assertEquals(proxy1, actualTestProxy.findSpecialization("Spec", "business-actor"));
+        assertEquals(proxy2, actualTestProxy.findSpecialization("Spec2", "business-object"));
+        assertNull(actualTestProxy.findSpecialization("Spec2", "business-actor"));
+    }
 }

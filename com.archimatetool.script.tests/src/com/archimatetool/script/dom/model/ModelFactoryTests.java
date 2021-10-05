@@ -10,6 +10,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
 import org.junit.Test;
 
@@ -21,6 +24,7 @@ import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
+import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IBounds;
@@ -372,4 +376,49 @@ public class ModelFactoryTests {
             ModelFactory.createDiagramConnection(source, proxy1.getEObject());
         });
     }
+    
+    @Test
+    public void createProfileProxy() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        
+        // Add a Profile
+        ProfileProxy proxy1 = ModelFactory.createProfileProxy(model, "Profile", "business-actor", null);
+        assertEquals("Profile", proxy1.getName());
+        assertEquals("business-actor", proxy1.getType());
+        assertEquals(null, proxy1.getImage());
+        
+        assertEquals(1, model.getProfiles().size());
+        
+        // Add a Profile with the same name and type should throw an exception
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createProfileProxy(model, "Profile", "business-actor", null);
+        });
+    }
+    
+    @Test
+    public void createProfileProxy_ThrowsExceptions() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        
+        // Should throw an exception if type is wrong
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createProfileProxy(model, "Profile", "business-cat", null);
+        });
+    
+        // Should throw an exception if image path references non existing image
+        assertThrows(ArchiScriptException.class, () -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("path", "imagePath");
+            ModelFactory.createProfileProxy(model, "Profile", "business-actor", map);
+        });
+        
+        // Should throw an exception if the profile already exists
+        assertThrows(ArchiScriptException.class, () -> {
+            // Create it
+            ModelFactory.createProfileProxy(model, "Profile", "business-actor", null);
+            
+            // Create it again
+            ModelFactory.createProfileProxy(model, "Profile", "business-actor", null);
+        });
+    }
+
 }

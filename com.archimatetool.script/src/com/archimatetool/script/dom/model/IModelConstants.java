@@ -98,4 +98,11 @@ interface IModelConstants {
     // Label Expressions
     String LABEL_EXPRESSION = "label-expression";
     String LABEL_VALUE = "label-value";
+    
+    // Specialization/Profile/Images
+    String SPECIALIZATION = "specialization";
+    String IMAGE = "image";
+    String SHOW_ICON = "showIcon";
+    String IMAGE_SOURCE = "imageSource";
+    String IMAGE_POSITION = "imagePosition";
 }

@@ -7,6 +7,8 @@ package com.archimatetool.script.dom.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateFactory;
@@ -208,5 +211,19 @@ public class ModelUtilTests {
         IArchimateModelObject o4 = (IArchimateModelObject)testModel2.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessEvent());
         
         ModelUtil.checkComponentsInSameModel(model1, o3, o4);
+    }
+    
+    @Test
+    public void getArchiveManager() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        
+        // Should throw an exception
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelUtil.getArchiveManager(model);
+        });
+
+        IArchiveManager am = IArchiveManager.FACTORY.createArchiveManager(model);
+        model.setAdapter(IArchiveManager.class, am);
+        assertSame(am, ModelUtil.getArchiveManager(model));
     }
 }

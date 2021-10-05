@@ -5,14 +5,18 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.canvas.model.ICanvasFactory;
 import com.archimatetool.canvas.model.ICanvasModel;
 import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.diagram.ArchimateDiagramModelFactory;
+import com.archimatetool.editor.model.commands.AddListMemberCommand;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
 import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.editor.utils.StringUtils;
@@ -36,12 +40,14 @@ import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.model.IProfile;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.AddElementCommand;
 import com.archimatetool.script.commands.AddRelationshipCommand;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.ScriptCommand;
+import com.archimatetool.script.commands.ScriptCommandWrapper;
 
 /**
  * Model Utils
@@ -456,5 +462,79 @@ class ModelFactory implements IModelConstants {
         
         return new DiagramModelConnectionProxy(dmc);
     }
+ 
+    /**
+     * Create and add a new Profile to the model
+     * @param conceptType is kebab case
+     * @return a ProfileProxy
+     */
+    static ProfileProxy createProfileProxy(IArchimateModel model, String name, String conceptType, Map<String, Object> image) {
+        if(!StringUtils.isSet(name)) {
+            throw new ArchiScriptException(Messages.ModelFactory_10);
+        }
+        
+        // Convert kebab to camel case
+        conceptType = ModelUtil.getCamelCase(conceptType);
+        
+        // Check it's the correct type
+        if(!ModelUtil.isArchimateConcept(conceptType)) {
+            throw new ArchiScriptException(NLS.bind(Messages.ModelFactory_11, conceptType));
+        }
+        
+        // Can we add an image?
+        if(image != null && !ModelUtil.canHaveImage(conceptType)) {
+            throw new ArchiScriptException(NLS.bind(Messages.ModelFactory_13, conceptType));
+        }
+        
+        // If imagePath is not null check that the ArchiveManager has this image
+        String imagePath = image != null ? ModelUtil.getStringValueFromMap(image, "path", null) : null; //$NON-NLS-1$
+        if(imagePath != null && !ModelUtil.hasImage(model, imagePath)) {
+            throw new ArchiScriptException(NLS.bind(Messages.ModelFactory_12, imagePath));
+        }
+        
+        return new ProfileProxy(createProfile(model, name, conceptType, imagePath));
+    }
     
+    /**
+     * Create and add a new Profile to the model
+     * @return The new Profile or throw an excpetion if it already exists
+     */
+    static IProfile createProfile(IArchimateModel model, String name, String conceptType, String imagePath) {
+        // Do we have a profile of this name and type?
+        IProfile profile = ArchimateModelUtils.getProfileByNameAndType(model, name, conceptType);
+        if(profile != null) {
+            throw new ArchiScriptException(NLS.bind(Messages.ModelFactory_14, name, conceptType));
+        }
+        
+        // No, so create and add a new profile
+        profile = IArchimateFactory.eINSTANCE.createProfile();
+        profile.setName(name);
+        profile.setConceptType(conceptType);
+        profile.setImagePath(imagePath);
+
+        CommandHandler.executeCommand(new ScriptCommandWrapper(new AddListMemberCommand<IProfile>(model.getProfiles(), profile), model));
+
+        return profile;
+    }
+    
+    /**
+     * Create a JS Image object (HashMap) or null if imagePath is null
+     */
+    static Map<String, Object> createImageObject(IArchimateModel model, String imagePath) {
+        if(imagePath == null) {
+            return null;
+        }
+        
+        Map<String, Object> map = ProxyUtil.createMap();
+        
+        map.put("path", imagePath); //$NON-NLS-1$
+        
+        ImageData id = ModelUtil.getArchiveManager(model).createImageData(imagePath);
+        if(id != null) {
+            map.put("width", id.width); //$NON-NLS-1$
+            map.put("height", id.height); //$NON-NLS-1$
+        }
+        
+        return map;
+    }
 }

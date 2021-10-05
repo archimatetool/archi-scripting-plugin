@@ -13,6 +13,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
 
+import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.util.ArchimateResourceFactory;
@@ -44,6 +45,7 @@ public class TestsHelper {
             resource.load(null);
             IArchimateModel model = (IArchimateModel)resource.getContents().get(0);
             model.setFile(file);
+            model.setAdapter(IArchiveManager.class, IArchiveManager.FACTORY.createArchiveManager(model));
             return (ArchimateModelProxy)EObjectProxy.get(model);
         }
         catch(IOException ex) {

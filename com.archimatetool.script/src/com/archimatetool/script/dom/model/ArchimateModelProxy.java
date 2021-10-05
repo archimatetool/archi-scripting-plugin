@@ -7,6 +7,9 @@ package com.archimatetool.script.dom.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
@@ -18,7 +21,9 @@ import com.archimatetool.editor.model.ModelChecker;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.model.IProfile;
 import com.archimatetool.model.ModelVersion;
+import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.SetCommand;
@@ -185,6 +190,54 @@ public class ArchimateModelProxy extends EObjectProxy {
      */
     public CanvasDiagramModelProxy createCanvasView(String name, FolderProxy parentFolder) {
         return (CanvasDiagramModelProxy)ModelFactory.createView(getEObject(), VIEW_CANVAS, name, parentFolder.getEObject());
+    }
+    
+    /**
+     * Create and add a Specialization (Profile) to the model
+     * @param conceptType is kebab case
+     */
+    public ProfileProxy createSpecialization(String name, String conceptType) {
+        return createSpecialization(name, conceptType, null);
+    }
+    
+    public ProfileProxy createSpecialization(String name, String conceptType, Map<String, Object> image) {
+        return ModelFactory.createProfileProxy(getEObject(), name, conceptType, image);
+    }
+    
+    /**
+     * Add an image from an image file to this model's ArchiveManager storage cache.
+     * If the image already exists the existing image path is returned.
+     * @param filePath The image file path
+     * @return The Image Object
+     */
+    public Map<String, Object> createImage(String filePath) throws IOException {
+        String imagePath = ModelUtil.getArchiveManager(getEObject()).addImageFromFile(new File(filePath));
+        return ModelFactory.createImageObject(getEObject(), imagePath);
+    }
+    
+    /**
+     * @return a list of all model Specializations (Profiles)
+     */
+    public List<ProfileProxy> getSpecializations() {
+        List<ProfileProxy> list = new ArrayList<>();
+        
+        for(IProfile profile : getEObject().getProfiles()) {
+            list.add(new ProfileProxy(profile));
+        }
+        
+        return list;
+    }
+    
+    /**
+     * @return A Specialization (Profile) in the model by name and type, or null
+     */
+    public ProfileProxy findSpecialization(String name, String conceptType) {
+        if(name == null || conceptType == null) {
+            return null;
+        }
+        
+        IProfile profile = ArchimateModelUtils.getProfileByNameAndType(getEObject(), name, ModelUtil.getCamelCase(conceptType));
+        return profile != null ? new ProfileProxy(profile) : null;
     }
 
     /**

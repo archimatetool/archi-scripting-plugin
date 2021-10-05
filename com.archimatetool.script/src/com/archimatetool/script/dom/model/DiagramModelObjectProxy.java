@@ -7,10 +7,13 @@ package com.archimatetool.script.dom.model;
 
 import java.util.Map;
 
+import org.eclipse.osgi.util.NLS;
+
 import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
 import com.archimatetool.editor.ui.factory.IArchimateElementUIProvider;
+import com.archimatetool.editor.ui.factory.IGraphicalObjectUIProvider;
 import com.archimatetool.editor.ui.factory.IObjectUIProvider;
 import com.archimatetool.editor.ui.factory.ObjectUIFactory;
 import com.archimatetool.model.IArchimateFactory;
@@ -18,7 +21,9 @@ import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IBounds;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelContainer;
+import com.archimatetool.model.IDiagramModelImageProvider;
 import com.archimatetool.model.IDiagramModelObject;
+import com.archimatetool.model.IIconic;
 import com.archimatetool.model.ITextAlignment;
 import com.archimatetool.model.ITextPosition;
 import com.archimatetool.script.ArchiScriptException;
@@ -242,6 +247,9 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     
     public DiagramModelObjectProxy setTextPosition(int position) {
         if(getEObject() instanceof ITextPosition) {
+            if(position < ITextPosition.TEXT_POSITION_TOP || position > ITextPosition.TEXT_POSITION_BOTTOM) {
+                position = ITextPosition.TEXT_POSITION_TOP;
+            }
             CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.TEXT_POSITION__TEXT_POSITION, position));
         }
         
@@ -254,6 +262,99 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         }
         
         return null;
+    }
+    
+    public Object getShowIcon() {
+        return getEObject().getIconVisibleState();
+    }
+    
+    public DiagramModelObjectProxy setShowIcon(int value) {
+        // Only for objects that have an icon
+        IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProvider(getEObject());
+        
+        if(provider instanceof IGraphicalObjectUIProvider && ((IGraphicalObjectUIProvider)provider).hasIcon()) {
+            // Bounds checking
+            if(value < IDiagramModelObject.ICON_VISIBLE_IF_NO_IMAGE_DEFINED || value > IDiagramModelObject.ICON_VISIBLE_NEVER) {
+                value = IDiagramModelObject.FEATURE_ICON_VISIBLE_DEFAULT;
+            }
+            
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IDiagramModelObject.FEATURE_ICON_VISIBLE, value, IDiagramModelObject.FEATURE_ICON_VISIBLE_DEFAULT));
+        }
+        
+        return this;
+    }
+    
+    public Object getImageSource() {
+        if(isArchimateConcept() &&
+                ModelUtil.shouldExposeFeature(getEObject(), IDiagramModelArchimateObject.FEATURE_IMAGE_SOURCE)) {
+            return ((IDiagramModelArchimateObject)getEObject()).getImageSource();
+        }
+        
+        return -1;
+    }
+    
+    public DiagramModelObjectProxy setImageSource(int value) {
+        if(isArchimateConcept() &&
+                ModelUtil.shouldExposeFeature(getEObject(), IDiagramModelArchimateObject.FEATURE_IMAGE_SOURCE)) {
+            
+            // Bounds checking
+            if(value < IDiagramModelArchimateObject.IMAGE_SOURCE_PROFILE || value > IDiagramModelArchimateObject.IMAGE_SOURCE_CUSTOM) {
+                value = IDiagramModelArchimateObject.FEATURE_IMAGE_SOURCE_DEFAULT;
+            }
+            
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IDiagramModelArchimateObject.FEATURE_IMAGE_SOURCE, value, IDiagramModelArchimateObject.FEATURE_IMAGE_SOURCE_DEFAULT));
+        }
+        
+        return this;
+    }
+    
+    public Object getImagePosition() {
+        if(getEObject() instanceof IIconic &&
+                ModelUtil.shouldExposeFeature(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH.getName())) {
+            return ((IIconic)getEObject()).getImagePosition();
+        }
+        
+        return -1;
+    }
+    
+    public DiagramModelObjectProxy setImagePosition(int value) {
+        if(getEObject() instanceof IIconic &&
+                ModelUtil.shouldExposeFeature(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH.getName())) {
+            // Bounds checking
+            if(value < IIconic.ICON_POSITION_TOP_LEFT || value > IIconic.ICON_POSITION_FILL) {
+                value = IIconic.ICON_POSITION_TOP_LEFT;
+            }
+            
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ICONIC__IMAGE_POSITION, value));
+        }
+        
+        return this;
+    }
+    
+    public Map<String, Object> getImage() {
+        if(getEObject() instanceof IDiagramModelImageProvider &&
+                ModelUtil.shouldExposeFeature(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH.getName())) {
+            return ModelFactory.createImageObject(getArchimateModel(), ((IDiagramModelImageProvider)getEObject()).getImagePath());
+        }
+        
+        return null;
+    }
+    
+    public DiagramModelObjectProxy setImage(Map<?, ?> map) {
+        if(getEObject() instanceof IDiagramModelImageProvider &&
+                ModelUtil.shouldExposeFeature(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH.getName())) {
+            
+            String imagePath = map != null ? ModelUtil.getStringValueFromMap(map, "path", null) : null; //$NON-NLS-1$
+            
+            // If imagePath is not null check that the ArchiveManager has this image
+            if(imagePath != null && !ModelUtil.hasImage(getArchimateModel(), imagePath)) {
+                throw new ArchiScriptException(NLS.bind(Messages.ModelFactory_12, imagePath));
+            }
+            
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH, imagePath));
+        }
+        
+        return this;
     }
     
     @Override
@@ -275,6 +376,14 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 return getTextAlignment();
             case TEXT_POSITION:
                 return getTextPosition();
+            case SHOW_ICON:
+                return getShowIcon();
+            case IMAGE_SOURCE:
+                return getImageSource();
+            case IMAGE_POSITION:
+                return getImagePosition();
+            case IMAGE:
+                return getImage();
         }
         
         return super.attr(attribute);
@@ -321,6 +430,26 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case TEXT_POSITION:
                 if(value instanceof Integer) {
                     return setTextPosition((int)value);
+                }
+                break;
+            case SHOW_ICON:
+                if(value instanceof Integer) {
+                    return setShowIcon((int)value);
+                }
+                break;
+            case IMAGE_SOURCE:
+                if(value instanceof Integer) {
+                    return setImageSource((int)value);
+                }
+                break;
+            case IMAGE_POSITION:
+                if(value instanceof Integer) {
+                    return setImagePosition((int)value);
+                }
+                break;
+            case IMAGE:
+                if(value instanceof Map) {
+                    return setImage((Map<?, ?>)value);
                 }
                 break;
         }

@@ -10,6 +10,12 @@ public class Messages extends NLS {
 
     public static String ArchimateConceptProxy_1;
 
+    public static String ArchimateConceptProxy_2;
+
+    public static String ArchimateConceptProxy_3;
+
+    public static String ArchimateConceptProxy_4;
+
     public static String ArchimateDiagramModelProxy_0;
 
     public static String ArchimateDiagramModelProxy_1;
@@ -39,6 +45,8 @@ public class Messages extends NLS {
     public static String CurrentModel_0;
 
     public static String DiagramModelComponentProxy_0;
+
+    public static String DiagramModelComponentProxy_1;
 
     public static String DiagramModelConnectionProxy_0;
 
@@ -74,6 +82,16 @@ public class Messages extends NLS {
 
     public static String ModelFactory_1;
 
+    public static String ModelFactory_10;
+
+    public static String ModelFactory_11;
+
+    public static String ModelFactory_12;
+
+    public static String ModelFactory_13;
+
+    public static String ModelFactory_14;
+
     public static String ModelFactory_2;
 
     public static String ModelFactory_3;
@@ -89,6 +107,14 @@ public class Messages extends NLS {
     public static String ModelFactory_8;
 
     public static String ModelFactory_9;
+
+    public static String ProfileProxy_0;
+
+    public static String ProfileProxy_1;
+
+    public static String ProfileProxy_2;
+
+    public static String ProfileProxy_3;
 
     static {
         // initialize resource bundle

@@ -8,14 +8,18 @@ package com.archimatetool.script.dom.model;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
+import com.archimatetool.editor.model.commands.SetProfileCommand;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IProfile;
+import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteFolderObjectCommand;
+import com.archimatetool.script.commands.ScriptCommandWrapper;
 
 /**
  * Archimate Concept wrapper proxy
@@ -123,6 +127,63 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
         }
       
     }
+    
+    public String getSpecialization() {
+        IProfile profile = getEObject().getPrimaryProfile();
+        return profile != null ? profile.getName() : null;
+    }
+    
+    public ArchimateConceptProxy setSpecialization(String name) {
+        if(getArchimateModel() == null) {
+            throw new ArchiScriptException(Messages.ArchimateConceptProxy_2);
+        }
+        
+        // Name can be null but not an empty string
+        if(name != null && "".equals(name.trim())) { //$NON-NLS-1$
+            throw new ArchiScriptException(Messages.ArchimateConceptProxy_3);
+        }
+        
+        IProfile profile = null;
+        
+        // If name is not null we are setting it to a profile, else unsetting it
+        if(name != null) {
+            // Get the Profile
+            profile = ArchimateModelUtils.getProfileByNameAndType(getArchimateModel(), name, getEObject().eClass().getName());
+            
+            // We don't have it
+            if(profile == null) {
+                throw new ArchiScriptException(NLS.bind(Messages.ArchimateConceptProxy_4, name, getEObject().eClass().getName()));
+            }
+        }
+        
+        // Set it
+        CommandHandler.executeCommand(new ScriptCommandWrapper(new SetProfileCommand(getEObject(), profile), getEObject()));
+        
+        return this;
+    }
+    
+    @Override
+    protected Object attr(String attribute) {
+        switch(attribute) {
+            case SPECIALIZATION:
+                return getSpecialization();
+        }
+        
+        return super.attr(attribute);
+    }
+
+    @Override
+    protected EObjectProxy attr(String attribute, Object value) {
+        switch(attribute) {
+            case SPECIALIZATION:
+                if(value instanceof String) {
+                    return setSpecialization((String)value);
+                }
+        }
+        
+        return super.attr(attribute, value);
+    }
+
 
     interface Internal extends IReferencedProxy, IConnectableProxy {}
     

@@ -288,4 +288,19 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertTrue(connection7.getSourceConnections().isEmpty());
         assertTrue(connection7.getTargetConnections().isEmpty());
     }
+    
+    @Test
+    public void attr_ShowIcon() {
+        assertEquals(0, actualTestProxy.attr(IModelConstants.SHOW_ICON));
+        actualTestProxy.attr(IModelConstants.SHOW_ICON, 2);
+        assertEquals(2, actualTestProxy.attr(IModelConstants.SHOW_ICON));
+    }
+    
+    @Test
+    public void attr_ImageSource() {
+        assertEquals(0, actualTestProxy.attr(IModelConstants.IMAGE_SOURCE));
+        actualTestProxy.attr(IModelConstants.IMAGE_SOURCE, 1);
+        assertEquals(1, actualTestProxy.attr(IModelConstants.IMAGE_SOURCE));
+    }
+
 }

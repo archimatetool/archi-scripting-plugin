@@ -15,9 +15,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
+import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.ui.factory.IObjectUIProvider;
 import com.archimatetool.editor.ui.factory.ObjectUIFactory;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateModel;
@@ -36,6 +38,7 @@ import com.archimatetool.script.ArchiScriptException;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 class ModelUtil {
     
     private ModelUtil() {
@@ -186,15 +189,19 @@ class ModelUtil {
     }
     
     static String getKebabCase(String string) {
-        return string.replaceAll("([a-z])([A-Z]+)", "$1-$2").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    static String getCamelCase(String string) {
-        if(string == null || "".equals(string)) { //$NON-NLS-1$
+        if(!StringUtils.isSet(string)) {
             return string;
         }
         
-        return Arrays.stream(string.split("\\-")) //$NON-NLS-1$
+        return string.replaceAll("([a-z])([A-Z]+)", "$1-$2").toLowerCase();
+    }
+
+    static String getCamelCase(String string) {
+        if(!StringUtils.isSet(string)) {
+            return string;
+        }
+        
+        return Arrays.stream(string.split("\\-"))
                 .map(String::toLowerCase)
                 .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1))
                 .collect(Collectors.joining());
@@ -232,7 +239,7 @@ class ModelUtil {
             if(eObject != null) {
                 IArchimateModel thatModel = eObject.getArchimateModel();
                 if(thatModel != null && model != null && thatModel != model) {
-                    throw new ArchiScriptException("Components belong to different models!"); //$NON-NLS-1$
+                    throw new ArchiScriptException("Components belong to different models!");
                 }
                 model = thatModel;
             }
@@ -251,5 +258,41 @@ class ModelUtil {
         }
         
         return true;
+    }
+
+    /**
+     * Return the IArchiveManager for a model
+     * @throws ArchiScriptException if null
+     */
+    static IArchiveManager getArchiveManager(IArchimateModel model) {
+        IArchiveManager archiveManager = (IArchiveManager)model.getAdapter(IArchiveManager.class);
+        if(archiveManager == null) {
+            throw new ArchiScriptException("Could not load ArchiveManager");
+        }
+        return archiveManager;
+    }
+    
+    /**
+     * @return true if the model has an image with name of imagePath
+     */
+    static boolean hasImage(IArchimateModel model, String imagePath) {
+        return imagePath != null && getArchiveManager(model).getLoadedImagePaths().contains(imagePath);
+    }
+    
+    /**
+     * @param conceptType this is camel case
+     */
+    static boolean isArchimateConcept(String conceptType) {
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(conceptType);
+        return eClass != null && IArchimatePackage.eINSTANCE.getArchimateConcept().isSuperTypeOf(eClass);
+    }
+
+    /**
+     * Only ArchiMate elements (not Junctions) can have images
+     */
+    static boolean canHaveImage(String conceptType) {
+        EClass eClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(conceptType);
+        return eClass != null && IArchimatePackage.eINSTANCE.getArchimateElement().isSuperTypeOf(eClass) &&
+                !IArchimatePackage.eINSTANCE.getJunction().isSuperTypeOf(eClass);
     }
 }

@@ -22,6 +22,7 @@ import com.archimatetool.script.dom.model.FolderProxyTests;
 import com.archimatetool.script.dom.model.ModelFactoryTests;
 import com.archimatetool.script.dom.model.ModelTests;
 import com.archimatetool.script.dom.model.ModelUtilTests;
+import com.archimatetool.script.dom.model.ProfileProxyTests;
 import com.archimatetool.script.dom.model.SelectorFilterFactoryTests;
 import com.archimatetool.script.dom.model.SketchDiagramModelProxyTests;
 
@@ -41,14 +42,15 @@ public class AllTests {
         suite.addTest(CanvasDiagramModelProxyTests.suite());
         suite.addTest(CurrentModelTests.suite());
         suite.addTest(DiagramModelConnectionProxyTests.suite());
-        suite.addTest(DiagramModelNoteProxyTests.suite());
         suite.addTest(DiagramModelGroupProxyTests.suite());
+        suite.addTest(DiagramModelNoteProxyTests.suite());
         suite.addTest(DiagramModelReferenceProxyTests.suite());
         suite.addTest(EObjectProxyCollectionTests.suite());
         suite.addTest(FolderProxyTests.suite());
         suite.addTest(ModelFactoryTests.suite());
 		suite.addTest(ModelTests.suite());
         suite.addTest(ModelUtilTests.suite());
+        suite.addTest(ProfileProxyTests.suite());
         suite.addTest(SelectorFilterFactoryTests.suite());
         suite.addTest(SketchDiagramModelProxyTests.suite());
 		

@@ -167,3 +167,29 @@ GRADIENT = {
     BOTTOM : 3
 };
 Object.freeze(GRADIENT);
+
+SHOW_ICON = {
+    IF_NO_IMAGE : 0,
+	ALWAYS : 1,
+	NEVER : 2
+};
+Object.freeze(SHOW_ICON);
+
+IMAGE_SOURCE = {
+    SPECIALIZATION : 0,
+    CUSTOM : 1
+};
+Object.freeze(IMAGE_SOURCE);
+
+IMAGE_POSITION = {
+    TOP_LEFT : 0,
+    TOP_CENTRE : 1,
+    TOP_RIGHT : 2,
+    MIDDLE_LEFT : 3,
+    MIDDLE_CENTRE : 4,
+    MIDDLE_RIGHT : 5,
+    BOTTOM_LEFT : 6,
+    BOTTOM_CENTRE : 7,
+    BOTTOM_RIGHT : 8,
+    FILL : 9
+};

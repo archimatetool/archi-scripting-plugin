@@ -66,6 +66,22 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
 
         return super.getReferencedConcept();
     }
+    
+    public String getSpecialization() {
+        if(isArchimateConcept()) {
+            return getConcept().getSpecialization();
+        }
+        
+        return null;
+    }
+    
+    public ArchimateConceptProxy setSpecialization(String name) {
+        if(isArchimateConcept()) {
+            return getConcept().setSpecialization(name);
+        }
+        
+        throw new ArchiScriptException(NLS.bind(Messages.DiagramModelComponentProxy_1, getType()));
+    }
 
     /**
      * @return a list of source connections (if any)
@@ -197,6 +213,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
                 return getView();
             case CONCEPT:
                 return getConcept();
+            case SPECIALIZATION:
+                return getSpecialization();
             case FONT_COLOR:
                 return getFontColor();
             case FONT_NAME:
@@ -217,6 +235,10 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     @Override
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
+            case SPECIALIZATION:
+                if(value instanceof String) {
+                    return setSpecialization((String)value);
+                }
             case FONT_COLOR:
                 if(value instanceof String) {
                     return setFontColor((String)value);
