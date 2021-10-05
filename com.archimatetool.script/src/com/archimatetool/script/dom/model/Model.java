@@ -26,6 +26,8 @@ import com.archimatetool.editor.diagram.util.DiagramUtils;
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.ui.ImageFactory;
+import com.archimatetool.export.svg.PDFExportProvider;
+import com.archimatetool.export.svg.SVGExportProvider;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
@@ -119,6 +121,27 @@ public class Model {
     }
     
     /**
+     * @param relationshipType
+     * @param sourceType
+     * @param targetType
+     * @return True if relationship type is allowed between source and target
+     */
+    public boolean isAllowedRelationship(String relationshipType, String sourceType, String targetType) {
+        EClass relClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(relationshipType));
+        EClass sourceClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(sourceType));
+        EClass targetClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(targetType));
+        
+        if(relClass == null || sourceClass == null || targetClass == null) {
+            throw new ArchiScriptException("Invalid type name."); //$NON-NLS-1$
+        }
+        
+        return ArchimateModelUtils.isValidRelationship(sourceClass, targetClass, relClass);
+    }
+    
+    
+    // ======================================== View Image Handling =====================================================
+    
+    /**
      * Render a View as a String of BASE64 bytes
      * @param dmProxy The DiagramModelProxy
      * @param formatOne of "PNG", "BMP", "JPG", "JPEG",
@@ -138,76 +161,137 @@ public class Model {
      * @throws IOException
      */
     public String renderViewAsBase64(DiagramModelProxy dmProxy, String format, Map<?, ?> options) throws IOException {
+        int imgFormat = getImageFormat(format);
+        ImageLoader loader = getImageLoader(dmProxy, format, options);
+
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream(1024)) {
+            loader.save(stream, imgFormat);
+            Encoder encoder = Base64.getEncoder();
+            return encoder.encodeToString(stream.toByteArray());
+        }
+    }
+
+    /**
+     * Render a View as to file
+     * @param dmProxy The DiagramModelProxy
+     * @param path File path
+     * @param format One of "PNG", "BMP", "JPG", "JPEG",
+     * @throws IOException
+     */
+    public void renderViewToFile(DiagramModelProxy dmProxy, String path, String format) {
+        renderViewToFile(dmProxy, path, format, null);
+    }
+
+    /**
+     * Render a View as to file
+     * @param dmProxy The DiagramModelProxy
+     * @param path File path
+     * @param format One of "PNG", "BMP", "JPG", "JPEG",
+     * @param options can be scale and margin insets
+     * @throws IOException
+     */
+    public void renderViewToFile(DiagramModelProxy dmProxy, String path, String format, Map<?, ?> options) {
+        File file = new File(path);
+        createParentFolder(file);
+        
+        int imgFormat = getImageFormat(format);
+        
+        ImageLoader loader = getImageLoader(dmProxy, format, options);
+        loader.save(file.getPath(), imgFormat);
+    }
+
+    /**
+     * Render a View as a String of SVG
+     * @param dmProxy The DiagramModelProxy
+     * @param setViewBox if true sets the viewbox bounds to the bounds of the diagram
+     * @return The SVG as a String
+     * @throws Exception
+     */
+    public String renderViewAsSVGString(DiagramModelProxy dmProxy, boolean setViewBox) throws Exception {
         if(dmProxy == null) {
-            throw new ArchiScriptException("renderViewAsBase64 - View is null"); //$NON-NLS-1$
+            throw new ArchiScriptException("renderViewAsSVGString - View is null"); //$NON-NLS-1$
+        }
+
+        return new SVGExportProvider().getSVGString(dmProxy.getEObject(), setViewBox);
+    }
+    
+    /**
+     * Render a View to file in SVG format
+     * @param dmProxy The DiagramModelProxy
+     * @param path the file to save to
+     * @param setViewBox if true sets the viewbox bounds to the bounds of the diagram
+     * @throws Exception
+     */
+    public void renderViewToSVG(DiagramModelProxy dmProxy, String path, boolean setViewBox) throws Exception {
+        if(dmProxy == null) {
+            throw new ArchiScriptException("renderViewToSVG - View is null"); //$NON-NLS-1$
+        }
+
+        new SVGExportProvider().export(dmProxy.getEObject(), new File(path), setViewBox);
+    }
+    
+    /**
+     * Render a View to file in PDF format
+     * @param dmProxy The DiagramModelProxy
+     * @param path the file to save to
+     * @throws Exception
+     */
+    public void renderViewToPDF(DiagramModelProxy dmProxy, String path) throws Exception {
+        if(dmProxy == null) {
+            throw new ArchiScriptException("renderViewToPDF - View is null"); //$NON-NLS-1$
+        }
+
+        new PDFExportProvider().export(dmProxy.getEObject(), new File(path));
+    }
+
+    private ImageLoader getImageLoader(DiagramModelProxy dmProxy, String format, Map<?, ?> options) {
+        if(dmProxy == null) {
+            throw new ArchiScriptException("getImageLoader - View is null"); //$NON-NLS-1$
         }
         
         if(format == null) {
-            throw new ArchiScriptException("renderViewAsBase64 - Format is null"); //$NON-NLS-1$
+            throw new ArchiScriptException("getImageLoader - Format is null"); //$NON-NLS-1$
         }
         
         // Default options
         int scale = ModelUtil.getIntValueFromMap(options, "scale", 1); //$NON-NLS-1$
         int margin = ModelUtil.getIntValueFromMap(options, "margin", 10); //$NON-NLS-1$
         
-        // Format
-        int imgFormat = SWT.IMAGE_PNG;
-        
-        switch(format.toUpperCase()) {
-            case "PNG": //$NON-NLS-1$
-                imgFormat = SWT.IMAGE_PNG;
-                break;
-
-            case "BMP": //$NON-NLS-1$
-                imgFormat = SWT.IMAGE_BMP;
-                break;
-
-            case "GIF": //$NON-NLS-1$
-                imgFormat = SWT.IMAGE_GIF;
-                break;
-
-            case "JPG": //$NON-NLS-1$
-            case "JPEG": //$NON-NLS-1$
-                imgFormat = SWT.IMAGE_JPEG;
-                break;
-
-            default:
-                break;
-        }
-        
         Image image = DiagramUtils.createImage(dmProxy.getEObject(), scale, margin);
         
         try {
             ImageLoader loader = new ImageLoader();
             loader.data = new ImageData[] { image.getImageData(ImageFactory.getImageDeviceZoom()) };
-            
-            try(ByteArrayOutputStream stream = new ByteArrayOutputStream(1024)) {
-                loader.save(stream, imgFormat);
-                
-                Encoder encoder = Base64.getEncoder();
-                return encoder.encodeToString(stream.toByteArray());
-            }
+            return loader;
         }
         finally {
             image.dispose();
         }
     }
+    
+    private int getImageFormat(String format) {
+        switch(format.toUpperCase()) {
+            case "PNG": //$NON-NLS-1$
+            default:
+                return SWT.IMAGE_PNG;
 
-    /**
-     * @param relationshipType
-     * @param sourceType
-     * @param targetType
-     * @return True if relationship type is allowed between source and target
-     */
-    public boolean isAllowedRelationship(String relationshipType, String sourceType, String targetType) {
-        EClass relClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(relationshipType));
-        EClass sourceClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(sourceType));
-        EClass targetClass = (EClass)IArchimatePackage.eINSTANCE.getEClassifier(ModelUtil.getCamelCase(targetType));
-        
-        if(relClass == null || sourceClass == null || targetClass == null) {
-            throw new ArchiScriptException("Invalid type name."); //$NON-NLS-1$
+            case "BMP": //$NON-NLS-1$
+                return SWT.IMAGE_BMP;
+
+            case "GIF": //$NON-NLS-1$
+                return SWT.IMAGE_GIF;
+
+            case "JPG": //$NON-NLS-1$
+            case "JPEG": //$NON-NLS-1$
+                return SWT.IMAGE_JPEG;
         }
-        
-        return ArchimateModelUtils.isValidRelationship(sourceClass, targetClass, relClass);
+    }
+    
+    /**
+     * Ensure parent folder exists by creating it
+     */
+    private boolean createParentFolder(File file) {
+        File parent = file.getParentFile();
+        return parent != null ? parent.mkdirs() : false;
     }
 }
