@@ -42,17 +42,17 @@ public class ProfileProxy implements Comparable<ProfileProxy> {
     }
     
     public ProfileProxy setName(String name) {
-        // Sames
-        if(profile.getName().equals(name)) {
-            return this;
-        }
-        
         if(!StringUtils.isSetAfterTrim(name)) {
             throw new ArchiScriptException(Messages.ProfileProxy_0);
         }
         
-        // Check we don't already have one
-        if(ArchimateModelUtils.hasProfileByNameAndType(profile.getArchimateModel(), name, profile.getConceptType())) {
+        // Same
+        if(profile.getName().equals(name)) {
+            return this;
+        }
+        
+        // Allowed to change case of this one, but check we don't already have one
+        if(!profile.getName().equalsIgnoreCase(name) && ArchimateModelUtils.hasProfileByNameAndType(profile.getArchimateModel(), name, profile.getConceptType())) {
             throw new ArchiScriptException(NLS.bind(Messages.ProfileProxy_1, name));
         }
         

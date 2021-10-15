@@ -85,6 +85,15 @@ public class ProfileProxyTests {
             proxy.setName("Profile2");
         });
         
+        // Check case-insensitive
+        assertThrows(ArchiScriptException.class, () -> {
+            proxy.setName("ProFiLe2");
+        });
+        
+        // Can change case of name
+        proxy.setName("profile");
+        assertEquals("profile", proxy.getName());
+        
         // Success
         proxy.setName("New Name");
         assertEquals("New Name", proxy.getName());
