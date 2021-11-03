@@ -52,6 +52,13 @@ public abstract class FileTreeViewer extends TreeViewer {
     public FileTreeViewer(File rootFolder, Composite parent) {
         super(parent, SWT.MULTI | (PlatformUtils.isAppleSilicon() ? SWT.BORDER : SWT.NONE));
         
+        // Mac Silicon Item height
+        if(PlatformUtils.isAppleSilicon()) {
+            getTree().setFont(getTree().getFont());
+        }
+        // TODO Use this
+        //UIUtils.fixMacSiliconItemHeight(getTree());
+        
         fRootFolder = rootFolder;
         
         setup();
