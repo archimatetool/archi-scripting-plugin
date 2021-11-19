@@ -10,7 +10,9 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.browser.BrowserEditorInput;
 import com.archimatetool.editor.browser.IBrowserEditor;
+import com.archimatetool.editor.browser.IBrowserEditorInput;
 import com.archimatetool.editor.ui.services.EditorManager;
+import com.archimatetool.editor.utils.StringUtils;
 
 
 /**
@@ -25,7 +27,7 @@ public class Browser {
     
     // Return new instance of Browser
     public Browser open() {
-        return open("http://localhost", "Archi");  //$NON-NLS-1$ //$NON-NLS-2$
+        return open(null, "Archi");  //$NON-NLS-1$
     }
     
     // Return new instance of Browser
@@ -66,15 +68,18 @@ public class Browser {
             return;
         }
         
+        // TODO: Get these from a preference or JS argument
+        boolean jsEnabled = true;
+        boolean externalHostsEnabled = true;
+        
+        IBrowserEditorInput input = new BrowserEditorInput(url, title != null ? title : StringUtils.safeString(url));
+        input.setJavascriptEnabled(jsEnabled);
+        input.setExternalHostsEnabled(externalHostsEnabled);
+
         if(fBrowserEditor == null) {
-            BrowserEditorInput input = new BrowserEditorInput(url, title);
             fBrowserEditor = (IBrowserEditor)EditorManager.openEditor(input, IBrowserEditor.ID);
         }
         else {
-            if(title == null) {
-                title = fBrowserEditor.getEditorInput().getName();
-            }
-            BrowserEditorInput input = new BrowserEditorInput(url, title);
             fBrowserEditor.setBrowserEditorInput(input);
         }
     }
