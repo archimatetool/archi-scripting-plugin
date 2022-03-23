@@ -8,6 +8,7 @@ package com.archimatetool.script;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.net.URL;
 
 import javax.script.Bindings;
@@ -22,21 +23,19 @@ import org.eclipse.swt.graphics.Image;
 import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 
-import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
-
 
 /**
  * JS Provider
  */
-@SuppressWarnings("removal")
+@SuppressWarnings("nls")
 public class JSProvider implements IScriptEngineProvider {
     
-    public static String ID = "com.archimatetool.script.provider.js"; //$NON-NLS-1$
+    public static String ID = "com.archimatetool.script.provider.js";
     
     @Override
     public void run(File file, ScriptEngine engine) throws IOException, ScriptException {
         // Initialize jArchi using the provided init.js script
-        URL initURL = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("js/init.js"); //$NON-NLS-1$
+        URL initURL = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("js/init.js");
         try(InputStreamReader initReader = new InputStreamReader(initURL.openStream());) {
             engine.eval(initReader);
         }
@@ -45,7 +44,7 @@ public class JSProvider implements IScriptEngineProvider {
         String scriptPath = PlatformUtils.isWindows() ? file.getAbsolutePath().replace('\\', '/') : file.getAbsolutePath();
 
         // Evaluate the script
-        engine.eval("load('" + scriptPath + "')");  //$NON-NLS-1$//$NON-NLS-2$
+        engine.eval("load('" + scriptPath + "')");
 	}
 
     @Override
@@ -54,18 +53,27 @@ public class JSProvider implements IScriptEngineProvider {
         
         switch((ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE))) {
             case 0:
-                engine = new ScriptEngineManager().getEngineByName("Nashorn"); //$NON-NLS-1$
+                engine = new ScriptEngineManager().getEngineByName("Nashorn");
                 break;
 
             case 1:
-                engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6"); //$NON-NLS-1$
+                // Get the NashornScriptEngineFactory by reflection in case user has a later JDK that doesn't have Nashorn
+                //engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6");
+                try {
+                    Class<?> clazz = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+                    Object instance = clazz.getConstructor().newInstance();
+                    Method getScriptEngineMethod = clazz.getMethod("getScriptEngine", String[].class);
+                    return (ScriptEngine)getScriptEngineMethod.invoke(instance, new Object[] {new String[] {"--language=es6"}});
+                }
+                catch(Exception ex) {
+                }
                 break;
 
-            case 2:
+            default:
                 // Need to set this either here or in runtime
-                System.getProperties().put("polyglot.js.nashorn-compat", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+                System.getProperties().put("polyglot.js.nashorn-compat", "true");
 
-                engine = new ScriptEngineManager().getEngineByName("graal.js"); //$NON-NLS-1$
+                engine = new ScriptEngineManager().getEngineByName("graal.js");
                 
                 // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
 //                Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
@@ -77,9 +85,6 @@ public class JSProvider implements IScriptEngineProvider {
 //                bindings.put("polyglot.js.allowHostClassLoading", true);
 //                bindings.put("polyglot.js.allowAllAccess", true);
                 break;
-                
-            default:
-                engine = new ScriptEngineManager().getEngineByName("Nashorn"); //$NON-NLS-1$
         }
         
         if(engine != null) {
@@ -96,8 +101,8 @@ public class JSProvider implements IScriptEngineProvider {
         Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
         
         // Remove these
-        bindings.remove("exit"); //$NON-NLS-1$
-        bindings.remove("quit"); //$NON-NLS-1$
+        bindings.remove("exit");
+        bindings.remove("quit");
     }
 
     @Override
@@ -107,12 +112,12 @@ public class JSProvider implements IScriptEngineProvider {
 
     @Override
     public String getName() {
-        return "jArchi"; //$NON-NLS-1$
+        return "jArchi";
     }
     
     @Override
     public String[] getSupportedFileExtensions() {
-        return new String[] { ".ajs" }; //$NON-NLS-1$
+        return new String[] { ".ajs" };
     }
     
     @Override
@@ -127,6 +132,6 @@ public class JSProvider implements IScriptEngineProvider {
 
     @Override
     public URL getNewFile() {
-        return ArchiScriptPlugin.INSTANCE.getBundle().getEntry("templates/new.ajs"); //$NON-NLS-1$
+        return ArchiScriptPlugin.INSTANCE.getBundle().getEntry("templates/new.ajs");
     }
 }

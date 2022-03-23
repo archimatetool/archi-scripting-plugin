@@ -47,6 +47,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 		
 		store.setDefault(PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT, false);
 		
-		store.setDefault(PREFS_JS_ENGINE, 0);
+		store.setDefault(PREFS_JS_ENGINE, 2);
     }
 }
