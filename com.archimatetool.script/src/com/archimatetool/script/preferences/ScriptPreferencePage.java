@@ -191,9 +191,8 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
         dialog.setText(Messages.ScriptPreferencePage_3);
         File file = new File(fEditorPathTextField.getText());
-        if(file.exists()) {
-            dialog.setFilterPath(fEditorPathTextField.getText());
-        }
+        dialog.setFilterPath(file.getParent());
+        
         return dialog.open();
     }
 
