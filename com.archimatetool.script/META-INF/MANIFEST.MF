@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Archi Scripting (jArchi)
 Bundle-SymbolicName: com.archimatetool.script;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.2.1.qualifier
 Bundle-Vendor: Archi
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
