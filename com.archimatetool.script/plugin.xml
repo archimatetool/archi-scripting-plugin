@@ -148,6 +148,11 @@
       </perspectiveExtension>
    </extension>
    <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="com.archimatetool.script.Startup"></startup>
+   </extension>
+   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             class="com.archimatetool.script.preferences.ScriptPreferencePage"

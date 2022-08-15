@@ -14,9 +14,9 @@ import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.BundleContext;
 
 import com.archimatetool.editor.diagram.IDiagramModelEditor;
+import com.archimatetool.editor.ui.components.PartListenerAdapter;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.editor.views.tree.ITreeModelView;
 import com.archimatetool.script.preferences.IPreferenceConstants;
@@ -28,7 +28,7 @@ import com.archimatetool.script.preferences.IPreferenceConstants;
  * 
  * @author Phillip Beauvoir
  */
-public class ArchiScriptPlugin extends AbstractUIPlugin implements IPartListener {
+public class ArchiScriptPlugin extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "com.archimatetool.script"; //$NON-NLS-1$
     
@@ -57,57 +57,40 @@ public class ArchiScriptPlugin extends AbstractUIPlugin implements IPartListener
         return new File(path);
     }
     
-    @Override
-    public void start(BundleContext context) throws Exception {
-        super.start(context);
-        if(PlatformUI.isWorkbenchRunning()) {
-            // This needs to be on a thread
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    IPartService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService();
-                    service.addPartListener(ArchiScriptPlugin.this);
-                    
-                    // Initialise with active part
-                    partActivated(service.getActivePart());
-                }
-            });
-        }
-    }
-    
-    
-    
     // Track current workbench part to get the current selection
-    // We have to do it this way because if the Script is run from the Scripts Manager View that will be the selection
+    // We have to capture the latest selection before a script is run otherwise the Script Manager will have the focus
     
     private IWorkbenchPart currentPart;
-
-    @Override
-    public void partActivated(IWorkbenchPart part) {
-        if(part instanceof ITreeModelView || part instanceof IDiagramModelEditor) {
-            currentPart = part;
+    
+    private IPartListener partListener = new PartListenerAdapter() {
+        @Override
+        public void partActivated(IWorkbenchPart part) {
+            if(part instanceof ITreeModelView || part instanceof IDiagramModelEditor) {
+                currentPart = part;
+            }
         }
-    }
 
-    @Override
-    public void partDeactivated(IWorkbenchPart part) {
-    }
-
-    @Override
-    public void partBroughtToTop(IWorkbenchPart part) {
-    }
-
-    @Override
-    public void partClosed(IWorkbenchPart part) {
-        // Tricky logic.
-        // Only set this to null if the part being closed is the current part
-        if(part == currentPart) {
-            currentPart = null;
+        @Override
+        public void partClosed(IWorkbenchPart part) {
+            // Only set this to null if the part being closed is the current part
+            if(part == currentPart) {
+                currentPart = null;
+            }
         }
-    }
+    };
+    
+    void registerPartListener() {
+        // Only if Platform UI is running
+        if(PlatformUI.isWorkbenchRunning()) {
+            // This has to run in the UI thread
+            Display.getDefault().syncExec(() -> {
+                IPartService service = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService();
+                service.addPartListener(partListener);
 
-    @Override
-    public void partOpened(IWorkbenchPart part) {
+                // Initialise with active part
+                partListener.partActivated(service.getActivePart());
+            });
+        }
     }
 
     public ISelection getCurrentSelection() {
