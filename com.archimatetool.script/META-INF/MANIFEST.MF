@@ -16,6 +16,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.archimatetool.canvas;bundle-version="4.9.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-11
+Eclipse-BundleShape: dir
 Bundle-Activator: com.archimatetool.script.ArchiScriptPlugin
 Export-Package: com.archimatetool.script,
  com.archimatetool.script.commands,
@@ -28,7 +29,7 @@ Export-Package: com.archimatetool.script,
  com.archimatetool.script.views.file,
  com.archimatetool.script.views.scripts
 Automatic-Module-Name: com.archimatetool.script
-Bundle-ClassPath: .,
+Bundle-ClassPath: com.archimatetool.script.jar,
  lib/graal-sdk-20.3.0.jar,
  lib/js-20.3.0.jar,
  lib/js-scriptengine-20.3.0.jar,
