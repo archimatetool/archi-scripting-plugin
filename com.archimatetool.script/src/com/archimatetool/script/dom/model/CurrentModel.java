@@ -9,11 +9,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.commandline.CommandLineState;
-import com.archimatetool.editor.ui.services.ViewManager;
-import com.archimatetool.editor.views.tree.ITreeModelView;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.script.ArchiScriptException;
-import com.archimatetool.script.ArchiScriptPlugin;
+import com.archimatetool.script.WorkbenchPartTracker;
 import com.archimatetool.script.dom.IArchiScriptBinding;
 
 /**
@@ -43,12 +41,7 @@ public class CurrentModel extends ArchimateModelProxy implements IArchiScriptBin
         
         // If the workbench is running determine if there is an active part containing an IArchimateModel we can set this to
         if(PlatformUI.isWorkbenchRunning()) {
-            IWorkbenchPart activePart = ArchiScriptPlugin.INSTANCE.getActivePart();
-            
-            // Fallback to tree
-            if(activePart == null) {
-                activePart = ViewManager.findViewPart(ITreeModelView.ID);
-            }
+            IWorkbenchPart activePart = WorkbenchPartTracker.INSTANCE.getActivePart();
             
             // Set model
             if(activePart != null) {

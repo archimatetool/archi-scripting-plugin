@@ -12,7 +12,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 
-import com.archimatetool.script.ArchiScriptPlugin;
+import com.archimatetool.script.WorkbenchPartTracker;
 import com.archimatetool.script.dom.IArchiScriptBinding;
 
 /**
@@ -27,7 +27,7 @@ public class Selection extends EObjectProxyCollection implements IArchiScriptBin
     
     public Selection() {
         if(PlatformUI.isWorkbenchRunning()) {
-            ISelection selection = ArchiScriptPlugin.INSTANCE.getCurrentSelection();
+            ISelection selection = WorkbenchPartTracker.INSTANCE.getCurrentSelection();
             
             if(selection instanceof IStructuredSelection) {
                 for(Object o : ((IStructuredSelection)selection).toArray()) {

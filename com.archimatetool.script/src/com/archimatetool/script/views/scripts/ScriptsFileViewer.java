@@ -50,6 +50,7 @@ import com.archimatetool.script.IArchiScriptImages;
 import com.archimatetool.script.IScriptEngineProvider;
 import com.archimatetool.script.JSProvider;
 import com.archimatetool.script.ScriptFiles;
+import com.archimatetool.script.WorkbenchPartTracker;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 import com.archimatetool.script.views.file.AbstractFileView;
 import com.archimatetool.script.views.file.FileTreeViewer;
@@ -63,6 +64,13 @@ import com.archimatetool.script.views.file.PathEditorInput;
  */
 public class ScriptsFileViewer
 extends AbstractFileView  {
+    
+    /*
+     * Ensure part tracker is activated so that we can get active part that is not this part when this gains focus
+     */
+    static {
+        WorkbenchPartTracker.INSTANCE.getActivePart();
+    }
     
     public static String ID = ArchiScriptPlugin.PLUGIN_ID + ".scriptsView"; //$NON-NLS-1$
     public static String HELP_ID = ArchiScriptPlugin.PLUGIN_ID + ".scriptsViewHelp"; //$NON-NLS-1$
