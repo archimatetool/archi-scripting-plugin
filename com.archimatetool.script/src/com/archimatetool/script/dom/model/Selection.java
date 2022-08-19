@@ -7,11 +7,11 @@ package com.archimatetool.script.dom.model;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.script.WorkbenchPartTracker;
 import com.archimatetool.script.dom.IArchiScriptBinding;
 
@@ -32,11 +32,8 @@ public class Selection extends EObjectProxyCollection implements IArchiScriptBin
             if(selection instanceof IStructuredSelection) {
                 for(Object o : ((IStructuredSelection)selection).toArray()) {
                     
-                    if(o instanceof EditPart) {
-                        o = ((EditPart)o).getModel();
-                    }
-                    else if(o instanceof IAdaptable) {
-                        o = ((IAdaptable)o).getAdapter(EObject.class);
+                    if(o instanceof IAdaptable) {
+                        o = ((IAdaptable)o).getAdapter(IArchimateModelObject.class);
                     }
                     
                     if(o instanceof EObject) {
