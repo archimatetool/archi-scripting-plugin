@@ -13,8 +13,6 @@ import org.junit.Test;
 
 import com.archimatetool.script.ArchiScriptException;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * ArchimateConceptProxy Tests
@@ -23,10 +21,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public abstract class ArchimateConceptProxyTests extends EObjectProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ArchimateConceptProxyTests.class);
-    }
     
     @Test
     public void getConcept() {

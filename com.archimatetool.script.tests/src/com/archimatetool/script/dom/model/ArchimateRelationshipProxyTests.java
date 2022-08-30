@@ -23,8 +23,6 @@ import com.archimatetool.model.IInfluenceRelationship;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * ArchimateRelationshipProxy Tests
@@ -33,10 +31,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ArchimateRelationshipProxyTests.class);
-    }
     
     private ArchimateRelationshipProxy actualTestProxy;
     

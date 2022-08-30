@@ -26,8 +26,6 @@ import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.script.ArchiScriptException;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * EObjectProxy Tests
@@ -36,10 +34,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public abstract class EObjectProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(EObjectProxyTests.class);
-    }
     
     protected IArchimateModelObject testEObject;
     protected EObjectProxy testProxy;

@@ -13,8 +13,6 @@ import org.junit.Test;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.dom.DomExtensionFactory;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * Current Model Tests
@@ -23,10 +21,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class CurrentModelTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(CurrentModelTests.class);
-    }
     
     @Test
     public void getDOMroot_ReturnsCorrectObject() throws Exception {

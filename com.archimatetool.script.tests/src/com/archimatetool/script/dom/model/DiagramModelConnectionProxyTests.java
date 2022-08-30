@@ -27,8 +27,6 @@ import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * DiagramModelConnectionProxy Tests
@@ -37,10 +35,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DiagramModelConnectionProxyTests.class);
-    }
     
     private DiagramModelConnectionProxy actualTestProxy;
     

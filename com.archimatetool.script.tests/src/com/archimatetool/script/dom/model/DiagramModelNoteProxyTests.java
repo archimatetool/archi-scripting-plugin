@@ -15,8 +15,6 @@ import org.junit.Test;
 
 import com.archimatetool.model.IArchimateModelObject;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * DiagramModelNoteProxy Tests
@@ -25,10 +23,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DiagramModelNoteProxyTests.class);
-    }
     
     private ArchimateModelProxy modelProxy;
     private ArchimateDiagramModelProxy viewProxy;

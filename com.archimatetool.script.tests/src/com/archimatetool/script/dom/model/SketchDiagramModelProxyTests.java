@@ -17,8 +17,6 @@ import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * SketchDiagramModelProxy Tests
@@ -26,10 +24,6 @@ import junit.framework.JUnit4TestAdapter;
  * @author Phillip Beauvoir
  */
 public class SketchDiagramModelProxyTests extends DiagramModelProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(SketchDiagramModelProxyTests.class);
-    }
     
     //protected ArchimateModelProxy testModelProxy;
     

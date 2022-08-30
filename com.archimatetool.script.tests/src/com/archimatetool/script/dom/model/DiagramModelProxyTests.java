@@ -5,9 +5,6 @@
  */
 package com.archimatetool.script.dom.model;
 
-import junit.framework.JUnit4TestAdapter;
-
-
 /**
  * DiagramModelProxy Tests
  * 
@@ -15,8 +12,5 @@ import junit.framework.JUnit4TestAdapter;
  */
 public abstract class DiagramModelProxyTests extends EObjectProxyTests {
     
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DiagramModelProxyTests.class);
-    }
     
 }

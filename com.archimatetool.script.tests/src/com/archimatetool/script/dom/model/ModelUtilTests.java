@@ -28,8 +28,6 @@ import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.testingtools.ArchimateTestModel;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * ModelUtil Tests
@@ -38,10 +36,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class ModelUtilTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ModelUtilTests.class);
-    }
     
     private ArchimateModelProxy testModelProxy;
     

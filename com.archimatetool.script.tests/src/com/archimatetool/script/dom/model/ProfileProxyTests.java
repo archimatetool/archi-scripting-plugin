@@ -24,8 +24,6 @@ import com.archimatetool.model.IBusinessActor;
 import com.archimatetool.model.IProfile;
 import com.archimatetool.script.ArchiScriptException;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * ProfileProxy Tests
@@ -34,10 +32,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class ProfileProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ProfileProxyTests.class);
-    }
     
     private IProfile profile, profile2;
     private ProfileProxy proxy, proxy2;

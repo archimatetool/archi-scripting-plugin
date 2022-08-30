@@ -6,6 +6,9 @@
 package com.archimatetool.script;
 
 
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+
 import com.archimatetool.script.dom.model.ArchimateDiagramModelObjectProxyTests;
 import com.archimatetool.script.dom.model.ArchimateDiagramModelProxyTests;
 import com.archimatetool.script.dom.model.ArchimateElementProxyTests;
@@ -26,35 +29,29 @@ import com.archimatetool.script.dom.model.ProfileProxyTests;
 import com.archimatetool.script.dom.model.SelectorFilterFactoryTests;
 import com.archimatetool.script.dom.model.SketchDiagramModelProxyTests;
 
-import junit.framework.TestSuite;
+@RunWith(Suite.class)
 
-@SuppressWarnings("nls")
+@Suite.SuiteClasses({
+    ArchimateDiagramModelObjectProxyTests.class,
+    ArchimateDiagramModelProxyTests.class,
+    ArchimateElementProxyTests.class,
+    ArchimateModelProxyTests.class,
+    ArchimateRelationshipProxyTests.class,
+    CanvasDiagramModelProxyTests.class,
+    CurrentModelTests.class,
+    DiagramModelConnectionProxyTests.class,
+    DiagramModelGroupProxyTests.class,
+    DiagramModelNoteProxyTests.class,
+    DiagramModelReferenceProxyTests.class,
+    EObjectProxyCollectionTests.class,
+    FolderProxyTests.class,
+    ModelFactoryTests.class,
+    ModelTests.class,
+    ModelUtilTests.class,
+    ProfileProxyTests.class,
+    SelectorFilterFactoryTests.class,
+    SketchDiagramModelProxyTests.class
+})
+
 public class AllTests {
-
-    public static junit.framework.Test suite() {
-		TestSuite suite = new TestSuite("com.archimatetool.script");
-
-        suite.addTest(ArchimateDiagramModelObjectProxyTests.suite());
-        suite.addTest(ArchimateDiagramModelProxyTests.suite());
-        suite.addTest(ArchimateElementProxyTests.suite());
-		suite.addTest(ArchimateModelProxyTests.suite());
-        suite.addTest(ArchimateRelationshipProxyTests.suite());
-        suite.addTest(CanvasDiagramModelProxyTests.suite());
-        suite.addTest(CurrentModelTests.suite());
-        suite.addTest(DiagramModelConnectionProxyTests.suite());
-        suite.addTest(DiagramModelGroupProxyTests.suite());
-        suite.addTest(DiagramModelNoteProxyTests.suite());
-        suite.addTest(DiagramModelReferenceProxyTests.suite());
-        suite.addTest(EObjectProxyCollectionTests.suite());
-        suite.addTest(FolderProxyTests.suite());
-        suite.addTest(ModelFactoryTests.suite());
-		suite.addTest(ModelTests.suite());
-        suite.addTest(ModelUtilTests.suite());
-        suite.addTest(ProfileProxyTests.suite());
-        suite.addTest(SelectorFilterFactoryTests.suite());
-        suite.addTest(SketchDiagramModelProxyTests.suite());
-		
-        return suite;
-	}
-
 }

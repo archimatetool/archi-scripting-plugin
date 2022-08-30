@@ -28,8 +28,6 @@ import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.util.ArchimateModelUtils;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * DiagramModelObjectProxy Tests
@@ -38,10 +36,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ArchimateDiagramModelObjectProxyTests.class);
-    }
     
     @Before
     public void runOnceBeforeEachTest() {

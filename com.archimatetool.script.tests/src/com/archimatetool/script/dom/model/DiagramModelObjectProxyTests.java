@@ -17,8 +17,6 @@ import org.junit.Test;
 
 import com.archimatetool.script.ArchiScriptException;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * DiagramModelObjectProxy Tests
@@ -27,10 +25,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public abstract class DiagramModelObjectProxyTests extends DiagramModelComponentProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DiagramModelObjectProxyTests.class);
-    }
     
     protected DiagramModelObjectProxy actualTestProxy;
     protected ArchimateModelProxy testModelProxy;

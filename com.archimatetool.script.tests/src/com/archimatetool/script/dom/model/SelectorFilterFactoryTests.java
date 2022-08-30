@@ -19,8 +19,6 @@ import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * SelectorFilterFactory Tests
@@ -30,10 +28,6 @@ import junit.framework.JUnit4TestAdapter;
 @SuppressWarnings("nls")
 public class SelectorFilterFactoryTests {
     
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(SelectorFilterFactoryTests.class);
-    }
-
     @Test
     public void accept_All() {
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("*");

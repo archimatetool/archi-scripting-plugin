@@ -22,8 +22,6 @@ import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * FolderProxy Tests
@@ -32,10 +30,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class FolderProxyTests extends EObjectProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(FolderProxyTests.class);
-    }
     
     private ArchimateModelProxy testModelProxy;
     

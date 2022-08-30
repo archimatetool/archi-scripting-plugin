@@ -21,8 +21,6 @@ import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.dom.DomExtensionFactory;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * Model Tests
@@ -32,10 +30,6 @@ import junit.framework.JUnit4TestAdapter;
 @SuppressWarnings("nls")
 public class ModelTests {
     
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ModelTests.class);
-    }
-
     private static Model model;
     
     @BeforeClass

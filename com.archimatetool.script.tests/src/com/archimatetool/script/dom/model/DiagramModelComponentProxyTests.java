@@ -15,8 +15,6 @@ import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.FontFactory;
 import com.archimatetool.script.ArchiScriptException;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * DiagramModelComponentProxy Tests
@@ -25,10 +23,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DiagramModelComponentProxyTests.class);
-    }
     
     @Test
     public void getView() {

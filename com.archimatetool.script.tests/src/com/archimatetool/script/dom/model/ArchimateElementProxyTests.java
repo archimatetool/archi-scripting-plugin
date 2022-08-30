@@ -22,8 +22,6 @@ import com.archimatetool.model.IJunction;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * ArchimateElementProxy Tests
@@ -32,10 +30,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ArchimateElementProxyTests.class);
-    }
     
     private ArchimateElementProxy actualTestProxy;
     

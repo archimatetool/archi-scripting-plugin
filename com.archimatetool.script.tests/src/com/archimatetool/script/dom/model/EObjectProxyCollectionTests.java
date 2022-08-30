@@ -23,8 +23,6 @@ import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * EObjectProxyCollection Tests
@@ -33,10 +31,6 @@ import junit.framework.JUnit4TestAdapter;
  */
 @SuppressWarnings("nls")
 public class EObjectProxyCollectionTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(EObjectProxyCollectionTests.class);
-    }
     
     @Test
     public void first() {

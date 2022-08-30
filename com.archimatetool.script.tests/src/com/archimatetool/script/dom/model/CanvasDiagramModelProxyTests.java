@@ -18,8 +18,6 @@ import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 
-import junit.framework.JUnit4TestAdapter;
-
 
 /**
  * CanvasDiagramModelProxy Tests
@@ -27,10 +25,6 @@ import junit.framework.JUnit4TestAdapter;
  * @author Phillip Beauvoir
  */
 public class CanvasDiagramModelProxyTests extends DiagramModelProxyTests {
-    
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(CanvasDiagramModelProxyTests.class);
-    }
     
     //protected ArchimateModelProxy testModelProxy;
     
