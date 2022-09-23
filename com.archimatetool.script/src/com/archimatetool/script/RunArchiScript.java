@@ -122,32 +122,26 @@ public class RunArchiScript {
 	    }
 	    // Other exception
 	    else {
-	        System.err.println("Script Error: " + ex.toString());
-	        
-	        // Print first few lines of the stack trace
-	        StackTraceElement[] elements = ex.getStackTrace();
-	        for(int i = 0; i < getStackTraceLines(ex) && i < elements.length; i++) {
-	            System.err.println("\tat " + elements[i]);
+	        // GraalVM exception
+	        if(ex instanceof ScriptException && ex.getCause() instanceof PolyglotException) {
+	            printStackTrace(ex.getCause(), 5);
+	        }
+	        // ArchiScriptException
+	        else if(ex instanceof ArchiScriptException || ex.getCause() instanceof ArchiScriptException) {
+	            printStackTrace(ex, 5);
+	        }
+	        // Nashorn or other
+	        else {
+	            printStackTrace(ex, 5);
 	        }
 	    }
 	}
 	
-	private int getStackTraceLines(Throwable ex) {
-	    // GraalVM exception
-	    if(ex instanceof ScriptException && ex.getCause() instanceof PolyglotException) {
-	        return 0;
-	    }
-	    
-	    // ArchiScriptException
-	    if(ex instanceof ArchiScriptException || ex.getCause() instanceof ArchiScriptException) {
-            return 0;
+	private void printStackTrace(Throwable ex, int stackLines) {
+	    System.err.println(ex);
+        StackTraceElement[] elements = ex.getStackTrace();
+        for(int i = 0; i < stackLines && i < elements.length; i++) {
+            System.err.println("\tat " + elements[i]);
         }
-	    
-	    // NPE
-	    if(ex instanceof NullPointerException || ex.getCause() instanceof NullPointerException) {
-            return 12;
-        }
-	    
-	    return 2;
 	}
 }
