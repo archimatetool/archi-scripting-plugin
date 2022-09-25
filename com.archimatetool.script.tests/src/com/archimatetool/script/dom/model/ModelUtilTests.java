@@ -22,11 +22,9 @@ import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimateModelObject;
-import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
-import com.archimatetool.testingtools.ArchimateTestModel;
 
 
 /**
@@ -185,10 +183,11 @@ public class ModelUtilTests {
 
     @Test
     public void checkComponentsInSameModel() {
-        ArchimateTestModel testModel1 = new ArchimateTestModel();
-        IArchimateModel model = testModel1.createSimpleModel();
-        IArchimateModelObject o1 = (IArchimateModelObject)testModel1.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessActor());
-        IArchimateModelObject o2 = (IArchimateModelObject)testModel1.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessEvent());
+        IArchimateModel model = createModel();
+        IArchimateModelObject o1 = IArchimateFactory.eINSTANCE.createBusinessActor();
+        model.getDefaultFolderForObject(o1).getElements().add(o1);
+        IArchimateModelObject o2 = IArchimateFactory.eINSTANCE.createBusinessEvent();
+        model.getDefaultFolderForObject(o2).getElements().add(o2);
         
         // Should not throw an exception
         ModelUtil.checkComponentsInSameModel(model, o1, o2);
@@ -196,15 +195,15 @@ public class ModelUtilTests {
     
     @Test(expected = ArchiScriptException.class)
     public void checkComponentsInSameModel_Exception() {
-        ArchimateTestModel testModel1 = new ArchimateTestModel();
-        IArchimateModel model1 = testModel1.createSimpleModel();
+        IArchimateModel model1 = createModel();
         
-        ArchimateTestModel testModel2 = new ArchimateTestModel();
-        testModel2.createSimpleModel();
-        IArchimateModelObject o3 = (IArchimateModelObject)testModel2.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessActor());
-        IArchimateModelObject o4 = (IArchimateModelObject)testModel2.createModelElementAndAddToModel(IArchimatePackage.eINSTANCE.getBusinessEvent());
+        IArchimateModel model2 = createModel();
+        IArchimateModelObject o1 = IArchimateFactory.eINSTANCE.createBusinessActor();
+        model2.getDefaultFolderForObject(o1).getElements().add(o1);
+        IArchimateModelObject o2 = IArchimateFactory.eINSTANCE.createBusinessEvent();
+        model2.getDefaultFolderForObject(o2).getElements().add(o2);
         
-        ModelUtil.checkComponentsInSameModel(model1, o3, o4);
+        ModelUtil.checkComponentsInSameModel(model1, o1, o2);
     }
     
     @Test
@@ -219,5 +218,11 @@ public class ModelUtilTests {
         IArchiveManager am = IArchiveManager.FACTORY.createArchiveManager(model);
         model.setAdapter(IArchiveManager.class, am);
         assertSame(am, ModelUtil.getArchiveManager(model));
+    }
+    
+    private IArchimateModel createModel() {
+        IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
+        model.setDefaults();
+        return model;
     }
 }

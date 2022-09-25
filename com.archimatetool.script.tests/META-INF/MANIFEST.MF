@@ -9,4 +9,3 @@ Require-Bundle: org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Eclipse-BundleShape: dir
 Automatic-Module-Name: com.archimatetool.script.tests
-Import-Package: com.archimatetool.testingtools
