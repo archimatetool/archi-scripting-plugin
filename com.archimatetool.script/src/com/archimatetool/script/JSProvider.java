@@ -42,6 +42,9 @@ public class JSProvider implements IScriptEngineProvider {
 
         // Normalize filename so that nashorn's load() can run it
         String scriptPath = PlatformUtils.isWindows() ? file.getAbsolutePath().replace('\\', '/') : file.getAbsolutePath();
+        
+        // Escape apostrophes to not conflict with the load('path') command
+        scriptPath = scriptPath.replace("'", "\\\'");
 
         // Evaluate the script
         engine.eval("load('" + scriptPath + "')");
