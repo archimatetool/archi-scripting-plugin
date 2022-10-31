@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -112,7 +113,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         List<Map<String, Object>> list = new ArrayList<>();
         
         for(IDiagramModelBendpoint bp : getEObject().getBendpoints()) {
-            Map<String, Object> map = ProxyUtil.createMap();
+            Map<String, Object> map = new HashMap<>();
             map.put(START_X, bp.getStartX());
             map.put(START_Y, bp.getStartY());
             map.put(END_X, bp.getEndX());

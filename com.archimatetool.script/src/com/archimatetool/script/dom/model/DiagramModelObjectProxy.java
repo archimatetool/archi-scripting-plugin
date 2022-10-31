@@ -5,6 +5,7 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.osgi.util.NLS;
@@ -89,7 +90,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     public Map<String, Object> getBounds() {
         IBounds b = getEObject().getBounds();
         
-        Map<String, Object> map = ProxyUtil.createMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("x", b.getX()); //$NON-NLS-1$
         map.put("y", b.getY()); //$NON-NLS-1$
         map.put("width", b.getWidth()); //$NON-NLS-1$

@@ -41,6 +41,8 @@ public class ProxyUtil {
      * For using ProxyExecutable:
      * 
      * https://github.com/oracle/graaljs/issues/371
+     * 
+     * NOT NEEDED IN GRAALVM 22.2!!
      *
      */
     private static class GraalMap extends HashMap<String, Object> implements ProxyObject {
@@ -113,7 +115,7 @@ public class ProxyUtil {
         return isGraalVM() ? new GraalMap() : new HashMap<>();
     }
 
-    public static boolean isGraalVM() {
+    private static boolean isGraalVM() {
         return "com.oracle.truffle.js.scriptengine.GraalJSScriptEngine".equals(System.getProperty("script.engine"));
     }
 }

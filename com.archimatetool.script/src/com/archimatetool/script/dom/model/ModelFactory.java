@@ -5,6 +5,7 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
@@ -525,7 +526,7 @@ class ModelFactory implements IModelConstants {
             return null;
         }
         
-        Map<String, Object> map = ProxyUtil.createMap();
+        Map<String, Object> map = new HashMap<>();
         
         map.put("path", imagePath); //$NON-NLS-1$
         

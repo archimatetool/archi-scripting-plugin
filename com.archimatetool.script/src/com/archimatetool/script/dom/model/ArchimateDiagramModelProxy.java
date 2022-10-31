@@ -5,6 +5,7 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
@@ -71,7 +72,7 @@ public class ArchimateDiagramModelProxy extends DiagramModelProxy {
     public Map<String, Object> getViewpoint() {
         IViewpoint vp = ViewpointManager.INSTANCE.getViewpoint(getEObject().getViewpoint());
         
-        Map<String, Object> map = ProxyUtil.createMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("id", vp.getID()); //$NON-NLS-1$
         map.put("name", vp.getName()); //$NON-NLS-1$
         
