@@ -75,12 +75,19 @@ public class JSProvider implements IScriptEngineProvider {
             default:
                 // Need to set this either here or in runtime
                 System.getProperties().put("polyglot.js.nashorn-compat", "true");
+                
+                // Turn off console warnings
+                System.getProperties().put("polyglot.engine.WarnInterpreterOnly", "false");
+                
+                // Need this for GraalVM 22.2
+                System.getProperties().put("polyglot.js.ecmascript-version", "2022");
 
                 engine = new ScriptEngineManager().getEngineByName("graal.js");
                 
                 // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
 //                Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-//                bindings.put("polyglot.js.allowHostAccess", true);
+//                bindings.put("polyglot.js.ecmascript-version", "2022");
+//                bindings.put("polyglot.js.nashorn-compat", true);
 //                bindings.put("polyglot.js.allowIO", true);
 //                bindings.put("polyglot.js.allowNativeAccess", true);
 //                bindings.put("polyglot.js.allowCreateThread", true);
