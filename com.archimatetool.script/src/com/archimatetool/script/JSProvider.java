@@ -32,6 +32,33 @@ public class JSProvider implements IScriptEngineProvider {
     
     public static String ID = "com.archimatetool.script.provider.js";
     
+    public static boolean isNashornInstalled() {
+        return getNashornScriptEngineFactoryClass() != null;
+    }
+    
+    /**
+     * @return The class used for the Nashorn engine
+     *         Either the one shipped with Java or the standalone one, or null if not installed
+     */
+    private static Class<?> getNashornScriptEngineFactoryClass() {
+        Class<?> c = null;
+        
+        try {
+            // Java Nashorn
+            c = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+        }
+        catch(ClassNotFoundException ex) {
+            try {
+                // Standalone Nashorn
+                c = Class.forName("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory");
+            }
+            catch(ClassNotFoundException ex1) {
+            }
+        }
+        
+        return c;
+    }
+    
     @Override
     public void run(File file, ScriptEngine engine) throws IOException, ScriptException {
         // Initialize jArchi using the provided init.js script
@@ -54,53 +81,68 @@ public class JSProvider implements IScriptEngineProvider {
     public ScriptEngine createScriptEngine() {
         ScriptEngine engine = null;
         
-        switch((ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE))) {
-            case 0:
-                engine = new ScriptEngineManager().getEngineByName("Nashorn");
-                break;
+        Class<?> clazz = getNashornScriptEngineFactoryClass();
+        
+        // If Nashorn is installed use the engine as set in user preferences
+        if(clazz != null) {
+            switch((ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE))) {
+                case 0:
+                    engine = new ScriptEngineManager().getEngineByName("Nashorn");
+                    break;
 
-            case 1:
-                // Get the NashornScriptEngineFactory by reflection in case user has a later JDK that doesn't have Nashorn
-                //engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6");
-                try {
-                    Class<?> clazz = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
-                    Object instance = clazz.getConstructor().newInstance();
-                    Method getScriptEngineMethod = clazz.getMethod("getScriptEngine", String[].class);
-                    return (ScriptEngine)getScriptEngineMethod.invoke(instance, new Object[] {new String[] {"--language=es6"}});
-                }
-                catch(Exception ex) {
-                }
-                break;
+                case 1:
+                    //engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6");
+                    // Get the NashornScriptEngineFactory by reflection in case not installed
+                    try {
+                        Object nashornScriptEngineFactory = clazz.getConstructor().newInstance();
+                        Method getScriptEngineMethod = clazz.getMethod("getScriptEngine", String[].class);
+                        return (ScriptEngine)getScriptEngineMethod.invoke(nashornScriptEngineFactory, new Object[] {new String[] {"--language=es6"}});
+                    }
+                    catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    break;
 
-            default:
-                // Need to set this either here or in runtime
-                System.getProperties().put("polyglot.js.nashorn-compat", "true");
-                
-                // Turn off console warnings
-                System.getProperties().put("polyglot.engine.WarnInterpreterOnly", "false");
-                
-                // Need this for GraalVM 22.2
-                System.getProperties().put("polyglot.js.ecmascript-version", "2022");
-
-                engine = new ScriptEngineManager().getEngineByName("graal.js");
-                
-                // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
-//                Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-//                bindings.put("polyglot.js.ecmascript-version", "2022");
-//                bindings.put("polyglot.js.nashorn-compat", true);
-//                bindings.put("polyglot.js.allowIO", true);
-//                bindings.put("polyglot.js.allowNativeAccess", true);
-//                bindings.put("polyglot.js.allowCreateThread", true);
-//                bindings.put("polyglot.js.allowHostClassLookup", true);
-//                bindings.put("polyglot.js.allowHostClassLoading", true);
-//                bindings.put("polyglot.js.allowAllAccess", true);
-                break;
+                default:
+                    engine = getGraalScriptEngine();
+                    break;
+            }
+        }
+        // Just use Graal
+        else {
+            engine = getGraalScriptEngine();
         }
         
         if(engine != null) {
             setBindings(engine);
         }
         
+        return engine;
+    }
+    
+    private ScriptEngine getGraalScriptEngine() {
+        // Need to set this either here or in runtime
+        System.getProperties().put("polyglot.js.nashorn-compat", "true");
+        
+        // Turn off console warnings
+        System.getProperties().put("polyglot.engine.WarnInterpreterOnly", "false");
+        
+        // Need this for GraalVM 22.2
+        System.getProperties().put("polyglot.js.ecmascript-version", "2022");
+
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
+        
+        // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
+//        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+//        bindings.put("polyglot.js.ecmascript-version", "2022");
+//        bindings.put("polyglot.js.nashorn-compat", true);
+//        bindings.put("polyglot.js.allowIO", true);
+//        bindings.put("polyglot.js.allowNativeAccess", true);
+//        bindings.put("polyglot.js.allowCreateThread", true);
+//        bindings.put("polyglot.js.allowHostClassLookup", true);
+//        bindings.put("polyglot.js.allowHostClassLoading", true);
+//        bindings.put("polyglot.js.allowAllAccess", true);
+
         return engine;
     }
     

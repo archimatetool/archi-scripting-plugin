@@ -32,6 +32,7 @@ import org.eclipse.ui.PlatformUI;
 import com.archimatetool.editor.ui.UIUtils;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
+import com.archimatetool.script.JSProvider;
 import com.archimatetool.script.views.console.ConsoleView;
 
 
@@ -139,14 +140,16 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         gd.horizontalSpan = 2;
         fDoubleClickBehaviourCombo.setLayoutData(gd);
         
-        // JS Versions
-        label = new Label(settingsGroup, SWT.NULL);
-        label.setText(Messages.ScriptPreferencePage_12);
-        fJSCombo = new Combo(settingsGroup, SWT.READ_ONLY);
-        fJSCombo.setItems(JS_VERSIONS);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        fJSCombo.setLayoutData(gd);
+        // JS Versions - only if Nashorn is installed
+        if(JSProvider.isNashornInstalled()) {
+            label = new Label(settingsGroup, SWT.NULL);
+            label.setText(Messages.ScriptPreferencePage_12);
+            fJSCombo = new Combo(settingsGroup, SWT.READ_ONLY);
+            fJSCombo.setItems(JS_VERSIONS);
+            gd = new GridData(GridData.FILL_HORIZONTAL);
+            gd.horizontalSpan = 2;
+            fJSCombo.setLayoutData(gd);
+        }
         
         // Console font
         label = new Label(settingsGroup, SWT.NULL);
@@ -201,7 +204,10 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         fScriptsFolderTextField.setText(getPreferenceStore().getString(PREFS_SCRIPTS_FOLDER));
         fEditorPathTextField.setText(getPreferenceStore().getString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
-        fJSCombo.select(getPreferenceStore().getInt(PREFS_JS_ENGINE));
+        
+        if(fJSCombo != null) {
+            fJSCombo.select(getPreferenceStore().getInt(PREFS_JS_ENGINE));
+        }
         
         String fontName = getPreferenceStore().getString(PREFS_CONSOLE_FONT);
         if(StringUtils.isSet(fontName)) {
@@ -215,7 +221,10 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         getPreferenceStore().setValue(PREFS_SCRIPTS_FOLDER, fScriptsFolderTextField.getText());
         getPreferenceStore().setValue(PREFS_EDITOR, fEditorPathTextField.getText());
         getPreferenceStore().setValue(PREFS_DOUBLE_CLICK_BEHAVIOUR, fDoubleClickBehaviourCombo.getSelectionIndex());
-        getPreferenceStore().setValue(PREFS_JS_ENGINE, fJSCombo.getSelectionIndex());
+        
+        if(fJSCombo != null) {
+            getPreferenceStore().setValue(PREFS_JS_ENGINE, fJSCombo.getSelectionIndex());
+        }
         
         getPreferenceStore().setValue(PREFS_CONSOLE_FONT, fDefaultConsoleFontData.equals(fConsoleFontData) ? "" : fConsoleFontData.toString()); //$NON-NLS-1$
         
@@ -227,7 +236,10 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         fScriptsFolderTextField.setText(getPreferenceStore().getDefaultString(PREFS_SCRIPTS_FOLDER));
         fEditorPathTextField.setText(getPreferenceStore().getDefaultString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getDefaultInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
-        fJSCombo.select(getPreferenceStore().getDefaultInt(PREFS_JS_ENGINE));
+        
+        if(fJSCombo != null) {
+            fJSCombo.select(getPreferenceStore().getDefaultInt(PREFS_JS_ENGINE));
+        }
         
         fConsoleFontData = fDefaultConsoleFontData;
         updateFontLabel();
