@@ -96,7 +96,7 @@ public class JSProvider implements IScriptEngineProvider {
                     try {
                         Object nashornScriptEngineFactory = clazz.getConstructor().newInstance();
                         Method getScriptEngineMethod = clazz.getMethod("getScriptEngine", String[].class);
-                        return (ScriptEngine)getScriptEngineMethod.invoke(nashornScriptEngineFactory, new Object[] {new String[] {"--language=es6"}});
+                        engine = (ScriptEngine)getScriptEngineMethod.invoke(nashornScriptEngineFactory, new Object[] {new String[] {"--language=es6"}});
                     }
                     catch(Exception ex) {
                         ex.printStackTrace();
