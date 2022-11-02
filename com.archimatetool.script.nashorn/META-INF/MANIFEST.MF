@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Nashorn for jArchi
+Bundle-Name: jArchi Nashorn Engine
 Bundle-SymbolicName: com.archimatetool.script.nashorn
 Bundle-Version: 1.0.0.qualifier
 Eclipse-BundleShape: dir
