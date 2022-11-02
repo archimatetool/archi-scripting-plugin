@@ -17,8 +17,10 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.osgi.framework.Bundle;
 
 import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.script.preferences.IPreferenceConstants;
@@ -41,22 +43,25 @@ public class JSProvider implements IScriptEngineProvider {
      *         Either the one shipped with Java or the standalone one, or null if not installed
      */
     private static Class<?> getNashornScriptEngineFactoryClass() {
-        Class<?> c = null;
+        Class<?> clazz = null;
         
         try {
             // Java Nashorn
-            c = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+            clazz = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
         }
         catch(ClassNotFoundException ex) {
             try {
-                // Standalone Nashorn
-                c = Class.forName("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory");
+                // Standalone Nashorn bundle
+                Bundle bundle = Platform.getBundle("com.archimatetool.script.nashorn");
+                if(bundle != null) {
+                    clazz = bundle.loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory");
+                }
             }
             catch(ClassNotFoundException ex1) {
             }
         }
         
-        return c;
+        return clazz;
     }
     
     @Override
@@ -87,13 +92,13 @@ public class JSProvider implements IScriptEngineProvider {
         if(clazz != null) {
             switch((ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE))) {
                 case 0:
-                    engine = new ScriptEngineManager().getEngineByName("Nashorn");
+                    engine = new ScriptEngineManager(clazz.getClassLoader()).getEngineByName("nashorn");
                     break;
 
                 case 1:
-                    //engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6");
-                    // Get the NashornScriptEngineFactory by reflection in case not installed
                     try {
+                        // Get the NashornScriptEngineFactory by reflection
+                        // This is the equivalent of: engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6");
                         Object nashornScriptEngineFactory = clazz.getConstructor().newInstance();
                         Method getScriptEngineMethod = clazz.getMethod("getScriptEngine", String[].class);
                         engine = (ScriptEngine)getScriptEngineMethod.invoke(nashornScriptEngineFactory, new Object[] {new String[] {"--language=es6"}});

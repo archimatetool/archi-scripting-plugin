@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Nashorn for jArchi
+Bundle-SymbolicName: com.archimatetool.script.nashorn
+Bundle-Version: 1.0.0.qualifier
+Eclipse-BundleShape: dir
+Require-Bundle: org.eclipse.core.runtime,
+ com.archimatetool.editor
+Bundle-Vendor: Archi
+Bundle-ClassPath: asm-9.0.jar,
+ asm-commons-9.0.jar,
+ asm-util-9.0.jar,
+ nashorn-core-15.4.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Automatic-Module-Name: com.archimatetool.script.nashorn
