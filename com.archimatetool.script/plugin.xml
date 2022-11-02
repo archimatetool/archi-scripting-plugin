@@ -200,5 +200,19 @@
             class="com.archimatetool.script.JSProvider">
       </provider>
    </extension>
+   <extension
+         point="org.eclipse.ui.cheatsheets.cheatSheetContent">
+      <category
+            id="com.archimatetool.script.cheatsheets"
+            name="jArchi Cheat Sheets">
+      </category>
+      <cheatsheet
+            category="com.archimatetool.script.cheatsheets"
+            composite="false"
+            contentFile="cheatsheets/demo.xml"
+            id="com.archimatetool.script.cheatsheet1"
+            name="Demo">
+      </cheatsheet>
+   </extension>
 
 </plugin>

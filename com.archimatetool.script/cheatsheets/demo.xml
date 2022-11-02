@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet
+      title="jArchi CheatSheets Integration Demo">
+   <intro>
+      <description>
+         This cheat sheet demoes the jArchi integration.
+      </description>
+   </intro>
+   <item
+         skip="true"
+         title="Run a script">
+      <description>
+         This will run a hardcoded script.
+      </description>
+      <action
+      		required="false"
+      		pluginId="com.archimatetool.script"
+      		class="com.archimatetool.script.cheatsheets.RunArchiScriptCheatSheetAction" 
+            param1="demo.ajs"/>
+   </item>
+</cheatsheet>

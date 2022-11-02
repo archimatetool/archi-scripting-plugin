@@ -8,6 +8,7 @@ Bundle-Vendor: Archi
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.help.ui,
+ org.eclipse.ui.cheatsheets,
  com.archimatetool.editor;bundle-version="4.9.0",
  com.archimatetool.commandline;bundle-version="4.9.0",
  com.archimatetool.help;bundle-version="4.9.0",
