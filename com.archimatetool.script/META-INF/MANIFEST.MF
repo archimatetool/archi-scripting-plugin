@@ -30,11 +30,11 @@ Export-Package: com.archimatetool.script,
  com.archimatetool.script.views.scripts
 Automatic-Module-Name: com.archimatetool.script
 Bundle-ClassPath: com.archimatetool.script.jar,
- lib/graal-sdk-22.2.0.jar,
- lib/js-22.2.0.jar,
- lib/js-scriptengine-22.2.0.jar,
- lib/regex-22.2.0.jar,
- lib/truffle-api-22.2.0.jar
+ lib/graal-sdk-22.3.0.jar,
+ lib/js-22.3.0.jar,
+ lib/js-scriptengine-22.3.0.jar,
+ lib/regex-22.3.0.jar,
+ lib/truffle-api-22.3.0.jar
 Import-Package: com.ibm.icu.number,
  com.ibm.icu.text,
  com.ibm.icu.util
