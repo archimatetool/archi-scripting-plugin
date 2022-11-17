@@ -94,6 +94,18 @@ var window = {
 		return dialog.open();
 	},
 
+    promptSelection: function(title, choices) {
+        var ElementListSelectionDialog = Java.type("org.eclipse.ui.dialogs.ElementListSelectionDialog");
+        var LabelProvider = Java.type('org.eclipse.jface.viewers.LabelProvider');
+        var dialog = new ElementListSelectionDialog(shell, new LabelProvider());
+    
+        dialog.setElements(choices);
+        dialog.setTitle(title);
+        dialog.open();
+        result = dialog.getFirstResult();
+        return result ? new String(result) : null;
+    },
+
 };
 
 // Define exit to throw an Exception
