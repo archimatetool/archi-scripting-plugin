@@ -192,17 +192,6 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertEquals(1, actualTestProxy.attr(IModelConstants.FIGURE_TYPE));
     }
     
-    @Test
-    public void attr_FigureTypeCannotSet() {
-        testEObject = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
-        ((IDiagramModelArchimateObject)testEObject).setArchimateElement(IArchimateFactory.eINSTANCE.createBusinessObject());
-        actualTestProxy = (DiagramModelObjectProxy)EObjectProxy.get(testEObject);
-        
-        assertEquals(0, actualTestProxy.attr(IModelConstants.FIGURE_TYPE));
-        actualTestProxy.attr(IModelConstants.FIGURE_TYPE, 1);
-        assertEquals(0, actualTestProxy.attr(IModelConstants.FIGURE_TYPE));
-    }
-    
     @Override
     @Test
     public void attr_TextAlignment() {
