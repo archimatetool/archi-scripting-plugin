@@ -210,9 +210,9 @@ public abstract class FileTreeViewer extends TreeViewer {
         }
         
         @Override
-        public Object [] getChildren(Object parent) {
+        public Object[] getChildren(Object parent) {
             if(parent instanceof File) {
-                return ((File)parent).listFiles(new FileFilter() {
+                File[] files = ((File)parent).listFiles(new FileFilter() {
                     @Override
                     public boolean accept(File pathname) {
                         try {
@@ -224,7 +224,12 @@ public abstract class FileTreeViewer extends TreeViewer {
                         return false;
                     }
                 });
+                
+                if(files != null) {
+                    return files;
+                }
             }
+            
             return new Object[0];
         }
         
@@ -250,6 +255,9 @@ public abstract class FileTreeViewer extends TreeViewer {
                 File file = (File)cell.getElement();
                 cell.setText(getText(file));
                 cell.setImage(getImage(file));
+            }
+            else {
+                cell.setText(cell.getElement().toString());
             }
         }
         
