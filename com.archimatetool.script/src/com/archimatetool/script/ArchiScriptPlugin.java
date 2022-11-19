@@ -8,6 +8,7 @@ package com.archimatetool.script;
 import java.io.File;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.preferences.IPreferenceConstants;
@@ -29,6 +30,12 @@ public class ArchiScriptPlugin extends AbstractUIPlugin {
     public static ArchiScriptPlugin INSTANCE;
 
     public ArchiScriptPlugin() {
+    }
+    
+    @Override
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+        
         INSTANCE = this;
     }
 

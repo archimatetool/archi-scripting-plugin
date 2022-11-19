@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.ui.UIUtils;
 import com.archimatetool.editor.ui.components.TreeTextCellEditor;
-import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.script.IArchiScriptImages;
 
 
@@ -50,32 +50,29 @@ public abstract class FileTreeViewer extends TreeViewer {
      * Constructor
      */
     public FileTreeViewer(File rootFolder, Composite parent) {
-        super(parent, SWT.MULTI | (PlatformUtils.isAppleSilicon() ? SWT.BORDER : SWT.NONE));
+        super(parent, SWT.MULTI);
         
         // Mac Silicon Item height
-        if(PlatformUtils.isAppleSilicon()) {
-            getTree().setFont(getTree().getFont());
-        }
-        // TODO Use this
-        //UIUtils.fixMacSiliconItemHeight(getTree());
+        UIUtils.fixMacSiliconItemHeight(getTree());
         
         fRootFolder = rootFolder;
+        fRootFolder.mkdirs();
         
         setup();
         
         setContentProvider(new FileTreeContentProvider());
         setLabelProvider(getUserLabelProvider());
         
-        fRootFolder.mkdirs();
-        setInput(fRootFolder);
-        
         ColumnViewerToolTipSupport.enableFor(this);
         
+        setInput(fRootFolder);
         //expandToLevel(ALL_LEVELS);
     }
     
     public void setRootFolder(File rootFolder) {
         fRootFolder = rootFolder;
+        fRootFolder.mkdirs();
+        
         setInput(fRootFolder);
     }
 
@@ -153,24 +150,6 @@ public abstract class FileTreeViewer extends TreeViewer {
     
     protected IBaseLabelProvider getUserLabelProvider() {
         return new FileTreeLabelProvider(); 
-    }
-    
-    /* 
-     * Over-ride - make sure we have a folder!
-     */
-    @Override
-    public void refresh() {
-        fRootFolder.mkdirs();
-        super.refresh();
-    }
-    
-    /* 
-     * Over-ride - make sure we have a folder!
-     */
-    @Override
-    public void refresh(final Object element) {
-        fRootFolder.mkdirs();
-        super.refresh(element);
     }
     
     /**
