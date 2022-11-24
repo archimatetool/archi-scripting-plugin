@@ -6,15 +6,36 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
+            categoryId="com.archimatetool.script.category"
             defaultHandler="com.archimatetool.script.ShowScriptsViewHandler"
+            description="%command.description"
             id="com.archimatetool.scripts.command.showScriptsView"
             name="%command.name">
       </command>
       <command
+            categoryId="com.archimatetool.script.category"
             defaultHandler="com.archimatetool.script.ShowScriptsConsoleHandler"
+            description="%command.description.0"
             id="com.archimatetool.scripts.command.showScriptsConsole"
             name="%command.name.0">
       </command>
+      <command
+            categoryId="com.archimatetool.script.category"
+            defaultHandler="com.archimatetool.script.RunScriptCommandHandler"
+            description="%command.description.1"
+            id="com.archimatetool.script.run"
+            name="%command.name.1">
+         <commandParameter
+               id="com.archimatetool.script.runParam"
+               name="Parameter"
+               optional="false"
+               values="com.archimatetool.script.RunScriptCommandHandler$ParamValues">
+         </commandParameter>
+      </command>
+      <category
+            id="com.archimatetool.script.category"
+            name="jArchi">
+      </category>
    </extension>
    <extension
          point="org.eclipse.ui.menus">

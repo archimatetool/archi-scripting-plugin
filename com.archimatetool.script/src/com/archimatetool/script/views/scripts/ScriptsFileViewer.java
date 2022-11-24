@@ -21,6 +21,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -28,27 +30,25 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
+import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.actions.AbstractDropDownAction;
+import com.archimatetool.editor.utils.FileUtils;
 import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.IArchiScriptImages;
 import com.archimatetool.script.IScriptEngineProvider;
 import com.archimatetool.script.JSProvider;
+import com.archimatetool.script.RunScriptCommandHandler;
 import com.archimatetool.script.ScriptFiles;
 import com.archimatetool.script.WorkbenchPartTracker;
 import com.archimatetool.script.preferences.IPreferenceConstants;
@@ -146,18 +146,6 @@ extends AbstractFileView  {
         // If we have more than one installed provider show a drop-down box
         if(installedProviders.size() > 1) {
             AbstractDropDownAction dropDownAction = new AbstractDropDownAction(Messages.ScriptsFileViewer_4) {
-                // TODO: After Archi 4.7 remove this method as it is implemented in AbstractDropDownAction
-                @Override
-                public void runWithEvent(Event event) {
-                    ToolItem ti = (ToolItem)event.widget;
-                    Rectangle bounds = ti.getBounds();
-                    Control control = ti.getParent();
-                    Menu menu = getMenu(control);
-                    Point point = control.toDisplay(new Point(bounds.x, bounds.height));
-                    menu.setLocation(point);
-                    menu.setVisible(true);
-                }
-                
                 @Override
                 public ImageDescriptor getImageDescriptor() {
                     return IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_NEW);
@@ -263,6 +251,84 @@ extends AbstractFileView  {
             
             if(fActionHideFolder.shouldShow(selection.toArray())) {
                 manager.add(fActionHideFolder);
+                manager.add(new Separator());
+            }
+            
+            // If selection is a script file and Archi version is 5.0.0 or greater show key bindings sub-menu
+            if(StringUtils.compareVersionNumbers(ArchiPlugin.INSTANCE.getVersion(), "5.0.0") >= 0 && //$NON-NLS-1$
+                    selection.getFirstElement() instanceof File && ScriptFiles.isScriptFile((File)selection.getFirstElement())) {
+                
+                manager.add(new Separator());
+                IMenuManager bindingsMenu = new MenuManager(Messages.ScriptsFileViewer_7, "bindings"); //$NON-NLS-1$
+                manager.add(bindingsMenu);
+                
+                File file = (File)selection.getFirstElement();
+                IPreferenceStore store = ArchiScriptPlugin.INSTANCE.getPreferenceStore();
+                
+                // Show the key binding slots
+                for(String paramValue : RunScriptCommandHandler.getParameterValues()) {
+                    String text = paramValue;
+
+                    // Show the script already assigned, if any
+                    File refFile = new File(store.getString(RunScriptCommandHandler.PREFS_PREFIX + paramValue));
+                    if(refFile.exists()) {
+                        text += " " + StringUtils.escapeAmpersandsInText(FileUtils.getFileNameWithoutExtension(refFile)); //$NON-NLS-1$
+                    }
+                    
+                    // Show the accelerator text, if any
+                    String accelText = RunScriptCommandHandler.getAcceleratorText(paramValue);
+                    if(accelText != null) {
+                        text += "\t" + accelText; //$NON-NLS-1$
+                    }
+                    
+                    // The action updates preferences withe slot number and the file path
+                    IAction action = new Action(text, IAction.AS_RADIO_BUTTON) {
+                        @Override
+                        public void run() {
+                            // Reset old one, if any
+                            String currentParamValue = RunScriptCommandHandler.getParameterValueForScriptFile(file);
+                            if(currentParamValue != null) {
+                                store.setToDefault(RunScriptCommandHandler.PREFS_PREFIX + currentParamValue);
+                            }
+                            // Store new one
+                            store.putValue(RunScriptCommandHandler.PREFS_PREFIX + paramValue, file.getAbsolutePath());
+                        }
+                    };
+                    bindingsMenu.add(action);
+                    
+                    // Set checked if the selected file == referenced file
+                    action.setChecked(file.equals(refFile));
+                }
+                
+                bindingsMenu.add(new Separator());
+                
+                // Unassign the key binding if set
+                String paramValue = RunScriptCommandHandler.getParameterValueForScriptFile(file);
+                
+                IAction action = new Action(Messages.ScriptsFileViewer_8) {
+                    @Override
+                    public void run() {
+                        if(paramValue != null) {
+                            store.setToDefault(RunScriptCommandHandler.PREFS_PREFIX + paramValue);
+                        }
+                    }
+                };
+                bindingsMenu.add(action);
+                action.setEnabled(paramValue != null);
+                
+                // Edit key bindings sub-menu
+                action = new Action(Messages.ScriptsFileViewer_9) {
+                    @Override
+                    public void run() {
+                        PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getViewSite().getShell(),
+                                "com.archimatetool.editor.keys", null, null); //$NON-NLS-1$
+                        if(dialog != null) {
+                            dialog.open();
+                        }
+                    }
+                };
+                bindingsMenu.add(action);
+                
                 manager.add(new Separator());
             }
         }

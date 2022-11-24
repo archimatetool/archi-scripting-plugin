@@ -8,6 +8,7 @@ package com.archimatetool.script;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Map;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ContributionItem;
@@ -18,6 +19,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.menus.IWorkbenchContribution;
 import org.eclipse.ui.services.IServiceLocator;
 
@@ -95,19 +98,36 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
                 else {
                     IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
                     ImageDescriptor imageDescriptor = provider.getImageDescriptor();
+                    String label = StringUtils.escapeAmpersandsInText(FileUtils.getFileNameWithoutExtension(file));
                     
-                    menuManager.add(new Action(StringUtils.escapeAmpersandsInText(FileUtils.getFileNameWithoutExtension(file)), imageDescriptor) {
-                        @Override
-                        public void run() {
-                            try {
-                                RunArchiScript runner = new RunArchiScript(file);
-                                runner.run();
+                    // If there is a key binding then use a CommandContributionItem to show the key mnemonic and run the Command
+                    String paramValue = RunScriptCommandHandler.getParameterValueForScriptFile(file);
+                    if(paramValue != null) {
+                        CommandContributionItemParameter param = new CommandContributionItemParameter(PlatformUI.getWorkbench(),
+                                null, RunScriptCommandHandler.ID,
+                                Map.of(RunScriptCommandHandler.PARAMETER, paramValue),
+                                imageDescriptor, null, null, label, null, null,
+                                CommandContributionItem.STYLE_PULLDOWN,
+                                null, true);
+                        
+                        CommandContributionItem item = new CommandContributionItem(param);
+                        menuManager.add(item);
+                    }
+                    // Else use an ActionContributionItem
+                    else {
+                        menuManager.add(new Action(label, imageDescriptor) {
+                            @Override
+                            public void run() {
+                                try {
+                                    RunArchiScript runner = new RunArchiScript(file);
+                                    runner.run();
+                                }
+                                catch(Exception ex) {
+                                    MessageDialog.openError(null, Messages.ScriptsContextMenuContributionItem_0, ex.getMessage());
+                                }
                             }
-                            catch(Exception ex) {
-                                MessageDialog.openError(null, Messages.ScriptsContextMenuContributionItem_0, ex.getMessage());
-                            }
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }
