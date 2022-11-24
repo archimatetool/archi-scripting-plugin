@@ -21,6 +21,16 @@
       </command>
       <command
             categoryId="com.archimatetool.script.category"
+            defaultHandler="com.archimatetool.script.RefreshUICommandHandler"
+            id="com.archimatetool.script.command.refreshUI"
+            name="%command.name.2">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            categoryId="com.archimatetool.script.category"
             defaultHandler="com.archimatetool.script.RunScriptCommandHandler"
             description="%command.description.1"
             id="com.archimatetool.script.run"
@@ -34,34 +44,48 @@
       </command>
       <category
             id="com.archimatetool.script.category"
-            name="jArchi">
+            name="%category.name">
       </category>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="menu:tools">
-         <separator
-               name="com.archimatetool.script.menu.separator1"
-               visible="true">
-         </separator>
-         <command
-               commandId="com.archimatetool.scripts.command.showScriptsView"
-               icon="img/script.png"
-               label="%command.label"
-               style="push">
-         </command>
-         <command
-               commandId="com.archimatetool.scripts.command.showScriptsConsole"
-               icon="img/console_view.png"
-               label="%command.label.0"
-               style="push">
-         </command>
-         <separator
-               name="com.archimatetool.script.menu.separator2"
-               visible="true">
-         </separator>
+            locationURI="menu:org.eclipse.ui.main.menu?after=tools">
+         <menu
+               id="com.archimatetool.script.menu"
+               label="%menu.label">
+            <command
+                  commandId="com.archimatetool.scripts.command.showScriptsView"
+                  icon="img/script.png"
+                  label="%command.label"
+                  style="push">
+            </command>
+            <command
+                  commandId="com.archimatetool.scripts.command.showScriptsConsole"
+                  icon="img/console_view.png"
+                  label="%command.label.0"
+                  style="push">
+            </command>
+            <separator
+                  name="com.archimatetool.script.menu.separator1"
+                  visible="true">
+            </separator>
+            <command
+                  commandId="com.archimatetool.script.command.refreshUI"
+                  icon="img/writeout_co.png"
+                  label="%command.label.1"
+                  style="toggle">
+            </command>
+            <separator
+                  name="com.archimatetool.script.menu.separator2"
+                  visible="true">
+            </separator>
+            <dynamic
+                  class="com.archimatetool.script.ScriptsContextMenuContributionItem"
+                  id="com.archimatetool.script.runmenu">
+            </dynamic>
+         </menu>
       </menuContribution>
       <menuContribution
             allPopups="false"

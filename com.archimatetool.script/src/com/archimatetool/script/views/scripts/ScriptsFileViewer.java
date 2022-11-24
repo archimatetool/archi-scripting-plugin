@@ -37,7 +37,10 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
 
 import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.actions.AbstractDropDownAction;
@@ -48,6 +51,7 @@ import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.IArchiScriptImages;
 import com.archimatetool.script.IScriptEngineProvider;
 import com.archimatetool.script.JSProvider;
+import com.archimatetool.script.RefreshUICommandHandler;
 import com.archimatetool.script.RunScriptCommandHandler;
 import com.archimatetool.script.ScriptFiles;
 import com.archimatetool.script.WorkbenchPartTracker;
@@ -196,19 +200,17 @@ extends AbstractFileView  {
         // Local menu items go here
         IMenuManager manager = actionBars.getMenuManager();
         
-        manager.add(new Action(Messages.ScriptsFileViewer_3, IAction.AS_CHECK_BOX) {
-            {
-                //setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_REFRESH_UI_WHEN_RUNNING));
-                setChecked(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT));
-                setToolTipText(getText());
-            }
-            
-            @Override
-            public void run() {
-                ArchiScriptPlugin.INSTANCE.getPreferenceStore().setValue(IPreferenceConstants.PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT, isChecked());
-            }
-        });
-
+        // Refresh UI when running scripts Command
+        CommandContributionItemParameter param = new CommandContributionItemParameter(PlatformUI.getWorkbench(),
+                null, RefreshUICommandHandler.ID,
+                null,
+                IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_REFRESH_UI_WHEN_RUNNING),
+                null, null, Messages.ScriptsFileViewer_3, null, Messages.ScriptsFileViewer_3,
+                CommandContributionItem.STYLE_CHECK,
+                null, false);
+        
+        CommandContributionItem item = new CommandContributionItem(param);
+        manager.add(item);
     }
     
     @Override

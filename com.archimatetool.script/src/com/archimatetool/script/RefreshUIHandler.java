@@ -4,8 +4,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import com.archimatetool.script.preferences.IPreferenceConstants;
-
 /**
  * RefreshUIHandler
  * 
@@ -80,7 +78,6 @@ public class RefreshUIHandler {
     }
 
     private static boolean shouldRun() {
-        return PlatformUI.isWorkbenchRunning() &&
-                ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT);
+        return PlatformUI.isWorkbenchRunning() && RefreshUICommandHandler.getState();
     }
 }

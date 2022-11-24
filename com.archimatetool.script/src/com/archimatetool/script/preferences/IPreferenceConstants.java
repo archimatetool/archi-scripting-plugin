@@ -24,7 +24,5 @@ public interface IPreferenceConstants {
     String PREFS_CONSOLE_SCROLL_LOCK = "consoleScrollLock";
     String PREFS_CONSOLE_FONT = "consoleFont";
     
-    String PREFS_REFRESH_UI_WHEN_RUNNING_SCRIPT = "refreshUIWhenRunningScript";
-    
     String PREFS_JS_ENGINE = "jsEngine";
 }
