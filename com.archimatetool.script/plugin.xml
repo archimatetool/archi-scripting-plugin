@@ -73,7 +73,6 @@
             </separator>
             <command
                   commandId="com.archimatetool.script.command.refreshUI"
-                  icon="img/writeout_co.png"
                   label="%command.label.1"
                   style="toggle">
             </command>

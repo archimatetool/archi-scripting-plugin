@@ -204,7 +204,7 @@ extends AbstractFileView  {
         CommandContributionItemParameter param = new CommandContributionItemParameter(PlatformUI.getWorkbench(),
                 null, RefreshUICommandHandler.ID,
                 null,
-                IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_REFRESH_UI_WHEN_RUNNING),
+                null,
                 null, null, Messages.ScriptsFileViewer_3, null, Messages.ScriptsFileViewer_3,
                 CommandContributionItem.STYLE_CHECK,
                 null, false);
