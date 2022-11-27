@@ -21,6 +21,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -283,19 +284,34 @@ extends AbstractFileView  {
                         text += "\t" + accelText; //$NON-NLS-1$
                     }
                     
-                    // The action updates preferences withe slot number and the file path
+                    // The action updates preferences with the slot number and the file path
                     IAction action = new Action(text, IAction.AS_RADIO_BUTTON) {
                         @Override
                         public void run() {
+                            // Already assigned to this one
+                            if(file.equals(refFile)) {
+                                return;
+                            }
+                            
+                            // Ask user if the slot is already taken
+                            if(refFile.exists()) {
+                                if(!MessageDialog.openConfirm(getSite().getShell(), Messages.ScriptsFileViewer_7,
+                                        Messages.ScriptsFileViewer_10 )) {
+                                    return;
+                                }
+                            }
+                            
                             // Reset old one, if any
                             String currentParamValue = RunScriptCommandHandler.getParameterValueForScriptFile(file);
                             if(currentParamValue != null) {
                                 store.setToDefault(RunScriptCommandHandler.PREFS_PREFIX + currentParamValue);
                             }
+                            
                             // Store new one
                             store.putValue(RunScriptCommandHandler.PREFS_PREFIX + paramValue, file.getAbsolutePath());
                         }
                     };
+                    
                     bindingsMenu.add(action);
                     
                     // Set checked if the selected file == referenced file
