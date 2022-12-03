@@ -48,6 +48,21 @@
       </category>
    </extension>
    <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="com.archimatetool.scripts.command.showScriptsView"
+            icon="img/script.png">
+      </image>
+      <image
+            commandId="com.archimatetool.scripts.command.showScriptsConsole"
+            icon="img/console_view.png">
+      </image>
+      <image
+            commandId="com.archimatetool.script.run"
+            icon="img/run_exc.png">
+      </image>
+   </extension>
+   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
