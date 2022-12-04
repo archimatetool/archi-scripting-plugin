@@ -25,7 +25,7 @@
             id="com.archimatetool.script.command.refreshUI"
             name="%command.name.2">
          <state
-               class="org.eclipse.ui.handlers.RegistryToggleState"
+               class="org.eclipse.ui.handlers.RegistryToggleState:true"
                id="org.eclipse.ui.commands.toggleState">
          </state>
       </command>
