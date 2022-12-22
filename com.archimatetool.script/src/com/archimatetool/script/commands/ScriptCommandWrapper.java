@@ -47,6 +47,11 @@ public class ScriptCommandWrapper extends ScriptCommand {
     }
     
     @Override
+    public void redo() {
+        cmd.redo();
+    }
+    
+    @Override
     public void dispose() {
         super.dispose();
         cmd.dispose();
