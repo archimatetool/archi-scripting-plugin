@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<?NLS TYPE="org.eclipse.help.contexts"?> 
+<contexts>
+    
+    <context id="scriptsViewHelp" title="Scripts Manager">
+        <description>Scripts Manager</description>
+        <topic label="Introduction" href="help/manager.html"/>
+    </context>
+    
+</contexts>

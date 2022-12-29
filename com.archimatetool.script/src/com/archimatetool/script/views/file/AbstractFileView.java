@@ -8,8 +8,6 @@ package com.archimatetool.script.views.file;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.help.HelpSystem;
-import org.eclipse.help.IContext;
 import org.eclipse.help.IContextProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -44,8 +42,6 @@ import com.archimatetool.script.IArchiScriptImages;
 public abstract class AbstractFileView
 extends ViewPart
 implements IContextProvider {
-    private static String HELP_ID = "com.archimatetool.script.help.fileViewer"; //$NON-NLS-1$
-    
     /**
      * The Tree Viewer
      */
@@ -108,9 +104,6 @@ implements IContextProvider {
                 handleDoubleClickAction();
             }
         });
-
-        // Register Help Context
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(getViewer().getControl(), HELP_ID);
     }
     
     /**
@@ -408,25 +401,5 @@ implements IContextProvider {
      * New File event happened
      */
     protected void handleNewFileAction() {
-    }
-    
-
-    // =================================================================================
-    //                       Contextual Help support
-    // =================================================================================
-    
-    @Override
-    public int getContextChangeMask() {
-        return NONE;
-    }
-
-    @Override
-    public IContext getContext(Object target) {
-        return HelpSystem.getContext(HELP_ID);
-    }
-
-    @Override
-    public String getSearchExpression(Object target) {
-        return Messages.AbstractFileView_19;
     }
 }

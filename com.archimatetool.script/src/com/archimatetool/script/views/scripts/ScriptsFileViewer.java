@@ -104,6 +104,9 @@ extends AbstractFileView  {
         
         // Listen to Prefs
         ArchiScriptPlugin.INSTANCE.getPreferenceStore().addPropertyChangeListener(prefsListener);
+        
+        // Register Help Context
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(getViewer().getControl(), HELP_ID);
     }
     
     @Override
