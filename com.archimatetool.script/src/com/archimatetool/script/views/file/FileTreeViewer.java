@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.text.Collator;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -81,7 +82,7 @@ public abstract class FileTreeViewer extends TreeViewer {
      */
     protected void setup() {
         // Sort folders first, files second, alphabetical
-        setComparator(new ViewerComparator() {
+        setComparator(new ViewerComparator(Collator.getInstance()) {
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
                 File f1 = (File)e1;
@@ -96,7 +97,7 @@ public abstract class FileTreeViewer extends TreeViewer {
                 }
                 else {
                     // Alphabetic order otherwise
-                    return f1.getName().compareToIgnoreCase(f2.getName());
+                    return getComparator().compare(f1.getName(), f2.getName());
                 }
             }
         });
