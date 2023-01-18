@@ -6,6 +6,6 @@ Bundle-Version: 1.0.0
 Fragment-Host: com.archimatetool.script
 Bundle-Vendor: Archi
 Require-Bundle: org.junit
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Eclipse-BundleShape: dir
 Automatic-Module-Name: com.archimatetool.script.tests
