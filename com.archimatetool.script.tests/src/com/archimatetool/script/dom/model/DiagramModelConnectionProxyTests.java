@@ -195,7 +195,14 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         actualTestProxy.attr(IModelConstants.STYLE, 4);
         assertEquals(4, actualTestProxy.attr(IModelConstants.STYLE));
     }
-
+    
+    @Test
+    public void attr_TextAlignment() {
+        assertEquals(2, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
+        assertEquals(4, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+    }
+    
     @Test
     public void attr_Source() {
         assertEquals("3831", ((EObjectProxy)actualTestProxy.attr(IModelConstants.SOURCE)).getId());

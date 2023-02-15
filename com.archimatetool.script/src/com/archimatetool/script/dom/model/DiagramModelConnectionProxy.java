@@ -15,6 +15,7 @@ import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelBendpoint;
 import com.archimatetool.model.IDiagramModelConnection;
+import com.archimatetool.model.ITextAlignment;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DisconnectConnectionCommand;
@@ -223,6 +224,22 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         return bp;
     }
     
+    public DiagramModelConnectionProxy setTextAlignment(int alignment) {
+        if(alignment != ITextAlignment.TEXT_ALIGNMENT_CENTER
+                && alignment != ITextAlignment.TEXT_ALIGNMENT_LEFT
+                && alignment != ITextAlignment.TEXT_ALIGNMENT_RIGHT) {
+            throw new ArchiScriptException(Messages.DiagramModelObjectProxy_2);
+        }
+        
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.TEXT_ALIGNMENT__TEXT_ALIGNMENT, alignment));
+        
+        return this;
+    }
+    
+    public Object getTextAlignment() {
+        return getEObject().getTextAlignment();
+    }
+    
     // ===========================================
     // Find / Attr
     // ===========================================
@@ -244,6 +261,8 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
                 return isLabelVisible();
             case TEXT_POSITION:
                 return getTextPosition();
+            case TEXT_ALIGNMENT:
+                return getTextAlignment();
             case RELATIVE_BENDPOINTS:
                 return getRelativeBendpoints();
             case STYLE:
@@ -269,6 +288,11 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
             case TEXT_POSITION:
                 if(value instanceof Integer) {
                     return setTextPosition((int)value);
+                }
+                break;
+            case TEXT_ALIGNMENT:
+                if(value instanceof Integer) {
+                    return setTextAlignment((int)value);
                 }
                 break;
             case STYLE:
