@@ -43,7 +43,6 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
 
-import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.actions.AbstractDropDownAction;
 import com.archimatetool.editor.utils.FileUtils;
 import com.archimatetool.editor.utils.PlatformUtils;
@@ -260,10 +259,8 @@ extends AbstractFileView  {
                 manager.add(new Separator());
             }
             
-            // If selection is a script file and Archi version is 5.0.0 or greater show key bindings sub-menu
-            if(StringUtils.compareVersionNumbers(ArchiPlugin.INSTANCE.getVersion(), "5.0.0") >= 0 && //$NON-NLS-1$
-                    selection.getFirstElement() instanceof File && ScriptFiles.isScriptFile((File)selection.getFirstElement())) {
-                
+            // If selection is a script file show key bindings sub-menu
+            if(selection.getFirstElement() instanceof File && ScriptFiles.isScriptFile((File)selection.getFirstElement())) {
                 manager.add(new Separator());
                 IMenuManager bindingsMenu = new MenuManager(Messages.ScriptsFileViewer_7, "bindings"); //$NON-NLS-1$
                 manager.add(bindingsMenu);
