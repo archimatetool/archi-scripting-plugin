@@ -57,6 +57,8 @@ interface IModelConstants {
     
     String FIGURE_TYPE = "figureType";
     
+    String ICON_COLOR = "iconColor";
+    
     String TEXT = "text";
     
     String TEXT_ALIGNMENT = "textAlignment";

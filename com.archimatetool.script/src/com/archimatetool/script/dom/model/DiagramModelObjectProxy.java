@@ -153,6 +153,22 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return this;
     }
     
+    public String getIconColor() {
+        return getEObject().getIconColor();
+    }
+    
+    public DiagramModelObjectProxy setIconColor(String value) {
+        // Only for objects that have an icon
+        IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProvider(getEObject());
+        
+        if(provider instanceof IGraphicalObjectUIProvider && ((IGraphicalObjectUIProvider)provider).hasIcon()) {
+            checkColorValue(value);
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IDiagramModelObject.FEATURE_ICON_COLOR, value, IDiagramModelObject.FEATURE_ICON_COLOR_DEFAULT));
+        }
+        
+        return this;
+    }
+    
     public int getOpacity() {
         return getEObject().getAlpha();
     }
@@ -365,6 +381,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 return getBounds();
             case FILL_COLOR:
                 return getFillColor();
+            case ICON_COLOR:
+                return getIconColor();
             case OPACITY:
                 return getOpacity();
             case OUTLINE_OPACITY:
@@ -401,6 +419,11 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case FILL_COLOR:
                 if(value == null || value instanceof String) {
                     return setFillColor((String)value);
+                }
+                break;
+            case ICON_COLOR:
+                if(value == null || value instanceof String) {
+                    return setIconColor((String)value);
                 }
                 break;
             case OPACITY:

@@ -13,6 +13,7 @@ import org.eclipse.swt.graphics.RGB;
 
 import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.FontFactory;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
@@ -284,7 +285,7 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     }
     
     protected void checkColorValue(String value) {
-        if(value != null && ColorFactory.convertStringToRGB(value) == null) {
+        if(StringUtils.isSet(value) && ColorFactory.convertStringToRGB(value) == null) {
             throw new ArchiScriptException(NLS.bind(Messages.DiagramModelComponentProxy_0, value));
         }
     }

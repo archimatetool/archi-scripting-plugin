@@ -286,4 +286,19 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertEquals(1, actualTestProxy.attr(IModelConstants.IMAGE_SOURCE));
     }
 
+    @Test
+    public void attr_IconColor() {
+        assertEquals("", actualTestProxy.attr(IModelConstants.ICON_COLOR));
+        actualTestProxy.attr(IModelConstants.ICON_COLOR, "#121212");
+        assertEquals("#121212", actualTestProxy.attr(IModelConstants.ICON_COLOR));
+    }
+    
+    @Test
+    public void attr_IconColor_NotForJunction() {
+        IDiagramModelArchimateObject dmo = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        dmo.setArchimateElement(IArchimateFactory.eINSTANCE.createJunction());
+        EObjectProxy proxy = EObjectProxy.get(dmo);
+        proxy.attr(IModelConstants.ICON_COLOR, "#121212");
+        assertEquals("", proxy.attr(IModelConstants.ICON_COLOR));
+    }
 }
