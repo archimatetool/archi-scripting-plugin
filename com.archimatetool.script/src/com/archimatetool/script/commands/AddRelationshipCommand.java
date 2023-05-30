@@ -10,7 +10,7 @@ import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 
 /**
- * AddElementCommand
+ * Add Relationship Command
  * 
  * @author Phillip Beauvoir
  */
@@ -37,6 +37,12 @@ public class AddRelationshipCommand extends ScriptCommand {
     @Override
     public void perform() {
         relationship.connect(source, target);
+        parent.getElements().add(relationship);
+    }
+    
+    @Override
+    public void redo() {
+        relationship.reconnect();
         parent.getElements().add(relationship);
     }
     
