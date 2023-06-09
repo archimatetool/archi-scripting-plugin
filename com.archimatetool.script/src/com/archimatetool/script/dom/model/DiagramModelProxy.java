@@ -75,6 +75,17 @@ public abstract class DiagramModelProxy extends EObjectProxy {
         return ModelFactory.createDiagramConnection((IConnectable)source.getEObject(), (IConnectable)target.getEObject());
     }
     
+    /**
+     * Open a View in the UI
+     * If Archi is not running has no effect
+     * @return this
+     */
+    public DiagramModelProxy openInUI() {
+        ModelUtil.openDiagramModelInUI(getEObject());
+        return this;
+    }
+    
+    
     @Override
     protected IDiagramModel getEObject() {
         return (IDiagramModel)super.getEObject();

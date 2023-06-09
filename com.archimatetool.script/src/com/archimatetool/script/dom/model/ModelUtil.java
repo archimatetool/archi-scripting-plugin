@@ -19,6 +19,7 @@ import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.ui.factory.IObjectUIProvider;
 import com.archimatetool.editor.ui.factory.ObjectUIFactory;
+import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
@@ -27,6 +28,7 @@ import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IBounds;
+import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelContainer;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IFolder;
@@ -185,6 +187,17 @@ class ModelUtil {
                     IEditorModelManager.INSTANCE.openModel(model);
                 }
             }
+        }
+    }
+    
+    static void openDiagramModelInUI(IDiagramModel dm) {
+        if(dm != null && PlatformUI.isWorkbenchRunning()) {
+            if(dm.getArchimateModel() == null) {
+                throw new ArchiScriptException("View does not have a parent model!");
+            }
+            
+            openModelInUI(dm.getArchimateModel());
+            EditorManager.openDiagramEditor(dm, true);
         }
     }
     
