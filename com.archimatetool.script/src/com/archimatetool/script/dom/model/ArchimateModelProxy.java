@@ -24,12 +24,16 @@ import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IProfile;
 import com.archimatetool.model.ModelVersion;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.modelimporter.ImportException;
+import com.archimatetool.modelimporter.ModelImporter;
+import com.archimatetool.modelimporter.StatusMessage;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.ScriptCommandWrapper;
 import com.archimatetool.script.commands.SetCommand;
 
 /**
- * ArchiMate Model object wrapper proxy thing
+ * ArchiMate Model object wrapper proxy
  * 
  * @author Phillip Beauvoir
  */
@@ -74,6 +78,10 @@ public class ArchimateModelProxy extends EObjectProxy {
         return new ArchimateModelProxy(getEObject());
     }
     
+    // ==============================================================================================================================
+    // Save model
+    // ==============================================================================================================================
+    
     public ArchimateModelProxy save(String path) throws IOException {
         if(getEObject() != null) {
             File file = new File(path);
@@ -102,22 +110,43 @@ public class ArchimateModelProxy extends EObjectProxy {
         return this;
     }
     
-    private void checkModel() throws IOException {
-        // Model Checker
-        ModelChecker checker = new ModelChecker(getEObject());
-        
-        if(!checker.checkAll()) {
-            for(String m : checker.getErrorMessages()) {
-                String logMessage = "Model Integrity Error.";  //$NON-NLS-1$
-                logMessage += " \'" + getEObject().getName() + "\':"; //$NON-NLS-1$ //$NON-NLS-2$
-                logMessage += " " + m; //$NON-NLS-1$
-                System.err.println(logMessage);
-            }
-
-            throw new IOException("Model has lost integrity. Check console for details."); //$NON-NLS-1$
-        }
+    // ==============================================================================================================================
+    // Merge (Import) model
+    // ==============================================================================================================================
+    
+    public ArchimateModelProxy merge(String filePath, boolean update, boolean updateAll) throws IOException, ImportException {
+        return merge(filePath, update, updateAll, null);
     }
     
+    public ArchimateModelProxy merge(String filePath, boolean update, boolean updateAll, List<StatusMessage> messages) throws IOException, ImportException {
+        IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(new File(filePath));
+        return merge(new ArchimateModelProxy(model), update, updateAll, messages);
+    }
+    
+    public ArchimateModelProxy merge(ArchimateModelProxy modelProxy, boolean update, boolean updateAll) throws IOException, ImportException {
+        return merge(modelProxy, update, updateAll, null);
+    }
+    
+    public ArchimateModelProxy merge(ArchimateModelProxy modelProxy, boolean update, boolean updateAll, List<StatusMessage> messages) throws IOException, ImportException {
+        ModelImporter importer = new ModelImporter();
+        importer.setUpdate(updateAll);
+        importer.setUpdateAll(updateAll);
+        CommandHandler.executeCommand(new ScriptCommandWrapper(importer.getCommand(modelProxy.getEObject(), getEObject()), getEObject()));
+        
+        if(messages != null) {
+            messages.addAll(importer.getStatusMessages());
+        }
+        
+        return this;
+    }
+    
+    // ==============================================================================================================================
+    // Other methods
+    // ==============================================================================================================================
+    
+    /**
+     * Return the file path of the model, or null
+     */
     public String getPath() {
         return getEObject().getFile() == null ? null : getEObject().getFile().getAbsolutePath();
     }
@@ -266,8 +295,8 @@ public class ArchimateModelProxy extends EObjectProxy {
         switch(attribute) {
             case PURPOSE:
             case DOCUMENTATION:
-                if(value instanceof String) {
-                    return setPurpose((String)value);
+                if(value instanceof String str) {
+                    return setPurpose(str);
                 }
         }
         
@@ -320,5 +349,24 @@ public class ArchimateModelProxy extends EObjectProxy {
         
         // Else, as this is the model we will additionally filter only on concepts, views and folders
         return super.find(selector).filter("*"); //$NON-NLS-1$
+    }
+    
+    /**
+     * Check a model by calling the ModelChecker
+     */
+    private void checkModel() throws IOException {
+        // Model Checker
+        ModelChecker checker = new ModelChecker(getEObject());
+        
+        if(!checker.checkAll()) {
+            for(String m : checker.getErrorMessages()) {
+                String logMessage = "Model Integrity Error.";  //$NON-NLS-1$
+                logMessage += " \'" + getEObject().getName() + "\':"; //$NON-NLS-1$ //$NON-NLS-2$
+                logMessage += " " + m; //$NON-NLS-1$
+                System.err.println(logMessage);
+            }
+
+            throw new IOException("Model has lost integrity. Check console for details."); //$NON-NLS-1$
+        }
     }
 }

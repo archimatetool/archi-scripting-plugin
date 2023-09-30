@@ -9,11 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.help.ui,
  com.archimatetool.editor;bundle-version="5.0.0",
- com.archimatetool.commandline;bundle-version="5.0.0",
- com.archimatetool.help;bundle-version="5.0.0",
- com.archimatetool.editor.browser;bundle-version="5.0.0",
- com.archimatetool.export.svg;bundle-version="5.0.0",
- com.archimatetool.canvas;bundle-version="5.0.0"
+ com.archimatetool.commandline;bundle-version="5.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Eclipse-BundleShape: dir
@@ -28,6 +24,11 @@ Export-Package: com.archimatetool.script,
  com.archimatetool.script.views.console,
  com.archimatetool.script.views.file,
  com.archimatetool.script.views.scripts
+Import-Package: com.archimatetool.canvas,
+ com.archimatetool.canvas.model,
+ com.archimatetool.editor.browser,
+ com.archimatetool.export.svg,
+ com.archimatetool.modelimporter
 Automatic-Module-Name: com.archimatetool.script
 Bundle-ClassPath: com.archimatetool.script.jar,
  lib/graal-sdk-22.3.0.jar,
