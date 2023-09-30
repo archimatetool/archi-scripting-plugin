@@ -25,6 +25,6 @@ public class SetCommand extends ScriptCommandWrapper {
     }
     
     public SetCommand(IFeatures featuresObject, String name, Object value, Object defaultValue) {
-        super(new FeatureCommand("Script", featuresObject, name, value, defaultValue), featuresObject);
+        super(new FeatureCommand("Script", featuresObject, name, value == null ? "" : value, defaultValue == null ? "" : defaultValue), featuresObject);
     }
 }
