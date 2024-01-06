@@ -3,11 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: jArchi Examples
 Bundle-SymbolicName: com.archimatetool.script.premium;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 1.5.0.qualifier
+Bundle-Version: 1.6.0.qualifier
 Bundle-Vendor: Archi
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
- com.archimatetool.script;bundle-version="1.5.0"
+ com.archimatetool.script;bundle-version="1.6.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: com.archimatetool.script.premium.ArchiScriptPremiumPlugin
