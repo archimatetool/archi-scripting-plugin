@@ -13,6 +13,8 @@ import org.eclipse.swt.graphics.RGB;
 
 import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.FontFactory;
+import com.archimatetool.editor.ui.factory.IObjectUIProvider;
+import com.archimatetool.editor.ui.factory.ObjectUIFactory;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IConnectable;
@@ -203,6 +205,24 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
         return this;
     }
 
+    public DiagramModelComponentProxy setLineWidth(int value) {
+        IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProvider(getEObject());
+
+        if(provider != null && provider.shouldExposeFeature(IArchimatePackage.Literals.LINE_OBJECT__LINE_WIDTH.getName())) {
+            int width = value;
+            if(width < 0) {
+                width = 1;
+            }
+            if(width > 3) {
+                width = 3;
+            }
+            
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_WIDTH, width));
+        }
+        
+        return this;
+    }
+
     public int getLineWidth() {
         return ((ILineObject)getEObject()).getLineWidth();
     }
@@ -263,6 +283,11 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
             case LINE_COLOR:
                 if(value == null || value instanceof String) {
                     return setLineColor((String)value);
+                }
+                break;
+            case LINE_WIDTH:
+                if(value instanceof Integer) {
+                    return setLineWidth((int)value);
                 }
                 break;
         }

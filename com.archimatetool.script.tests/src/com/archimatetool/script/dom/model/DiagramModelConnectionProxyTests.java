@@ -148,13 +148,6 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     }
     
     @Test
-    public void attr_LineWidth() {
-        assertEquals(1, actualTestProxy.attr(IModelConstants.LINE_WIDTH));
-        actualTestProxy.attr(IModelConstants.LINE_WIDTH, 4);
-        assertEquals(3, actualTestProxy.attr(IModelConstants.LINE_WIDTH));
-    }
-    
-    @Test
     public void attr_LabelVisible() {
         assertTrue((boolean)actualTestProxy.attr(IModelConstants.LABEL_VISIBLE));
         actualTestProxy.attr(IModelConstants.LABEL_VISIBLE, false);

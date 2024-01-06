@@ -53,19 +53,6 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
         return (DiagramModelComponentProxy)EObjectProxy.get(getEObject().getTarget());
     }
     
-    public DiagramModelConnectionProxy setLineWidth(int value) {
-        int width = value;
-        if(width < 0) {
-            width = 1;
-        }
-        if(width > 3) {
-            width = 3;
-        }
-        
-        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.LINE_OBJECT__LINE_WIDTH, width));
-        return this;
-    }
-    
     public boolean isLabelVisible() {
         return getEObject().getFeatures().getBoolean(IDiagramModelConnection.FEATURE_NAME_VISIBLE, true);
     }
@@ -275,11 +262,6 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
     @Override
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
-            case LINE_WIDTH:
-                if(value instanceof Integer) {
-                    return setLineWidth((int)value);
-                }
-                break;
             case LABEL_VISIBLE:
                 if(value instanceof Boolean) {
                     return setLabelVisible((boolean)value);

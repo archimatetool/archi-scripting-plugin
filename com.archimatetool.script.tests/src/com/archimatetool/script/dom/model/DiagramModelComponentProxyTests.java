@@ -107,5 +107,12 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
         assertEquals(defaultLineColor, testProxy.attr(IModelConstants.LINE_COLOR));
     }
 
+    @Test
+    public void attr_LineWidth() {
+        assertEquals(1, testProxy.attr(IModelConstants.LINE_WIDTH));
+        testProxy.attr(IModelConstants.LINE_WIDTH, 4);
+        assertEquals(3, testProxy.attr(IModelConstants.LINE_WIDTH));
+    }
+    
 
 }
