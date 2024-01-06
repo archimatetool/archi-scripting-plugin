@@ -374,6 +374,24 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return this;
     }
     
+    public boolean getDeriveLineColor() {
+        IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProvider(getEObject());
+        if(provider != null && provider.shouldExposeFeature(IDiagramModelObject.FEATURE_DERIVE_ELEMENT_LINE_COLOR)) {
+            return getEObject().getDeriveElementLineColor();
+        }
+        
+        return false;
+    }
+    
+    public DiagramModelObjectProxy setDeriveLineColor(boolean set) {
+        IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProvider(getEObject());
+        if(provider != null && provider.shouldExposeFeature(IDiagramModelObject.FEATURE_DERIVE_ELEMENT_LINE_COLOR)) {
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IDiagramModelObject.FEATURE_DERIVE_ELEMENT_LINE_COLOR, set, IDiagramModelObject.FEATURE_DERIVE_ELEMENT_LINE_COLOR_DEFAULT));
+        }
+        
+        return this;
+    }
+    
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {
@@ -403,6 +421,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 return getImagePosition();
             case IMAGE:
                 return getImage();
+            case DERIVE_LINE_COLOR:
+                return getDeriveLineColor();
         }
         
         return super.attr(attribute);
@@ -474,6 +494,11 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case IMAGE:
                 if(value instanceof Map) {
                     return setImage((Map<?, ?>)value);
+                }
+                break;
+            case DERIVE_LINE_COLOR:
+                if(value instanceof Boolean) {
+                    return setDeriveLineColor((boolean)value);
                 }
                 break;
         }
