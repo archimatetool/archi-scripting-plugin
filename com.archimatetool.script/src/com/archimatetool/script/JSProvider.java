@@ -135,6 +135,11 @@ public class JSProvider implements IScriptEngineProvider {
         // Need this for GraalVM 22.2
         System.getProperties().put("polyglot.js.ecmascript-version", "2022");
 
+        // Enable loading Node.js modules
+        // See https://www.graalvm.org/latest/reference-manual/js/Modules/
+        System.setProperty("polyglot.js.commonjs-require", "true");
+        System.setProperty("polyglot.js.commonjs-require-cwd", ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER));
+
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
         
         // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
