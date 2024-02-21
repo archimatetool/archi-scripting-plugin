@@ -7,6 +7,7 @@ package com.archimatetool.script.preferences;
 
 import java.io.File;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -65,6 +66,8 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     };
     
     private Combo fJSCombo;
+    
+    private Button fCommonJSButton;
     
     private String[] JS_VERSIONS = {
             Messages.ScriptPreferencePage_10,
@@ -175,6 +178,11 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
             }
         });
         
+        fCommonJSButton = new Button(settingsGroup, SWT.CHECK);
+        fCommonJSButton.setText(Messages.ScriptPreferencePage_15);
+        fCommonJSButton.setToolTipText(Messages.ScriptPreferencePage_16);
+        GridDataFactory.create(GridData.FILL_HORIZONTAL).span(2, 1).applyTo(fCommonJSButton);
+        
         setValues();
         
         return client;
@@ -214,6 +222,8 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
             fConsoleFontData = new FontData(fontName);
         }
         updateFontLabel();
+        
+        fCommonJSButton.setSelection(getPreferenceStore().getBoolean(PREFS_COMMONJS_ENABLED));
     }
     
     @Override
@@ -227,6 +237,8 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         }
         
         getPreferenceStore().setValue(PREFS_CONSOLE_FONT, fDefaultConsoleFontData.equals(fConsoleFontData) ? "" : fConsoleFontData.toString()); //$NON-NLS-1$
+        
+        getPreferenceStore().setValue(PREFS_COMMONJS_ENABLED, fCommonJSButton.getSelection());
         
         return true;
     }
@@ -243,6 +255,8 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         
         fConsoleFontData = fDefaultConsoleFontData;
         updateFontLabel();
+        
+        fCommonJSButton.setSelection(getPreferenceStore().getDefaultBoolean(PREFS_COMMONJS_ENABLED));
     }
     
     private void updateFontLabel() {

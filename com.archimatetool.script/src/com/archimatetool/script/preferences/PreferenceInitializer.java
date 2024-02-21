@@ -46,5 +46,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 		store.setDefault(PREFS_CONSOLE_SCROLL_LOCK, false);
 		
 		store.setDefault(PREFS_JS_ENGINE, 2);
+		
+		store.setDefault(PREFS_COMMONJS_ENABLED, true);
     }
 }

@@ -25,4 +25,6 @@ public interface IPreferenceConstants {
     String PREFS_CONSOLE_FONT = "consoleFont";
     
     String PREFS_JS_ENGINE = "jsEngine";
+    
+    String PREFS_COMMONJS_ENABLED = "commonJSEnabled";
 }

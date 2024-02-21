@@ -127,18 +127,25 @@ public class JSProvider implements IScriptEngineProvider {
     
     private ScriptEngine getGraalScriptEngine() {
         // Need to set this either here or in runtime
-        System.getProperties().put("polyglot.js.nashorn-compat", "true");
+        System.setProperty("polyglot.js.nashorn-compat", "true");
         
         // Turn off console warnings
-        System.getProperties().put("polyglot.engine.WarnInterpreterOnly", "false");
+        System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
         
         // Need this for GraalVM 22.2
-        System.getProperties().put("polyglot.js.ecmascript-version", "2022");
+        System.setProperty("polyglot.js.ecmascript-version", "2022");
 
         // Enable loading Node.js modules
         // See https://www.graalvm.org/latest/reference-manual/js/Modules/
-        System.setProperty("polyglot.js.commonjs-require", "true");
-        System.setProperty("polyglot.js.commonjs-require-cwd", ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER));
+        boolean commonJSEnabled = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_COMMONJS_ENABLED);
+        if(commonJSEnabled) {
+            System.setProperty("polyglot.js.commonjs-require", "true");
+            System.setProperty("polyglot.js.commonjs-require-cwd", ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER));
+        }
+        else {
+            System.clearProperty("polyglot.js.commonjs-require");
+            System.clearProperty("polyglot.js.commonjs-require-cwd");
+        }
 
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
         
