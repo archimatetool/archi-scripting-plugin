@@ -27,9 +27,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.part.IContributedContentsView;
 import org.eclipse.ui.part.ViewPart;
 
 import com.archimatetool.editor.utils.FileUtils;
@@ -41,7 +43,7 @@ import com.archimatetool.script.IArchiScriptImages;
  */
 public abstract class AbstractFileView
 extends ViewPart
-implements IContextProvider {
+implements IContextProvider, IContributedContentsView {
     /**
      * The Tree Viewer
      */
@@ -401,5 +403,13 @@ implements IContextProvider {
      * New File event happened
      */
     protected void handleNewFileAction() {
+    }
+    
+    /**
+     * Return null so that the Properties View displays "The active part does not provide properties" instead of a table
+     */
+    @Override
+    public IWorkbenchPart getContributingPart() {
+        return null;
     }
 }

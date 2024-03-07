@@ -52,8 +52,7 @@ public class RestoreExampleScriptsHandler extends AbstractHandler {
                         "\n\n" + ex.getMessage()); //$NON-NLS-1$
         }
         finally {
-            ScriptsFileViewer viewer = (ScriptsFileViewer)HandlerUtil.getActivePart(event);
-            if(viewer != null) {
+            if(HandlerUtil.getActivePart(event) instanceof ScriptsFileViewer viewer) {
                 viewer.getViewer().refresh();
             }
         }
