@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
+import com.archimatetool.editor.ui.UIUtils;
 import com.archimatetool.editor.ui.components.TreeTextCellEditor;
 import com.archimatetool.script.IArchiScriptImages;
 
@@ -51,6 +52,9 @@ public abstract class FileTreeViewer extends TreeViewer {
      */
     public FileTreeViewer(File rootFolder, Composite parent) {
         super(parent, SWT.MULTI);
+        
+        // Mac Item height
+        UIUtils.fixMacSiliconItemHeight(getTree());
         
         fRootFolder = rootFolder;
         fRootFolder.mkdirs();
