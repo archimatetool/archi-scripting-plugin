@@ -5,17 +5,18 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
@@ -40,7 +41,7 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     
     private ArchimateModelProxy testModelProxy;
     
-    @Before
+    @BeforeEach
     public void runOnceBeforeEachTest() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
@@ -182,11 +183,13 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         assertEquals(4, proxy.attr(IModelConstants.STYLE));
     }
     
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void attr_Style_NotArchiMateConnection( ) {
         assertEquals(0, actualTestProxy.attr(IModelConstants.STYLE));
-        actualTestProxy.attr(IModelConstants.STYLE, 4);
-        assertEquals(4, actualTestProxy.attr(IModelConstants.STYLE));
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.attr(IModelConstants.STYLE, 4);
+        });
     }
     
     @Test

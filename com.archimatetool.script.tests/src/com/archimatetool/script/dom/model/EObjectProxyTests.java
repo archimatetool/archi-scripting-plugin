@@ -5,18 +5,19 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.swt.widgets.Display;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModelObject;
@@ -38,7 +39,7 @@ public abstract class EObjectProxyTests {
     protected IArchimateModelObject testEObject;
     protected EObjectProxy testProxy;
     
-    @BeforeClass
+    @BeforeAll
     public static void ensureDefaultDisplay() {
         if(Display.getCurrent() == null) {
             Display.getDefault();
@@ -90,9 +91,11 @@ public abstract class EObjectProxyTests {
         assertEquals(ModelUtil.getKebabCase(testProxy.getReferencedConcept().eClass().getName()), testProxy.getType());
     }
     
-    @Test(expected = ArchiScriptException.class)
+    @Test
     public void delete() {
-        testProxy.delete();
+        assertThrows(ArchiScriptException.class, () -> {
+            testProxy.delete();
+        });
     }
     
     @Test

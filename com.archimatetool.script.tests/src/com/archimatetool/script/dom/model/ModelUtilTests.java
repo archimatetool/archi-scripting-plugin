@@ -5,16 +5,16 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.model.FolderType;
@@ -193,17 +193,18 @@ public class ModelUtilTests {
         ModelUtil.checkComponentsInSameModel(model, o1, o2);
     }
     
-    @Test(expected = ArchiScriptException.class)
+    @Test
     public void checkComponentsInSameModel_Exception() {
         IArchimateModel model1 = createModel();
-        
         IArchimateModel model2 = createModel();
         IArchimateModelObject o1 = IArchimateFactory.eINSTANCE.createBusinessActor();
         model2.getDefaultFolderForObject(o1).getElements().add(o1);
         IArchimateModelObject o2 = IArchimateFactory.eINSTANCE.createBusinessEvent();
         model2.getDefaultFolderForObject(o2).getElements().add(o2);
         
-        ModelUtil.checkComponentsInSameModel(model1, o1, o2);
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelUtil.checkComponentsInSameModel(model1, o1, o2);
+        });
     }
     
     @Test

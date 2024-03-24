@@ -5,16 +5,16 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.archimatetool.canvas.model.ICanvasPackage;
 import com.archimatetool.editor.ArchiPlugin;
@@ -78,11 +78,13 @@ public class ModelFactoryTests {
         assertEquals(testModelProxy.getEObject().getFolder(FolderType.APPLICATION), elementProxy.getEObject().eContainer());
     }
     
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void createElement_Exception() {
         loadTestModel();
         
-        ModelFactory.createElement(testModelProxy.getArchimateModel(), "association-relationship", "Fido", null);
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createElement(testModelProxy.getArchimateModel(), "association-relationship", "Fido", null);
+        });
     }
 
     @Test
@@ -115,13 +117,16 @@ public class ModelFactoryTests {
         assertSame(testModelProxy.getEObject().getFolder(FolderType.RELATIONS), relationProxy.getEObject().eContainer());
     }
 
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void createRelationship_Exception() {
         loadTestModel();
         
         IArchimateConcept source = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
         IArchimateConcept target = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "507");
-        ModelFactory.createRelationship(testModelProxy.getArchimateModel(), "node", "Fido", source, target, null);
+
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createRelationship(testModelProxy.getArchimateModel(), "node", "Fido", source, target, null);
+        });
     }
 
     @Test
@@ -155,13 +160,16 @@ public class ModelFactoryTests {
         assertSame(parent, concept.eContainer());
     }
     
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void addObject_Concept_Exception() {
         loadTestModel();
         
         IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
         IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4a8e833a");
-        ModelFactory.addObject(parent, concept);
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.addObject(parent, concept);
+        });
     }
     
     @Test
@@ -304,12 +312,14 @@ public class ModelFactoryTests {
         }
     }
 
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void createDiagramObject_Exception() {
         loadTestModel();
         
         IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
-        ModelFactory.createDiagramObject(view, "bogus", 10, 15, 100, 200, false);
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createDiagramObject(view, "bogus", 10, 15, 100, 200, false);
+        });
     }
 
     @Test
@@ -325,14 +335,17 @@ public class ModelFactoryTests {
         assertTrue(proxy.getEObject() instanceof IDiagramModelArchimateConnection);
     }
 
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void addArchimateDiagramConnection_Exception() {
         loadTestModel();
         
         IArchimateRelationship relation = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "756");
         IDiagramModelArchimateComponent source = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3790");
         IDiagramModelArchimateComponent target = (IDiagramModelArchimateComponent)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3774");
-        ModelFactory.addArchimateDiagramConnection(relation, source, target);
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.addArchimateDiagramConnection(relation, source, target);
+        });
     }
 
     @Test

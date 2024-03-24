@@ -5,11 +5,12 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.FontFactory;
@@ -46,9 +47,11 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
         assertNull(((DiagramModelComponentProxy)testProxy).getConcept());
     }
 
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void attr_Set_FontColorThrowsException() {
-        testProxy.attr(IModelConstants.FONT_COLOR, "123456");
+        assertThrows(ArchiScriptException.class, () -> {
+            testProxy.attr(IModelConstants.FONT_COLOR, "123456");
+        });
     }
     
     @Test

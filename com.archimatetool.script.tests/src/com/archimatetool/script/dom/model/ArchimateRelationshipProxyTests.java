@@ -5,14 +5,15 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.archimatetool.model.IAccessRelationship;
 import com.archimatetool.model.IArchimateFactory;
@@ -36,7 +37,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
     
     private ArchimateModelProxy testModelProxy;
     
-    @Before
+    @BeforeEach
     public void runOnceBeforeEachTest() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
@@ -159,16 +160,22 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         assertEquals(proxy.getEObject(), actualTestProxy.getTarget().getEObject());
     }
     
-    @Test(expected = ArchiScriptException.class)
+    @Test
     public void setSource_Bogus() {
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createRequirement());
-        actualTestProxy.setSource(proxy);
+
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.setSource(proxy);
+        });
     }
 
-    @Test(expected = ArchiScriptException.class)
+    @Test
     public void setTarget_Bogus() {
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createRequirement());
-        actualTestProxy.setTarget(proxy);
+
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.setTarget(proxy);
+        });
     }
 
     @Test
@@ -309,7 +316,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         assertEquals(0, replacementRelationship.getTargetRelationships().size());
     }
 
-    @Test (expected=ArchiScriptException.class)
+    @Test
     public void mergeThrowsExceptionOnWrongSourceTarget() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_MERGE2);
         
@@ -321,7 +328,9 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
                 "id-b38531df8892405aa87a402e5ea12110");
         ArchimateRelationshipProxy otherProxy = (ArchimateRelationshipProxy)EObjectProxy.get(otherRelationship);
         
-        replacementProxy.merge(otherProxy);
+        assertThrows(ArchiScriptException.class, () -> {
+            replacementProxy.merge(otherProxy);
+        });
     }
 
 }

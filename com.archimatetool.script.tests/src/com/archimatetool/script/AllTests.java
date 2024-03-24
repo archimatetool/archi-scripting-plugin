@@ -6,8 +6,9 @@
 package com.archimatetool.script;
 
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.SuiteDisplayName;
 
 import com.archimatetool.script.dom.model.ArchimateDiagramModelObjectProxyTests;
 import com.archimatetool.script.dom.model.ArchimateDiagramModelProxyTests;
@@ -29,9 +30,8 @@ import com.archimatetool.script.dom.model.ProfileProxyTests;
 import com.archimatetool.script.dom.model.SelectorFilterFactoryTests;
 import com.archimatetool.script.dom.model.SketchDiagramModelProxyTests;
 
-@RunWith(Suite.class)
-
-@Suite.SuiteClasses({
+@Suite
+@SelectClasses({
     ArchimateDiagramModelObjectProxyTests.class,
     ArchimateDiagramModelProxyTests.class,
     ArchimateElementProxyTests.class,
@@ -53,5 +53,6 @@ import com.archimatetool.script.dom.model.SketchDiagramModelProxyTests;
     SketchDiagramModelProxyTests.class
 })
 
+@SuiteDisplayName("All Scripting Tests")
 public class AllTests {
 }

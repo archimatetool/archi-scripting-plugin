@@ -5,17 +5,18 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
 import org.eclipse.gef.commands.CommandStack;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.script.ArchiScriptException;
@@ -32,7 +33,7 @@ public class ModelTests {
     
     private static Model model;
     
-    @BeforeClass
+    @BeforeAll
     public static void runOnce() {
         model = new Model();
     }
@@ -78,8 +79,10 @@ public class ModelTests {
         assertTrue(model.isAllowedRelationship("association-relationship", "business-actor", "business-role"));
     }
 
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void isAllowedRelationship_Exception() {
-        model.isAllowedRelationship("bogus", "business-actor", "business-role");
+        assertThrows(ArchiScriptException.class, () -> {
+            model.isAllowedRelationship("bogus", "business-actor", "business-role");
+        });
     }
 }

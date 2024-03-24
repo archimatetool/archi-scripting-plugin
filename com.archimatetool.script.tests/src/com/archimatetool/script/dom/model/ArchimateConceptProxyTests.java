@@ -5,11 +5,12 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.archimatetool.script.ArchiScriptException;
 
@@ -46,25 +47,32 @@ public abstract class ArchimateConceptProxyTests extends EObjectProxyTests {
         assertNull(getTestProxy().getSpecialization());
     }
 
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void setSpecialization_Exists_But_Wrong_Type() {
         assertNull(getTestProxy().getSpecialization());
         
         // Create Specialization for Node type
         getTestProxy().getModel().createSpecialization("Special", "node", null);
         
-        // Try to set it
-        getTestProxy().setSpecialization("Special");
+        // Try to set it, should throw exception
+        assertThrows(ArchiScriptException.class, () -> {
+            getTestProxy().setSpecialization("Special");
+        });
     }
 
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void setSpecialization_Not_Exists_Throws_Exception() {
         assertNull(getTestProxy().getSpecialization());
-        getTestProxy().setSpecialization("Special");
+
+        assertThrows(ArchiScriptException.class, () -> {
+            getTestProxy().setSpecialization("Special");
+        });
     }
 
-    @Test(expected=ArchiScriptException.class)
+    @Test
     public void setSpecialization_EmptyString_Throws_Exception() {
-        getTestProxy().setSpecialization("");
+        assertThrows(ArchiScriptException.class, () -> {
+            getTestProxy().setSpecialization("");
+        });
     }
 }

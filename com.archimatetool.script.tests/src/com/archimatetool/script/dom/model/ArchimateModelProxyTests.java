@@ -5,20 +5,20 @@
  */
 package com.archimatetool.script.dom.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
 import org.eclipse.emf.ecore.EObject;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.model.IArchimateElement;
@@ -40,7 +40,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     
     private ArchimateModelProxy actualTestProxy;
     
-    @Before
+    @BeforeEach
     public void runOnceBeforeEachTest() {
         testEObject = IArchimateFactory.eINSTANCE.createArchimateModel();
         ((IArchimateModel)testEObject).setDefaults();
@@ -210,9 +210,11 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals(IArchimatePackage.eINSTANCE.getBusinessActor(), element.eClass());
     }
     
-    @Test(expected = ArchiScriptException.class)
+    @Test
     public void createElement_Bogus() {
-        actualTestProxy.createElement("access-relationship", "Fido");
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.createElement("access-relationship", "Fido");
+        });
     }
 
     @Test
@@ -228,18 +230,22 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals(IArchimatePackage.eINSTANCE.getAssignmentRelationship(), relation.eClass());
     }
     
-    @Test(expected = ArchiScriptException.class)
+    @Test
     public void addRelationship_Bogus() {
-        ArchimateElementProxy source = actualTestProxy.createElement("BusinessActor", "Fido");
-        ArchimateElementProxy target = actualTestProxy.createElement("BusinessRole", "Role");
-        actualTestProxy.createRelationship("BusinessActor", "Fido", source, target);
+        ArchimateElementProxy source = actualTestProxy.createElement("business-actor", "Fido");
+        ArchimateElementProxy target = actualTestProxy.createElement("business-role", "Role");
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.createRelationship("BusinessActor", "Fido", source, target);
+        });
     }
     
-    @Test(expected = ArchiScriptException.class)
+    @Test
     public void addRelationship_BogusType() {
-        ArchimateElementProxy source = actualTestProxy.createElement("BusinessActor", "Fido");
-        ArchimateElementProxy target = actualTestProxy.createElement("BusinessRole", "Role");
-        actualTestProxy.createRelationship("AccessRelationship", "Fido", source, target);
+        ArchimateElementProxy source = actualTestProxy.createElement("business-actor", "Fido");
+        ArchimateElementProxy target = actualTestProxy.createElement("business-role", "Role");
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.createRelationship("access-relationship", "Fido", source, target);
+        });
     }
     
     @Test
