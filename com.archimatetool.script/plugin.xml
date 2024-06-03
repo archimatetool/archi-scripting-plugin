@@ -39,7 +39,7 @@
                id="com.archimatetool.script.runParam"
                name="Parameter"
                optional="false"
-               values="com.archimatetool.script.RunScriptCommandHandler$ParamValues">
+               values="com.archimatetool.script.RunScriptCommandHandler">
          </commandParameter>
       </command>
       <category

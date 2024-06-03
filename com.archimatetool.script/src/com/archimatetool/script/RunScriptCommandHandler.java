@@ -6,9 +6,7 @@
 package com.archimatetool.script;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -35,12 +33,16 @@ import com.archimatetool.editor.utils.StringUtils;
  * 
  * @author Phillip Beauvoir
  */
-public class RunScriptCommandHandler extends AbstractHandler {
+@SuppressWarnings("nls")
+public class RunScriptCommandHandler extends AbstractHandler implements IParameterValues {
     
-    public static final String ID = "com.archimatetool.script.run"; //$NON-NLS-1$
-    public static final String PARAMETER = "com.archimatetool.script.runParam"; //$NON-NLS-1$
-    public static final String PREFS_PREFIX = "keybinding"; //$NON-NLS-1$
+    public static final String ID = "com.archimatetool.script.run";
+    public static final String PARAMETER = "com.archimatetool.script.runParam";
+    public static final String PREFS_PREFIX = "keybinding";
 
+    private static LinkedHashMap<String, String> paramValues;
+    private static int NUM_PARAMS = 10;
+    
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         String parameterValue = event.getParameter(PARAMETER);
@@ -52,13 +54,31 @@ public class RunScriptCommandHandler extends AbstractHandler {
                 runner.run();
             }
             catch(Exception ex) {
-                MessageDialog.openError(null, "Archi Script", ex.getMessage()); //$NON-NLS-1$
+                MessageDialog.openError(null, "Archi Script", ex.getMessage());
             }
         }
         
         return null;
     }
     
+    @Override
+    public Map<String, String> getParameterValues() {
+        return getParameters();
+    }
+    
+    public static Map<String, String> getParameters() {
+        if(paramValues == null) {
+            paramValues = new LinkedHashMap<>();
+            
+            for(int i = 1; i <= NUM_PARAMS; i++) {
+                // The Keys Preference page orders alphanumerically so add a leading zero so it displays as "Run Script (01)"
+                paramValues.put(String.format("%02d", i), String.valueOf(i));
+            }
+        }
+        
+        return paramValues;
+    }
+
     public static File getScriptFileForParameterValue(String parameterValue) {
         IPreferenceStore store = ArchiScriptPlugin.INSTANCE.getPreferenceStore();
         String scriptPath = store.getString(PREFS_PREFIX + parameterValue);
@@ -72,7 +92,7 @@ public class RunScriptCommandHandler extends AbstractHandler {
     }
     
     public static String getParameterValueForScriptFile(File scriptFile) {
-        for(String parameterValue : getParameterValues()) {
+        for(String parameterValue : getParameters().values()) {
             File file = getScriptFileForParameterValue(parameterValue);
             if(scriptFile.equals(file)) {
                 return parameterValue;
@@ -110,33 +130,4 @@ public class RunScriptCommandHandler extends AbstractHandler {
         
         return null;
     }
-    
-    public static List<String> getParameterValues() {
-        return new ArrayList<>(new ParamValues().getParameterValues().values());
-    }
-    
-    /**
-     * Used by the Run Command for different parameter values
-     */
-    public static class ParamValues implements IParameterValues {
-        private static int NUM_PARAMS = 10;
-        
-        private static LinkedHashMap<String, String> paramValues;
-        
-        public ParamValues() {
-        }
-
-        @Override
-        public Map<String, String> getParameterValues() {
-            if(paramValues == null) {
-                paramValues = new LinkedHashMap<>();
-                for(int i = 1; i <= NUM_PARAMS; i++) {
-                    paramValues.put(String.valueOf(i), String.valueOf(i));
-                }
-            }
-            
-            return paramValues;
-        }
-    }
-
 }

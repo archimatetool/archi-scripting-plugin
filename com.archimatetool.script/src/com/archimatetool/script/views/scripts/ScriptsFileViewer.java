@@ -269,7 +269,7 @@ extends AbstractFileView  {
                 IPreferenceStore store = ArchiScriptPlugin.INSTANCE.getPreferenceStore();
                 
                 // Show the key binding slots
-                for(String paramValue : RunScriptCommandHandler.getParameterValues()) {
+                for(String paramValue : RunScriptCommandHandler.getParameters().values()) {
                     String text = paramValue;
 
                     // Show the script already assigned, if any
