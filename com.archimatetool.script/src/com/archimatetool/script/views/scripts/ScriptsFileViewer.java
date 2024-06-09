@@ -339,7 +339,7 @@ extends AbstractFileView  {
                     @Override
                     public void run() {
                         PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getViewSite().getShell(),
-                                "com.archimatetool.editor.keys", null, null); //$NON-NLS-1$
+                                "org.eclipse.ui.preferencePages.Keys", null, null); //$NON-NLS-1$
                         if(dialog != null) {
                             dialog.open();
                         }
