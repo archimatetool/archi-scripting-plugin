@@ -249,6 +249,10 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         return list;
     }
     
+    public EObjectProxyCollection parents(String selector) {
+        return parents().filter(selector);
+    }
+    
     /**
      * Return the list of properties' key for the first object in the collection
      * @return
