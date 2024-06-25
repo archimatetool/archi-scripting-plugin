@@ -58,11 +58,10 @@ class ModelUtil {
         for(Iterator<EObject> iter = parent.eAllContents(); iter.hasNext();) {
             EObject eObject = iter.next();
             
-            if(eObject instanceof IDiagramModelContainer) {
-                IDiagramModelObject dmo = (IDiagramModelObject)eObject;
+            if(eObject instanceof IDiagramModelContainer dmc && eObject instanceof IDiagramModelObject dmo) {
                 IBounds dmoBounds = DiagramModelUtils.getAbsoluteBounds(dmo);
                 if(DiagramModelUtils.outerBoundsContainsInnerBounds(dmoBounds, bounds)) {
-                    parent = (IDiagramModelContainer)eObject;
+                    parent = dmc;
                 }
             }
         }
