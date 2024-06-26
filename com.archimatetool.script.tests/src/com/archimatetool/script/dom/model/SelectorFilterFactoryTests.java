@@ -56,7 +56,7 @@ public class SelectorFilterFactoryTests {
     
     @Test
     public void accept_Concept() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("concept");
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(IModelConstants.CONCEPT);
         assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
@@ -81,7 +81,7 @@ public class SelectorFilterFactoryTests {
     
     @Test
     public void accept_Element() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("element");
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(IModelConstants.ELEMENT);
         assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
@@ -106,7 +106,7 @@ public class SelectorFilterFactoryTests {
     
     @Test
     public void accept_Relation() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("relation");
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(IModelConstants.RELATION);
         assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
@@ -131,7 +131,7 @@ public class SelectorFilterFactoryTests {
 
     @Test
     public void accept_View() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("view");
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(IModelConstants.VIEW);
         assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createSketchModel()));
@@ -212,16 +212,13 @@ public class SelectorFilterFactoryTests {
     @Test
     public void accept_Type() {
         IArchimateConcept element = IArchimateFactory.eINSTANCE.createBusinessRole();
-        IArchimateConcept relation = IArchimateFactory.eINSTANCE.createAssociationRelationship();
-        IDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
-        IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
-        
         ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("business-role");
         assertNotNull(filter);
         assertTrue(filter.accept(element));
         filter = SelectorFilterFactory.INSTANCE.getFilter("business-actor");
         assertFalse(filter.accept(element));
         
+        IArchimateConcept relation = IArchimateFactory.eINSTANCE.createAssociationRelationship();
         filter = SelectorFilterFactory.INSTANCE.getFilter("association-relationship");
         assertNotNull(filter);
         assertTrue(filter.accept(relation));
@@ -229,13 +226,24 @@ public class SelectorFilterFactoryTests {
         assertNotNull(filter);
         assertFalse(filter.accept(relation));
     
+        IDiagramModel dm = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
         filter = SelectorFilterFactory.INSTANCE.getFilter("archimate-diagram-model");
         assertNotNull(filter);
         assertTrue(filter.accept(dm));
         
+        IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
         filter = SelectorFilterFactory.INSTANCE.getFilter("folder");
         assertNotNull(filter);
         assertTrue(filter.accept(folder));
     }
 
+    @Test
+    public void referencedObjectNotNull() {
+        // Create a DiagramModelArchimateObject without a referenced concept
+        // This will test SelectorFilterFactory returning null in getReferencedObject
+        IDiagramModelArchimateObject dmao = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter("diagram-model-archimate-object");
+        assertNotNull(filter);
+        assertFalse(filter.accept(dmao));
+    }
 }

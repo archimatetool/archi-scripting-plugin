@@ -21,6 +21,7 @@ import com.archimatetool.model.INameable;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 class SelectorFilterFactory {
     
     public static interface ISelectorFilter {
@@ -36,12 +37,12 @@ class SelectorFilterFactory {
     static SelectorFilterFactory INSTANCE = new SelectorFilterFactory();
 
     public ISelectorFilter getFilter(String selector) {
-        if(selector == null || "".equals(selector)) { //$NON-NLS-1$
+        if(selector == null || "".equals(selector)) {
             return null;
         }
         
         // All model concepts, diagram models, and folders
-        if(selector.equals("*")) { //$NON-NLS-1$
+        if(selector.equals("*")) {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
@@ -56,7 +57,7 @@ class SelectorFilterFactory {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
-                    object = getReferencedConcept(object);
+                    object = getReferencedObject(object);
                     return object instanceof IArchimateConcept;
                 }
             };
@@ -67,7 +68,7 @@ class SelectorFilterFactory {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
-                    object = getReferencedConcept(object);
+                    object = getReferencedObject(object);
                     return object instanceof IArchimateElement;
                 }
             };
@@ -78,7 +79,7 @@ class SelectorFilterFactory {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
-                    object = getReferencedConcept(object);
+                    object = getReferencedObject(object);
                     return object instanceof IArchimateRelationship;
                 }
             };
@@ -95,13 +96,13 @@ class SelectorFilterFactory {
         }
 
         // Find single unique object by its ID
-        else if(selector.startsWith("#") && selector.length() > 1) { //$NON-NLS-1$
+        else if(selector.startsWith("#") && selector.length() > 1) {
             String id = selector.substring(1);
             
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
-                    return object instanceof IIdentifier && id.equals(((IIdentifier)object).getId());
+                    return object instanceof IIdentifier identifier && id.equals(identifier.getId());
                 }
                 
                 @Override
@@ -112,20 +113,20 @@ class SelectorFilterFactory {
         }
         
         // Find all objects with given name
-        else if(selector.startsWith(".") & selector.length() > 1) { //$NON-NLS-1$
+        else if(selector.startsWith(".") & selector.length() > 1) {
             String name = selector.substring(1);
             
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
-                    return (object instanceof INameable) && name.equals(((INameable)object).getName());
+                    return object instanceof INameable nameable && name.equals(nameable.getName());
                 }
             };
         }
         
         // Find all objects with given type (class) and name
-        else if(selector.contains(".") && selector.length() > 2) { //$NON-NLS-1$
-            String[] s = selector.split("\\.", 2); //$NON-NLS-1$
+        else if(selector.contains(".") && selector.length() > 2) {
+            String[] s = selector.split("\\.", 2);
             
             if(s.length != 2) {
                 return null;
@@ -137,28 +138,28 @@ class SelectorFilterFactory {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
-                    object = getReferencedConcept(object);
-                    return object.eClass().getName().equals(type) &&
-                            (object instanceof INameable) &&
-                            ((INameable)object).getName().equals(name);
+                    object = getReferencedObject(object);
+                    return object instanceof INameable nameable &&
+                            nameable.getName().equals(name) &&
+                            nameable.eClass().getName().equals(type);
                 }
             };
         }
 
-        // Class type of concept
+        // Class type of object
         else {
             String type = ModelUtil.getCamelCase(selector);
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
-                    object = getReferencedConcept(object);
-                    return object.eClass().getName().equals(type);
+                    object = getReferencedObject(object);
+                    return object != null && object.eClass().getName().equals(type);
                 }
             };
         }
     }
     
-    private EObject getReferencedConcept(EObject object) {
+    private EObject getReferencedObject(EObject object) {
         if(object instanceof IDiagramModelArchimateComponent) {
             return ((IDiagramModelArchimateComponent)object).getArchimateConcept();
         }
