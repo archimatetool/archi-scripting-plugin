@@ -53,8 +53,8 @@ public abstract class EObjectProxyTests {
     }
 
     @Test
-    public void getReferencedConcept() {
-        assertSame(testProxy.getEObject(), testProxy.getReferencedConcept());
+    public void getReferencedEObject() {
+        assertSame(testProxy.getEObject(), testProxy.getReferencedEObject());
     }
     
     @Test
@@ -81,7 +81,7 @@ public abstract class EObjectProxyTests {
 
     @Test
     public void setDocumentation() {
-        assumeTrue(testProxy.getReferencedConcept() instanceof IDocumentable);
+        assumeTrue(testProxy.getReferencedEObject() instanceof IDocumentable);
         
         testProxy.setDocumentation("doc");
         assertEquals("doc", testProxy.getDocumentation());
@@ -89,7 +89,7 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void getType() {
-        assertEquals(ModelUtil.getKebabCase(testProxy.getReferencedConcept().eClass().getName()), testProxy.getType());
+        assertEquals(ModelUtil.getKebabCase(testProxy.getReferencedEObject().eClass().getName()), testProxy.getType());
     }
     
     @Test
@@ -144,12 +144,12 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop() {
-        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
 
         List<String> collection = testProxy.prop();
         assertTrue(collection.isEmpty());
         
-        IProperties obj = (IProperties)testProxy.getReferencedConcept();
+        IProperties obj = (IProperties)testProxy.getReferencedEObject();
 
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value1"));
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key2", "value2"));
@@ -163,12 +163,12 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop_Key() {
-        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
         
         String s = testProxy.prop("key");
         assertNull(s);
         
-        IProperties obj = (IProperties)testProxy.getReferencedConcept();
+        IProperties obj = (IProperties)testProxy.getReferencedEObject();
         
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value1"));
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value2"));
@@ -180,12 +180,12 @@ public abstract class EObjectProxyTests {
 
     @Test
     public void prop_Key_Duplicate() {
-        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
 
         Object prop = testProxy.prop("key", true);
         assertNull(prop);
         
-        IProperties obj = (IProperties)testProxy.getReferencedConcept();
+        IProperties obj = (IProperties)testProxy.getReferencedEObject();
         
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value1"));
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value2"));
@@ -202,12 +202,12 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop_Key_Value() {
-        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
 
         EObjectProxy proxy = testProxy.prop("key", "value");
         assertSame(testProxy, proxy);
         
-        IProperties obj = (IProperties)testProxy.getReferencedConcept();
+        IProperties obj = (IProperties)testProxy.getReferencedEObject();
         
         EList<IProperty> props = obj.getProperties();
         assertEquals(1, props.size());
@@ -223,12 +223,12 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop_Key_Value_Duplicate() {
-        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
 
         EObjectProxy proxy = testProxy.prop("key", "value", true);
         assertSame(testProxy, proxy);
         
-        IProperties obj = (IProperties)testProxy.getReferencedConcept();
+        IProperties obj = (IProperties)testProxy.getReferencedEObject();
         
         EList<IProperty> props = obj.getProperties();
         assertEquals(1, props.size());
@@ -245,12 +245,12 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void removeProp() {
-        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
 
         testProxy.prop("key", "value", true);
         testProxy.prop("key", "value2", true);
         
-        IProperties obj = (IProperties)testProxy.getReferencedConcept();
+        IProperties obj = (IProperties)testProxy.getReferencedEObject();
         
         EList<IProperty> props = obj.getProperties();
         assertEquals(2, props.size());
@@ -261,12 +261,12 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void removeProp_Key_Value() {
-        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
 
         testProxy.prop("key", "value", true);
         testProxy.prop("key", "value2", true);
         
-        IProperties obj = (IProperties)testProxy.getReferencedConcept();
+        IProperties obj = (IProperties)testProxy.getReferencedEObject();
         
         EList<IProperty> props = obj.getProperties();
         assertEquals(2, props.size());
@@ -320,7 +320,7 @@ public abstract class EObjectProxyTests {
  
     @Test
     public void attr_Type() {
-        assertEquals(ModelUtil.getKebabCase(((IIdentifier)testProxy.getReferencedConcept()).eClass().getName()), testProxy.attr(IModelConstants.TYPE));
+        assertEquals(ModelUtil.getKebabCase(((IIdentifier)testProxy.getReferencedEObject()).eClass().getName()), testProxy.attr(IModelConstants.TYPE));
     }
 
     @Test
@@ -331,7 +331,7 @@ public abstract class EObjectProxyTests {
 
     @Test
     public void attr_Documentation() {
-        assumeTrue(testProxy.getReferencedConcept() instanceof IDocumentable);
+        assumeTrue(testProxy.getReferencedEObject() instanceof IDocumentable);
         
         testProxy.attr(IModelConstants.DOCUMENTATION, "doc");
         assertEquals("doc", testProxy.attr(IModelConstants.DOCUMENTATION));

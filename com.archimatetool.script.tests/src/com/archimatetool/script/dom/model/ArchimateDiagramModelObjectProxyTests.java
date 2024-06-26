@@ -82,13 +82,13 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     
     @Override
     @Test
-    public void getReferencedConcept() {
-        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedConcept());
+    public void getReferencedEObject() {
+        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedEObject());
         
         // Group has none
         IDiagramModelGroup group = (IDiagramModelGroup)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4096");
         DiagramModelObjectProxy groupProxy = new DiagramModelObjectProxy(group);
-        assertSame(groupProxy.getEObject(), groupProxy.getReferencedConcept());
+        assertSame(groupProxy.getEObject(), groupProxy.getReferencedEObject());
     }
     
     @Override

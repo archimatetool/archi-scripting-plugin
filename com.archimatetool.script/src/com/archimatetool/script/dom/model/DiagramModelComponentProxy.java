@@ -62,12 +62,12 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     }
     
     @Override
-    protected EObject getReferencedConcept() {
+    protected EObject getReferencedEObject() {
         if(isArchimateConcept()) {
             return ((IDiagramModelArchimateComponent)getEObject()).getArchimateConcept();
         }
 
-        return super.getReferencedConcept();
+        return super.getReferencedEObject();
     }
     
     public String getSpecialization() {

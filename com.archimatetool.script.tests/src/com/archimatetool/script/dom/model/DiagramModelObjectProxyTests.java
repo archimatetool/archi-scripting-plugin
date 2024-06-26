@@ -58,8 +58,8 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
 
     @Override
     @Test
-    public void getReferencedConcept() {
-        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedConcept());
+    public void getReferencedEObject() {
+        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedEObject());
     }
     
     @Test

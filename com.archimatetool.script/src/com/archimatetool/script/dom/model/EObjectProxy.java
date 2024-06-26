@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.osgi.util.NLS;
 
@@ -123,7 +122,7 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
      * @return The (possibly) referenced eObject underlying this eObject
      * sub-classes can over-ride and return the underlying eObject
      */
-    protected EObject getReferencedConcept() {
+    protected EObject getReferencedEObject() {
         return getEObject();
     }
     
@@ -141,11 +140,11 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     }
     
     public String getId() {
-        return getEObject() instanceof IIdentifier ? ((IIdentifier)getEObject()).getId() : null;
+        return getEObject() instanceof IIdentifier id ? id.getId() : null;
     }
 
     public String getName() {
-        return getEObject() instanceof INameable ? ((INameable)getEObject()).getName() : null;
+        return getEObject() instanceof INameable nameable ? nameable.getName() : null;
     }
     
     public EObjectProxy setName(String name) {
@@ -156,13 +155,13 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     }
     
     public String getDocumentation() {
-        // Referenced concept because diagram objects are not IDocumentable
-        return getReferencedConcept() instanceof IDocumentable ? ((IDocumentable)getReferencedConcept()).getDocumentation() : null;
+        // Get the referenced object because not all top objects are IDocumentable (diagram objects)
+        return getReferencedEObject() instanceof IDocumentable documentable ? documentable.getDocumentation() : null;
     }
     
     public EObjectProxy setDocumentation(String documentation) {
-        if(getReferencedConcept() instanceof IDocumentable) { // Referenced concept because diagram objects are not IDocumentable
-            CommandHandler.executeCommand(new SetCommand(getReferencedConcept(), IArchimatePackage.Literals.DOCUMENTABLE__DOCUMENTATION, documentation));
+        if(getReferencedEObject() instanceof IDocumentable) { // Get the referenced object because not all top objects are IDocumentable (diagram objects)
+            CommandHandler.executeCommand(new SetCommand(getReferencedEObject(), IArchimatePackage.Literals.DOCUMENTABLE__DOCUMENTATION, documentation));
         }
         return this;
     }
@@ -171,8 +170,8 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
      * @return class type of this object
      */
     public String getType() {
-        if(getReferencedConcept() != null) {
-            return ModelUtil.getKebabCase(getReferencedConcept().eClass().getName());
+        if(getReferencedEObject() != null) {
+            return ModelUtil.getKebabCase(getReferencedEObject().eClass().getName());
         }
         
         return null;
@@ -343,9 +342,8 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
      * @param value
      */
     private EObjectProxy addProperty(String key, String value) {
-        
-        if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
-            CommandHandler.executeCommand(new AddPropertyCommand((IProperties)getReferencedConcept(), key, value));
+        if(getReferencedEObject() instanceof IProperties properties && key != null && value != null) {
+            CommandHandler.executeCommand(new AddPropertyCommand(properties, key, value));
         }
         
         return this;
@@ -358,12 +356,11 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
      * @param value
      */
     private EObjectProxy addOrUpdateProperty(String key, String value) {
-        if(getReferencedConcept() instanceof IProperties && key != null && value != null) {
+        if(getReferencedEObject() instanceof IProperties properties && key != null && value != null) {
             boolean updated = false;
             
-            for(IProperty prop : ((IProperties)getReferencedConcept()).getProperties()) {
+            for(IProperty prop : properties.getProperties()) {
                 if(prop.getKey().equals(key)) {
-                    //prop.setValue(value);
                     CommandHandler.executeCommand(new SetCommand(prop, IArchimatePackage.Literals.PROPERTY__VALUE, value));
                     updated = true;
                 }
@@ -383,8 +380,8 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     private List<String> getPropertyKey() {
         List<String> list = new ArrayList<String>();
         
-        if(getReferencedConcept() instanceof IProperties) {
-            for(IProperty p : ((IProperties)getReferencedConcept()).getProperties()) {
+        if(getReferencedEObject() instanceof IProperties properties) {
+            for(IProperty p : properties.getProperties()) {
                 if(!list.contains(p.getKey())) {
                     list.add(p.getKey());
                 }
@@ -401,8 +398,8 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     private List<String> getPropertyValue(String key) {
         List<String> list = new ArrayList<String>();
         
-        if(getReferencedConcept() instanceof IProperties) {
-            for(IProperty p : ((IProperties)getReferencedConcept()).getProperties()) {
+        if(getReferencedEObject() instanceof IProperties properties) {
+            for(IProperty p : properties.getProperties()) {
                 if(p.getKey().equals(key)) {
                     list.add(p.getValue());
                 }
@@ -425,11 +422,10 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
      * @param key
      */
     public EObjectProxy removeProp(String key, String value) {
-        if(getReferencedConcept() instanceof IProperties) {
+        if(getReferencedEObject() instanceof IProperties properties) {
             List<IProperty> toRemove = new ArrayList<IProperty>();
-            EList<IProperty> props = ((IProperties)getReferencedConcept()).getProperties();
             
-            for(IProperty p : props) {
+            for(IProperty p : properties.getProperties()) {
                 if(p.getKey().equals(key)) {
                     if(value == null || p.getValue().equals(value)) {
                         toRemove.add(p);
@@ -437,7 +433,7 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
                 }
             }
             
-            CommandHandler.executeCommand(new RemovePropertiesCommand((IProperties)getReferencedConcept(), toRemove));
+            CommandHandler.executeCommand(new RemovePropertiesCommand(properties, toRemove));
         }
         
         return this;
@@ -501,18 +497,18 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case NAME:
-                if(value instanceof String) {
-                    return setName((String)value);
+                if(value instanceof String s) {
+                    return setName(s);
                 }
             
             case DOCUMENTATION:
-                if(value instanceof String) {
-                    return setDocumentation((String)value);
+                if(value instanceof String s) {
+                    return setDocumentation(s);
                 }
 
             case LABEL_EXPRESSION:
-                if(value instanceof String) {
-                    return setLabelExpression((String)value);
+                if(value instanceof String s) {
+                    return setLabelExpression(s);
                 }
         }
         

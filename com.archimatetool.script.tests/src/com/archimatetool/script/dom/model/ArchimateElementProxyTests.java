@@ -177,14 +177,14 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
         assertEquals(2, refs.size());
         for(EObjectProxy eObjectProxy : refs) {
             DiagramModelObjectProxy dmoProxy = (DiagramModelObjectProxy)eObjectProxy;
-            assertEquals(replacementElement, dmoProxy.getReferencedConcept());
+            assertEquals(replacementElement, dmoProxy.getReferencedEObject());
         }
         
         refs = otherProxy.objectRefs();
         assertEquals(2, refs.size());
         for(EObjectProxy eObjectProxy : refs) {
             DiagramModelObjectProxy dmoProxy = (DiagramModelObjectProxy)eObjectProxy;
-            assertEquals(otherElement, dmoProxy.getReferencedConcept());
+            assertEquals(otherElement, dmoProxy.getReferencedEObject());
         }
         
         // Relations
@@ -207,7 +207,7 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
         assertEquals(4, refs.size());
         for(EObjectProxy eObjectProxy : refs) {
             DiagramModelObjectProxy dmoProxy = (DiagramModelObjectProxy)eObjectProxy;
-            assertEquals(replacementElement, dmoProxy.getReferencedConcept());
+            assertEquals(replacementElement, dmoProxy.getReferencedEObject());
         }
 
         assertEquals(0, otherProxy.objectRefs().size());

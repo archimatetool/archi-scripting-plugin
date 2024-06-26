@@ -105,12 +105,12 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     
     @Override
     @Test
-    public void getReferencedConcept() {
-        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedConcept());
+    public void getReferencedEObject() {
+        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedEObject());
         
         IDiagramModelConnection connection = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
         DiagramModelConnectionProxy connectionProxy = new DiagramModelConnectionProxy(connection);
-        assertSame(connectionProxy.getEObject(), connectionProxy.getReferencedConcept());
+        assertSame(connectionProxy.getEObject(), connectionProxy.getReferencedEObject());
     }
     
     @Test

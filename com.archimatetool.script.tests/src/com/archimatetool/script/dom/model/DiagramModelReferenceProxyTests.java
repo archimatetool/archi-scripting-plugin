@@ -46,7 +46,7 @@ public class DiagramModelReferenceProxyTests extends DiagramModelObjectProxyTest
 
     @Override
     @Test
-    public void getReferencedConcept() {
+    public void getReferencedEObject() {
         assertNull(actualTestProxy.getConcept());
     }
     

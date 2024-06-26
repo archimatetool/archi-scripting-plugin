@@ -30,7 +30,7 @@ public class DiagramModelReferenceProxy extends DiagramModelObjectProxy {
     }
     
     @Override
-    protected EObject getReferencedConcept() {
+    protected EObject getReferencedEObject() {
         return getEObject().getReferencedModel();
     }
 
