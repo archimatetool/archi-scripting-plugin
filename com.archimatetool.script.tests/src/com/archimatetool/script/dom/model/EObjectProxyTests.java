@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.List;
 
@@ -68,7 +69,7 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void getID() {
-        ((IIdentifier)testEObject).setId("123");
+        testEObject.setId("123");
         assertEquals("123", testProxy.getId());
     }
     
@@ -80,10 +81,10 @@ public abstract class EObjectProxyTests {
 
     @Test
     public void setDocumentation() {
-        if(testProxy instanceof IDocumentable) {
-            testProxy.setDocumentation("doc");
-            assertEquals("doc", testProxy.getDocumentation());
-        }
+        assumeTrue(testProxy.getReferencedConcept() instanceof IDocumentable);
+        
+        testProxy.setDocumentation("doc");
+        assertEquals("doc", testProxy.getDocumentation());
     }
     
     @Test
@@ -117,7 +118,6 @@ public abstract class EObjectProxyTests {
         assertEquals(testEObject, collection.get(0).getEObject());
     }
     
-    
     @Test
     public void find_EObjectProxy() {
         EObjectProxyCollection collection = testProxy.find(testProxy);
@@ -144,6 +144,8 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop() {
+        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+
         List<String> collection = testProxy.prop();
         assertTrue(collection.isEmpty());
         
@@ -161,6 +163,8 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop_Key() {
+        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+        
         String s = testProxy.prop("key");
         assertNull(s);
         
@@ -176,6 +180,8 @@ public abstract class EObjectProxyTests {
 
     @Test
     public void prop_Key_Duplicate() {
+        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+
         Object prop = testProxy.prop("key", true);
         assertNull(prop);
         
@@ -196,6 +202,8 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop_Key_Value() {
+        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+
         EObjectProxy proxy = testProxy.prop("key", "value");
         assertSame(testProxy, proxy);
         
@@ -215,6 +223,8 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop_Key_Value_Duplicate() {
+        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+
         EObjectProxy proxy = testProxy.prop("key", "value", true);
         assertSame(testProxy, proxy);
         
@@ -235,6 +245,8 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void removeProp() {
+        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+
         testProxy.prop("key", "value", true);
         testProxy.prop("key", "value2", true);
         
@@ -249,6 +261,8 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void removeProp_Key_Value() {
+        assumeTrue(testProxy.getReferencedConcept() instanceof IProperties);
+
         testProxy.prop("key", "value", true);
         testProxy.prop("key", "value2", true);
         
@@ -317,10 +331,10 @@ public abstract class EObjectProxyTests {
 
     @Test
     public void attr_Documentation() {
-        if(testProxy instanceof IDocumentable) {
-            testProxy.attr(IModelConstants.DOCUMENTATION, "doc");
-            assertEquals("doc", testProxy.attr(IModelConstants.DOCUMENTATION));
-        }
+        assumeTrue(testProxy.getReferencedConcept() instanceof IDocumentable);
+        
+        testProxy.attr(IModelConstants.DOCUMENTATION, "doc");
+        assertEquals("doc", testProxy.attr(IModelConstants.DOCUMENTATION));
     }
 
     @Test
