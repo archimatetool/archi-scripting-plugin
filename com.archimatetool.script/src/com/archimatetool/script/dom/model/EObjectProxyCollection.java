@@ -242,7 +242,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         for(EObjectProxy object : this) {
         	EObjectProxyCollection parents = object.parents();
             if(parents != null && !parents.isEmpty()) {
-                list = list.add(parents); // TODO: should this just be list.add(parents); ?
+                list.add(parents);
             }
         }
         

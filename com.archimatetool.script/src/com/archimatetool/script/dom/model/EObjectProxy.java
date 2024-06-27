@@ -186,51 +186,56 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     }
     
     /**
-     * @return the descendants of each object in the set of matched objects
+     * Iterate over the descendent contents of this object and add them to a collection.
+     * Descendent objects are those supported in {@link EObjectProxy#get(EObject)}
+     * @return the collection of descendent objects or an empty list if no child objects.
      */
     protected EObjectProxyCollection find() {
     	EObjectProxyCollection list = new EObjectProxyCollection();
         
-        if(getEObject() != null) {
-            // Iterate over all model contents and put all objects into the list
-            for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
-                EObject eObject = iter.next();
-                EObjectProxy proxy = EObjectProxy.get(eObject);
-                if(proxy != null) {
-                    list.add(proxy);
-                }
+        if(getEObject() == null) {
+            return list;
+        }
+
+        for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
+            EObject eObject = iter.next();
+            EObjectProxy proxy = EObjectProxy.get(eObject);
+            if(proxy != null) {
+                list.add(proxy);
             }
         }
-        
+
         return list;
     }
     
     /**
-     * @param selector
-     * @return the set of matched objects
+     * Iterate over the contents of this object and filter them by the selector
+     * @param selector The selector to filter on. See SelectorFilterFactory
+     * @return the collection of matched objects
      */
     protected EObjectProxyCollection find(String selector) {
         return find().filter(selector);
     }
     
     /**
-     * @param eObject
-     * @return
+     * TODO: I can't see where/why this is used. Is it needed?
+     * @param eObject The eObject to get as an EObjectProxy and added to a collection.
+     * @return a collection containing the object or an empty collection if the EObjectProxy is not found.
      */
     protected EObjectProxyCollection find(EObject eObject) {
-    	EObjectProxyCollection list = new EObjectProxyCollection();
-    	
-    	EObjectProxy proxy = EObjectProxy.get(eObject);
-    	if(proxy != null) {
-            list.add(proxy);
-    	}
-    	
-    	return list;
+    	return find(EObjectProxy.get(eObject));
     }
     
     /**
-     * @param object
-     * @return
+     * Add the given object to a collection so that the EObjectProxyCollection methods can be used on it.
+     * In JS this manifests as in this example:
+     * <pre>
+     *  var object = ...;
+     *  var parent = $(object).parent();
+     * </pre>
+     * 
+     * @param object the EObjectProxy to wrap in a collection
+     * @return a collection containing the object.
      */
     protected EObjectProxyCollection find(EObjectProxy object) {
     	EObjectProxyCollection list = new EObjectProxyCollection();
@@ -243,30 +248,32 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
     }
     
     /**
-     * @return children as collection. Default is an empty list
+     * @return children as collection. Default is an empty list.
      */
     protected EObjectProxyCollection children() {
         return new EObjectProxyCollection();
     }
     
     /**
-     * @return parent of this object. Default is the eContainer
+     * @return parent of this object. Default is the eContainer.
      */
     protected EObjectProxy parent() {
         return getEObject() == null ? null : EObjectProxy.get(getEObject().eContainer());
 	}
     
+    /**
+     * @return all parents of this object as a hierarchy.
+     */
     protected EObjectProxyCollection parents() {
         EObjectProxy parent = parent();
         
         if(parent == null || parent.getEObject() instanceof IArchimateModel) {
             return null;
         }
-        else {
-            EObjectProxyCollection list = new EObjectProxyCollection();
-            list.add(parent);
-            return list.add(list.parents());
-        }
+
+        EObjectProxyCollection list = new EObjectProxyCollection();
+        list.add(parent);
+        return list.add(list.parents());
     }
 
     // ========================================= Properties =========================================

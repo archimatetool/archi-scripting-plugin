@@ -1,5 +1,5 @@
 function jArchi (obj) {
-	if (obj == selection) // obj is an object
+	if (obj == selection) // obj is the selection so just return that
 		return obj;
 	else // obj is an object, a string or will be casted to a (potentially empty) string
 		return model.find(obj || "");
