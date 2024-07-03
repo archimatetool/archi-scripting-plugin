@@ -20,7 +20,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.FontDialog;
 import org.eclipse.swt.widgets.Group;
@@ -189,7 +188,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     }
 
     private String chooseFolderPath() {
-        DirectoryDialog dialog = new DirectoryDialog(Display.getCurrent().getActiveShell());
+        DirectoryDialog dialog = new DirectoryDialog(getShell());
         dialog.setText(Messages.ScriptPreferencePage_8);
         dialog.setMessage(Messages.ScriptPreferencePage_9);
         File file = new File(fScriptsFolderTextField.getText());
@@ -200,7 +199,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     }
 
     private String chooseEditor() {
-        FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell());
+        FileDialog dialog = new FileDialog(getShell());
         dialog.setText(Messages.ScriptPreferencePage_3);
         File file = new File(fEditorPathTextField.getText());
         dialog.setFilterPath(file.getParent());
