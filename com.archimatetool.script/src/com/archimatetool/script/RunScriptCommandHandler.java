@@ -13,11 +13,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IParameter;
 import org.eclipse.core.commands.IParameterValues;
-import org.eclipse.core.commands.Parameterization;
 import org.eclipse.core.commands.ParameterizedCommand;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.jface.bindings.TriggerSequence;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -107,27 +104,17 @@ public class RunScriptCommandHandler extends AbstractHandler implements IParamet
             return null;
         }
         
-        try {
-            Command command = PlatformUI.getWorkbench().getAdapter(ICommandService.class).getCommand(ID);
-            if(command == null) {
-                return null;
-            }
-            
-            IParameter parameter = command.getParameter(PARAMETER);
-            if(parameter == null) {
-                return null;
-            }
-            
-            Parameterization[] params = new Parameterization[] { new Parameterization(parameter, parameterValue) };
-            ParameterizedCommand parameterizedCommand = new ParameterizedCommand(command, params);
-            
-            TriggerSequence ts = PlatformUI.getWorkbench().getAdapter(IBindingService.class).getBestActiveBindingFor(parameterizedCommand);
-            return ts != null ? ts.format() : null;
-        }
-        catch(NotDefinedException ex) {
-            ex.printStackTrace();
+        Command command = PlatformUI.getWorkbench().getAdapter(ICommandService.class).getCommand(ID);
+        if(command == null) {
+            return null;
         }
         
-        return null;
+        ParameterizedCommand parameterizedCommand = ParameterizedCommand.generateCommand(command, Map.of(PARAMETER, parameterValue));
+        if(parameterizedCommand == null) {
+            return null;
+        }
+        
+        TriggerSequence ts = PlatformUI.getWorkbench().getAdapter(IBindingService.class).getBestActiveBindingFor(parameterizedCommand);
+        return ts != null ? ts.format() : null;
     }
 }
