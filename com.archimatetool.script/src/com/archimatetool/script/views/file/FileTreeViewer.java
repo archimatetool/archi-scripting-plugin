@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.Collator;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
@@ -119,23 +120,23 @@ public abstract class FileTreeViewer extends TreeViewer {
         setCellModifier(new ICellModifier() {
             @Override
             public void modify(Object element, String property, Object value) {
-                if(element instanceof TreeItem) {
-                    Object data = ((TreeItem)element).getData();
-                    if(data instanceof File) {
-                        File renamedFile = new File(((File)data).getParent(), (String)value);
-                        boolean ok = ((File)data).renameTo((renamedFile));
-                        if(ok) {
-                            refresh();
-                            setSelection(new StructuredSelection(renamedFile));
-                        }
+                if(element instanceof TreeItem treeItem && treeItem.getData() instanceof File file && value instanceof String newValue) {
+                    File renamedFile = new File(file.getParent(), newValue);
+                    boolean ok = file.renameTo(renamedFile);
+                    if(ok) {
+                        refresh();
+                        setSelection(new StructuredSelection(renamedFile));
+                    }
+                    else {
+                        MessageDialog.openError(getControl().getShell(), Messages.FileTreeViewer_0, Messages.FileTreeViewer_1);
                     }
                 }
             }
             
             @Override
             public Object getValue(Object element, String property) {
-                if(element instanceof File) {
-                    return ((File)element).getName();
+                if(element instanceof File file) {
+                    return file.getName();
                 }
                 return null;
             }
@@ -181,16 +182,16 @@ public abstract class FileTreeViewer extends TreeViewer {
         
         @Override
         public Object getParent(Object child) {
-            if(child instanceof File) {
-                return ((File)child).getParentFile();
+            if(child instanceof File file) {
+                return file.getParentFile();
             }
             return null;
         }
         
         @Override
         public Object[] getChildren(Object parent) {
-            if(parent instanceof File) {
-                File[] files = ((File)parent).listFiles(new FileFilter() {
+            if(parent instanceof File file) {
+                File[] files = file.listFiles(new FileFilter() {
                     @Override
                     public boolean accept(File pathname) {
                         try {
@@ -213,9 +214,8 @@ public abstract class FileTreeViewer extends TreeViewer {
         
         @Override
         public boolean hasChildren(Object parent) {
-            if(parent instanceof File) {
-                File f = (File)parent;
-                return f.isDirectory() && f.listFiles().length > 0;
+            if(parent instanceof File file) {
+                return file.isDirectory() && file.listFiles().length > 0;
             }
             return false;
         }
@@ -229,8 +229,7 @@ public abstract class FileTreeViewer extends TreeViewer {
         
         @Override
         public void update(ViewerCell cell) {
-            if(cell.getElement() instanceof File) {
-                File file = (File)cell.getElement();
+            if(cell.getElement() instanceof File file) {
                 cell.setText(getText(file));
                 cell.setImage(getImage(file));
             }
