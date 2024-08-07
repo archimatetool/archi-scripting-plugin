@@ -320,7 +320,7 @@ public abstract class EObjectProxyTests {
  
     @Test
     public void attr_Type() {
-        assertEquals(ModelUtil.getKebabCase(((IIdentifier)testProxy.getReferencedEObject()).eClass().getName()), testProxy.attr(IModelConstants.TYPE));
+        assertEquals(ModelUtil.getKebabCase(testProxy.getReferencedEObject().eClass().getName()), testProxy.attr(IModelConstants.TYPE));
     }
 
     @Test
