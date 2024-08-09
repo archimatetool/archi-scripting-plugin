@@ -34,4 +34,9 @@ public class DiagramModelReferenceProxy extends DiagramModelObjectProxy {
         return getEObject().getReferencedModel();
     }
 
+    @Override
+    public String getType() {
+        // The type should be the IDiagramModelReference, not the referenced diagram model
+        return ModelUtil.getKebabCase(getEObject().eClass().getName());
+    }
 }

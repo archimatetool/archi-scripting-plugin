@@ -39,6 +39,19 @@ public class DiagramModelReferenceProxyTests extends DiagramModelObjectProxyTest
 
     @Override
     @Test
+    public void getType() {
+        // The type should be the IDiagramModelReference, not the referenced diagram model
+        assertEquals(ModelUtil.getKebabCase(testProxy.getEObject().eClass().getName()), testProxy.getType());
+    }
+    
+    @Override
+    public void attr_Type() {
+        // The type should be the IDiagramModelReference, not the referenced diagram model        
+        assertEquals(ModelUtil.getKebabCase(testProxy.getEObject().eClass().getName()), testProxy.getType());
+    }
+    
+    @Override
+    @Test
     public void get_ReturnsCorrectProxy() {
         EObjectProxy proxy = EObjectProxy.get(testEObject);
         assertTrue(proxy instanceof DiagramModelReferenceProxy);
