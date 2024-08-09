@@ -30,6 +30,7 @@ import com.archimatetool.model.ITextPosition;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteDiagramModelObjectCommand;
+import com.archimatetool.script.commands.MoveListObjectCommand;
 import com.archimatetool.script.commands.ScriptCommandWrapper;
 import com.archimatetool.script.commands.SetCommand;
 
@@ -118,6 +119,56 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         
         return this;
     }
+    
+    // ============================================================================
+    
+    // TODO - Parent approach. Would need to add this to DiagramModelProxy as well
+    
+    public int indexOf(DiagramModelObjectProxy childObject) {
+        if(getEObject() instanceof IDiagramModelContainer parent && childObject != null) {
+            return parent.getChildren().indexOf(childObject.getEObject());
+        }
+        return -1;
+    }
+    
+    public DiagramModelObjectProxy setIndex(DiagramModelObjectProxy childObject, int position) {
+        if(getEObject() instanceof IDiagramModelContainer parent && childObject != null) {
+            if(!parent.getChildren().contains(childObject.getEObject())) {
+                throw new ArchiScriptException(NLS.bind("''{0}'' is not a child of ''{1}''", childObject.getEObject().getName(),
+                        getEObject().getName()));
+            }
+            if(position < -1 || position >= parent.getChildren().size()) {
+                throw new ArchiScriptException("Index out of bounds");
+            }
+            
+            CommandHandler.executeCommand(new MoveListObjectCommand(parent.getChildren(), childObject.getEObject(), position));
+        }
+        
+        return this;
+    }
+    
+    // TODO - Object approach - preferred.
+    
+    public int getIndex() {
+        if(getEObject().eContainer() instanceof IDiagramModelContainer parent) {
+            return parent.getChildren().indexOf(getEObject());
+        }
+        return -1;
+    }
+    
+    public DiagramModelObjectProxy setIndex(int position) {
+        if(getEObject().eContainer() instanceof IDiagramModelContainer parent) {
+            if(position < -1 || position >= parent.getChildren().size()) {
+                throw new ArchiScriptException("Index out of bounds");
+            }
+            
+            CommandHandler.executeCommand(new MoveListObjectCommand(parent.getChildren(), getEObject(), position));
+        }
+        
+        return this;
+    }
+    
+    // ============================================================================
     
     /**
      * @return child node diagram objects of this diagram object (if any)
@@ -390,6 +441,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         switch(attribute) {
             case BOUNDS:
                 return getBounds();
+            case INDEX:
+                return getIndex();
             case FILL_COLOR:
                 return getFillColor();
             case ICON_COLOR:
@@ -427,6 +480,11 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             case BOUNDS:
                 if(value instanceof Map val) {
                     return setBounds(val);
+                }
+                break;
+            case INDEX:
+                if(value instanceof Integer val) {
+                    return setIndex(val);
                 }
                 break;
             case FILL_COLOR:

@@ -8,6 +8,7 @@ package com.archimatetool.script.dom.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.script.ArchiScriptException;
 
 
 /**
@@ -134,6 +136,59 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertEquals(20, bounds.get("y"));
         assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.get("width"));
         assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.get("height"));
+    }
+    
+    @Override
+    @Test
+    public void index() {
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.setIndex(-2);
+        });
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.setIndex(actualTestProxy.parent().children().size() + 1);
+        });
+        
+        assertEquals(1, actualTestProxy.getIndex());
+        assertEquals(1, actualTestProxy.attr(IModelConstants.INDEX));
+        
+        actualTestProxy.setIndex(0);
+        assertEquals(0, actualTestProxy.getIndex());
+        assertEquals(0, actualTestProxy.attr(IModelConstants.INDEX));
+        
+        actualTestProxy.attr(IModelConstants.INDEX, 2);
+        assertEquals(2, actualTestProxy.getIndex());
+        assertEquals(2, actualTestProxy.attr(IModelConstants.INDEX));
+        
+        // -1 is end of list
+        actualTestProxy.setIndex(-1);
+        assertEquals(2, actualTestProxy.getIndex());
+    }
+    
+    // TODO Do we want this?
+    @Test
+    public void index_Parent() {
+        DiagramModelObjectProxy parent = (DiagramModelObjectProxy)testProxy.parent();
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            parent.setIndex(actualTestProxy, -2);
+        });
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            parent.setIndex(actualTestProxy, parent.children().size() + 1);
+        });
+        
+        assertEquals(1, parent.indexOf(actualTestProxy));
+        
+        parent.setIndex(actualTestProxy, 0);
+        assertEquals(0, parent.indexOf(actualTestProxy));
+        
+        parent.setIndex(actualTestProxy, 1);
+        assertEquals(1, parent.indexOf(actualTestProxy));
+        
+        // -1 is end of list
+        parent.setIndex(actualTestProxy, -1);
+        assertEquals(2, parent.indexOf(actualTestProxy));
     }
     
     @Override

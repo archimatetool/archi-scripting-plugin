@@ -55,6 +55,12 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
         assertEquals(100, bounds.get("width"));
         assertEquals(100, bounds.get("height"));
     }
+    
+    @Test
+    public void index() {
+        assertEquals(0, actualTestProxy.getIndex());
+        assertEquals(0, actualTestProxy.attr(IModelConstants.INDEX));
+    }
 
     @Override
     @Test
