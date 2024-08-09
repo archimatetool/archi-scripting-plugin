@@ -55,52 +55,52 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
      * @return EObjectProxy type or null if not found
      */
     static EObjectProxy get(EObject eObject) {
-        if(eObject instanceof IArchimateModel) {
-            return new ArchimateModelProxy((IArchimateModel)eObject);
+        if(eObject instanceof IArchimateModel model) {
+            return new ArchimateModelProxy(model);
         }
         
-        if(eObject instanceof IArchimateElement) {
-            return new ArchimateElementProxy((IArchimateElement)eObject);
+        if(eObject instanceof IArchimateElement element) {
+            return new ArchimateElementProxy(element);
         }
         
-        if(eObject instanceof IArchimateRelationship) {
-            return new ArchimateRelationshipProxy((IArchimateRelationship)eObject);
+        if(eObject instanceof IArchimateRelationship relation) {
+            return new ArchimateRelationshipProxy(relation);
         }
         
-        if(eObject instanceof IArchimateDiagramModel) {
-            return new ArchimateDiagramModelProxy((IArchimateDiagramModel)eObject);
+        if(eObject instanceof IArchimateDiagramModel dm) {
+            return new ArchimateDiagramModelProxy(dm);
         }
         
-        if(eObject instanceof ISketchModel) {
-            return new SketchDiagramModelProxy((ISketchModel)eObject);
+        if(eObject instanceof ISketchModel sm) {
+            return new SketchDiagramModelProxy(sm);
         }
         
-        if(eObject instanceof ICanvasModel) {
-            return new CanvasDiagramModelProxy((ICanvasModel)eObject);
+        if(eObject instanceof ICanvasModel cm) {
+            return new CanvasDiagramModelProxy(cm);
         }
         
-        if(eObject instanceof IDiagramModelNote) {
-            return new DiagramModelNoteProxy((IDiagramModelNote)eObject);
+        if(eObject instanceof IDiagramModelNote note) {
+            return new DiagramModelNoteProxy(note);
         }
         
-        if(eObject instanceof IDiagramModelGroup) {
-            return new DiagramModelGroupProxy((IDiagramModelGroup)eObject);
+        if(eObject instanceof IDiagramModelGroup group) {
+            return new DiagramModelGroupProxy(group);
         }
 
-        if(eObject instanceof IDiagramModelReference) {
-            return new DiagramModelReferenceProxy((IDiagramModelReference)eObject);
+        if(eObject instanceof IDiagramModelReference ref) {
+            return new DiagramModelReferenceProxy(ref);
         }
 
-        if(eObject instanceof IDiagramModelObject) {
-            return new DiagramModelObjectProxy((IDiagramModelObject)eObject);
+        if(eObject instanceof IDiagramModelObject dmo) {
+            return new DiagramModelObjectProxy(dmo);
         }
         
-        if(eObject instanceof IDiagramModelConnection) {
-            return new DiagramModelConnectionProxy((IDiagramModelConnection)eObject);
+        if(eObject instanceof IDiagramModelConnection dmc) {
+            return new DiagramModelConnectionProxy(dmc);
         }
 
-        if(eObject instanceof IFolder) {
-            return new FolderProxy((IFolder)eObject);
+        if(eObject instanceof IFolder folder) {
+            return new FolderProxy(folder);
         }
 
         return null;

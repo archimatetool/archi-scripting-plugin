@@ -67,8 +67,8 @@ class ModelUtil {
         }
         
         // Convert back to relative co-ords
-        if(parent instanceof IDiagramModelObject) {
-            IBounds newBounds = DiagramModelUtils.getRelativeBounds(bounds, (IDiagramModelObject)parent);
+        if(parent instanceof IDiagramModelObject dmo) {
+            IBounds newBounds = DiagramModelUtils.getRelativeBounds(bounds, dmo);
             bounds.setX(newBounds.getX());
             bounds.setY(newBounds.getY());
         }
@@ -157,9 +157,8 @@ class ModelUtil {
         }
         
         // If a relationship, check ends
-        if(concept instanceof IArchimateRelationship) {
-            if(!ArchimateModelUtils.isValidRelationship(((IArchimateRelationship)concept).getSource(),
-                    ((IArchimateRelationship)concept).getTarget(), eClass)) {
+        if(concept instanceof IArchimateRelationship relation) {
+            if(!ArchimateModelUtils.isValidRelationship(relation.getSource(), relation.getTarget(), eClass)) {
                 return false;
             }
         }
@@ -227,7 +226,7 @@ class ModelUtil {
      * @return
      */
     static int getIntValueFromMap(Map<?, ?> map, String key, int defaultValue) {
-        return (map != null && map.get(key) instanceof Number) ? ((Number)map.get(key)).intValue() : defaultValue;
+        return (map != null && map.get(key) instanceof Number num) ? num.intValue() : defaultValue;
     }
 
     /**
@@ -238,7 +237,7 @@ class ModelUtil {
      * @return
      */
     static String getStringValueFromMap(Map<?, ?> map, String key, String defaultValue) {
-        return (map != null && map.get(key) instanceof String) ? (String)map.get(key) : defaultValue;
+        return (map != null && map.get(key) instanceof String str) ? str : defaultValue;
     }
     
     /**

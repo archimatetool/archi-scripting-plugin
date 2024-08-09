@@ -160,8 +160,8 @@ class SelectorFilterFactory {
     }
     
     private EObject getReferencedObject(EObject object) {
-        if(object instanceof IDiagramModelArchimateComponent) {
-            return ((IDiagramModelArchimateComponent)object).getArchimateConcept();
+        if(object instanceof IDiagramModelArchimateComponent dmac) {
+            return dmac.getArchimateConcept();
         }
         
         return object;

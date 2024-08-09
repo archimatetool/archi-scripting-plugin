@@ -92,8 +92,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     protected EObjectProxyCollection outRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        if(getEObject() instanceof IConnectable) {
-            for(IDiagramModelConnection dmc : ((IConnectable)getEObject()).getSourceConnections()) {
+        if(getEObject() instanceof IConnectable connectable) {
+            for(IDiagramModelConnection dmc : connectable.getSourceConnections()) {
                 list.add(new DiagramModelConnectionProxy(dmc));
             }
         }
@@ -107,8 +107,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     protected EObjectProxyCollection inRels() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        if(getEObject() instanceof IConnectable) {
-            for(IDiagramModelConnection dmc : ((IConnectable)getEObject()).getTargetConnections()) {
+        if(getEObject() instanceof IConnectable connectable) {
+            for(IDiagramModelConnection dmc : connectable.getTargetConnections()) {
                 list.add(new DiagramModelConnectionProxy(dmc));
             }
         }
@@ -257,27 +257,27 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case SPECIALIZATION:
-                if(value instanceof String) {
-                    return setSpecialization((String)value);
+                if(value instanceof String val) {
+                    return setSpecialization(val);
                 }
             case FONT_COLOR:
-                if(value instanceof String) {
-                    return setFontColor((String)value);
+                if(value instanceof String val) {
+                    return setFontColor(val);
                 }
                 break;
             case FONT_NAME:
-                if(value instanceof String) {
-                    return setFontName((String)value);
+                if(value instanceof String val) {
+                    return setFontName(val);
                 }
                 break;
             case FONT_SIZE:
-                if(value instanceof Integer) {
-                    return setFontSize((int)value);
+                if(value instanceof Integer val) {
+                    return setFontSize(val);
                 }
                 break;
             case FONT_STYLE:
-                if(value instanceof String) {
-                    return setFontStyle((String)value);
+                if(value instanceof String val) {
+                    return setFontStyle(val);
                 }
                 break;
             case LINE_COLOR:
@@ -286,8 +286,8 @@ public abstract class DiagramModelComponentProxy extends EObjectProxy {
                 }
                 break;
             case LINE_WIDTH:
-                if(value instanceof Integer) {
-                    return setLineWidth((int)value);
+                if(value instanceof Integer val) {
+                    return setLineWidth(val);
                 }
                 break;
         }

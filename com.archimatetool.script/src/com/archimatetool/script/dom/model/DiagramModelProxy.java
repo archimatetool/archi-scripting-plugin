@@ -110,8 +110,8 @@ public abstract class DiagramModelProxy extends EObjectProxy {
         // All connections
         for(Iterator<EObject> iter = getEObject().eAllContents(); iter.hasNext();) {
             EObject eObject = iter.next();
-            if(eObject instanceof IDiagramModelConnection) {
-                list.add(new DiagramModelConnectionProxy((IDiagramModelConnection)eObject));
+            if(eObject instanceof IDiagramModelConnection dmc) {
+                list.add(new DiagramModelConnectionProxy(dmc));
             }
         }
         

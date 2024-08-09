@@ -29,21 +29,21 @@ public class Selection extends EObjectProxyCollection implements IArchiScriptBin
         if(PlatformUI.isWorkbenchRunning()) {
             ISelection selection = WorkbenchPartTracker.INSTANCE.getCurrentSelection();
             
-            if(selection instanceof IStructuredSelection) {
-                for(Object o : ((IStructuredSelection)selection).toArray()) {
+            if(selection instanceof IStructuredSelection structuredSelection) {
+                for(Object o : structuredSelection.toArray()) {
                     
                     // Check this first!
                     // If it's an EditPart then get the diagram model component
-                    if(o instanceof EditPart) {
-                        o = ((EditPart)o).getModel();
+                    if(o instanceof EditPart editPart) {
+                        o = editPart.getModel();
                     }
                     // Else this...which I don't think will ever happen
-                    else if(o instanceof IAdaptable) {
-                        o = ((IAdaptable)o).getAdapter(EObject.class);
+                    else if(o instanceof IAdaptable adaptable) {
+                        o = adaptable.getAdapter(EObject.class);
                     }
                     
-                    if(o instanceof EObject) {
-                        EObjectProxy proxy = EObjectProxy.get((EObject)o);
+                    if(o instanceof EObject eObject) {
+                        EObjectProxy proxy = EObjectProxy.get(eObject);
                         if(proxy != null) {
                             add(proxy);
                         }

@@ -107,8 +107,8 @@ public class ArchimateDiagramModelProxy extends DiagramModelProxy {
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case VIEWPOINT:
-                if(value instanceof String) {
-                    return setViewpoint((String)value);
+                if(value instanceof String val) {
+                    return setViewpoint(val);
                 }
                 break;
         }

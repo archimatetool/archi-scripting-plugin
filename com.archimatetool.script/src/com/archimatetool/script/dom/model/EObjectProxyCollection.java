@@ -407,9 +407,9 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         Set<EObjectProxy> set = new LinkedHashSet<>();
 		
 		for(EObjectProxy object : this) {
-		    if(object instanceof IRelationshipProxy ) {
-		        set.add(((IRelationshipProxy)object).getSource());
-		        set.add(((IRelationshipProxy)object).getTarget());
+		    if(object instanceof IRelationshipProxy relationshipProxy) {
+		        set.add(relationshipProxy.getSource());
+		        set.add(relationshipProxy.getTarget());
 		    }
         }
 		
@@ -430,8 +430,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         Set<EObjectProxy> set = new LinkedHashSet<>();
 		
 		for(EObjectProxy object : this) {
-            if(object instanceof IRelationshipProxy) {
-                set.add(((IRelationshipProxy)object).getSource());
+            if(object instanceof IRelationshipProxy relationshipProxy) {
+                set.add(relationshipProxy.getSource());
             }
         }
 		
@@ -452,8 +452,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
         Set<EObjectProxy> set = new LinkedHashSet<>();
         
 		for(EObjectProxy object : this) {
-            if(object instanceof IRelationshipProxy) {
-                set.add(((IRelationshipProxy)object).getTarget());
+            if(object instanceof IRelationshipProxy relationshipProxy) {
+                set.add(relationshipProxy.getTarget());
             }
         }
 		
@@ -500,8 +500,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object.getInternal() instanceof IReferencedProxy) {
-                list.add(((IReferencedProxy)object.getInternal()).objectRefs());
+            if(object.getInternal() instanceof IReferencedProxy refProxy) {
+                list.add(refProxy.objectRefs());
             }
         }
 		
@@ -526,8 +526,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object.getInternal() instanceof IReferencedProxy) {
-                list.add(((IReferencedProxy)object.getInternal()).viewRefs());
+            if(object.getInternal() instanceof IReferencedProxy refProxy) {
+                list.add(refProxy.viewRefs());
             }
         }
 		
@@ -553,9 +553,9 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-		    if(object.getInternal() instanceof IConnectableProxy) {
-                list.add(((IConnectableProxy)object.getInternal()).outRels());
-                list.add(((IConnectableProxy)object.getInternal()).inRels());
+		    if(object.getInternal() instanceof IConnectableProxy connectableProxy) {
+                list.add(connectableProxy.outRels());
+                list.add(connectableProxy.inRels());
 		    }
         }
 		
@@ -571,8 +571,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object.getInternal() instanceof IConnectableProxy) {
-                list.add(((IConnectableProxy)object.getInternal()).inRels());
+            if(object.getInternal() instanceof IConnectableProxy connectableProxy) {
+                list.add(connectableProxy.inRels());
             }
         }
 		
@@ -588,8 +588,8 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
 		EObjectProxyCollection list = new EObjectProxyCollection();
 		
 		for(EObjectProxy object : this) {
-            if(object.getInternal() instanceof IConnectableProxy) {
-                list.add(((IConnectableProxy)object.getInternal()).outRels());
+            if(object.getInternal() instanceof IConnectableProxy connectableProxy) {
+                list.add(connectableProxy.outRels());
             }
         }
 		

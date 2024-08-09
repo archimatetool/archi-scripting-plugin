@@ -68,13 +68,13 @@ public class DiagramModelNoteProxy extends DiagramModelObjectProxy {
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case TEXT:
-                if(value instanceof String) {
-                    setText((String)value);
+                if(value instanceof String val) {
+                    setText(val);
                 }
                 break;
             case BORDER_TYPE:
-                if(value instanceof Integer) {
-                    setBorderType((int)value);
+                if(value instanceof Integer val) {
+                    setBorderType(val);
                 }
                 break;
         }

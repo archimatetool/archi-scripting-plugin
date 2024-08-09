@@ -263,23 +263,23 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case LABEL_VISIBLE:
-                if(value instanceof Boolean) {
-                    return setLabelVisible((boolean)value);
+                if(value instanceof Boolean val) {
+                    return setLabelVisible(val);
                 }
                 break;
             case TEXT_POSITION:
-                if(value instanceof Integer) {
-                    return setTextPosition((int)value);
+                if(value instanceof Integer val) {
+                    return setTextPosition(val);
                 }
                 break;
             case TEXT_ALIGNMENT:
-                if(value instanceof Integer) {
-                    return setTextAlignment((int)value);
+                if(value instanceof Integer val) {
+                    return setTextAlignment(val);
                 }
                 break;
             case STYLE:
-                if(value instanceof Integer) {
-                    return setStyle((int)value);
+                if(value instanceof Integer val) {
+                    return setStyle(val);
                 }
                 break;
         }

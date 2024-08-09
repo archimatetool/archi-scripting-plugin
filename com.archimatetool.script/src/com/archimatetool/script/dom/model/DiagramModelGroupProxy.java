@@ -55,8 +55,8 @@ public class DiagramModelGroupProxy extends DiagramModelObjectProxy {
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case BORDER_TYPE:
-                if(value instanceof Integer) {
-                    setBorderType((int)value);
+                if(value instanceof Integer val) {
+                    setBorderType(val);
                 }
                 break;
         }

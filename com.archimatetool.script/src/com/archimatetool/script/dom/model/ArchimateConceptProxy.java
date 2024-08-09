@@ -176,8 +176,8 @@ public abstract class ArchimateConceptProxy extends EObjectProxy {
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case SPECIALIZATION:
-                if(value instanceof String) {
-                    return setSpecialization((String)value);
+                if(value instanceof String val) {
+                    return setSpecialization(val);
                 }
         }
         

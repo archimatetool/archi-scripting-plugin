@@ -48,8 +48,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
      * Add an Archimate element to this diagram object and return the new diagram object
      */
     public DiagramModelObjectProxy add(ArchimateElementProxy elementProxy, int x, int y, int width, int height) {
-        if(getEObject() instanceof IDiagramModelContainer) {
-            return ModelFactory.addArchimateDiagramObject((IDiagramModelContainer)getEObject(), elementProxy.getEObject(), x, y, width, height, false);
+        if(getEObject() instanceof IDiagramModelContainer parent) {
+            return ModelFactory.addArchimateDiagramObject(parent, elementProxy.getEObject(), x, y, width, height, false);
         }
         
         throw new ArchiScriptException(Messages.DiagramModelObjectProxy_0);
@@ -59,8 +59,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
      * Create and add a diagram object and return the diagram object proxy
      */
     public DiagramModelObjectProxy createObject(String type, int x, int y, int width, int height) {
-        if(getEObject() instanceof IDiagramModelContainer) {
-            return ModelFactory.createDiagramObject((IDiagramModelContainer)getEObject(), type, x, y, width, height, false);
+        if(getEObject() instanceof IDiagramModelContainer parent) {
+            return ModelFactory.createDiagramObject(parent, type, x, y, width, height, false);
         }
         
         throw new ArchiScriptException(Messages.DiagramModelObjectProxy_1);
@@ -70,8 +70,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
      * Create and add a view reference to another view and return the diagram object proxy
      */
     public DiagramModelReferenceProxy createViewReference(DiagramModelProxy dmRef, int x, int y, int width, int height) {
-        if(getEObject() instanceof IDiagramModelContainer) {
-            return ModelFactory.createViewReference((IDiagramModelContainer)getEObject(), dmRef.getEObject(), x, y, width, height, false);
+        if(getEObject() instanceof IDiagramModelContainer parent) {
+            return ModelFactory.createViewReference(parent, dmRef.getEObject(), x, y, width, height, false);
         }
         
         throw new ArchiScriptException(Messages.DiagramModelObjectProxy_1);
@@ -126,8 +126,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     protected EObjectProxyCollection children() {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        if(getEObject() instanceof IDiagramModelContainer) {
-            for(IDiagramModelObject dmo : ((IDiagramModelContainer)getEObject()).getChildren()) {
+        if(getEObject() instanceof IDiagramModelContainer parent) {
+            for(IDiagramModelObject dmo : parent.getChildren()) {
                 list.add(EObjectProxy.get(dmo));
             }
         }
@@ -159,9 +159,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     
     public DiagramModelObjectProxy setIconColor(String value) {
         // Only for objects that have an icon
-        IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProvider(getEObject());
-        
-        if(provider instanceof IGraphicalObjectUIProvider && ((IGraphicalObjectUIProvider)provider).hasIcon()) {
+        if(ObjectUIFactory.INSTANCE.getProvider(getEObject()) instanceof IGraphicalObjectUIProvider provider && provider.hasIcon()) {
             checkColorValue(value);
             CommandHandler.executeCommand(new SetCommand(getEObject(), IDiagramModelObject.FEATURE_ICON_COLOR, value, IDiagramModelObject.FEATURE_ICON_COLOR_DEFAULT));
         }
@@ -220,19 +218,16 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     }
     
     public DiagramModelObjectProxy setFigureType(int value) {
-        // If this is an ArchiMate type...
-        if(isArchimateConcept()) {
-            // And we support alternate figures for this diagram model object...
-            IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProviderForClass(getConcept().getEObject().eClass());
-            if(provider instanceof IArchimateElementUIProvider && ((IArchimateElementUIProvider)provider).hasAlternateFigure()) {
-                if(value < 0) {
-                    value = 0;
-                }
-                if(value > 1) {
-                    value = 1;
-                }          
-                CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_ARCHIMATE_OBJECT__TYPE, value));
+        // If this is an ArchiMate type and we support alternate figures for this diagram model object
+        if(isArchimateConcept() &&
+                ObjectUIFactory.INSTANCE.getProviderForClass(getConcept().getEObject().eClass()) instanceof IArchimateElementUIProvider provider && provider.hasAlternateFigure()) {
+            if(value < 0) {
+                value = 0;
             }
+            if(value > 1) {
+                value = 1;
+            }          
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_ARCHIMATE_OBJECT__TYPE, value));
         }
         
         return this;
@@ -274,8 +269,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     }
     
     public Object getTextPosition() {
-        if(getEObject() instanceof ITextPosition) {
-            return ((ITextPosition)getEObject()).getTextPosition();
+        if(getEObject() instanceof ITextPosition textPositionObject) {
+            return textPositionObject.getTextPosition();
         }
         
         return null;
@@ -287,9 +282,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     
     public DiagramModelObjectProxy setShowIcon(int value) {
         // Only for objects that have an icon
-        IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProvider(getEObject());
-        
-        if(provider instanceof IGraphicalObjectUIProvider && ((IGraphicalObjectUIProvider)provider).hasIcon()) {
+        if(ObjectUIFactory.INSTANCE.getProvider(getEObject()) instanceof IGraphicalObjectUIProvider provider && provider.hasIcon()) {
             // Bounds checking
             if(value < IDiagramModelObject.ICON_VISIBLE_IF_NO_IMAGE_DEFINED || value > IDiagramModelObject.ICON_VISIBLE_NEVER) {
                 value = IDiagramModelObject.FEATURE_ICON_VISIBLE_DEFAULT;
@@ -326,9 +319,9 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     }
     
     public Object getImagePosition() {
-        if(getEObject() instanceof IIconic &&
+        if(getEObject() instanceof IIconic iconic &&
                 ModelUtil.shouldExposeFeature(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH.getName())) {
-            return ((IIconic)getEObject()).getImagePosition();
+            return iconic.getImagePosition();
         }
         
         return -1;
@@ -349,9 +342,9 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     }
     
     public Map<String, Object> getImage() {
-        if(getEObject() instanceof IDiagramModelImageProvider &&
+        if(getEObject() instanceof IDiagramModelImageProvider imageProvider &&
                 ModelUtil.shouldExposeFeature(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH.getName())) {
-            return ModelFactory.createImageObject(getArchimateModel(), ((IDiagramModelImageProvider)getEObject()).getImagePath());
+            return ModelFactory.createImageObject(getArchimateModel(), imageProvider.getImagePath());
         }
         
         return null;
@@ -432,8 +425,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case BOUNDS:
-                if(value instanceof Map) {
-                    return setBounds((Map<?, ?>)value);
+                if(value instanceof Map val) {
+                    return setBounds(val);
                 }
                 break;
             case FILL_COLOR:
@@ -447,58 +440,58 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 }
                 break;
             case OPACITY:
-                if(value instanceof Integer) {
-                    return setOpacity((int)value);
+                if(value instanceof Integer val) {
+                    return setOpacity(val);
                 }
                 break;
             case OUTLINE_OPACITY:
-                if(value instanceof Integer) {
-                    return setOutlineOpacity((int)value);
+                if(value instanceof Integer val) {
+                    return setOutlineOpacity(val);
                 }
                 break;
             case GRADIENT:
-                if(value instanceof Integer) {
-                    return setGradient((int)value);
+                if(value instanceof Integer val) {
+                    return setGradient(val);
                 }
                 break;
             case FIGURE_TYPE:
-                if(value instanceof Integer) {
-                    return setFigureType((int)value);
+                if(value instanceof Integer val) {
+                    return setFigureType(val);
                 }
                 break;
             case TEXT_ALIGNMENT:
-                if(value instanceof Integer) {
-                    return setTextAlignment((int)value);
+                if(value instanceof Integer val) {
+                    return setTextAlignment(val);
                 }
                 break;
             case TEXT_POSITION:
-                if(value instanceof Integer) {
-                    return setTextPosition((int)value);
+                if(value instanceof Integer val) {
+                    return setTextPosition(val);
                 }
                 break;
             case SHOW_ICON:
-                if(value instanceof Integer) {
-                    return setShowIcon((int)value);
+                if(value instanceof Integer val) {
+                    return setShowIcon(val);
                 }
                 break;
             case IMAGE_SOURCE:
-                if(value instanceof Integer) {
-                    return setImageSource((int)value);
+                if(value instanceof Integer val) {
+                    return setImageSource(val);
                 }
                 break;
             case IMAGE_POSITION:
-                if(value instanceof Integer) {
-                    return setImagePosition((int)value);
+                if(value instanceof Integer val) {
+                    return setImagePosition(val);
                 }
                 break;
             case IMAGE:
-                if(value instanceof Map) {
-                    return setImage((Map<?, ?>)value);
+                if(value instanceof Map val) {
+                    return setImage(val);
                 }
                 break;
             case DERIVE_LINE_COLOR:
-                if(value instanceof Boolean) {
-                    return setDeriveLineColor((boolean)value);
+                if(value instanceof Boolean val) {
+                    return setDeriveLineColor(val);
                 }
                 break;
         }

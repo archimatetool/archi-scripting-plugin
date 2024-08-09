@@ -153,8 +153,8 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
     // Junction type
     
     public String getJunctionType() {
-        if(getEObject() instanceof IJunction) {
-            String type = ((IJunction)getEObject()).getType();
+        if(getEObject() instanceof IJunction junction) {
+            String type = junction.getType();
             return IJunction.AND_JUNCTION_TYPE.equals(type) ? "and" : type; //$NON-NLS-1$
         }
         return null;
@@ -190,8 +190,8 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
     protected EObjectProxy attr(String attribute, Object value) {
         switch(attribute) {
             case JUNCTION_TYPE:
-                if(value instanceof String) {
-                    return setJunctionType((String)value);
+                if(value instanceof String val) {
+                    return setJunctionType(val);
                 }
         }
         
