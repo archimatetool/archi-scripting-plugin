@@ -18,6 +18,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.IContributedContentsView;
 import org.eclipse.ui.part.ViewPart;
 
 import com.archimatetool.editor.ui.FontFactory;
@@ -33,7 +35,7 @@ import com.archimatetool.script.preferences.IPreferenceConstants;
  * Script Console View
  */
 public class ConsoleView
-extends ViewPart {
+extends ViewPart implements IContributedContentsView {
     public static String ID = ArchiScriptPlugin.PLUGIN_ID + ".consoleView"; //$NON-NLS-1$
     public static String HELP_ID = ArchiScriptPlugin.PLUGIN_ID + ".consoleViewHelp"; //$NON-NLS-1$
 
@@ -188,6 +190,14 @@ extends ViewPart {
         }
     }
     
+    /**
+     * Return null so that the Properties View displays "The active part does not provide properties" instead of a table
+     */
+    @Override
+    public IWorkbenchPart getContributingPart() {
+        return null;
+    }
+
     @Override
     public void dispose() {
         super.dispose();
