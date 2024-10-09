@@ -38,7 +38,7 @@ public class RunScriptCommandHandler extends AbstractHandler implements IParamet
     public static final String PREFS_PREFIX = "keybinding";
 
     private static LinkedHashMap<String, String> paramValues;
-    private static int NUM_PARAMS = 10;
+    private static int NUM_PARAMS = 20;
     
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
