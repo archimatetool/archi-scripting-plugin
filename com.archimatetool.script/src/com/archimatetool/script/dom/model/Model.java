@@ -176,7 +176,6 @@ public class Model {
      * @param dmProxy The DiagramModelProxy
      * @param path File path
      * @param format One of "PNG", "BMP", "JPG", "JPEG",
-     * @throws IOException
      */
     public void renderViewToFile(DiagramModelProxy dmProxy, String path, String format) {
         renderViewToFile(dmProxy, path, format, null);
@@ -188,7 +187,6 @@ public class Model {
      * @param path File path
      * @param format One of "PNG", "BMP", "JPG", "JPEG",
      * @param options can be scale and margin insets
-     * @throws IOException
      */
     public void renderViewToFile(DiagramModelProxy dmProxy, String path, String format, Map<?, ?> options) {
         File file = new File(path);
@@ -208,11 +206,24 @@ public class Model {
      * @throws Exception
      */
     public String renderViewAsSVGString(DiagramModelProxy dmProxy, boolean setViewBox) throws Exception {
+        return renderViewAsSVGString(dmProxy, Map.of("setViewBox", setViewBox)); //$NON-NLS-1$
+    }
+    
+    /**
+     * Render a View as a String of SVG
+     * @param dmProxy The DiagramModelProxy
+     * @param options options of different setttings
+     * @return The SVG as a String
+     * @throws Exception
+     */
+    public String renderViewAsSVGString(DiagramModelProxy dmProxy, Map<?, ?> options) throws Exception {
         if(dmProxy == null) {
             throw new ArchiScriptException("renderViewAsSVGString - View is null"); //$NON-NLS-1$
         }
-
-        return new SVGExportProvider().getSVGString(dmProxy.getEObject(), setViewBox);
+        
+        SVGExportProvider provider = createSVGExportProvider(options);
+        return provider.getSVGString(dmProxy.getEObject(),
+                                     ModelUtil.getBooleanValueFromMap(options, "setViewBox", true)); //$NON-NLS-1$
     }
     
     /**
@@ -220,14 +231,49 @@ public class Model {
      * @param dmProxy The DiagramModelProxy
      * @param path the file to save to
      * @param setViewBox if true sets the viewbox bounds to the bounds of the diagram
-     * @throws Exception
      */
     public void renderViewToSVG(DiagramModelProxy dmProxy, String path, boolean setViewBox) throws Exception {
+        renderViewToSVG(dmProxy, path, Map.of("setViewBox", setViewBox)); //$NON-NLS-1$
+    }
+    
+    /**
+     * Render a View to file in SVG format
+     * @param dmProxy The DiagramModelProxy
+     * @param path the file to save to
+     * @param options options of different setttings
+     */
+    public void renderViewToSVG(DiagramModelProxy dmProxy, String path, Map<?, ?> options) throws Exception {
         if(dmProxy == null) {
             throw new ArchiScriptException("renderViewToSVG - View is null"); //$NON-NLS-1$
         }
 
-        new SVGExportProvider().export(dmProxy.getEObject(), new File(path), setViewBox);
+        SVGExportProvider provider = createSVGExportProvider(options);
+        provider.export(dmProxy.getEObject(),
+                        new File(path),
+                        ModelUtil.getBooleanValueFromMap(options, "setViewBox", true)); //$NON-NLS-1$
+    }
+    
+    /**
+     * Create a SVGExportProvider with options
+     * @param options options
+     * @return an SVGExportProvider with options set
+     */
+    private SVGExportProvider createSVGExportProvider(Map<?, ?> options) {
+        SVGExportProvider provider = new SVGExportProvider();
+        
+        provider.setDrawTextAsShapes(ModelUtil.getBooleanValueFromMap(options, "textAsShapes", true)); //$NON-NLS-1$
+        provider.setEmbedFonts(ModelUtil.getBooleanValueFromMap(options, "embedFonts", false)); //$NON-NLS-1$
+        provider.setTextOffsetWorkaround(ModelUtil.getBooleanValueFromMap(options, "textOffsetWorkaround", false)); //$NON-NLS-1$
+        
+        // Viewbox bounds
+        if(ModelUtil.getBooleanValueFromMap(options, "setViewBox", true)) { //$NON-NLS-1$
+            String viewBoxBounds = ModelUtil.getStringValueFromMap(options, "viewBoxBounds", null); //$NON-NLS-1$
+            if(viewBoxBounds != null) {
+                provider.setElementRootAttributes(Map.of("viewBox", viewBoxBounds)); //$NON-NLS-1$
+            }
+        }
+        
+        return provider;
     }
     
     /**
@@ -237,11 +283,26 @@ public class Model {
      * @throws Exception
      */
     public void renderViewToPDF(DiagramModelProxy dmProxy, String path) throws Exception {
+        renderViewToPDF(dmProxy, path, null);
+    }
+
+    /**
+     * Render a View to file in PDF format
+     * @param dmProxy The DiagramModelProxy
+     * @param path the file to save to
+     * @param options options
+     * @throws Exception
+     */
+    public void renderViewToPDF(DiagramModelProxy dmProxy, String path, Map<?, ?> options) throws Exception {
         if(dmProxy == null) {
             throw new ArchiScriptException("renderViewToPDF - View is null"); //$NON-NLS-1$
         }
-
-        new PDFExportProvider().export(dmProxy.getEObject(), new File(path));
+        
+        PDFExportProvider provider = new PDFExportProvider();
+        provider.setDrawTextAsShapes(ModelUtil.getBooleanValueFromMap(options, "textAsShapes", true)); //$NON-NLS-1$
+        provider.setEmbedFonts(ModelUtil.getBooleanValueFromMap(options, "embedFonts", false)); //$NON-NLS-1$
+        provider.setTextOffsetWorkaround(ModelUtil.getBooleanValueFromMap(options, "textOffsetWorkaround", false)); //$NON-NLS-1$
+        provider.export(dmProxy.getEObject(), new File(path));
     }
 
     private ImageLoader getImageLoader(DiagramModelProxy dmProxy, String format, Map<?, ?> options) {

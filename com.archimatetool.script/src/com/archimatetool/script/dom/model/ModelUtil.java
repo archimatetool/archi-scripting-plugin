@@ -219,25 +219,24 @@ class ModelUtil {
     }
     
     /**
-     * Get an integer value from a property map.
-     * @param map
-     * @param key
-     * @param defaultValue
-     * @return
+     * Get an integer value from a property map
      */
     static int getIntValueFromMap(Map<?, ?> map, String key, int defaultValue) {
         return (map != null && map.get(key) instanceof Number num) ? num.intValue() : defaultValue;
     }
 
     /**
-     * Get a string value from a property map.
-     * @param map
-     * @param key
-     * @param defaultValue
-     * @return
+     * Get a string value from a property map
      */
     static String getStringValueFromMap(Map<?, ?> map, String key, String defaultValue) {
         return (map != null && map.get(key) instanceof String str) ? str : defaultValue;
+    }
+    
+    /**
+     * Get a boolean value from a property map
+     */
+    static boolean getBooleanValueFromMap(Map<?, ?> map, String key, boolean defaultValue) {
+        return (map != null && map.get(key) instanceof Boolean bool) ? bool.booleanValue() : defaultValue;
     }
     
     /**

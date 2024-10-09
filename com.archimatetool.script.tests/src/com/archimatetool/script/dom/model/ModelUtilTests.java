@@ -182,6 +182,20 @@ public class ModelUtilTests {
     }
 
     @Test
+    public void getBooleanValueFromMap() {
+        Map<String, Boolean> map = new HashMap<>();
+        map.put("key1", true);
+        map.put("key2", false);
+        
+        assertEquals(true, ModelUtil.getBooleanValueFromMap(map, "key1", false));
+        assertEquals(false, ModelUtil.getBooleanValueFromMap(map, "key2", true));
+        assertEquals(true, ModelUtil.getBooleanValueFromMap(map, "key3", true));
+
+        // Null map
+        assertEquals(true, ModelUtil.getBooleanValueFromMap(null, "key4", true));
+    }
+
+    @Test
     public void checkComponentsInSameModel() {
         IArchimateModel model = createModel();
         IArchimateModelObject o1 = IArchimateFactory.eINSTANCE.createBusinessActor();
