@@ -193,6 +193,31 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertEquals(2, actualTestProxy.getIndex());
     }
     
+    @Test
+    public void index_Parent() {
+        DiagramModelObjectProxy parent = (DiagramModelObjectProxy)testProxy.parent();
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            parent.setIndex(actualTestProxy, -2);
+        });
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            parent.setIndex(actualTestProxy, parent.children().size() + 1);
+        });
+        
+        assertEquals(1, parent.indexOf(actualTestProxy));
+        
+        parent.setIndex(actualTestProxy, 0);
+        assertEquals(0, parent.indexOf(actualTestProxy));
+        
+        parent.setIndex(actualTestProxy, 1);
+        assertEquals(1, parent.indexOf(actualTestProxy));
+        
+        // -1 is end of list
+        parent.setIndex(actualTestProxy, -1);
+        assertEquals(2, parent.indexOf(actualTestProxy));
+    }
+    
     @Override
     @Test
     public void children() {

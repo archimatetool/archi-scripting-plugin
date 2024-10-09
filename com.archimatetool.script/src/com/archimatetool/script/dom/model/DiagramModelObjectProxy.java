@@ -181,6 +181,31 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return this;
     }
     
+    // TODO - Parent approach. Would need to add this to DiagramModelProxy as well
+    
+    public int indexOf(DiagramModelObjectProxy childObject) {
+        if(getEObject() instanceof IDiagramModelContainer parent && childObject != null) {
+            return parent.getChildren().indexOf(childObject.getEObject());
+        }
+        return -1;
+    }
+    
+    public DiagramModelObjectProxy setIndex(DiagramModelObjectProxy childObject, int position) {
+        if(getEObject() instanceof IDiagramModelContainer parent && childObject != null) {
+            if(!parent.getChildren().contains(childObject.getEObject())) {
+                throw new ArchiScriptException(NLS.bind("''{0}'' is not a child of ''{1}''", childObject.getEObject().getName(),
+                        getEObject().getName()));
+            }
+            if(position < -1 || position >= parent.getChildren().size()) {
+                throw new ArchiScriptException("Index out of bounds");
+            }
+            
+            CommandHandler.executeCommand(new MoveListObjectCommand(parent.getChildren(), childObject.getEObject(), position));
+        }
+        
+        return this;
+    }
+    
     // ============================================================================
     
     /**
