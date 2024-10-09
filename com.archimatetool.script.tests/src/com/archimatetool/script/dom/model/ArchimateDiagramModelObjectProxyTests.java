@@ -8,6 +8,7 @@ package com.archimatetool.script.dom.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.script.ArchiScriptException;
 
 
 /**
@@ -134,6 +136,61 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertEquals(20, bounds.get("y"));
         assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.get("width"));
         assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.get("height"));
+    }
+    
+    @Test
+    public void sendToBack() {
+        assertEquals(1, actualTestProxy.getIndex());
+        actualTestProxy.sendToBack();
+        assertEquals(0, actualTestProxy.getIndex());
+    }
+    
+    @Test
+    public void sendBackward() {
+        assertEquals(1, actualTestProxy.getIndex());
+        actualTestProxy.sendBackward();
+        assertEquals(0, actualTestProxy.getIndex());
+    }
+    
+    @Test
+    public void bringToFront() {
+        assertEquals(1, actualTestProxy.getIndex());
+        actualTestProxy.bringToFront();
+        assertEquals(2, actualTestProxy.getIndex());
+    }
+
+    @Test
+    public void bringForward() {
+        assertEquals(1, actualTestProxy.getIndex());
+        actualTestProxy.bringToFront();
+        assertEquals(2, actualTestProxy.getIndex());
+    }
+
+    @Override
+    @Test
+    public void index() {
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.setIndex(-2);
+        });
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            actualTestProxy.setIndex(actualTestProxy.parent().children().size() + 1);
+        });
+        
+        assertEquals(1, actualTestProxy.getIndex());
+        assertEquals(1, actualTestProxy.attr(IModelConstants.INDEX));
+        
+        actualTestProxy.setIndex(0);
+        assertEquals(0, actualTestProxy.getIndex());
+        assertEquals(0, actualTestProxy.attr(IModelConstants.INDEX));
+        
+        actualTestProxy.attr(IModelConstants.INDEX, 2);
+        assertEquals(2, actualTestProxy.getIndex());
+        assertEquals(2, actualTestProxy.attr(IModelConstants.INDEX));
+        
+        // -1 is end of list
+        actualTestProxy.setIndex(-1);
+        assertEquals(2, actualTestProxy.getIndex());
     }
     
     @Override
