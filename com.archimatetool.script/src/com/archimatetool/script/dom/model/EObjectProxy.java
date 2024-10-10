@@ -30,6 +30,7 @@ import com.archimatetool.model.IFeatures;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
+import com.archimatetool.model.IProfile;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.model.ISketchModel;
@@ -101,6 +102,10 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
 
         if(eObject instanceof IFolder folder) {
             return new FolderProxy(folder);
+        }
+
+        if(eObject instanceof IProfile profile) {
+            return new ProfileProxy(profile);
         }
 
         return null;
