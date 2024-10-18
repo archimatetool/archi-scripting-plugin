@@ -5,13 +5,18 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.gef.commands.Command;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
+import com.archimatetool.editor.model.commands.AddListMemberCommand;
+import com.archimatetool.editor.model.commands.RemoveListMemberCommand;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
 import com.archimatetool.editor.ui.factory.IArchimateElementUIProvider;
 import com.archimatetool.editor.ui.factory.IGraphicalObjectUIProvider;
@@ -28,6 +33,7 @@ import com.archimatetool.model.IIconic;
 import com.archimatetool.model.ITextAlignment;
 import com.archimatetool.model.ITextPosition;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.ChangeBoundsCommand;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteDiagramModelObjectCommand;
 import com.archimatetool.script.commands.MoveListObjectCommand;
@@ -572,6 +578,42 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     
     @Override
     public void delete() {
+        delete(true);
+    }
+    
+    /**
+     * Delete this object but re-parent child objects to this object's parent
+     */
+    public void deleteContainer() {
+        IDiagramModelObject dmo = getEObject();
+        
+        if(!(dmo instanceof IDiagramModelContainer) || ((IDiagramModelContainer)dmo).getChildren().isEmpty()
+                || !(dmo.eContainer() instanceof IDiagramModelContainer)) {
+            return;
+        }
+        
+        IDiagramModelContainer parent = (IDiagramModelContainer)dmo.eContainer();
+        List<IDiagramModelObject> children = ((IDiagramModelContainer)dmo).getChildren();
+        
+        // Iterate thru child objects to move them to new parent
+        for(IDiagramModelObject child : new ArrayList<>(children)) {
+            // Remove child from this
+            Command cmd = new RemoveListMemberCommand<>(children, child);
+            CommandHandler.executeCommand(new ScriptCommandWrapper(cmd, dmo));
+            
+            // Add child to new parent
+            cmd = new AddListMemberCommand<>(parent.getChildren(), child);
+            CommandHandler.executeCommand(new ScriptCommandWrapper(cmd, dmo));
+            
+            // Adjust x,y position to new parent
+            CommandHandler.executeCommand(new ChangeBoundsCommand(child, dmo.getBounds()));
+        }
+        
+        // Delete this
+        delete(false);
+    }
+    
+    private void delete(boolean deleteChildren) {
         for(EObjectProxy rel : inRels()) {
             rel.delete();
         }
@@ -580,13 +622,14 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             rel.delete();
         }
         
-        for(EObjectProxy child : children()) {
-            child.delete();
+        if(deleteChildren) {
+            for(EObjectProxy child : children()) {
+                child.delete();
+            }
         }
-
+        
         if(getEObject().eContainer() != null) {
             CommandHandler.executeCommand(new DeleteDiagramModelObjectCommand(getEObject()));
         }
     }
-    
 }
