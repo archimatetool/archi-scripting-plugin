@@ -21,6 +21,11 @@ public class ScriptCommandWrapper extends ScriptCommand {
         this.cmd = cmd;
     }
     
+    public ScriptCommandWrapper(Command cmd) {
+        super(cmd.getLabel());
+        this.cmd = cmd;
+    }
+    
     @Override
     public void perform() {
         cmd.execute();

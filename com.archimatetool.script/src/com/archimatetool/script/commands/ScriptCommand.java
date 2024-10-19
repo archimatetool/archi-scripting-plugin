@@ -32,11 +32,13 @@ public abstract class ScriptCommand extends Command {
         super(name);
     }
     
-    protected void setModel(EObject eObject) {
+    public ScriptCommand setModel(EObject eObject) {
         while(!(eObject instanceof IArchimateModel) && eObject != null) {
             eObject = eObject.eContainer();
         }
         model = (IArchimateModel)eObject;
+        
+        return this;
     }
     
     public IArchimateModel getModel() {
