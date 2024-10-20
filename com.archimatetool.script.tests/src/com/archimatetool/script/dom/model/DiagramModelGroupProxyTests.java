@@ -67,6 +67,19 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
         assertNull(testProxy.parent());
     }
     
+    @Test
+    public void deleteContainer() {
+        DiagramModelObjectProxy groupProxy = (DiagramModelObjectProxy)testProxy;
+        DiagramModelObjectProxy childProxy1 = groupProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 0, 0, 100, 100);
+        DiagramModelObjectProxy childProxy2 = groupProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 0, 0, 100, 100);
+        DiagramModelObjectProxy childProxy3 = childProxy2.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 0, 0, 100, 100);
+        
+        groupProxy.deleteContainer();
+        assertEquals(viewProxy, childProxy1.parent());
+        assertEquals(viewProxy, childProxy2.parent());
+        assertEquals(childProxy2, childProxy3.parent());
+    }
+    
     @Override
     @Test
     public void parent() {
