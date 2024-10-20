@@ -46,9 +46,21 @@ public class CommandHandler {
             CompoundCommand compound = compoundcommands.get(stack);
             if(compound == null) {
                 compound = new NonNotifyingCompoundCommand(name) {
+                    // Always return true for these so that all commands do their dummy execute() command
+                    // and undo/redo always runs
                     @Override
                     public boolean canExecute() {
-                        return true; // Always return true so that all commands do their dummy execute() command
+                        return true;
+                    }
+                    
+                    @Override
+                    public boolean canUndo() {
+                        return true;
+                    }
+                    
+                    @Override
+                    public boolean canRedo() {
+                        return true;
                     }
                 };
                 compoundcommands.put(stack, compound);
