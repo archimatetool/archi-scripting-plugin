@@ -33,17 +33,25 @@ import com.archimatetool.script.ArchiScriptException;
 @SuppressWarnings("nls")
 public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests {
     
-    private ArchimateRelationshipProxy actualTestProxy;
-    
     private ArchimateModelProxy testModelProxy;
+    private IArchimateRelationship testEObject;
+    private ArchimateRelationshipProxy testProxy;
     
+    @Override
+    protected IArchimateRelationship getTestEObject() {
+        return testEObject;
+    }
+    
+    @Override
+    protected ArchimateRelationshipProxy getTestProxy() {
+        return testProxy;
+    }
+
     @BeforeEach
     public void runOnceBeforeEachTest() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
-        
         testEObject = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "882");
-        testProxy = EObjectProxy.get(testEObject);
-        actualTestProxy = (ArchimateRelationshipProxy)testProxy;
+        testProxy = (ArchimateRelationshipProxy)EObjectProxy.get(testEObject);
     }
 
     @Test
@@ -75,35 +83,35 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
     @Override
     @Test
     public void delete() {
-        assertEquals(1, actualTestProxy.objectRefs().size());
-        assertEquals(0, actualTestProxy.inRels().size());
-        assertEquals(0, actualTestProxy.outRels().size());
+        assertEquals(1, testProxy.objectRefs().size());
+        assertEquals(0, testProxy.inRels().size());
+        assertEquals(0, testProxy.outRels().size());
         
-        actualTestProxy.delete();
+        testProxy.delete();
 
         assertNull(testProxy.getModel());
-        assertEquals(0, actualTestProxy.objectRefs().size());
-        assertEquals(0, actualTestProxy.inRels().size());
-        assertEquals(0, actualTestProxy.outRels().size());
+        assertEquals(0, testProxy.objectRefs().size());
+        assertEquals(0, testProxy.inRels().size());
+        assertEquals(0, testProxy.outRels().size());
     }
 
     @Test
     public void setType() {
-        actualTestProxy.setName("Type Test");
-        actualTestProxy.setDocumentation("Documentation");
-        actualTestProxy.prop("p1", "v1");
-        actualTestProxy.prop("p2", "v2");
-        actualTestProxy.getEObject().getFeatures().putString("f1", "v1");
-        actualTestProxy.getEObject().getFeatures().putString("f2", "v2");
+        testProxy.setName("Type Test");
+        testProxy.setDocumentation("Documentation");
+        testProxy.prop("p1", "v1");
+        testProxy.prop("p2", "v2");
+        testProxy.getEObject().getFeatures().putString("f1", "v1");
+        testProxy.getEObject().getFeatures().putString("f2", "v2");
 
-        assertTrue(actualTestProxy.getEObject() instanceof IAccessRelationship);
-        assertEquals(0, actualTestProxy.outRels().size());
-        assertEquals(0, actualTestProxy.inRels().size());
-        assertEquals(1, actualTestProxy.objectRefs().size());
+        assertTrue(testProxy.getEObject() instanceof IAccessRelationship);
+        assertEquals(0, testProxy.outRels().size());
+        assertEquals(0, testProxy.inRels().size());
+        assertEquals(1, testProxy.objectRefs().size());
 
-        ArchimateRelationshipProxy newRelationshipProxy = actualTestProxy.setType("association-relationship");
+        ArchimateRelationshipProxy newRelationshipProxy = testProxy.setType("association-relationship");
         
-        assertSame(newRelationshipProxy, actualTestProxy);
+        assertSame(newRelationshipProxy, testProxy);
         assertTrue(newRelationshipProxy.getEObject() instanceof IAssociationRelationship);
         
         assertEquals("Type Test", newRelationshipProxy.getName());
@@ -118,19 +126,19 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
 
     @Test
     public void outRels() {
-        EObjectProxyCollection collection = actualTestProxy.outRels();
+        EObjectProxyCollection collection = testProxy.outRels();
         assertEquals(0, collection.size());
     }
 
     @Test
     public void inRels() {
-        EObjectProxyCollection collection = actualTestProxy.inRels();
+        EObjectProxyCollection collection = testProxy.inRels();
         assertEquals(0, collection.size());
     }
     
     @Test
     public void objectRefs() {
-        EObjectProxyCollection collection = actualTestProxy.objectRefs();
+        EObjectProxyCollection collection = testProxy.objectRefs();
         assertEquals(1, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof DiagramModelConnectionProxy);
@@ -139,7 +147,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
     
     @Test
     public void viewRefs() {
-        EObjectProxyCollection collection = actualTestProxy.viewRefs();
+        EObjectProxyCollection collection = testProxy.viewRefs();
         assertEquals(1, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof DiagramModelProxy);
@@ -149,15 +157,15 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
     @Test
     public void setSource() {
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createApplicationComponent());
-        actualTestProxy.setSource(proxy);
-        assertEquals(proxy.getEObject(), actualTestProxy.getSource().getEObject());
+        testProxy.setSource(proxy);
+        assertEquals(proxy.getEObject(), testProxy.getSource().getEObject());
     }
 
     @Test
     public void setTarget() {
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createArtifact());
-        actualTestProxy.setTarget(proxy);
-        assertEquals(proxy.getEObject(), actualTestProxy.getTarget().getEObject());
+        testProxy.setTarget(proxy);
+        assertEquals(proxy.getEObject(), testProxy.getTarget().getEObject());
     }
     
     @Test
@@ -165,7 +173,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createRequirement());
 
         assertThrows(ArchiScriptException.class, () -> {
-            actualTestProxy.setSource(proxy);
+            testProxy.setSource(proxy);
         });
     }
 
@@ -174,7 +182,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         ArchimateConceptProxy proxy = (ArchimateConceptProxy)EObjectProxy.get(IArchimateFactory.eINSTANCE.createRequirement());
 
         assertThrows(ArchiScriptException.class, () -> {
-            actualTestProxy.setTarget(proxy);
+            testProxy.setTarget(proxy);
         });
     }
 

@@ -37,17 +37,24 @@ import com.archimatetool.script.ArchiScriptException;
 @SuppressWarnings("nls")
 public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxyTests {
     
-    private DiagramModelConnectionProxy actualTestProxy;
+    private IDiagramModelArchimateConnection testEObject;
+    private DiagramModelConnectionProxy testProxy;
     
-    private ArchimateModelProxy testModelProxy;
+    @Override
+    protected IDiagramModelArchimateConnection getTestEObject() {
+        return testEObject;
+    }
     
+    @Override
+    protected DiagramModelConnectionProxy getTestProxy() {
+        return testProxy;
+    }
+
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
-        
+        ArchimateModelProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         testEObject = (IDiagramModelArchimateConnection)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3847");
-        testProxy = EObjectProxy.get(testEObject);
-        actualTestProxy = (DiagramModelConnectionProxy)testProxy;
+        testProxy = (DiagramModelConnectionProxy)EObjectProxy.get(testEObject);
     }
 
     @Test
@@ -100,13 +107,13 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     @Override
     @Test
     public void getConcept() {
-        assertTrue(actualTestProxy.getConcept().getEObject() instanceof ICompositionRelationship);
+        assertTrue(testProxy.getConcept().getEObject() instanceof ICompositionRelationship);
     }
     
     @Override
     @Test
     public void getReferencedEObject() {
-        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedEObject());
+        assertSame(testProxy.getConcept().getEObject(), testProxy.getReferencedEObject());
         
         IDiagramModelConnection connection = IArchimateFactory.eINSTANCE.createDiagramModelConnection();
         DiagramModelConnectionProxy connectionProxy = new DiagramModelConnectionProxy(connection);
@@ -115,13 +122,13 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     
     @Test
     public void outRels() {
-        EObjectProxyCollection collection = actualTestProxy.outRels();
+        EObjectProxyCollection collection = testProxy.outRels();
         assertEquals(0, collection.size());
     }
 
     @Test
     public void inRels() {
-        EObjectProxyCollection collection = actualTestProxy.inRels();
+        EObjectProxyCollection collection = testProxy.inRels();
         assertEquals(0, collection.size());
     }
     
@@ -130,36 +137,36 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     public void children() {
         super.children();
         
-        EObjectProxyCollection collection = actualTestProxy.children();
+        EObjectProxyCollection collection = testProxy.children();
         assertEquals(0, collection.size());
     }
     
     @Test
     public void getSource() {
-        DiagramModelComponentProxy source = actualTestProxy.getSource();
+        DiagramModelComponentProxy source = testProxy.getSource();
         assertTrue(source instanceof DiagramModelObjectProxy);
         assertEquals("3831", source.getId());
     }
     
     @Test
     public void getTarget() {
-        DiagramModelComponentProxy source = actualTestProxy.getTarget();
+        DiagramModelComponentProxy source = testProxy.getTarget();
         assertTrue(source instanceof DiagramModelObjectProxy);
         assertEquals("3835", source.getId());
     }
     
     @Test
     public void attr_LabelVisible() {
-        assertTrue((boolean)actualTestProxy.attr(IModelConstants.LABEL_VISIBLE));
-        actualTestProxy.attr(IModelConstants.LABEL_VISIBLE, false);
-        assertFalse((boolean)actualTestProxy.attr(IModelConstants.LABEL_VISIBLE));
+        assertTrue((boolean)testProxy.attr(IModelConstants.LABEL_VISIBLE));
+        testProxy.attr(IModelConstants.LABEL_VISIBLE, false);
+        assertFalse((boolean)testProxy.attr(IModelConstants.LABEL_VISIBLE));
     }
     
     @Test
     public void attr_TextPosition() {
-        assertEquals(IDiagramModelConnection.CONNECTION_TEXT_POSITION_MIDDLE, actualTestProxy.attr(IModelConstants.TEXT_POSITION));
-        actualTestProxy.attr(IModelConstants.TEXT_POSITION, 0);
-        assertEquals(0, actualTestProxy.attr(IModelConstants.TEXT_POSITION));
+        assertEquals(IDiagramModelConnection.CONNECTION_TEXT_POSITION_MIDDLE, testProxy.attr(IModelConstants.TEXT_POSITION));
+        testProxy.attr(IModelConstants.TEXT_POSITION, 0);
+        assertEquals(0, testProxy.attr(IModelConstants.TEXT_POSITION));
     }
 
     @Test
@@ -185,28 +192,28 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     
     @Test
     public void attr_Style_NotArchiMateConnection( ) {
-        assertEquals(0, actualTestProxy.attr(IModelConstants.STYLE));
+        assertEquals(0, testProxy.attr(IModelConstants.STYLE));
         
         assertThrows(ArchiScriptException.class, () -> {
-            actualTestProxy.attr(IModelConstants.STYLE, 4);
+            testProxy.attr(IModelConstants.STYLE, 4);
         });
     }
     
     @Test
     public void attr_TextAlignment() {
-        assertEquals(2, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
-        actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
-        assertEquals(4, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        assertEquals(2, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        testProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
+        assertEquals(4, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
     }
     
     @Test
     public void attr_Source() {
-        assertEquals("3831", ((EObjectProxy)actualTestProxy.attr(IModelConstants.SOURCE)).getId());
+        assertEquals("3831", ((EObjectProxy)testProxy.attr(IModelConstants.SOURCE)).getId());
     }
 
     @Test
     public void attr_Target() {
-        assertEquals("3835", ((EObjectProxy)actualTestProxy.attr(IModelConstants.TARGET)).getId());
+        assertEquals("3835", ((EObjectProxy)testProxy.attr(IModelConstants.TARGET)).getId());
     }
 
     @Override
@@ -278,10 +285,10 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     public void getRelativeBendpoints() {
         Map<String, Object> map = createBendpoint(1, 2, 3, 4);
         Map<String, Object> map2 = createBendpoint(5, 6, 7, 8);
-        actualTestProxy.addRelativeBendpoint(map, 0);
-        actualTestProxy.addRelativeBendpoint(map2, 1);
+        testProxy.addRelativeBendpoint(map, 0);
+        testProxy.addRelativeBendpoint(map2, 1);
         
-        List<Map<String, Object>> list = actualTestProxy.getRelativeBendpoints();
+        List<Map<String, Object>> list = testProxy.getRelativeBendpoints();
         assertEquals(2, list.size());
         
         checkBendpoint(map, list.get(0));
@@ -291,9 +298,9 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     @Test
     public void addRelativeBendpoint() {
         Map<String, Object> map = createBendpoint(1, 2, 3, 4);
-        actualTestProxy.addRelativeBendpoint(map, 0);
+        testProxy.addRelativeBendpoint(map, 0);
 
-        List<Map<String, Object>> list = actualTestProxy.getRelativeBendpoints();
+        List<Map<String, Object>> list = testProxy.getRelativeBendpoints();
         assertEquals(1, list.size());
         checkBendpoint(map, list.get(0));
     }
@@ -301,29 +308,29 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     @Test
     public void setRelativeBendpoint() {
         Map<String, Object> map = createBendpoint(1, 2, 3, 4);
-        actualTestProxy.addRelativeBendpoint(map, 0);
+        testProxy.addRelativeBendpoint(map, 0);
 
-        List<Map<String, Object>> list = actualTestProxy.getRelativeBendpoints();
+        List<Map<String, Object>> list = testProxy.getRelativeBendpoints();
         assertEquals(1, list.size());
         checkBendpoint(map, list.get(0));
         
         Map<String, Object> map2 = createBendpoint(5, 6, 7, 8);
-        actualTestProxy.setRelativeBendpoint(map2, 0);
+        testProxy.setRelativeBendpoint(map2, 0);
         assertEquals(1, list.size());
-        checkBendpoint(map2, actualTestProxy.getRelativeBendpoints().get(0));
+        checkBendpoint(map2, testProxy.getRelativeBendpoints().get(0));
     }
     
    @Test
     public void deleteAllBendpoints() {
         Map<String, Object> map = createBendpoint(1, 2, 3, 4);
         
-        actualTestProxy.addRelativeBendpoint(map, 0);
-        actualTestProxy.addRelativeBendpoint(map, 1);
+        testProxy.addRelativeBendpoint(map, 0);
+        testProxy.addRelativeBendpoint(map, 1);
 
-        assertEquals(2, actualTestProxy.getRelativeBendpoints().size());
+        assertEquals(2, testProxy.getRelativeBendpoints().size());
         
-        actualTestProxy.deleteAllBendpoints();
-        assertEquals(0, actualTestProxy.getRelativeBendpoints().size());
+        testProxy.deleteAllBendpoints();
+        assertEquals(0, testProxy.getRelativeBendpoints().size());
     }
     
     @Test
@@ -331,16 +338,16 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         Map<String, Object> map1 = createBendpoint(1, 2, 3, 4);
         Map<String, Object> map2 = createBendpoint(5, 6, 7, 8);
 
-        actualTestProxy.addRelativeBendpoint(map1, 0);
-        actualTestProxy.addRelativeBendpoint(map2, 1);
+        testProxy.addRelativeBendpoint(map1, 0);
+        testProxy.addRelativeBendpoint(map2, 1);
 
-        assertEquals(2, actualTestProxy.getRelativeBendpoints().size());
+        assertEquals(2, testProxy.getRelativeBendpoints().size());
         
-        actualTestProxy.deleteBendpoint(0);
+        testProxy.deleteBendpoint(0);
         
-        assertEquals(1, actualTestProxy.getRelativeBendpoints().size());
+        assertEquals(1, testProxy.getRelativeBendpoints().size());
         
-        checkBendpoint(map2, actualTestProxy.getRelativeBendpoints().get(0));
+        checkBendpoint(map2, testProxy.getRelativeBendpoints().get(0));
     }
 
     private Map<String, Object> createBendpoint(int startX, int endX, int startY, int endY) {

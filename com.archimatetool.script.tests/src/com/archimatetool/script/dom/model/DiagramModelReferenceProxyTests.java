@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.archimatetool.model.IArchimateModelObject;
+import com.archimatetool.model.IDiagramModelReference;
 
 
 /**
@@ -24,17 +24,27 @@ import com.archimatetool.model.IArchimateModelObject;
 @SuppressWarnings("nls")
 public class DiagramModelReferenceProxyTests extends DiagramModelObjectProxyTests {
     
-    private ArchimateModelProxy modelProxy;
     private ArchimateDiagramModelProxy viewProxy1, viewProxy2;
+    private IDiagramModelReference testEObject;
+    private DiagramModelReferenceProxy testProxy;
+    
+    @Override
+    protected IDiagramModelReference getTestEObject() {
+        return testEObject;
+    }
+    
+    @Override
+    protected DiagramModelReferenceProxy getTestProxy() {
+        return testProxy;
+    }
     
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        modelProxy = TestsHelper.createTestModel();
+        ArchimateModelProxy modelProxy = TestsHelper.createTestModel();
         viewProxy1 = modelProxy.createArchimateView("view1");
         viewProxy2 = modelProxy.createArchimateView("view2");
         testProxy = viewProxy1.createViewReference(viewProxy2, 0, 0, 100, 100);
-        testEObject = (IArchimateModelObject)testProxy.getEObject();
-        actualTestProxy = (DiagramModelReferenceProxy)testProxy;
+        testEObject = testProxy.getEObject();
     }
 
     @Override
@@ -47,13 +57,12 @@ public class DiagramModelReferenceProxyTests extends DiagramModelObjectProxyTest
     @Override
     @Test
     public void getReferencedEObject() {
-        assertNull(actualTestProxy.getConcept());
+        assertNull(testProxy.getConcept());
     }
     
     @Test
     public void getRefView() {
-        DiagramModelReferenceProxy dmRefProxy = (DiagramModelReferenceProxy)actualTestProxy;
-        assertEquals(viewProxy2, dmRefProxy.getRefView());
+        assertEquals(viewProxy2, testProxy.getRefView());
     }
     
     @Override

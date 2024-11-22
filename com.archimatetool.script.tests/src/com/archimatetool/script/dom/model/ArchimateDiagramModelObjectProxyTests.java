@@ -39,13 +39,25 @@ import com.archimatetool.script.ArchiScriptException;
 @SuppressWarnings("nls")
 public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectProxyTests {
     
+    private ArchimateModelProxy testModelProxy;
+    private IDiagramModelArchimateObject testEObject;
+    private DiagramModelObjectProxy testProxy;
+    
+    @Override
+    protected IDiagramModelArchimateObject getTestEObject() {
+        return testEObject;
+    }
+    
+    @Override
+    protected DiagramModelObjectProxy getTestProxy() {
+        return testProxy;
+    }
+
     @BeforeEach
     public void runOnceBeforeEachTest() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
-        
         testEObject = (IDiagramModelArchimateObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4104");
-        testProxy = EObjectProxy.get(testEObject);
-        actualTestProxy = (DiagramModelObjectProxy)testProxy;
+        testProxy = (DiagramModelObjectProxy)EObjectProxy.get(testEObject);
     }
 
     @Override
@@ -76,7 +88,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     @Override
     @Test
     public void getConcept() {
-        assertTrue(actualTestProxy.getConcept().getEObject() instanceof IBusinessService);
+        assertTrue(testProxy.getConcept().getEObject() instanceof IBusinessService);
         IDiagramModelGroup group = (IDiagramModelGroup)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4096");
         DiagramModelObjectProxy groupProxy = new DiagramModelObjectProxy(group);
         assertNull(groupProxy.getConcept());
@@ -85,7 +97,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     @Override
     @Test
     public void getReferencedEObject() {
-        assertSame(actualTestProxy.getConcept().getEObject(), actualTestProxy.getReferencedEObject());
+        assertSame(testProxy.getConcept().getEObject(), testProxy.getReferencedEObject());
         
         // Group has none
         IDiagramModelGroup group = (IDiagramModelGroup)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4096");
@@ -96,7 +108,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     @Override
     @Test
     public void outRels() {
-        EObjectProxyCollection collection = actualTestProxy.outRels();
+        EObjectProxyCollection collection = testProxy.outRels();
         assertEquals(1, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof DiagramModelConnectionProxy);
@@ -106,7 +118,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     @Override
     @Test
     public void inRels() {
-        EObjectProxyCollection collection = actualTestProxy.inRels();
+        EObjectProxyCollection collection = testProxy.inRels();
         assertEquals(1, collection.size());
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof DiagramModelConnectionProxy);
@@ -115,7 +127,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     
     @Test
     public void getBounds() {
-        Map<String, Object> bounds = actualTestProxy.getBounds();
+        Map<String, Object> bounds = testProxy.getBounds();
         assertEquals(20, bounds.get("x"));
         assertEquals(25, bounds.get("y"));
         assertEquals(101, bounds.get("width"));
@@ -129,9 +141,9 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         bounds.put("y", 20);
         bounds.put("width", -1);
         bounds.put("height", -1);
-        actualTestProxy.setBounds(bounds);
+        testProxy.setBounds(bounds);
         
-        bounds = actualTestProxy.getBounds();
+        bounds = testProxy.getBounds();
         assertEquals(10, bounds.get("x"));
         assertEquals(20, bounds.get("y"));
         assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.get("width"));
@@ -140,57 +152,57 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     
     @Test
     public void sendToBack() {
-        assertEquals(1, actualTestProxy.getIndex());
-        actualTestProxy.sendToBack();
-        assertEquals(0, actualTestProxy.getIndex());
+        assertEquals(1, testProxy.getIndex());
+        testProxy.sendToBack();
+        assertEquals(0, testProxy.getIndex());
     }
     
     @Test
     public void sendBackward() {
-        assertEquals(1, actualTestProxy.getIndex());
-        actualTestProxy.sendBackward();
-        assertEquals(0, actualTestProxy.getIndex());
+        assertEquals(1, testProxy.getIndex());
+        testProxy.sendBackward();
+        assertEquals(0, testProxy.getIndex());
     }
     
     @Test
     public void bringToFront() {
-        assertEquals(1, actualTestProxy.getIndex());
-        actualTestProxy.bringToFront();
-        assertEquals(2, actualTestProxy.getIndex());
+        assertEquals(1, testProxy.getIndex());
+        testProxy.bringToFront();
+        assertEquals(2, testProxy.getIndex());
     }
 
     @Test
     public void bringForward() {
-        assertEquals(1, actualTestProxy.getIndex());
-        actualTestProxy.bringToFront();
-        assertEquals(2, actualTestProxy.getIndex());
+        assertEquals(1, testProxy.getIndex());
+        testProxy.bringToFront();
+        assertEquals(2, testProxy.getIndex());
     }
 
     @Override
     @Test
     public void index() {
         assertThrows(ArchiScriptException.class, () -> {
-            actualTestProxy.setIndex(-2);
+            testProxy.setIndex(-2);
         });
         
         assertThrows(ArchiScriptException.class, () -> {
-            actualTestProxy.setIndex(actualTestProxy.parent().children().size() + 1);
+            testProxy.setIndex(testProxy.parent().children().size() + 1);
         });
         
-        assertEquals(1, actualTestProxy.getIndex());
-        assertEquals(1, actualTestProxy.attr(IModelConstants.INDEX));
+        assertEquals(1, testProxy.getIndex());
+        assertEquals(1, testProxy.attr(IModelConstants.INDEX));
         
-        actualTestProxy.setIndex(0);
-        assertEquals(0, actualTestProxy.getIndex());
-        assertEquals(0, actualTestProxy.attr(IModelConstants.INDEX));
+        testProxy.setIndex(0);
+        assertEquals(0, testProxy.getIndex());
+        assertEquals(0, testProxy.attr(IModelConstants.INDEX));
         
-        actualTestProxy.attr(IModelConstants.INDEX, 2);
-        assertEquals(2, actualTestProxy.getIndex());
-        assertEquals(2, actualTestProxy.attr(IModelConstants.INDEX));
+        testProxy.attr(IModelConstants.INDEX, 2);
+        assertEquals(2, testProxy.getIndex());
+        assertEquals(2, testProxy.attr(IModelConstants.INDEX));
         
         // -1 is end of list
-        actualTestProxy.setIndex(-1);
-        assertEquals(2, actualTestProxy.getIndex());
+        testProxy.setIndex(-1);
+        assertEquals(2, testProxy.getIndex());
     }
     
     @Override
@@ -211,9 +223,9 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     
     @Test
     public void attr_FillColor() {
-        assertEquals("#0080c0", actualTestProxy.attr(IModelConstants.FILL_COLOR));
-        actualTestProxy.attr(IModelConstants.FILL_COLOR, "#ffff80");
-        assertEquals("#ffff80", actualTestProxy.attr(IModelConstants.FILL_COLOR));
+        assertEquals("#0080c0", testProxy.attr(IModelConstants.FILL_COLOR));
+        testProxy.attr(IModelConstants.FILL_COLOR, "#ffff80");
+        assertEquals("#ffff80", testProxy.attr(IModelConstants.FILL_COLOR));
     }
     
     @Test
@@ -238,23 +250,23 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     
     @Test
     public void attr_FigureTypeCanSet() {
-        assertEquals(0, actualTestProxy.attr(IModelConstants.FIGURE_TYPE));
-        actualTestProxy.attr(IModelConstants.FIGURE_TYPE, 1);
-        assertEquals(1, actualTestProxy.attr(IModelConstants.FIGURE_TYPE));
+        assertEquals(0, testProxy.attr(IModelConstants.FIGURE_TYPE));
+        testProxy.attr(IModelConstants.FIGURE_TYPE, 1);
+        assertEquals(1, testProxy.attr(IModelConstants.FIGURE_TYPE));
         
-        actualTestProxy.attr(IModelConstants.FIGURE_TYPE, -1);
-        assertEquals(0, actualTestProxy.attr(IModelConstants.FIGURE_TYPE));
+        testProxy.attr(IModelConstants.FIGURE_TYPE, -1);
+        assertEquals(0, testProxy.attr(IModelConstants.FIGURE_TYPE));
         
-        actualTestProxy.attr(IModelConstants.FIGURE_TYPE, 2);
-        assertEquals(1, actualTestProxy.attr(IModelConstants.FIGURE_TYPE));
+        testProxy.attr(IModelConstants.FIGURE_TYPE, 2);
+        assertEquals(1, testProxy.attr(IModelConstants.FIGURE_TYPE));
     }
     
     @Override
     @Test
     public void attr_TextAlignment() {
-        assertEquals(2, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
-        actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
-        assertEquals(4, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        assertEquals(2, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        testProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
+        assertEquals(4, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
     }
     
     @Override
@@ -331,23 +343,23 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     
     @Test
     public void attr_ShowIcon() {
-        assertEquals(0, actualTestProxy.attr(IModelConstants.SHOW_ICON));
-        actualTestProxy.attr(IModelConstants.SHOW_ICON, 2);
-        assertEquals(2, actualTestProxy.attr(IModelConstants.SHOW_ICON));
+        assertEquals(0, testProxy.attr(IModelConstants.SHOW_ICON));
+        testProxy.attr(IModelConstants.SHOW_ICON, 2);
+        assertEquals(2, testProxy.attr(IModelConstants.SHOW_ICON));
     }
     
     @Test
     public void attr_ImageSource() {
-        assertEquals(0, actualTestProxy.attr(IModelConstants.IMAGE_SOURCE));
-        actualTestProxy.attr(IModelConstants.IMAGE_SOURCE, 1);
-        assertEquals(1, actualTestProxy.attr(IModelConstants.IMAGE_SOURCE));
+        assertEquals(0, testProxy.attr(IModelConstants.IMAGE_SOURCE));
+        testProxy.attr(IModelConstants.IMAGE_SOURCE, 1);
+        assertEquals(1, testProxy.attr(IModelConstants.IMAGE_SOURCE));
     }
 
     @Test
     public void attr_IconColor() {
-        assertEquals("", actualTestProxy.attr(IModelConstants.ICON_COLOR));
-        actualTestProxy.attr(IModelConstants.ICON_COLOR, "#121212");
-        assertEquals("#121212", actualTestProxy.attr(IModelConstants.ICON_COLOR));
+        assertEquals("", testProxy.attr(IModelConstants.ICON_COLOR));
+        testProxy.attr(IModelConstants.ICON_COLOR, "#121212");
+        assertEquals("#121212", testProxy.attr(IModelConstants.ICON_COLOR));
     }
     
     @Test

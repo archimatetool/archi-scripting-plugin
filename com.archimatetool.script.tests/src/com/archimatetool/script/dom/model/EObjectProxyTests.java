@@ -37,8 +37,8 @@ import com.archimatetool.script.ArchiScriptException;
 @SuppressWarnings("nls")
 public abstract class EObjectProxyTests {
     
-    protected IArchimateModelObject testEObject;
-    protected EObjectProxy testProxy;
+    protected abstract IArchimateModelObject getTestEObject();
+    protected abstract EObjectProxy getTestProxy();
     
     @BeforeAll
     public static void ensureDefaultDisplay() {
@@ -49,112 +49,112 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void getEObject() {
-        assertSame(testEObject, testProxy.getEObject());
+        assertSame(getTestEObject(), getTestProxy().getEObject());
     }
 
     @Test
     public void getReferencedEObject() {
-        assertSame(testProxy.getEObject(), testProxy.getReferencedEObject());
+        assertSame(getTestProxy().getEObject(), getTestProxy().getReferencedEObject());
     }
     
     @Test
     public void getModel() {
-        assertNotNull(testProxy.getModel());
+        assertNotNull(getTestProxy().getModel());
     }
     
     @Test
     public void getArchimateModel() {
-        assertNotNull(testProxy.getArchimateModel());
+        assertNotNull(getTestProxy().getArchimateModel());
     }
     
     @Test
     public void getID() {
-        testEObject.setId("123");
-        assertEquals("123", testProxy.getId());
+        getTestEObject().setId("123");
+        assertEquals("123", getTestProxy().getId());
     }
     
     @Test
     public void setName() {
-        testProxy.setName("name");
-        assertEquals("name", testProxy.getName());
+        getTestProxy().setName("name");
+        assertEquals("name", getTestProxy().getName());
     }
 
     @Test
     public void setDocumentation() {
-        assumeTrue(testProxy.getReferencedEObject() instanceof IDocumentable);
+        assumeTrue(getTestProxy().getReferencedEObject() instanceof IDocumentable);
         
-        testProxy.setDocumentation("doc");
-        assertEquals("doc", testProxy.getDocumentation());
+        getTestProxy().setDocumentation("doc");
+        assertEquals("doc", getTestProxy().getDocumentation());
     }
     
     @Test
     public void getType() {
-        assertEquals(ModelUtil.getKebabCase(testProxy.getReferencedEObject().eClass().getName()), testProxy.getType());
+        assertEquals(ModelUtil.getKebabCase(getTestProxy().getReferencedEObject().eClass().getName()), getTestProxy().getType());
     }
     
     @Test
     public void delete() {
         assertThrows(ArchiScriptException.class, () -> {
-            testProxy.delete();
+            getTestProxy().delete();
         });
     }
     
     @Test
     public void find() {
-        EObjectProxyCollection collection = testProxy.find();
+        EObjectProxyCollection collection = getTestProxy().find();
         assertTrue(collection.isEmpty());
     }
     
     @Test
     public void find_Selector() {
-        EObjectProxyCollection collection = testProxy.find("");
+        EObjectProxyCollection collection = getTestProxy().find("");
         assertTrue(collection.isEmpty());
     }
     
     @Test
     public void find_EObject() {
-        EObjectProxyCollection collection = testProxy.find(testEObject);
-        assertEquals(testProxy, collection.get(0));
-        assertEquals(testEObject, collection.get(0).getEObject());
+        EObjectProxyCollection collection = getTestProxy().find(getTestEObject());
+        assertEquals(getTestProxy(), collection.get(0));
+        assertEquals(getTestEObject(), collection.get(0).getEObject());
     }
     
     @Test
     public void find_EObjectProxy() {
-        EObjectProxyCollection collection = testProxy.find(testProxy);
-        assertSame(testProxy, collection.get(0));
+        EObjectProxyCollection collection = getTestProxy().find(getTestProxy());
+        assertSame(getTestProxy(), collection.get(0));
     }
     
     @Test
     public void children() {
-        EObjectProxyCollection collection = testProxy.children();
+        EObjectProxyCollection collection = getTestProxy().children();
         assertTrue(collection.isEmpty());
     }
     
     @Test
     public void parent() {
-        EObjectProxy object = testProxy.parent();
+        EObjectProxy object = getTestProxy().parent();
         assertNull(object);
     }
 
     @Test
     public void parents() {
-        EObjectProxyCollection collection = testProxy.parents();
+        EObjectProxyCollection collection = getTestProxy().parents();
         assertNull(collection);
     }
     
     @Test
     public void prop() {
-        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
+        assumeTrue(getTestProxy().getReferencedEObject() instanceof IProperties);
 
-        List<String> collection = testProxy.prop();
+        List<String> collection = getTestProxy().prop();
         assertTrue(collection.isEmpty());
         
-        IProperties obj = (IProperties)testProxy.getReferencedEObject();
+        IProperties obj = (IProperties)getTestProxy().getReferencedEObject();
 
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value1"));
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key2", "value2"));
         
-        collection = testProxy.prop();
+        collection = getTestProxy().prop();
         
         assertEquals(2, collection.size());
         assertEquals("key1", collection.get(0));
@@ -163,38 +163,38 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop_Key() {
-        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
+        assumeTrue(getTestProxy().getReferencedEObject() instanceof IProperties);
         
-        String s = testProxy.prop("key");
+        String s = getTestProxy().prop("key");
         assertNull(s);
         
-        IProperties obj = (IProperties)testProxy.getReferencedEObject();
+        IProperties obj = (IProperties)getTestProxy().getReferencedEObject();
         
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value1"));
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value2"));
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key2", "value3"));
         
-        assertEquals("value1", testProxy.prop("key1"));
-        assertEquals("value3", testProxy.prop("key2"));
+        assertEquals("value1", getTestProxy().prop("key1"));
+        assertEquals("value3", getTestProxy().prop("key2"));
     }
 
     @Test
     public void prop_Key_Duplicate() {
-        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
+        assumeTrue(getTestProxy().getReferencedEObject() instanceof IProperties);
 
-        Object prop = testProxy.prop("key", true);
+        Object prop = getTestProxy().prop("key", true);
         assertNull(prop);
         
-        IProperties obj = (IProperties)testProxy.getReferencedEObject();
+        IProperties obj = (IProperties)getTestProxy().getReferencedEObject();
         
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value1"));
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key1", "value2"));
         obj.getProperties().add(IArchimateFactory.eINSTANCE.createProperty("key2", "value3"));
 
-        prop = testProxy.prop("key1", false);
+        prop = getTestProxy().prop("key1", false);
         assertEquals("value1", prop);
         
-        prop = testProxy.prop("key1", true);
+        prop = getTestProxy().prop("key1", true);
         assertTrue(prop instanceof List<?>);
         assertEquals("value1", ((List<?>)prop).get(0));
         assertEquals("value2", ((List<?>)prop).get(1));
@@ -202,12 +202,12 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void prop_Key_Value() {
-        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
+        assumeTrue(getTestProxy().getReferencedEObject() instanceof IProperties);
 
-        EObjectProxy proxy = testProxy.prop("key", "value");
-        assertSame(testProxy, proxy);
+        EObjectProxy proxy = getTestProxy().prop("key", "value");
+        assertSame(getTestProxy(), proxy);
         
-        IProperties obj = (IProperties)testProxy.getReferencedEObject();
+        IProperties obj = (IProperties)getTestProxy().getReferencedEObject();
         
         EList<IProperty> props = obj.getProperties();
         assertEquals(1, props.size());
@@ -216,19 +216,19 @@ public abstract class EObjectProxyTests {
         assertEquals("key", p.getKey());
         assertEquals("value", p.getValue());
         
-        testProxy.prop("key", "value2");
+        getTestProxy().prop("key", "value2");
         assertEquals("value2", p.getValue());
         assertEquals(1, props.size());
     }
     
     @Test
     public void prop_Key_Value_Duplicate() {
-        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
+        assumeTrue(getTestProxy().getReferencedEObject() instanceof IProperties);
 
-        EObjectProxy proxy = testProxy.prop("key", "value", true);
-        assertSame(testProxy, proxy);
+        EObjectProxy proxy = getTestProxy().prop("key", "value", true);
+        assertSame(getTestProxy(), proxy);
         
-        IProperties obj = (IProperties)testProxy.getReferencedEObject();
+        IProperties obj = (IProperties)getTestProxy().getReferencedEObject();
         
         EList<IProperty> props = obj.getProperties();
         assertEquals(1, props.size());
@@ -237,7 +237,7 @@ public abstract class EObjectProxyTests {
         assertEquals("key", p.getKey());
         assertEquals("value", p.getValue());
         
-        testProxy.prop("key", "value2", true);
+        getTestProxy().prop("key", "value2", true);
         assertEquals(2, props.size());
         p = props.get(1);
         assertEquals("value2", p.getValue());
@@ -245,108 +245,108 @@ public abstract class EObjectProxyTests {
     
     @Test
     public void removeProp() {
-        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
+        assumeTrue(getTestProxy().getReferencedEObject() instanceof IProperties);
 
-        testProxy.prop("key", "value", true);
-        testProxy.prop("key", "value2", true);
+        getTestProxy().prop("key", "value", true);
+        getTestProxy().prop("key", "value2", true);
         
-        IProperties obj = (IProperties)testProxy.getReferencedEObject();
+        IProperties obj = (IProperties)getTestProxy().getReferencedEObject();
         
         EList<IProperty> props = obj.getProperties();
         assertEquals(2, props.size());
         
-        testProxy.removeProp("key");
+        getTestProxy().removeProp("key");
         assertEquals(0, props.size());
     }    
     
     @Test
     public void removeProp_Key_Value() {
-        assumeTrue(testProxy.getReferencedEObject() instanceof IProperties);
+        assumeTrue(getTestProxy().getReferencedEObject() instanceof IProperties);
 
-        testProxy.prop("key", "value", true);
-        testProxy.prop("key", "value2", true);
+        getTestProxy().prop("key", "value", true);
+        getTestProxy().prop("key", "value2", true);
         
-        IProperties obj = (IProperties)testProxy.getReferencedEObject();
+        IProperties obj = (IProperties)getTestProxy().getReferencedEObject();
         
         EList<IProperty> props = obj.getProperties();
         assertEquals(2, props.size());
         
-        testProxy.removeProp("key", "value");
+        getTestProxy().removeProp("key", "value");
         assertEquals(1, props.size());
         assertEquals("value2", props.get(0).getValue());
     }
     
     @Test
     public void getLabelExpression() {
-        assertEquals(null, testProxy.getLabelExpression());
+        assertEquals(null, getTestProxy().getLabelExpression());
     }
     
     @Test
     public void setLabelExpression() {
-        assertEquals(null, testProxy.getLabelExpression());
+        assertEquals(null, getTestProxy().getLabelExpression());
 
         try {
-            testProxy.setLabelExpression("${name}");
-            assertEquals("${name}", testProxy.getLabelExpression());
+            getTestProxy().setLabelExpression("${name}");
+            assertEquals("${name}", getTestProxy().getLabelExpression());
             
-            testProxy.attr(IModelConstants.LABEL_EXPRESSION, "${documentation}");
-            assertEquals("${documentation}", testProxy.attr(IModelConstants.LABEL_EXPRESSION));
+            getTestProxy().attr(IModelConstants.LABEL_EXPRESSION, "${documentation}");
+            assertEquals("${documentation}", getTestProxy().attr(IModelConstants.LABEL_EXPRESSION));
         }
         // Will throw exception if this object doesn't support setLabelExpression()
         catch(ArchiScriptException ex) {
-            assertEquals(null, testProxy.getLabelExpression());
+            assertEquals(null, getTestProxy().getLabelExpression());
         }
     }
     
     @Test
     public void getLabelValue() {
-        assertEquals("", testProxy.getLabelValue());
+        assertEquals("", getTestProxy().getLabelValue());
         
         try {
-            testProxy.setLabelExpression("${name}"); 
-            assertEquals(testProxy.getName(), testProxy.getLabelValue());
-            assertEquals(testProxy.getName(), testProxy.attr(IModelConstants.LABEL_VALUE));
+            getTestProxy().setLabelExpression("${name}"); 
+            assertEquals(getTestProxy().getName(), getTestProxy().getLabelValue());
+            assertEquals(getTestProxy().getName(), getTestProxy().attr(IModelConstants.LABEL_VALUE));
         }
         // Will throw exception if this object doesn't support setLabelExpression()
         catch(ArchiScriptException ex) {
-            assertEquals("", testProxy.getLabelValue());
+            assertEquals("", getTestProxy().getLabelValue());
         }
     }
 
     @Test
     public void attr_ID() {
-        assertEquals(((IIdentifier)testProxy.getEObject()).getId(), testProxy.attr(IModelConstants.ID));
+        assertEquals(((IIdentifier)getTestProxy().getEObject()).getId(), getTestProxy().attr(IModelConstants.ID));
     }
  
     @Test
     public void attr_Type() {
-        assertEquals(ModelUtil.getKebabCase(testProxy.getReferencedEObject().eClass().getName()), testProxy.attr(IModelConstants.TYPE));
+        assertEquals(ModelUtil.getKebabCase(getTestProxy().getReferencedEObject().eClass().getName()), getTestProxy().attr(IModelConstants.TYPE));
     }
 
     @Test
     public void attr_Name() {
-        testProxy.attr(IModelConstants.NAME, "foo");
-        assertEquals("foo", testProxy.attr(IModelConstants.NAME));
+        getTestProxy().attr(IModelConstants.NAME, "foo");
+        assertEquals("foo", getTestProxy().attr(IModelConstants.NAME));
     }
 
     @Test
     public void attr_Documentation() {
-        assumeTrue(testProxy.getReferencedEObject() instanceof IDocumentable);
+        assumeTrue(getTestProxy().getReferencedEObject() instanceof IDocumentable);
         
-        testProxy.attr(IModelConstants.DOCUMENTATION, "doc");
-        assertEquals("doc", testProxy.attr(IModelConstants.DOCUMENTATION));
+        getTestProxy().attr(IModelConstants.DOCUMENTATION, "doc");
+        assertEquals("doc", getTestProxy().attr(IModelConstants.DOCUMENTATION));
     }
 
     @Test
     public void equals() {
-        EObjectProxy proxy = EObjectProxy.get(testEObject);
-        assertTrue(proxy.equals(testProxy));
+        EObjectProxy proxy = EObjectProxy.get(getTestEObject());
+        assertTrue(proxy.equals(getTestProxy()));
     }
     
     @Test
     public void hashCode_() {
-        EObjectProxy proxy = EObjectProxy.get(testEObject);
-        assertTrue(proxy.hashCode() == testEObject.hashCode());
+        EObjectProxy proxy = EObjectProxy.get(getTestEObject());
+        assertTrue(proxy.hashCode() == getTestEObject().hashCode());
     }
 
 }

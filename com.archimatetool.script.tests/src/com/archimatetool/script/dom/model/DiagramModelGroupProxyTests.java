@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.archimatetool.model.IArchimateModelObject;
+import com.archimatetool.model.IDiagramModelGroup;
 
 
 /**
@@ -24,16 +24,26 @@ import com.archimatetool.model.IArchimateModelObject;
 @SuppressWarnings("nls")
 public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     
-    private ArchimateModelProxy modelProxy;
     private ArchimateDiagramModelProxy viewProxy;
+    private IDiagramModelGroup testEObject;
+    private DiagramModelGroupProxy testProxy;
+    
+    @Override
+    protected IDiagramModelGroup getTestEObject() {
+        return testEObject;
+    }
+    
+    @Override
+    protected DiagramModelGroupProxy getTestProxy() {
+        return testProxy;
+    }
     
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        modelProxy = TestsHelper.createTestModel();
+        ArchimateModelProxy modelProxy = TestsHelper.createTestModel();
         viewProxy = modelProxy.createArchimateView("test");
-        testProxy = viewProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 0, 0, 100, 100);
-        testEObject = (IArchimateModelObject)testProxy.getEObject();
-        actualTestProxy = (DiagramModelGroupProxy)testProxy;
+        testProxy = (DiagramModelGroupProxy)viewProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 0, 0, 100, 100);
+        testEObject = testProxy.getEObject();
     }
 
     @Override
@@ -46,7 +56,7 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     @Override
     @Test
     public void getReferencedEObject() {
-        assertNull(actualTestProxy.getConcept());
+        assertNull(testProxy.getConcept());
     }
     
     @Override
@@ -54,7 +64,7 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     public void children() {
         assertTrue(testProxy.children().isEmpty());
         
-        DiagramModelObjectProxy noteProxy = ((DiagramModelObjectProxy)testProxy).createObject(IModelConstants.DIAGRAM_MODEL_NOTE, 0, 0, 20, 20);
+        DiagramModelObjectProxy noteProxy = testProxy.createObject(IModelConstants.DIAGRAM_MODEL_NOTE, 0, 0, 20, 20);
         assertEquals(1, testProxy.children().size());
         assertEquals(noteProxy, testProxy.children().first());
     }
@@ -81,17 +91,17 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
 
     @Test
     public void attr_BorderType() {
-        assertEquals(0, actualTestProxy.attr(IModelConstants.BORDER_TYPE));
-        actualTestProxy.attr(IModelConstants.BORDER_TYPE, 1);
-        assertEquals(1, actualTestProxy.attr(IModelConstants.BORDER_TYPE));
+        assertEquals(0, testProxy.attr(IModelConstants.BORDER_TYPE));
+        testProxy.attr(IModelConstants.BORDER_TYPE, 1);
+        assertEquals(1, testProxy.attr(IModelConstants.BORDER_TYPE));
     }
 
     @Override
     @Test
     public void attr_TextAlignment() {
-        assertEquals(1, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
-        actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
-        assertEquals(4, actualTestProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        assertEquals(1, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        testProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
+        assertEquals(4, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
     }
 
 }

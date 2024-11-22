@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.archimatetool.canvas.model.ICanvasFactory;
+import com.archimatetool.canvas.model.ICanvasModel;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
@@ -26,11 +27,19 @@ import com.archimatetool.model.IArchimateModel;
  */
 public class CanvasDiagramModelProxyTests extends DiagramModelProxyTests {
     
-    //protected ArchimateModelProxy testModelProxy;
-    
-    //private CanvasDiagramModelProxy actualTestProxy;
-    
     private IArchimateModel model;
+    private ICanvasModel testEObject;
+    private CanvasDiagramModelProxy testProxy;
+    
+    @Override
+    protected ICanvasModel getTestEObject() {
+        return testEObject;
+    }
+    
+    @Override
+    protected CanvasDiagramModelProxy getTestProxy() {
+        return testProxy;
+    }
     
     @BeforeEach
     public void runOnceBeforeEachTest() {
@@ -40,7 +49,7 @@ public class CanvasDiagramModelProxyTests extends DiagramModelProxyTests {
         testEObject = ICanvasFactory.eINSTANCE.createCanvasModel();
         model.getFolder(FolderType.DIAGRAMS).getElements().add(testEObject);
         
-        testProxy = EObjectProxy.get(testEObject);
+        testProxy = (CanvasDiagramModelProxy)EObjectProxy.get(testEObject);
     }
 
     @Test

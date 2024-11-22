@@ -23,13 +23,12 @@ import com.archimatetool.script.ArchiScriptException;
 @SuppressWarnings("nls")
 public abstract class ArchimateConceptProxyTests extends EObjectProxyTests {
     
+    @Override
+    protected abstract ArchimateConceptProxy getTestProxy();
+    
     @Test
     public void getConcept() {
-        assertSame(testProxy, getTestProxy().getConcept());
-    }
-    
-    protected ArchimateConceptProxy getTestProxy() {
-        return (ArchimateConceptProxy)testProxy;
+        assertSame(getTestProxy(), getTestProxy().getConcept());
     }
     
     @Test
@@ -37,7 +36,7 @@ public abstract class ArchimateConceptProxyTests extends EObjectProxyTests {
         assertNull(getTestProxy().getSpecialization());
         
         // Create Specialization
-        getTestProxy().getModel().createSpecialization("Special", ModelUtil.getKebabCase(testProxy.getEObject().eClass().getName()), null);
+        getTestProxy().getModel().createSpecialization("Special", ModelUtil.getKebabCase(getTestProxy().getEObject().eClass().getName()), null);
         
         // Now set it
         getTestProxy().setSpecialization("Special");

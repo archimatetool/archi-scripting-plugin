@@ -32,22 +32,31 @@ import com.archimatetool.model.util.ArchimateModelUtils;
 public class FolderProxyTests extends EObjectProxyTests {
     
     private ArchimateModelProxy testModelProxy;
+    private IFolder testEObject;
+    private FolderProxy testProxy;
     
-    private FolderProxy actualTestProxy;
+    @Override
+    protected IFolder getTestEObject() {
+        return testEObject;
+    }
+    
+    @Override
+    protected FolderProxy getTestProxy() {
+        return testProxy;
+    }
     
     @BeforeEach
     public void runOnceBeforeEachTest() {
         testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
         
         testEObject = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "74944b84"); // Relationships sub Folder
-        testProxy = EObjectProxy.get(testEObject);
-        actualTestProxy = (FolderProxy)testProxy;
+        testProxy = (FolderProxy)EObjectProxy.get(testEObject);
     }
     
     @Test
     public void setName_NotSystemFolder() {
         testEObject = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "408ff6d3");
-        testProxy = EObjectProxy.get(testEObject);
+        testProxy = (FolderProxy)EObjectProxy.get(testEObject);
         
         testProxy.setName("test");
         assertEquals("Relations", testProxy.getName());
@@ -102,8 +111,8 @@ public class FolderProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void children() {
-        EObjectProxyCollection collection = actualTestProxy.children();
-        assertEquals(actualTestProxy.getEObject().getElements().size(), collection.size());
+        EObjectProxyCollection collection = testProxy.children();
+        assertEquals(testProxy.getEObject().getElements().size(), collection.size());
         
         for(EObjectProxy eObjectProxy : collection) {
             assertTrue(eObjectProxy instanceof ArchimateRelationshipProxy);
@@ -113,10 +122,10 @@ public class FolderProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void delete() {
-        assertEquals(actualTestProxy.getEObject().getElements().size(), actualTestProxy.children().size());
+        assertEquals(testProxy.getEObject().getElements().size(), testProxy.children().size());
         
         // Store folder contents (relationships)
-        ArrayList<EObject> children = new ArrayList<>(actualTestProxy.getEObject().getElements());
+        ArrayList<EObject> children = new ArrayList<>(testProxy.getEObject().getElements());
         
         for(EObject eObject : children) {
             IArchimateRelationship rel = (IArchimateRelationship)eObject;
@@ -127,11 +136,11 @@ public class FolderProxyTests extends EObjectProxyTests {
             assertTrue(rel.getTarget().getTargetRelationships().contains(rel));
         }
 
-        actualTestProxy.delete();
+        testProxy.delete();
         
-        assertEquals(0, actualTestProxy.children().size());
-        assertNull(actualTestProxy.getModel());
-        assertNull(actualTestProxy.getEObject().eContainer());
+        assertEquals(0, testProxy.children().size());
+        assertNull(testProxy.getModel());
+        assertNull(testProxy.getEObject().eContainer());
         
         for(EObject eObject : children) {
             IArchimateRelationship rel = (IArchimateRelationship)eObject;

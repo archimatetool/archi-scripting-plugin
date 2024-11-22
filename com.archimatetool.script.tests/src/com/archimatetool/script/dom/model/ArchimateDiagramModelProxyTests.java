@@ -34,17 +34,24 @@ import com.archimatetool.model.util.ArchimateModelUtils;
 @SuppressWarnings("nls")
 public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
     
-    protected ArchimateModelProxy testModelProxy;
+    private IArchimateDiagramModel testEObject;
+    private ArchimateDiagramModelProxy testProxy;
     
-    private ArchimateDiagramModelProxy actualTestProxy;
+    @Override
+    protected IArchimateDiagramModel getTestEObject() {
+        return testEObject;
+    }
+    
+    @Override
+    protected ArchimateDiagramModelProxy getTestProxy() {
+        return testProxy;
+    }
     
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
-        
-        testEObject = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4056");
-        testProxy = EObjectProxy.get(testEObject);
-        actualTestProxy = (ArchimateDiagramModelProxy)testProxy;
+        ArchimateModelProxy modelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        testEObject = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(modelProxy.getEObject(), "4056");
+        testProxy = (ArchimateDiagramModelProxy)EObjectProxy.get(testEObject);
     }
 
     @Test
@@ -56,14 +63,14 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
     @Override
     @Test
     public void parent() {
-        EObjectProxy parent = actualTestProxy.parent();
+        EObjectProxy parent = testProxy.parent();
         assertEquals("e64e9b49", parent.getId());
     }
 
     @Override
     @Test
     public void parents() {
-        EObjectProxyCollection collection = actualTestProxy.parents();
+        EObjectProxyCollection collection = testProxy.parents();
         assertEquals(1, collection.size());
         assertEquals("e64e9b49", collection.get(0).getId());
     }
@@ -71,7 +78,7 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
     @Override
     @Test
     public void find() {
-        EObjectProxyCollection collection = actualTestProxy.find();
+        EObjectProxyCollection collection = testProxy.find();
         assertEquals(65, collection.size());
     }
     
@@ -80,20 +87,20 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
     public void find_Selector() {
         super.find_Selector();
         
-        EObjectProxyCollection collection = actualTestProxy.find("garbage");
+        EObjectProxyCollection collection = testProxy.find("garbage");
         assertEquals(0, collection.size());
 
-        collection = actualTestProxy.find("*");
+        collection = testProxy.find("*");
         assertEquals(0, collection.size());
         
-        collection = actualTestProxy.find("diagram-model-group");
+        collection = testProxy.find("diagram-model-group");
         assertEquals(7, collection.size());
     }
 
     @Override
     @Test
     public void children() {
-        EObjectProxyCollection collection = actualTestProxy.children();
+        EObjectProxyCollection collection = testProxy.children();
         assertEquals(35, collection.size());
         
         for(EObjectProxy eObjectProxy : collection) {
@@ -103,7 +110,7 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
     
     @Test
     public void objectRefs() {
-        EObjectProxyCollection collection = actualTestProxy.objectRefs();
+        EObjectProxyCollection collection = testProxy.objectRefs();
         assertEquals(1, collection.size());
         
         for(EObjectProxy eObjectProxy : collection) {
@@ -114,7 +121,7 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
 
     @Test
     public void viewRefs() {
-        EObjectProxyCollection collection = actualTestProxy.viewRefs();
+        EObjectProxyCollection collection = testProxy.viewRefs();
         assertEquals(1, collection.size());
         
         for(EObjectProxy eObjectProxy : collection) {
@@ -126,13 +133,13 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
     @Override
     @Test
     public void delete() {
-        assertEquals(35, actualTestProxy.children().size());
+        assertEquals(35, testProxy.children().size());
         
-        assertEquals(1, actualTestProxy.viewRefs().size());
+        assertEquals(1, testProxy.viewRefs().size());
 
         // Store dm contents
         ArrayList<IDiagramModelComponent> children = new ArrayList<>();
-        for(Iterator<EObject> iter = actualTestProxy.getEObject().eAllContents(); iter.hasNext();) {
+        for(Iterator<EObject> iter = testProxy.getEObject().eAllContents(); iter.hasNext();) {
             EObject eObject = iter.next();
             if(eObject instanceof IDiagramModelComponent) {
                 children.add((IDiagramModelComponent)eObject);
@@ -140,11 +147,11 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
         }
         assertEquals(65, children.size());
         
-        actualTestProxy.delete();
+        testProxy.delete();
         
         assertEquals(0, testProxy.children().size());
         assertNull(testProxy.getModel());
-        assertEquals(0, actualTestProxy.viewRefs().size());
+        assertEquals(0, testProxy.viewRefs().size());
         
         for(IDiagramModelComponent eObject : children) {
             assertNull(eObject.eContainer());
@@ -157,12 +164,12 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
     
     @Test
     public void getViewpoint() {
-        Map<String, Object> map = actualTestProxy.getViewpoint();
+        Map<String, Object> map = testProxy.getViewpoint();
         assertEquals("layered", map.get("id"));
         assertEquals("Layered", map.get("name"));
         
-        actualTestProxy.setViewpoint("implementation_migration");
-        map = actualTestProxy.getViewpoint();
+        testProxy.setViewpoint("implementation_migration");
+        map = testProxy.getViewpoint();
         assertEquals("implementation_migration", map.get("id"));
         assertEquals("Implementation and Migration", map.get("name"));
     }
@@ -170,23 +177,23 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
     @Test
     @SuppressWarnings("unchecked")
     public void attr_getViewpoint() {
-        Map<String, Object> map = (Map<String, Object>)actualTestProxy.attr("viewpoint");
+        Map<String, Object> map = (Map<String, Object>)testProxy.attr("viewpoint");
         assertEquals("layered", map.get("id"));
         assertEquals("Layered", map.get("name"));
         
-        actualTestProxy.attr("viewpoint", "implementation_migration");
-        map = (Map<String, Object>)actualTestProxy.attr("viewpoint");
+        testProxy.attr("viewpoint", "implementation_migration");
+        map = (Map<String, Object>)testProxy.attr("viewpoint");
         assertEquals("implementation_migration", map.get("id"));
         assertEquals("Implementation and Migration", map.get("name"));
     }
 
     @Test
     public void isAllowedConceptForViewpoint() {
-        actualTestProxy.setViewpoint("strategy");
-        assertFalse(actualTestProxy.isAllowedConceptForViewpoint("business-actor"));
-        assertFalse(actualTestProxy.isAllowedConceptForViewpoint("node"));
-        assertFalse(actualTestProxy.isAllowedConceptForViewpoint("location"));
-        assertTrue(actualTestProxy.isAllowedConceptForViewpoint("resource"));
-        assertTrue(actualTestProxy.isAllowedConceptForViewpoint("outcome"));
+        testProxy.setViewpoint("strategy");
+        assertFalse(testProxy.isAllowedConceptForViewpoint("business-actor"));
+        assertFalse(testProxy.isAllowedConceptForViewpoint("node"));
+        assertFalse(testProxy.isAllowedConceptForViewpoint("location"));
+        assertTrue(testProxy.isAllowedConceptForViewpoint("resource"));
+        assertTrue(testProxy.isAllowedConceptForViewpoint("outcome"));
     }
 }

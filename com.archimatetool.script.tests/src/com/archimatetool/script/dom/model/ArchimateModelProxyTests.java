@@ -38,14 +38,24 @@ import com.archimatetool.script.ArchiScriptException;
 @SuppressWarnings("nls")
 public class ArchimateModelProxyTests extends EObjectProxyTests {
     
-    private ArchimateModelProxy actualTestProxy;
+    private IArchimateModel testEObject;
+    private ArchimateModelProxy testProxy;
+    
+    @Override
+    protected IArchimateModel getTestEObject() {
+        return testEObject;
+    }
+    
+    @Override
+    protected ArchimateModelProxy getTestProxy() {
+        return testProxy;
+    }
     
     @BeforeEach
     public void runOnceBeforeEachTest() {
         testEObject = IArchimateFactory.eINSTANCE.createArchimateModel();
-        ((IArchimateModel)testEObject).setDefaults();
-        testProxy = EObjectProxy.get(testEObject);
-        actualTestProxy = (ArchimateModelProxy)testProxy;
+        testEObject.setDefaults();
+        testProxy = (ArchimateModelProxy)EObjectProxy.get(testEObject);
     }
     
     @Test
@@ -57,7 +67,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void getModel() {
-        assertEquals(actualTestProxy, testProxy.getModel());
+        assertEquals(testProxy, testProxy.getModel());
     }
     
     @Test
@@ -70,16 +80,16 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
             currentModel.getEObject();
         });
         
-        actualTestProxy.setAsCurrent();
-        assertEquals(actualTestProxy, currentModel);
-        assertEquals(actualTestProxy.getEObject(), currentModel.getEObject());
+        testProxy.setAsCurrent();
+        assertEquals(testProxy, currentModel);
+        assertEquals(testProxy.getEObject(), currentModel.getEObject());
     }
     
     @Override
     @Test
     public void children() {
-        EObjectProxyCollection collection = actualTestProxy.children();
-        assertEquals(actualTestProxy.getEObject().getFolders().size(), collection.size());
+        EObjectProxyCollection collection = testProxy.children();
+        assertEquals(testProxy.getEObject().getFolders().size(), collection.size());
         
         // Should be top-level folders
         for(EObjectProxy eObjectProxy : collection) {
@@ -159,24 +169,24 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
 
     @Test
     public void attr_Purpose() {
-        assertEquals("", actualTestProxy.attr(IModelConstants.PURPOSE));
-        actualTestProxy.attr(IModelConstants.PURPOSE, "p");
-        assertEquals("p", actualTestProxy.attr(IModelConstants.PURPOSE));
+        assertEquals("", testProxy.attr(IModelConstants.PURPOSE));
+        testProxy.attr(IModelConstants.PURPOSE, "p");
+        assertEquals("p", testProxy.attr(IModelConstants.PURPOSE));
     }
 
     @Test
     public void setPurpose() {
-        actualTestProxy.setPurpose("purpose");
-        assertEquals("purpose", actualTestProxy.getPurpose());
+        testProxy.setPurpose("purpose");
+        assertEquals("purpose", testProxy.getPurpose());
     }
 
     @Test
     public void copy() {
-        assertSame(testEObject, actualTestProxy.getEObject());
+        assertSame(testEObject, testProxy.getEObject());
         
-        ArchimateModelProxy proxy = actualTestProxy.copy();
-        assertSame(actualTestProxy.getEObject(), proxy.getEObject());
-        assertEquals(actualTestProxy, proxy);
+        ArchimateModelProxy proxy = testProxy.copy();
+        assertSame(testProxy.getEObject(), proxy.getEObject());
+        assertEquals(testProxy, proxy);
     }
     
     @Test
@@ -184,8 +194,8 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         File file = File.createTempFile("~temp", ".archimate");
         file.deleteOnExit();
         
-        actualTestProxy.getEObject().setAdapter(IArchiveManager.class, IArchiveManager.FACTORY.createArchiveManager(actualTestProxy.getEObject()));
-        actualTestProxy.save(file.getAbsolutePath());
+        testProxy.getEObject().setAdapter(IArchiveManager.class, IArchiveManager.FACTORY.createArchiveManager(testProxy.getEObject()));
+        testProxy.save(file.getAbsolutePath());
         
         assertTrue(file.exists());
         assertTrue(file.length() > 100);
@@ -193,16 +203,16 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     
     @Test
     public void getPath() {
-        assertNull(actualTestProxy.getPath());
+        assertNull(testProxy.getPath());
         
         File file = new File("/path/test.archimate");
-        actualTestProxy.getEObject().setFile(file);
-        assertEquals(file.getAbsolutePath(), actualTestProxy.getPath());
+        testProxy.getEObject().setFile(file);
+        assertEquals(file.getAbsolutePath(), testProxy.getPath());
     }
     
     @Test
     public void createElement() {
-        ArchimateElementProxy proxy = actualTestProxy.createElement("business-actor", "Fido");
+        ArchimateElementProxy proxy = testProxy.createElement("business-actor", "Fido");
         assertNotNull(proxy);
         
         IArchimateElement element = proxy.getEObject();
@@ -213,16 +223,16 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Test
     public void createElement_Bogus() {
         assertThrows(ArchiScriptException.class, () -> {
-            actualTestProxy.createElement("access-relationship", "Fido");
+            testProxy.createElement("access-relationship", "Fido");
         });
     }
 
     @Test
     public void createRelationship() {
-        ArchimateElementProxy source = actualTestProxy.createElement("business-actor", "Fido");
-        ArchimateElementProxy target = actualTestProxy.createElement("business-role", "Role");
+        ArchimateElementProxy source = testProxy.createElement("business-actor", "Fido");
+        ArchimateElementProxy target = testProxy.createElement("business-role", "Role");
         
-        ArchimateRelationshipProxy proxy = actualTestProxy.createRelationship("assignment-relationship", "Fido", source, target);
+        ArchimateRelationshipProxy proxy = testProxy.createRelationship("assignment-relationship", "Fido", source, target);
         assertNotNull(proxy);
         
         IArchimateRelationship relation = proxy.getEObject();
@@ -232,39 +242,39 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     
     @Test
     public void addRelationship_Bogus() {
-        ArchimateElementProxy source = actualTestProxy.createElement("business-actor", "Fido");
-        ArchimateElementProxy target = actualTestProxy.createElement("business-role", "Role");
+        ArchimateElementProxy source = testProxy.createElement("business-actor", "Fido");
+        ArchimateElementProxy target = testProxy.createElement("business-role", "Role");
         assertThrows(ArchiScriptException.class, () -> {
-            actualTestProxy.createRelationship("BusinessActor", "Fido", source, target);
+            testProxy.createRelationship("BusinessActor", "Fido", source, target);
         });
     }
     
     @Test
     public void addRelationship_BogusType() {
-        ArchimateElementProxy source = actualTestProxy.createElement("business-actor", "Fido");
-        ArchimateElementProxy target = actualTestProxy.createElement("business-role", "Role");
+        ArchimateElementProxy source = testProxy.createElement("business-actor", "Fido");
+        ArchimateElementProxy target = testProxy.createElement("business-role", "Role");
         assertThrows(ArchiScriptException.class, () -> {
-            actualTestProxy.createRelationship("access-relationship", "Fido", source, target);
+            testProxy.createRelationship("access-relationship", "Fido", source, target);
         });
     }
     
     @Test
     public void getSpecializations() {
-        ProfileProxy proxy1 = actualTestProxy.createSpecialization("Spec", "business-actor", null);
-        ProfileProxy proxy2 = actualTestProxy.createSpecialization("Spec2", "business-object", null);
+        ProfileProxy proxy1 = testProxy.createSpecialization("Spec", "business-actor", null);
+        ProfileProxy proxy2 = testProxy.createSpecialization("Spec2", "business-object", null);
         
-        assertEquals(2, actualTestProxy.getSpecializations().size());
-        assertEquals(proxy1, actualTestProxy.getSpecializations().get(0));
-        assertEquals(proxy2, actualTestProxy.getSpecializations().get(1));
+        assertEquals(2, testProxy.getSpecializations().size());
+        assertEquals(proxy1, testProxy.getSpecializations().get(0));
+        assertEquals(proxy2, testProxy.getSpecializations().get(1));
     }
     
     @Test
     public void findSpecialization() {
-        ProfileProxy proxy1 = actualTestProxy.createSpecialization("Spec", "business-actor", null);
-        ProfileProxy proxy2 = actualTestProxy.createSpecialization("Spec2", "business-object", null);
+        ProfileProxy proxy1 = testProxy.createSpecialization("Spec", "business-actor", null);
+        ProfileProxy proxy2 = testProxy.createSpecialization("Spec2", "business-object", null);
         
-        assertEquals(proxy1, actualTestProxy.findSpecialization("Spec", "business-actor"));
-        assertEquals(proxy2, actualTestProxy.findSpecialization("Spec2", "business-object"));
-        assertNull(actualTestProxy.findSpecialization("Spec2", "business-actor"));
+        assertEquals(proxy1, testProxy.findSpecialization("Spec", "business-actor"));
+        assertEquals(proxy2, testProxy.findSpecialization("Spec2", "business-object"));
+        assertNull(testProxy.findSpecialization("Spec2", "business-actor"));
     }
 }

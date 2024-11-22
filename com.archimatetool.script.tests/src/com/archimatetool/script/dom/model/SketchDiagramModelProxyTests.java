@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.ISketchModel;
 
 
 /**
@@ -25,12 +26,20 @@ import com.archimatetool.model.IArchimateModel;
  */
 public class SketchDiagramModelProxyTests extends DiagramModelProxyTests {
     
-    //protected ArchimateModelProxy testModelProxy;
-    
-    //private SketchDiagramModelProxy actualTestProxy;
-    
     private IArchimateModel model;
+    private ISketchModel testEObject;
+    private SketchDiagramModelProxy testProxy;
     
+    @Override
+    protected ISketchModel getTestEObject() {
+        return testEObject;
+    }
+    
+    @Override
+    protected SketchDiagramModelProxy getTestProxy() {
+        return testProxy;
+    }
+
     @BeforeEach
     public void runOnceBeforeEachTest() {
         model = IArchimateFactory.eINSTANCE.createArchimateModel();
@@ -39,7 +48,7 @@ public class SketchDiagramModelProxyTests extends DiagramModelProxyTests {
         testEObject = IArchimateFactory.eINSTANCE.createSketchModel();
         model.getFolder(FolderType.DIAGRAMS).getElements().add(testEObject);
 
-        testProxy = EObjectProxy.get(testEObject);
+        testProxy = (SketchDiagramModelProxy)EObjectProxy.get(testEObject);
     }
 
     @Test
