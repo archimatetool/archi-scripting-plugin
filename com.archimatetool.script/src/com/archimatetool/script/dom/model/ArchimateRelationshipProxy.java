@@ -85,7 +85,13 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             public void undo() {
                 getEObject().setSource(oldSource);
             }
-        });
+            
+            @Override
+            public void dispose() {
+                super.dispose();
+                oldSource = null;
+            }
+       });
         
         if(updateViews) {
             // Get each instance of the connection in a view
@@ -146,6 +152,12 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
             @Override
             public void undo() {
                 getEObject().setTarget(oldTarget);
+            }
+            
+            @Override
+            public void dispose() {
+                super.dispose();
+                oldTarget = null;
             }
         });
         

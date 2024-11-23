@@ -37,6 +37,7 @@ public class AddPropertyCommand extends ScriptCommand {
     
     @Override
     public void dispose() {
+        super.dispose();
         eObject = null;
         property = null;
     }

@@ -36,6 +36,7 @@ public class AddElementCommand extends ScriptCommand {
     
     @Override
     public void dispose() {
+        super.dispose();
         parent = null;
         element = null;
     }

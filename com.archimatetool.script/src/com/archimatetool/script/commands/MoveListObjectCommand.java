@@ -49,6 +49,7 @@ public class MoveListObjectCommand extends ScriptCommand {
     
     @Override
     public void dispose() {
+        super.dispose();
         list = null;
     }
 }

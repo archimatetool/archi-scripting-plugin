@@ -156,6 +156,12 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
             public void undo() {
                 getEObject().getBendpoints().set(index, previous);
             }
+            
+            @Override
+            public void dispose() {
+                super.dispose();
+                previous = null;
+            }
         });
         
         return this;
@@ -187,6 +193,12 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
             @Override
             public void undo() {
                 getEObject().getBendpoints().add(index, bp);
+            }
+            
+            @Override
+            public void dispose() {
+                super.dispose();
+                bp = null;
             }
         });
         

@@ -33,6 +33,7 @@ public class DisconnectRelationshipCommand extends ScriptCommand {
     
     @Override
     public void dispose() {
+        super.dispose();
         eObject = null;
     }
 }

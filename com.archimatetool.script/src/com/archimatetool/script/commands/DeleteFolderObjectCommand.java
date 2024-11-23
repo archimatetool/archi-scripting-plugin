@@ -59,6 +59,7 @@ public class DeleteFolderObjectCommand extends ScriptCommand {
     
     @Override
     public void dispose() {
+        super.dispose();
         eObject = null;
         parent = null;
     }

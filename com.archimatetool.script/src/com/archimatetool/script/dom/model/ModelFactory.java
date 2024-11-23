@@ -174,6 +174,12 @@ class ModelFactory implements IModelConstants {
                     oldParent.getElements().add(oldPosition, object);
                 }
             }
+            
+            @Override
+            public void dispose() {
+                super.dispose();
+                oldParent = null;
+            }
         });
     }
     
@@ -209,6 +215,12 @@ class ModelFactory implements IModelConstants {
                 if(oldParent != null) {
                     oldParent.getFolders().add(oldPosition, folder);
                 }
+            }
+            
+            @Override
+            public void dispose() {
+                super.dispose();
+                oldParent = null;
             }
         });
     }

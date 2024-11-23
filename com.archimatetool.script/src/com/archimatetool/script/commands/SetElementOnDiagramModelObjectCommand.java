@@ -88,6 +88,7 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
 
     @Override
     public void dispose() {
+        super.dispose();
         element = null;
         dmo = null;
         oldElement = null;

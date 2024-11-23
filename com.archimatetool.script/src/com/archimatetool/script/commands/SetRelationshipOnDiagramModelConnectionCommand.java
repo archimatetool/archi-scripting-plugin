@@ -57,6 +57,7 @@ public class SetRelationshipOnDiagramModelConnectionCommand extends ScriptComman
 
     @Override
     public void dispose() {
+        super.dispose();
         newRelationship = null;
         dmc = null;
         oldRelationship = null;

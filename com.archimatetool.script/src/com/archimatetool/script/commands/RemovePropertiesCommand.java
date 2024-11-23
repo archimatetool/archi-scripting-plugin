@@ -43,6 +43,7 @@ public class RemovePropertiesCommand extends ScriptCommand {
     
     @Override
     public void dispose() {
+        super.dispose();
         toRemove = null;
         eObject = null;
     }
