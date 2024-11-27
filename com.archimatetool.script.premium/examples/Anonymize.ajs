@@ -19,7 +19,7 @@
 
 var confirm = window.confirm("Are you sure you want to run the Anonymize script?\nThis will change all names, properties and documentation text in the model!");
 if(confirm == 0) {
-    exit();;
+    exit();
 }
 
 // Include Lorem.js rom https://github.com/oliver-moran/lorem.js

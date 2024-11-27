@@ -63,17 +63,25 @@ public class RefreshUIHandler {
      * Disable/Enable Application Shell and Menu Bar so user doesn't edit models
      */
     private static void setShellEnabled(boolean enabled) {
-        if(Display.getCurrent() != null) {
-            if(Display.getCurrent().getSystemMenu() != null) { // Mac
-                Display.getCurrent().getSystemMenu().setEnabled(enabled);
+        if(Display.getCurrent() == null) {
+            return;
+        }
+        
+        if(Display.getCurrent().getSystemMenu() != null) { // Mac
+            Display.getCurrent().getSystemMenu().setEnabled(enabled);
+        }
+
+        for(Shell shell : Display.getCurrent().getShells()) {
+            shell.setEnabled(enabled);
+            if(shell.getMenuBar() != null) { // Mac/Linux will have menu bar enabled
+                shell.getMenuBar().setEnabled(enabled);
             }
-            
-            for(Shell shell : Display.getCurrent().getShells()) {
-                shell.setEnabled(enabled);
-                if(shell.getMenuBar() != null) { // Mac/Linux will have menu bar enabled
-                    shell.getMenuBar().setEnabled(enabled);
-                }
-            }
+        }
+        
+        // Set focus back to the active Workbench part.
+        // This is a problem on Mac rather than Windows (don't know about Linux)
+        if(enabled) {
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPartService().getActivePart().setFocus();
         }
     }
 
