@@ -256,6 +256,8 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         updateFontLabel();
         
         fCommonJSButton.setSelection(getPreferenceStore().getDefaultBoolean(PREFS_COMMONJS_ENABLED));
+        
+        super.performDefaults();
     }
     
     private void updateFontLabel() {
