@@ -19,6 +19,7 @@ import com.archimatetool.model.IJunction;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.DuplicateElementCommand;
 import com.archimatetool.script.commands.ScriptCommand;
 import com.archimatetool.script.commands.SetCommand;
 import com.archimatetool.script.commands.SetElementOnDiagramModelObjectCommand;
@@ -160,7 +161,7 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         return null;
     }
     
-    public EObjectProxy setJunctionType(String type) {
+    public ArchimateElementProxy setJunctionType(String type) {
         if(getEObject() instanceof IJunction && type != null) {
             type = type.toLowerCase();
             if(IModelConstants.JUNCTION_TYPES_LIST.contains(type)) {
@@ -172,6 +173,30 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         }
         
         return this;
+    }
+    
+    /**
+     * Create a duplicate of this element and put it in the same folder
+     */
+    public ArchimateElementProxy duplicate() {
+        return duplicate((FolderProxy)parent());
+    }
+
+    /**
+     * Create a duplicate of this element and put it in the given parent folder
+     */
+    public ArchimateElementProxy duplicate(FolderProxy parentFolder) {
+        // Check for correct folder
+        if(!ModelUtil.isCorrectFolderForObject(parentFolder.getEObject(), getEObject())) {
+            throw new ArchiScriptException(Messages.ModelFactory_0);
+        }
+        
+        // Check for same model
+        ModelUtil.checkComponentsInSameModel(getEObject(), parentFolder.getEObject());
+        
+        DuplicateElementCommand command = new DuplicateElementCommand(getEObject(), parentFolder.getEObject());
+        CommandHandler.executeCommand(command);
+        return (ArchimateElementProxy)EObjectProxy.get(command.getDuplicate());
     }
 
     // Attr
