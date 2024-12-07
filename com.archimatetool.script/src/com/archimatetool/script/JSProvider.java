@@ -39,26 +39,19 @@ public class JSProvider implements IScriptEngineProvider {
     }
     
     /**
-     * @return The class used for the Nashorn engine
-     *         Either the one shipped with Java or the standalone one, or null if not installed
+     * @return The class used for the Nashorn engine if it is installed, or null.
      */
     private static Class<?> getNashornScriptEngineFactoryClass() {
         Class<?> clazz = null;
         
         try {
-            // Java Nashorn
-            clazz = Class.forName("jdk.nashorn.api.scripting.NashornScriptEngineFactory");
+            // Standalone Nashorn bundle
+            Bundle bundle = Platform.getBundle("com.archimatetool.script.nashorn");
+            if(bundle != null) {
+                clazz = bundle.loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory");
+            }
         }
-        catch(ClassNotFoundException ex) {
-            try {
-                // Standalone Nashorn bundle
-                Bundle bundle = Platform.getBundle("com.archimatetool.script.nashorn");
-                if(bundle != null) {
-                    clazz = bundle.loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory");
-                }
-            }
-            catch(ClassNotFoundException ex1) {
-            }
+        catch(ClassNotFoundException ex1) {
         }
         
         return clazz;
@@ -72,7 +65,7 @@ public class JSProvider implements IScriptEngineProvider {
             engine.eval(initReader);
         }
 
-        // Normalize filename so that nashorn's load() can run it
+        // Normalize filename so that load() can run it
         String scriptPath = PlatformUtils.isWindows() ? file.getAbsolutePath().replace('\\', '/') : file.getAbsolutePath();
         
         // Escape apostrophes to not conflict with the load('path') command
@@ -126,14 +119,15 @@ public class JSProvider implements IScriptEngineProvider {
     }
     
     private ScriptEngine getGraalScriptEngine() {
-        // Need to set this either here or in runtime
+        // Nashorn compatibility
         System.setProperty("polyglot.js.nashorn-compat", "true");
         
         // Turn off console warnings
         System.setProperty("polyglot.engine.WarnInterpreterOnly", "false");
         
-        // Need this for GraalVM 22.2
-        System.setProperty("polyglot.js.ecmascript-version", "2022");
+        // Set this for the ECMA version. Use latest.
+        // See https://www.graalvm.org/latest/reference-manual/js/Options/
+        System.setProperty("polyglot.js.ecmascript-version", "latest");
 
         // Enable loading Node.js modules
         // See https://www.graalvm.org/latest/reference-manual/js/Modules/
