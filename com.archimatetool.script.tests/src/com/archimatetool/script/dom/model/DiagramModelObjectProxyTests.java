@@ -145,4 +145,10 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
         assertEquals(false, getTestProxy().attr(IModelConstants.DERIVE_LINE_COLOR));
     }
 
+    @Test
+    public void attr_LineStyle() {
+        assertEquals(IDiagramModelObject.LINE_STYLE_SOLID, getTestProxy().attr(IModelConstants.LINE_STYLE));
+        getTestProxy().attr(IModelConstants.LINE_STYLE, IDiagramModelObject.LINE_STYLE_DOTTED);
+        assertEquals(IDiagramModelObject.LINE_STYLE_DOTTED, getTestProxy().attr(IModelConstants.LINE_STYLE));
+    }
 }
