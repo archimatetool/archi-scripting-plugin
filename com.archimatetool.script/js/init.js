@@ -163,6 +163,13 @@ CONNECTION_STYLE = {
 };
 Object.freeze(CONNECTION_STYLE);
 
+LINE_STYLE = {
+	SOLID : 0,
+	DASHED : 1,
+	DOTTED : 2
+};
+Object.freeze(LINE_STYLE);
+
 BORDER = {
     TABBED : 0,
     DOGEAR : 0,
