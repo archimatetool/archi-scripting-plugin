@@ -366,6 +366,10 @@ class ModelFactory implements IModelConstants {
             height = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT);
         }
         
+        if(width <= 0 || height <= 0) {
+            throw new ArchiScriptException(Messages.ModelFactory_15);
+        }
+        
         // Create new bounds for object
         IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
         

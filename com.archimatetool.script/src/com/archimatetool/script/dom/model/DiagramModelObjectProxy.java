@@ -114,6 +114,10 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             height = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT);
         }
 
+        if(width <= 0 || height <= 0) {
+            throw new ArchiScriptException(Messages.DiagramModelObjectProxy_3);
+        }
+        
         IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
         CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__BOUNDS, bounds));
         

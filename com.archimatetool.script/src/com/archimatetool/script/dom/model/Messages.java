@@ -68,6 +68,8 @@ public class Messages extends NLS {
 
     public static String DiagramModelObjectProxy_2;
 
+    public static String DiagramModelObjectProxy_3;
+
     public static String DiagramModelProxy_0;
 
     public static String DiagramModelProxy_1;
@@ -91,6 +93,8 @@ public class Messages extends NLS {
     public static String ModelFactory_13;
 
     public static String ModelFactory_14;
+
+    public static String ModelFactory_15;
 
     public static String ModelFactory_2;
 

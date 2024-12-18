@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -136,11 +135,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     
     @Test
     public void setBoundsUsesPreferencesWidthAndHeight() {
-        Map<String, Object> bounds = new HashMap<>();
-        bounds.put("x", 10);
-        bounds.put("y", 20);
-        bounds.put("width", -1);
-        bounds.put("height", -1);
+        Map<String, Object> bounds = Map.of("x", 10, "y", 20, "width", -1, "height", -1);
         testProxy.setBounds(bounds);
         
         bounds = testProxy.getBounds();
@@ -148,6 +143,19 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         assertEquals(20, bounds.get("y"));
         assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.get("width"));
         assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.get("height"));
+    }
+    
+    @Test
+    public void setBoundsThrowsExceptionIfZeroOrLess() {
+        assertThrows(ArchiScriptException.class, () -> {
+            Map<String, Object> bounds = Map.of("x", 10, "y", 20, "width", 10, "height", 0);
+            testProxy.setBounds(bounds);
+        });
+
+        assertThrows(ArchiScriptException.class, () -> {
+            Map<String, Object> bounds = Map.of("x", 10, "y", 20, "width", -2, "height", 10);
+            testProxy.setBounds(bounds);
+        });
     }
     
     @Test
