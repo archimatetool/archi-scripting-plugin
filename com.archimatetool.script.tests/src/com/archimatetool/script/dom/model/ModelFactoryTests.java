@@ -270,6 +270,18 @@ public class ModelFactoryTests {
     }
 
     @Test
+    public void addArchimateDiagramObject_ThrowsExceptionIfBoundsIncorrect() {
+        loadTestModel();
+        
+        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
+        IArchimateElement element = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "528");
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.addArchimateDiagramObject(view, element, 10, 15, 0, 0, false);
+        });
+    }
+    
+    @Test
     public void addArchimateDiagramObject_Nested() {
         loadTestModel();
         
@@ -297,7 +309,7 @@ public class ModelFactoryTests {
         
         IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
         
-        String[] types = {"diagram-model-note", "diagram-model-group"};
+        String[] types = {IModelConstants.DIAGRAM_MODEL_NOTE, IModelConstants.DIAGRAM_MODEL_GROUP};
         EClass[] classes = { IArchimatePackage.eINSTANCE.getDiagramModelNote(), IArchimatePackage.eINSTANCE.getDiagramModelGroup() };
         
         for(int i = 0; i < types.length; i++) {
@@ -313,12 +325,59 @@ public class ModelFactoryTests {
     }
 
     @Test
-    public void createDiagramObject_Exception() {
+    public void createDiagramObject_ThrowsExceptionIfWrongType() {
         loadTestModel();
         
         IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
         assertThrows(ArchiScriptException.class, () -> {
             ModelFactory.createDiagramObject(view, "bogus", 10, 15, 100, 200, false);
+        });
+    }
+    
+    @Test
+    public void createDiagramObject_ThrowsExceptionIfBoundsIncorrect() {
+        loadTestModel();
+        
+        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createDiagramObject(view, IModelConstants.DIAGRAM_MODEL_NOTE, 10, 15, 0, 200, false);
+        });
+    }
+    
+    @Test
+    public void createViewReference() {
+        loadTestModel();
+        
+        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
+        IArchimateDiagramModel parentView = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3641");
+        DiagramModelReferenceProxy proxy = ModelFactory.createViewReference(parentView, view, 10, 10, 100, 100, false);
+        
+        assertSame(parentView, proxy.getEObject().eContainer());
+        
+        IBounds bounds = proxy.getEObject().getBounds();
+        assertEquals(10, bounds.getX());
+        assertEquals(10, bounds.getY());
+        assertEquals(100, bounds.getWidth());
+        assertEquals(100, bounds.getHeight());
+    }
+    
+    @Test
+    public void createViewReference_ThrowsExceptionIfSelf() {
+        loadTestModel();
+        
+        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createViewReference(view, view, 10, 10, 100, 100, false);
+        });
+    }
+
+    @Test
+    public void createViewReference_ThrowsExceptionIfBoundsIncorrect() {
+        loadTestModel();
+        
+        IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createViewReference(view, view, 10, 10, 0, 0, false);
         });
     }
 
