@@ -64,7 +64,7 @@ public class Model {
      * @param path
      * @return the model
      */
-    public ArchimateModelProxy load(String path) {
+    public ArchimateModelProxy load(String path) throws IOException {
         File file = new File(path);
         
         if(PlatformUI.isWorkbenchRunning()) {
@@ -81,9 +81,9 @@ public class Model {
                 return new ArchimateModelProxy(model);
             }
         }
-        // No UI, else load from file
+        // No Workbench or UI, so load from file
         else {
-            IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(file);
+            IArchimateModel model = IEditorModelManager.INSTANCE.load(file);
             if(model != null) {
                 return new ArchimateModelProxy(model);
             }
