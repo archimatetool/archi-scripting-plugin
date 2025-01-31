@@ -6,6 +6,8 @@
 package com.archimatetool.script.dom.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -14,11 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IBusinessActor;
 import com.archimatetool.model.IBusinessRole;
+import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IJunction;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
@@ -267,4 +271,49 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
         proxy.attr(IModelConstants.JUNCTION_TYPE, "OR");
         assertEquals(IJunction.OR_JUNCTION_TYPE, proxy.attr(IModelConstants.JUNCTION_TYPE));
     }
+    
+    @Test
+    public void duplicate() {
+        ArchimateElementProxy duplicate = testProxy.duplicate();
+        
+        assertNotNull(duplicate);
+        assertNotEquals(testProxy.getId(), duplicate.getId());
+        assertSame(testProxy.parent().getEObject(), duplicate.parent().getEObject());
+    }
+    
+    @Test
+    public void duplicateInFolder() {
+        IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
+        IFolder parent = (IFolder)testProxy.getEObject().eContainer();
+        parent.getFolders().add(folder);
+        FolderProxy folderProxy = (FolderProxy)EObjectProxy.get(folder);
+        
+        ArchimateElementProxy duplicate = testProxy.duplicate(folderProxy);
+        assertSame(folder, duplicate.parent().getEObject());
+    }
+    
+    @Test
+    public void duplicateInWrongFolderShouldThrowException() {
+        IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
+        IFolder parent = testProxy.getArchimateModel().getFolder(FolderType.APPLICATION);
+        parent.getFolders().add(folder);
+        FolderProxy folderProxy = (FolderProxy)EObjectProxy.get(folder);
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            testProxy.duplicate(folderProxy);
+        });
+    }
+    
+    @Test
+    public void duplicateInFolderInDifferentModelsShouldThrowException() {
+        // Create another model and get its Business folder
+        ArchimateModelProxy modelProxy = TestsHelper.createTestArchimateModelProxy();
+        IFolder folder = modelProxy.getArchimateModel().getFolder(FolderType.BUSINESS);
+        FolderProxy folderProxy = (FolderProxy)EObjectProxy.get(folder);
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            testProxy.duplicate(folderProxy);
+        });
+    }
+
 }

@@ -20,6 +20,11 @@ public class RunArchiScriptTests {
         runScript("test-model.ajs");
     }
 
+    @Test
+    public void testDuplicateScript() {
+        runScript("test-duplicate.ajs");
+    }
+
     private void runScript(String scriptFile) {
         RunArchiScript rs = new RunArchiScript(TestFiles.getTestFile(scriptFile));
         rs.throwExceptions = true;

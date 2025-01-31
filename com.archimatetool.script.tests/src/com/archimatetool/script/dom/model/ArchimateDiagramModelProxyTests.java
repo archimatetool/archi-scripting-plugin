@@ -7,7 +7,11 @@ package com.archimatetool.script.dom.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -18,12 +22,16 @@ import org.eclipse.emf.ecore.EObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateDiagramModel;
+import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelComponent;
 import com.archimatetool.model.IDiagramModelReference;
+import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.TestFiles;
 
 
@@ -164,6 +172,51 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
     }
     
     @Test
+    public void duplicate() {
+        DiagramModelProxy duplicate = testProxy.duplicate();
+        
+        assertNotNull(duplicate);
+        assertNotEquals(testProxy.getId(), duplicate.getId());
+        assertEquals(35, duplicate.children().size());
+        assertSame(testProxy.parent().getEObject(), duplicate.parent().getEObject());
+    }
+    
+    @Test
+    public void duplicateInFolder() {
+        IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
+        IFolder parent = (IFolder)testProxy.getEObject().eContainer();
+        parent.getFolders().add(folder);
+        FolderProxy folderProxy = (FolderProxy)EObjectProxy.get(folder);
+        
+        DiagramModelProxy duplicate = testProxy.duplicate(folderProxy);
+        assertSame(folder, duplicate.parent().getEObject());
+    }
+    
+    @Test
+    public void duplicateInWrongFolderShouldThrowException() {
+        IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
+        IFolder parent = testProxy.getArchimateModel().getFolder(FolderType.BUSINESS);
+        parent.getFolders().add(folder);
+        FolderProxy folderProxy = (FolderProxy)EObjectProxy.get(folder);
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            testProxy.duplicate(folderProxy);
+        });
+    }
+    
+    @Test
+    public void duplicateInFolderInDifferentModelsShouldThrowException() {
+        // Create another model and get its Views folder
+        ArchimateModelProxy modelProxy = TestsHelper.createTestArchimateModelProxy();
+        IFolder folder = modelProxy.getArchimateModel().getFolder(FolderType.DIAGRAMS);
+        FolderProxy folderProxy = (FolderProxy)EObjectProxy.get(folder);
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            testProxy.duplicate(folderProxy);
+        });
+    }
+    
+   @Test
     public void getViewpoint() {
         Map<String, Object> map = testProxy.getViewpoint();
         assertEquals("layered", map.get("id"));

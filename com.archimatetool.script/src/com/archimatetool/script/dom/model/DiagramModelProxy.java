@@ -20,6 +20,7 @@ import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteFolderObjectCommand;
+import com.archimatetool.script.commands.DuplicateDiagramModelCommand;
 
 /**
  * DiagramModel wrapper proxy
@@ -167,7 +168,31 @@ public abstract class DiagramModelProxy extends EObjectProxy {
             CommandHandler.executeCommand(new DeleteFolderObjectCommand(getEObject()));
         }
     }
+    
+    /**
+     * Create a duplicate of this diagram model and put it in the same folder
+     */
+    public DiagramModelProxy duplicate() {
+        return duplicate((FolderProxy)parent());
+    }
 
+    /**
+     * Create a duplicate of this diagram model and put it in the given parent folder
+     */
+    public DiagramModelProxy duplicate(FolderProxy parentFolder) {
+        // Check for correct folder
+        if(!ModelUtil.isCorrectFolderForObject(parentFolder.getEObject(), getEObject())) {
+            throw new ArchiScriptException(Messages.ModelFactory_0);
+        }
+        
+        // Check for same model
+        ModelUtil.checkComponentsInSameModel(getEObject(), parentFolder.getEObject());
+        
+        DuplicateDiagramModelCommand command = new DuplicateDiagramModelCommand(getEObject(), parentFolder.getEObject());
+        CommandHandler.executeCommand(command);
+        return (DiagramModelProxy)EObjectProxy.get(command.getDuplicate());
+    }
+    
     @Override
     protected Object getInternal() {
         return new IReferencedProxy() {

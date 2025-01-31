@@ -1,0 +1,41 @@
+// =========================================================================
+// Test Duplicate of Views and Elements
+// =========================================================================
+
+load("testutils.js");
+
+// Load the test model
+loadTestModel("Archisurance.archimate", true);
+assertNotNull(model);
+
+// Create a new Views folder 
+var viewsFolder = $("folder.Views").first();
+var newFolder = viewsFolder.createFolder("Test");
+assertNotNull(newFolder);
+
+// Get all Views in the Views folder
+var views = $(viewsFolder).children("view");
+assertEquals(17, views.size());
+
+// Duplicate each View into the new folder
+views.forEach(e => {
+    var duplicate = e.duplicate(newFolder);
+    assertNotNull(duplicate);
+    assertEquals(e.name + " (copy)", duplicate.name);
+});
+
+// Create a new Business folder 
+var businessFolder = $("folder.Business").first();
+var newFolder = businessFolder.createFolder("Test");
+assertNotNull(newFolder);
+
+// Get the Business elements in the "Actors" sub-folder
+var elements = $("folder.Actors").children("element");
+assertEquals(30, elements.size());
+
+// Duplicate each element into the new folder
+elements.forEach(e => {
+    var duplicate = e.duplicate(newFolder);
+    assertNotNull(duplicate);
+    assertEquals(e.name + " (copy)", duplicate.name);
+});
