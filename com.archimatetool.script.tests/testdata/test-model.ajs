@@ -1,0 +1,34 @@
+// =========================================================================
+// Test of basic model commands
+// =========================================================================
+
+load("testutils.js");
+
+// Create a new model and set it as the current model
+var model = $.model.create("Test Model").setAsCurrent();
+assertNotNull(model);
+assertEquals("Test Model", model.name);
+
+// Create a Business Actor
+var actor = model.createElement("business-actor", "Oscar");
+assertNotNull(actor);
+assertEquals("Oscar", actor.name);
+
+// Create a Business Role
+var role = model.createElement("business-role", "Cat");
+assertNotNull(role);
+assertEquals("Cat", role.name);
+
+// Check that a relationship is allowed
+var allowed = $.model.isAllowedRelationship("assignment-relationship", "business-actor", "business-role");
+assertTrue(allowed);
+
+// Create this relationship
+var rel = model.createRelationship("assignment-relationship", "Assigned to", actor, role);
+assertNotNull(rel);
+assertEquals("Assigned to", rel.name);
+
+// Add an ArchiMate view to the default "Views" folder
+var view = model.createArchimateView("New View");
+assertNotNull(view);
+assertEquals("New View", view.name);

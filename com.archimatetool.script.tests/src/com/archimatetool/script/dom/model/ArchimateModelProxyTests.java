@@ -28,6 +28,7 @@ import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.TestFiles;
 
 
 /**
@@ -100,7 +101,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Override
     @Test
     public void find() {
-        ArchimateModelProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        ArchimateModelProxy testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         
         EObjectProxyCollection collection = testModelProxy.find();
         assertEquals(788, collection.size());
@@ -115,7 +116,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     public void find_Selector() {
         super.find_Selector();
         
-        ArchimateModelProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        ArchimateModelProxy testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         
         EObjectProxyCollection collection = testModelProxy.find("garbage");
         assertEquals(0, collection.size());
@@ -153,7 +154,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     
     @Test
     public void find_Selector_IDs() {
-        ArchimateModelProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        ArchimateModelProxy testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         
         // Test we can find every object by its ID
         for(Iterator<EObject> iter = testModelProxy.getEObject().eAllContents(); iter.hasNext();) {

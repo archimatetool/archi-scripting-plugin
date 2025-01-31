@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.TestFiles;
 import com.archimatetool.script.dom.DomExtensionFactory;
 
 
@@ -48,11 +49,11 @@ public class ModelTests {
 
     @Test
     public void load() throws Exception {
-        ArchimateModelProxy proxy = model.load(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
+        ArchimateModelProxy proxy = model.load(TestFiles.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
         assertNotNull(proxy.getEObject());
         
         // Ensure model loaded from same file is not the same model as before
-        ArchimateModelProxy proxy2 = model.load(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
+        ArchimateModelProxy proxy2 = model.load(TestFiles.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
         assertNotNull(proxy2.getEObject());
         assertNotSame(proxy.getEObject(), proxy2.getEObject());
         
@@ -62,7 +63,7 @@ public class ModelTests {
 
     @Test
     public void isModelLoaded() throws Exception {
-        ArchimateModelProxy proxy = model.load(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
+        ArchimateModelProxy proxy = model.load(TestFiles.TEST_MODEL_FILE_ARCHISURANCE.getAbsolutePath());
         assertFalse(model.isModelLoaded(proxy));
         assertFalse(model.isModelLoaded(null));
     }    

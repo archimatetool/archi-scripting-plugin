@@ -22,6 +22,7 @@ import com.archimatetool.model.IBusinessRole;
 import com.archimatetool.model.IJunction;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.TestFiles;
 
 
 /**
@@ -48,7 +49,7 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
 
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         testEObject = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "352");
         testProxy = (ArchimateElementProxy)EObjectProxy.get(testEObject);
     }
@@ -162,7 +163,7 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
     @Test
     public void merge() {
         // Set up
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_MERGE);
+        testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_MERGE);
         
         IArchimateElement replacementElement = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(),
                 "76aa9eb3-8cdd-471c-81e4-965d94e12dd9");
@@ -227,7 +228,7 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
     
     @Test
     public void mergeThrowsExceptionOnWrongType() {
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_MERGE);
+        testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_MERGE);
         
         IArchimateElement replacementElement = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(),
                 "76aa9eb3-8cdd-471c-81e4-965d94e12dd9");

@@ -40,7 +40,7 @@ public class DiagramModelReferenceProxyTests extends DiagramModelObjectProxyTest
     
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        ArchimateModelProxy modelProxy = TestsHelper.createTestModel();
+        ArchimateModelProxy modelProxy = TestsHelper.createTestArchimateModelProxy();
         viewProxy1 = modelProxy.createArchimateView("view1");
         viewProxy2 = modelProxy.createArchimateView("view2");
         testProxy = viewProxy1.createViewReference(viewProxy2, 0, 0, 100, 100);

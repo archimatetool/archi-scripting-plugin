@@ -29,6 +29,10 @@ import com.archimatetool.script.views.console.ConsoleOutput;
 @SuppressWarnings("nls")
 public class RunArchiScript {
 	private File file;
+	
+	// If true exceptions are thrown rather than printed to console or stdout.
+	// Used for testing.
+	boolean throwExceptions;
 
 	public RunArchiScript(File file) {
 		this.file = file;
@@ -70,7 +74,10 @@ public class RunArchiScript {
             provider.run(file, engine);
         }
         catch(Throwable ex) {
-            error(ex);
+            if(throwExceptions) {
+                throw new RuntimeException(ex);
+            }
+            printException(ex);
         }
         finally {
             // End writing to the Console
@@ -83,9 +90,9 @@ public class RunArchiScript {
             CommandHandler.finalise();
             
             // Dispose any resources that a binding object may be holding onto
-            for(Object binding : engine.getBindings(ScriptContext.ENGINE_SCOPE).values()) {
-                if(binding instanceof IArchiScriptBinding) {
-                    ((IArchiScriptBinding)binding).dispose();
+            for(Object object : engine.getBindings(ScriptContext.ENGINE_SCOPE).values()) {
+                if(object instanceof IArchiScriptBinding binding) {
+                    binding.dispose();
                 }
             }
         }
@@ -115,7 +122,7 @@ public class RunArchiScript {
         }
     }
 
-	private void error(Throwable ex) {
+	private void printException(Throwable ex) {
 	    // The init.js function exit() works by throwing an exception with message "__EXIT__"
 	    if(ex instanceof ScriptException && ex.getMessage().contains("__EXIT__")) {
 	        System.out.println("Exited");

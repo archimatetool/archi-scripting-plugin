@@ -40,7 +40,7 @@ public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
     
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        ArchimateModelProxy modelProxy = TestsHelper.createTestModel();
+        ArchimateModelProxy modelProxy = TestsHelper.createTestArchimateModelProxy();
         viewProxy = modelProxy.createArchimateView("test");
         testProxy = (DiagramModelNoteProxy)viewProxy.createObject(IModelConstants.DIAGRAM_MODEL_NOTE, 0, 0, 100, 100);
         testEObject = testProxy.getEObject();

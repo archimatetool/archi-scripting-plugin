@@ -23,6 +23,7 @@ import com.archimatetool.model.IAssociationRelationship;
 import com.archimatetool.model.IInfluenceRelationship;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.TestFiles;
 
 
 /**
@@ -49,7 +50,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
 
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         testEObject = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "882");
         testProxy = (ArchimateRelationshipProxy)EObjectProxy.get(testEObject);
     }
@@ -261,7 +262,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
     @Test
     public void merge() {
         // Set up
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_MERGE2);
+        testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_MERGE2);
         
         IArchimateRelationship replacementRelationship = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(),
                 "id-34246786266245a58380c22fccfbd54a");
@@ -326,7 +327,7 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
 
     @Test
     public void mergeThrowsExceptionOnWrongSourceTarget() {
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_MERGE2);
+        testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_MERGE2);
         
         IArchimateRelationship replacementRelationship = (IArchimateRelationship)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(),
                 "id-34246786266245a58380c22fccfbd54a");

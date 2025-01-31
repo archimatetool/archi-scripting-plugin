@@ -21,6 +21,7 @@ import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.script.TestFiles;
 
 
 /**
@@ -47,7 +48,7 @@ public class FolderProxyTests extends EObjectProxyTests {
     
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         
         testEObject = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "74944b84"); // Relationships sub Folder
         testProxy = (FolderProxy)EObjectProxy.get(testEObject);

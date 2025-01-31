@@ -38,6 +38,7 @@ import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.TestFiles;
 
 
 /**
@@ -51,7 +52,7 @@ public class ModelFactoryTests {
     private ArchimateModelProxy testModelProxy;
     
     private void loadTestModel() {
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
     }
     
     @Test

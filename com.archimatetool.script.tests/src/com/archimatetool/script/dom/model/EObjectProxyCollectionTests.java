@@ -22,6 +22,7 @@ import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
+import com.archimatetool.script.TestFiles;
 
 
 /**
@@ -101,7 +102,7 @@ public class EObjectProxyCollectionTests {
     
     @Test
     public void find() {
-        ArchimateModelProxy modelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        ArchimateModelProxy modelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         EObjectProxyCollection collection = new EObjectProxyCollection();
         
         // Get an Archimate Diagram

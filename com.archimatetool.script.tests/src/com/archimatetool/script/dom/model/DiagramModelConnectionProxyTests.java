@@ -27,6 +27,7 @@ import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.TestFiles;
 
 
 /**
@@ -52,7 +53,7 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
 
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        ArchimateModelProxy testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        ArchimateModelProxy testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         testEObject = (IDiagramModelArchimateConnection)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3847");
         testProxy = (DiagramModelConnectionProxy)EObjectProxy.get(testEObject);
     }

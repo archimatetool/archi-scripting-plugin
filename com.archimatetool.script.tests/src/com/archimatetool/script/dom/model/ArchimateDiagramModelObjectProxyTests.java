@@ -28,6 +28,7 @@ import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.TestFiles;
 
 
 /**
@@ -54,7 +55,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
 
     @BeforeEach
     public void runOnceBeforeEachTest() {
-        testModelProxy = TestsHelper.loadTestModel(TestsHelper.TEST_MODEL_FILE_ARCHISURANCE);
+        testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         testEObject = (IDiagramModelArchimateObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4104");
         testProxy = (DiagramModelObjectProxy)EObjectProxy.get(testEObject);
     }
