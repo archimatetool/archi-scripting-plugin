@@ -1,0 +1,37 @@
+// =========================================================================
+// Test Delete of parent object and keep child objects
+// =========================================================================
+
+load("testutils.js");
+
+// Load the test model
+loadTestModel("Archisurance.archimate", true);
+assertNotNull(model);
+
+// Find an object with children
+// var view = $("archimate-diagram-model.Actor Cooperation view").first();
+// var object = $(view).children(".Archisurance").first();
+
+// A better way to get these...
+var view = $("#4165").first();
+var object = $("#4174").first();
+
+assertNotNull(view);
+assertNotNull(object);
+
+// View has x child objects
+assertEquals(10, $(view).children("element").size());
+
+// Object has children and a parent
+assertEquals(6, $(object).children().size());
+assertEquals(1, $(object).parent().size());
+
+// Delete this object and keep children
+object.delete(false);
+
+// Object has no children and no parent
+assertEquals(0, $(object).children().size());
+assertEquals(0, $(object).parent().size());
+
+// View now has x children
+assertEquals(15, $(view).children("element").size());

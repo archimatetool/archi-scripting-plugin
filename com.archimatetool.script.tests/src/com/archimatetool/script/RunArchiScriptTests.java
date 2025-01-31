@@ -25,6 +25,11 @@ public class RunArchiScriptTests {
         runScript("test-duplicate.ajs");
     }
 
+    @Test
+    public void testDeleteKeepChildrenScript() {
+        runScript("test-deletekeepchildren.ajs");
+    }
+
     private void runScript(String scriptFile) {
         RunArchiScript rs = new RunArchiScript(TestFiles.getTestFile(scriptFile));
         rs.throwExceptions = true;

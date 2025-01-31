@@ -5,19 +5,24 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.gef.commands.Command;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
+import com.archimatetool.editor.model.commands.AddListMemberCommand;
+import com.archimatetool.editor.model.commands.RemoveListMemberCommand;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
 import com.archimatetool.editor.ui.factory.IArchimateElementUIProvider;
 import com.archimatetool.editor.ui.factory.IGraphicalObjectUIProvider;
 import com.archimatetool.editor.ui.factory.IObjectUIProvider;
 import com.archimatetool.editor.ui.factory.ObjectUIFactory;
 import com.archimatetool.model.IArchimateFactory;
+import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IBounds;
 import com.archimatetool.model.IDiagramModelArchimateObject;
@@ -28,6 +33,7 @@ import com.archimatetool.model.IIconic;
 import com.archimatetool.model.ITextAlignment;
 import com.archimatetool.model.ITextPosition;
 import com.archimatetool.script.ArchiScriptException;
+import com.archimatetool.script.commands.ChangePositionCommand;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteDiagramModelObjectCommand;
 import com.archimatetool.script.commands.MoveListObjectCommand;
@@ -576,6 +582,23 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     
     @Override
     public void delete() {
+        deleteInternal(true);
+    }
+    
+    /**
+     * @param deleteChildren If true child objects are deleted as well.
+     *                       If false child objects are not deleted but reparented
+     */
+    public void delete(boolean deleteChildren) {
+        if(deleteChildren) {
+            deleteInternal(true);
+        }
+        else {
+            deleteAndReparentChildren();
+        }
+    }
+
+    private void deleteInternal(boolean deleteChildren) {
         for(EObjectProxy rel : inRels()) {
             rel.delete();
         }
@@ -584,13 +607,46 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             rel.delete();
         }
         
-        for(EObjectProxy child : children()) {
-            child.delete();
+        if(deleteChildren) {
+            for(EObjectProxy child : children()) {
+                child.delete();
+            }
         }
-
+        
         if(getEObject().eContainer() != null) {
             CommandHandler.executeCommand(new DeleteDiagramModelObjectCommand(getEObject()));
         }
     }
-    
+
+    /**
+     * Delete this object but re-parent child objects to this object's parent
+     */
+    private void deleteAndReparentChildren() {
+        IDiagramModelObject dmo = getEObject();
+        
+        // Not a container, or no children, or parent not a container
+        if(!(dmo instanceof IDiagramModelContainer dmc) || dmc.getChildren().isEmpty()
+                || !(dmo.eContainer() instanceof IDiagramModelContainer parent)) {
+            return;
+        }
+        
+        IArchimateModel model = getArchimateModel(); // Store this now as it will be null when this is deleted
+        
+        // Delete this first, it's faster updating the UI
+        deleteInternal(false);
+
+        // Iterate thru child objects and move them to the container parent
+        for(IDiagramModelObject child : new ArrayList<>(dmc.getChildren())) {
+            // Remove child from this
+            Command cmd = new RemoveListMemberCommand<>(dmc.getChildren(), child);
+            CommandHandler.executeCommand(new ScriptCommandWrapper(cmd, model));
+            
+            // Adjust x,y position to new parent
+            CommandHandler.executeCommand(new ChangePositionCommand(child, dmo.getBounds().getX(), dmo.getBounds().getY()).setModel(model));
+
+            // Add child to new parent
+            cmd = new AddListMemberCommand<>(parent.getChildren(), child);
+            CommandHandler.executeCommand(new ScriptCommandWrapper(cmd, model));
+        }
+    }
 }

@@ -77,6 +77,31 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
         assertNull(testProxy.parent());
     }
     
+    @Test
+    public void deleteKeepChildren() {
+        testProxy.getEObject().setBounds(100, 100, 100, 100);
+        
+        DiagramModelObjectProxy childProxy1 = testProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 10, 20, 100, 100);
+        DiagramModelObjectProxy childProxy2 = testProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 30, 40, 100, 100);
+        DiagramModelObjectProxy childProxy3 = childProxy2.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 10, 20, 100, 100);
+        
+        testProxy.delete(false);
+        
+        assertEquals(viewProxy, childProxy1.parent());
+        assertEquals(viewProxy, childProxy2.parent());
+        assertEquals(childProxy2, childProxy3.parent());
+        
+        assertEquals(110, childProxy1.getEObject().getBounds().getX());
+        assertEquals(120, childProxy1.getEObject().getBounds().getY());
+        assertEquals(100, childProxy1.getEObject().getBounds().getWidth());
+        assertEquals(100, childProxy1.getEObject().getBounds().getHeight());
+        
+        assertEquals(10, childProxy3.getEObject().getBounds().getX());
+        assertEquals(20, childProxy3.getEObject().getBounds().getY());
+        assertEquals(100, childProxy3.getEObject().getBounds().getWidth());
+        assertEquals(100, childProxy3.getEObject().getBounds().getHeight());
+    }
+    
     @Override
     @Test
     public void parent() {
