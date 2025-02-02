@@ -30,6 +30,11 @@ public class RunArchiScriptTests {
         runScript("test-deletekeepchildren.ajs");
     }
 
+    @Test
+    public void testDiagramObjectsScript() {
+        runScript("test-diagramobjects.ajs");
+    }
+
     private void runScript(String scriptFile) {
         RunArchiScript rs = new RunArchiScript(TestFiles.getTestFile(scriptFile));
         rs.throwExceptions = true;

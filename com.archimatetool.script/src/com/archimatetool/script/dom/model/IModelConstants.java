@@ -51,6 +51,7 @@ interface IModelConstants {
     String LINE_COLOR = "lineColor"; 
     String LINE_WIDTH = "lineWidth";
     String DERIVE_LINE_COLOR = "deriveLineColor";
+    String LINE_STYLE = "lineStyle";
     
     String OPACITY = "opacity";
     String OUTLINE_OPACITY = "outlineOpacity";

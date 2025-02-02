@@ -13,6 +13,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.editor.ArchiPlugin;
+import com.archimatetool.editor.diagram.commands.DiagramModelObjectLineStyleCommand;
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
 import com.archimatetool.editor.model.commands.AddListMemberCommand;
 import com.archimatetool.editor.model.commands.RemoveListMemberCommand;
@@ -459,6 +460,20 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         return this;
     }
     
+    public int getLineStyle() {
+        // Get this value from the UIProvider in case it is set to default value
+        return (int)ObjectUIFactory.INSTANCE.getProvider(getEObject()).getFeatureValue(IDiagramModelObject.FEATURE_LINE_STYLE);
+    }
+    
+    public DiagramModelObjectProxy setLineStyle(int lineStyle) {
+        IObjectUIProvider provider = ObjectUIFactory.INSTANCE.getProvider(getEObject());
+        if(provider != null && provider.shouldExposeFeature(IDiagramModelObject.FEATURE_LINE_STYLE)) {
+            CommandHandler.executeCommand(new ScriptCommandWrapper(new DiagramModelObjectLineStyleCommand(getEObject(), lineStyle), getEObject()));
+        }
+        
+        return this;
+    }
+    
     @Override
     protected Object attr(String attribute) {
         switch(attribute) {
@@ -492,6 +507,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 return getImage();
             case DERIVE_LINE_COLOR:
                 return getDeriveLineColor();
+            case LINE_STYLE:
+                return getLineStyle();
         }
         
         return super.attr(attribute);
@@ -504,77 +521,66 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
                 if(value instanceof Map val) {
                     return setBounds(val);
                 }
-                break;
             case INDEX:
                 if(value instanceof Integer val) {
                     return setIndex(val);
                 }
-                break;
             case FILL_COLOR:
                 if(value == null || value instanceof String) {
                     return setFillColor((String)value);
                 }
-                break;
             case ICON_COLOR:
                 if(value == null || value instanceof String) {
                     return setIconColor((String)value);
                 }
-                break;
             case OPACITY:
                 if(value instanceof Integer val) {
                     return setOpacity(val);
                 }
-                break;
             case OUTLINE_OPACITY:
                 if(value instanceof Integer val) {
                     return setOutlineOpacity(val);
                 }
-                break;
             case GRADIENT:
                 if(value instanceof Integer val) {
                     return setGradient(val);
                 }
-                break;
             case FIGURE_TYPE:
                 if(value instanceof Integer val) {
                     return setFigureType(val);
                 }
-                break;
             case TEXT_ALIGNMENT:
                 if(value instanceof Integer val) {
                     return setTextAlignment(val);
                 }
-                break;
             case TEXT_POSITION:
                 if(value instanceof Integer val) {
                     return setTextPosition(val);
                 }
-                break;
             case SHOW_ICON:
                 if(value instanceof Integer val) {
                     return setShowIcon(val);
                 }
-                break;
             case IMAGE_SOURCE:
                 if(value instanceof Integer val) {
                     return setImageSource(val);
                 }
-                break;
             case IMAGE_POSITION:
                 if(value instanceof Integer val) {
                     return setImagePosition(val);
                 }
-                break;
             case IMAGE:
                 if(value instanceof Map val) {
                     return setImage(val);
                 }
-                break;
             case DERIVE_LINE_COLOR:
                 if(value instanceof Boolean val) {
                     return setDeriveLineColor(val);
                 }
-                break;
+            case LINE_STYLE:
+                if(value instanceof Integer val) {
+                    return setLineStyle(val);
+                }
         }
         
         return super.attr(attribute, value);

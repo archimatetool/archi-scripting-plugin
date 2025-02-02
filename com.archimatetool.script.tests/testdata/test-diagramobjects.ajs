@@ -1,0 +1,28 @@
+// =========================================================================
+// Test Diagram Objects
+// =========================================================================
+
+load("testutils.js");
+
+// =========================================================================
+// Object Line Style
+// =========================================================================
+
+// Load the test model
+loadTestModel("Archisurance.archimate", true);
+assertNotNull(model);
+
+// Find an object
+var object = $("#4174").first();
+assertNotNull(object);
+assertEquals(LINE_STYLE.SOLID, object.lineStyle);
+
+object.lineStyle = LINE_STYLE.DASHED;
+assertEquals(LINE_STYLE.DASHED, object.lineStyle);
+
+object.lineStyle = LINE_STYLE.DOTTED;
+assertEquals(LINE_STYLE.DOTTED, object.lineStyle);
+
+object.lineStyle = LINE_STYLE.NONE;
+assertEquals(LINE_STYLE.NONE, object.lineStyle);
+
