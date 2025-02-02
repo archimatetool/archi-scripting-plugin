@@ -31,9 +31,12 @@ Import-Package: com.archimatetool.canvas,
  com.archimatetool.modelimporter
 Automatic-Module-Name: com.archimatetool.script
 Bundle-ClassPath: com.archimatetool.script.jar,
- lib/graal-sdk-22.3.0.jar,
- lib/js-22.3.0.jar,
- lib/js-scriptengine-22.3.0.jar,
- lib/regex-22.3.0.jar,
- lib/truffle-api-22.3.0.jar,
- lib/icu4j-71.1.jar
+ lib/js-scriptengine-24.1.2.jar,
+ lib/js-language-24.1.2.jar,
+ lib/polyglot-24.1.2.jar,
+ lib/truffle-api-24.1.2.jar,
+ lib/regex-24.1.2.jar,
+ lib/nativeimage-24.1.2.jar,
+ lib/word-24.1.2.jar,
+ lib/collections-24.1.2.jar,
+ lib/icu4j-24.1.2.jar
