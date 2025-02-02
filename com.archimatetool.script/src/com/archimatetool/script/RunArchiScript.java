@@ -43,13 +43,13 @@ public class RunArchiScript {
 	    IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
         
 	    if(provider == null) {
-	        throw new RuntimeException(NLS.bind("Script Provider not found for file: {0}", file)); //$NON-NLS-1$
+	        throw new RuntimeException(NLS.bind("Script Provider not found for file: {0}", file));
 	    }
 	    
 	    ScriptEngine engine = provider.createScriptEngine();
 	    
 	    if(engine == null) {
-            throw new RuntimeException(NLS.bind("Script Engine not found for file: {0}", file)); //$NON-NLS-1$
+            throw new RuntimeException(NLS.bind("Script Engine not found for file: {0}", file));
         }
 	    
 	    // Set the script engine class name in a System Property in case we need to know what the engine is elsewhere
@@ -123,7 +123,7 @@ public class RunArchiScript {
     }
 
 	private void printException(Throwable ex) {
-	    // The init.js function exit() works by throwing an exception with message "__EXIT__"
+	    // The init file must declare functions exit() and quit() to throw an exception with message "__EXIT__"
 	    if(ex instanceof ScriptException && ex.getMessage().contains("__EXIT__")) {
 	        System.out.println("Exited");
 	    }

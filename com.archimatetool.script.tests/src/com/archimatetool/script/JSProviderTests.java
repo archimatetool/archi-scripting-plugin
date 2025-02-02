@@ -7,10 +7,7 @@ package com.archimatetool.script;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
-import javax.script.Bindings;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 
 import org.junit.jupiter.api.Test;
@@ -39,10 +36,6 @@ public class JSProviderTests {
         
         assertEquals("true", System.getProperty("polyglot.js.commonjs-require"));
         assertEquals(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER), System.getProperty("polyglot.js.commonjs-require-cwd"));
-        
-        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-        assertNull(bindings.get("exit"));
-        assertNull(bindings.get("quit"));
     }
 
 }

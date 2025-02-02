@@ -108,20 +108,15 @@ var window = {
 
 };
 
-// Define exit to throw an Exception
+
+// Re-define exit() and quit() to throw an Exception that jArchi can trap to exit the script and show an "Exited" message
+// If we don't redefine these calling them will quit the JVM and close Archi.
 function exit() {
 	throw "__EXIT__";
 }
 
-// Legacy functions marked as deprecated
-function exec() {
-	console.log("WARNING: exec() is deprecated and will be removed in the future. Use $.child_process.exec() instead.");
-	$.child_process.exec.apply(this, arguments);
-}
-
-function getArgs() {
-	console.log("WARNING: getArgs() is deprecated and will be removed in the future. Use $.process.argv instead.");
-	return $.process.argv;
+function quit() {
+    throw "__EXIT__";
 }
 
 

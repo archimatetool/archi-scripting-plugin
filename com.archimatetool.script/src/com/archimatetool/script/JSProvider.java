@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.net.URL;
 
-import javax.script.Bindings;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -32,7 +30,7 @@ import com.archimatetool.script.preferences.IPreferenceConstants;
 @SuppressWarnings("nls")
 public class JSProvider implements IScriptEngineProvider {
     
-    public static String ID = "com.archimatetool.script.provider.js";
+    public static final String ID = "com.archimatetool.script.provider.js";
     
     public static boolean isNashornInstalled() {
         return getNashornScriptEngineFactoryClass() != null;
@@ -61,7 +59,7 @@ public class JSProvider implements IScriptEngineProvider {
     public void run(File file, ScriptEngine engine) throws IOException, ScriptException {
         // Initialize jArchi using the provided init.js script
         URL initURL = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("js/init.js");
-        try(InputStreamReader initReader = new InputStreamReader(initURL.openStream());) {
+        try(InputStreamReader initReader = new InputStreamReader(initURL.openStream())) {
             engine.eval(initReader);
         }
 
@@ -83,7 +81,7 @@ public class JSProvider implements IScriptEngineProvider {
         
         // If Nashorn is installed use the engine as set in user preferences
         if(clazz != null) {
-            switch((ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE))) {
+            switch(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE)) {
                 case 0:
                     engine = new ScriptEngineManager(clazz.getClassLoader()).getEngineByName("nashorn");
                     break;
@@ -109,10 +107,6 @@ public class JSProvider implements IScriptEngineProvider {
         // Just use Graal
         else {
             engine = getGraalScriptEngine();
-        }
-        
-        if(engine != null) {
-            setBindings(engine);
         }
         
         return engine;
@@ -157,17 +151,6 @@ public class JSProvider implements IScriptEngineProvider {
         return engine;
     }
     
-    /**
-     * Set/Remove some JS global bindings
-     */
-    private void setBindings(ScriptEngine engine) {
-        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-        
-        // Remove these
-        bindings.remove("exit");
-        bindings.remove("quit");
-    }
-
     @Override
     public String getID() {
         return ID;
