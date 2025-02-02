@@ -14,9 +14,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 public class GroovyPlugin extends AbstractUIPlugin {
 
-    public static final String PLUGIN_ID = "com.archimatetool.script.groovy"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "com.archimatetool.script.groovy";
     
     /**
      * The shared instance

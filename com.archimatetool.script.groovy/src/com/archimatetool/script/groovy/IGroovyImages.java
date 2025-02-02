@@ -15,11 +15,11 @@ import com.archimatetool.editor.ui.ImageFactory;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 public interface IGroovyImages {
     
     ImageFactory ImageFactory = new ImageFactory(GroovyPlugin.INSTANCE);
 
-    String IMGPATH = "img/"; //$NON-NLS-1$
-    
-    String ICON_GROOVY = IMGPATH + "groovy.png"; //$NON-NLS-1$
+    String IMGPATH = "img/";
+    String ICON_GROOVY = IMGPATH + "groovy.png";
 }

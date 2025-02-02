@@ -46,3 +46,6 @@ def exit() {
     throw new Exception("__EXIT__");
 }
 
+def quit() {
+    throw new Exception("__EXIT__");
+}

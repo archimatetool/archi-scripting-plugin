@@ -24,27 +24,28 @@ import com.archimatetool.script.IScriptEngineProvider;
 /**
  * Groovy Provider
  */
+@SuppressWarnings("nls")
 public class GroovyProvider implements IScriptEngineProvider {
     
-    public static String ID = "com.archimatetool.script.provider.groovy"; //$NON-NLS-1$
+    public static final String ID = "com.archimatetool.script.provider.groovy";
     
     @Override
     public void run(File file, ScriptEngine engine) throws IOException, ScriptException {
         // Init script
-        URL initURL = GroovyPlugin.INSTANCE.getBundle().getEntry("groovy/init.groovy"); //$NON-NLS-1$
-        try(InputStreamReader initReader = new InputStreamReader(initURL.openStream());) {
+        URL initURL = GroovyPlugin.INSTANCE.getBundle().getEntry("groovy/init.groovy");
+        try(InputStreamReader initReader = new InputStreamReader(initURL.openStream())) {
             engine.eval(initReader);
         }
         
         // Evaluate the script
-        try(FileReader scriptReader = new FileReader(file.getAbsolutePath())) {
+        try(FileReader scriptReader = new FileReader(file)) {
             engine.eval(scriptReader);
         }
     }
 
     @Override
     public ScriptEngine createScriptEngine() {
-        return new ScriptEngineManager().getEngineByName("groovy"); //$NON-NLS-1$
+        return new ScriptEngineManager().getEngineByName("groovy");
     }
     
     @Override
@@ -54,12 +55,12 @@ public class GroovyProvider implements IScriptEngineProvider {
 
     @Override
     public String getName() {
-        return "Groovy"; //$NON-NLS-1$
+        return "Groovy";
     }
 
     @Override
     public String[] getSupportedFileExtensions() {
-        return new String[] { ".groovy" }; //$NON-NLS-1$
+        return new String[] { ".groovy" };
     }
 
     @Override
@@ -74,6 +75,6 @@ public class GroovyProvider implements IScriptEngineProvider {
 
     @Override
     public URL getNewFile() {
-        return GroovyPlugin.INSTANCE.getBundle().getEntry("templates/new.groovy"); //$NON-NLS-1$
+        return GroovyPlugin.INSTANCE.getBundle().getEntry("templates/new.groovy");
     }
 }
