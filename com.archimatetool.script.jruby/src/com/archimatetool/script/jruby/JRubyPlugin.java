@@ -14,9 +14,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 public class JRubyPlugin extends AbstractUIPlugin {
 
-    public static final String PLUGIN_ID = "com.archimatetool.script.jruby"; //$NON-NLS-1$
+    public static final String PLUGIN_ID = "com.archimatetool.script.jruby";
     
     /**
      * The shared instance

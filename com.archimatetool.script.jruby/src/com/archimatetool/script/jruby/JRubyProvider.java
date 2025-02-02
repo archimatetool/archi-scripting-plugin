@@ -24,27 +24,28 @@ import com.archimatetool.script.IScriptEngineProvider;
 /**
  * JRuby Provider
  */
+@SuppressWarnings("nls")
 public class JRubyProvider implements IScriptEngineProvider {
     
-    public static String ID = "com.archimatetool.script.provider.jruby"; //$NON-NLS-1$
+    public final static String ID = "com.archimatetool.script.provider.jruby";
     
     @Override
     public void run(File file, ScriptEngine engine) throws IOException, ScriptException {
         // Init script
-        URL initURL = JRubyPlugin.INSTANCE.getBundle().getEntry("jruby/init.rb"); //$NON-NLS-1$
-        try(InputStreamReader initReader = new InputStreamReader(initURL.openStream());) {
+        URL initURL = JRubyPlugin.INSTANCE.getBundle().getEntry("jruby/init.rb");
+        try(InputStreamReader initReader = new InputStreamReader(initURL.openStream())) {
             engine.eval(initReader);
         }
         
         // Evaluate the script
-        try(FileReader scriptReader = new FileReader(file.getAbsolutePath())) {
+        try(FileReader scriptReader = new FileReader(file)) {
             engine.eval(scriptReader);
         }
     }
 
     @Override
     public ScriptEngine createScriptEngine() {
-        return new ScriptEngineManager().getEngineByName("jruby"); //$NON-NLS-1$
+        return new ScriptEngineManager().getEngineByName("jruby");
     }
     
     @Override
@@ -54,12 +55,12 @@ public class JRubyProvider implements IScriptEngineProvider {
 
     @Override
     public String getName() {
-        return "JRuby"; //$NON-NLS-1$
+        return "JRuby";
     }
 
     @Override
     public String[] getSupportedFileExtensions() {
-        return new String[] { ".rb" }; //$NON-NLS-1$
+        return new String[] { ".rb" };
     }
 
     @Override
@@ -74,6 +75,6 @@ public class JRubyProvider implements IScriptEngineProvider {
 
     @Override
     public URL getNewFile() {
-        return JRubyPlugin.INSTANCE.getBundle().getEntry("templates/new.rb"); //$NON-NLS-1$
+        return JRubyPlugin.INSTANCE.getBundle().getEntry("templates/new.rb");
     }
 }

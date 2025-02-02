@@ -15,11 +15,11 @@ import com.archimatetool.editor.ui.ImageFactory;
  * 
  * @author Phillip Beauvoir
  */
+@SuppressWarnings("nls")
 public interface IJRubyImages {
     
     ImageFactory ImageFactory = new ImageFactory(JRubyPlugin.INSTANCE);
 
-    String IMGPATH = "img/"; //$NON-NLS-1$
-    
-    String ICON_JRUBY = IMGPATH + "jruby.png"; //$NON-NLS-1$
+    String IMGPATH = "img/";
+    String ICON_JRUBY = IMGPATH + "jruby.png";
 }

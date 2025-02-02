@@ -8,7 +8,7 @@ $shell = shell
 $workbench = workbench
 $workbenchwindow = workbenchwindow
 
-def jArchi (obj=nil)
+def jArchi(obj=nil)
     if obj == $selection
         return obj
     end
