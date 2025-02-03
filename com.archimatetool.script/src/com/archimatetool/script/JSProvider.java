@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
 import com.archimatetool.editor.utils.PlatformUtils;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 
 
@@ -135,6 +136,9 @@ public class JSProvider implements IScriptEngineProvider {
             System.clearProperty("polyglot.js.commonjs-require-cwd");
         }
 
+    	// Enable debugger if needed
+        enableAndRunDebugger();
+        
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
         
         // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
@@ -149,6 +153,56 @@ public class JSProvider implements IScriptEngineProvider {
 //        bindings.put("polyglot.js.allowAllAccess", true);
 
         return engine;
+    }
+    
+    /**
+     * Enable debugger and open a Chrome Devtools Protocol (CDP) client on:
+     * devtools://devtools/bundled/js_app.html?ws=127.0.0.1:port/uuid
+     */
+    private void enableAndRunDebugger() {
+        // TODO: Get from Preferences or through a "Debug" action
+        boolean enableDebugger = true;
+        
+        // TODO: Get from Preferences
+        String port = "9229";
+        
+        // TODO: Get from Preferences
+        String editor = "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe";
+        if(PlatformUtils.isMac()) {
+            editor = "/Applications/Microsoft Edge.app";
+        }
+        
+        String path = java.util.UUID.randomUUID().toString();
+        String url = "devtools://devtools/bundled/js_app.html?ws=127.0.0.1:" + port + "/" + path;
+
+        // Unset properties by default
+        System.getProperties().remove("polyglot.inspect");
+    	System.getProperties().remove("polyglot.inspect.Path");
+    	
+    	// Debugger AND editor must be configured!
+    	// When enabled, the script will pause and can be resumed only through a CDP client.
+    	// BUT - if the CDP client can't be launched, it will be impossible to resume and Archi will hang.
+        if(!enableDebugger || !StringUtils.isSet(editor)) {
+        	return;
+        }
+        
+    	System.setProperty("polyglot.inspect", port);
+    	System.setProperty("polyglot.inspect.Path", path);
+
+        try {
+            // Windows / Linux
+            String[] paths = new String[] { editor, url };
+            
+            // Mac
+            if(PlatformUtils.isMac()) {
+                paths = new String[] { "open", "-a", editor, url }; //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            
+            Runtime.getRuntime().exec(paths);
+        }
+        catch(IOException ex) {
+            ex.printStackTrace();
+        }
     }
     
     @Override

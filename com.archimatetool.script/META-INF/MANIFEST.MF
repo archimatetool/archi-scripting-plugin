@@ -39,4 +39,6 @@ Bundle-ClassPath: com.archimatetool.script.jar,
  lib/nativeimage-24.1.2.jar,
  lib/word-24.1.2.jar,
  lib/collections-24.1.2.jar,
- lib/icu4j-24.1.2.jar
+ lib/icu4j-24.1.2.jar,
+ lib/chromeinspector-23.0.7.jar,
+ lib/profiler-23.0.7.jar
