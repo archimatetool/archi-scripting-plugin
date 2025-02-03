@@ -54,6 +54,13 @@ public class CurrentModel extends ArchimateModelProxy implements IArchiScriptBin
         }
     }
     
+    /**
+     * @return true if the current model is set
+     */
+    public boolean isSet() {
+        return super.getEObject() != null;
+    }
+    
     @Override
     protected IArchimateModel getEObject() {
         // Throw this exception rather than a NPE if the current model has not been set

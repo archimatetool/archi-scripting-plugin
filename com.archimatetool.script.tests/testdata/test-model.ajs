@@ -4,10 +4,16 @@
 
 load("testutils.js");
 
+// Global model is not set
+assertFalse(model.isSet());
+
 // Create a new model and set it as the current model
-var model = $.model.create("Test Model").setAsCurrent();
-assertNotNull(model);
-assertEquals("Test Model", model.name);
+var m = $.model.create("Test Model").setAsCurrent();
+assertNotNull(m);
+assertEquals("Test Model", m.name);
+
+// Global model is set
+assertTrue(model.isSet());
 
 // Create a Business Actor
 var actor = model.createElement("business-actor", "Oscar");
