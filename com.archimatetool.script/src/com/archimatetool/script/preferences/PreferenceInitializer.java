@@ -48,5 +48,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 		store.setDefault(PREFS_JS_ENGINE, 2);
 		
 		store.setDefault(PREFS_COMMONJS_ENABLED, true);
+		
+		store.setDefault(PREFS_DEBUGGER_ENABLED, false);
+		store.setDefault(PREFS_DEBUGGER_PORT, "9229");
+		store.setDefault(PREFS_DEBUGGER_BROWSER, "");
     }
 }

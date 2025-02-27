@@ -27,4 +27,8 @@ public interface IPreferenceConstants {
     String PREFS_JS_ENGINE = "jsEngine";
     
     String PREFS_COMMONJS_ENABLED = "commonJSEnabled";
+    
+    String PREFS_DEBUGGER_ENABLED = "debuggerEnabled";
+    String PREFS_DEBUGGER_PORT = "debuggerPort";
+    String PREFS_DEBUGGER_BROWSER = "debuggerBrowser";
 }

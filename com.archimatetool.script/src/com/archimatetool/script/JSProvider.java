@@ -10,17 +10,26 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.UUID;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.Bundle;
 
 import com.archimatetool.editor.utils.PlatformUtils;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.preferences.IPreferenceConstants;
 
 
@@ -135,6 +144,9 @@ public class JSProvider implements IScriptEngineProvider {
             System.clearProperty("polyglot.js.commonjs-require-cwd");
         }
 
+        // Enable *before* getting engine
+        enableDebugger();
+
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
         
         // See https://www.graalvm.org/reference-manual/js/ScriptEngine/
@@ -149,6 +161,90 @@ public class JSProvider implements IScriptEngineProvider {
 //        bindings.put("polyglot.js.allowAllAccess", true);
 
         return engine;
+    }
+    
+    /**
+     * Enable debugger
+     * @see https://www.graalvm.org/latest/tools/chrome-debugger/
+     * @see https://github.com/oracle/graal/blob/master/docs/tools/chrome-debugger.md 
+     */
+    private void enableDebugger() {
+        if(!PlatformUI.isWorkbenchRunning()   // Ensure we are running in the UI
+                || PlatformUtils.isLinux()) { // On Linux, Chrome will freeze and the devtools URL can't be pasted into the address bar.
+                                              // There will also be popup dialogs in Archi about waiting or force quitting the app.
+            return;
+        }
+        
+        // Default is disabled, so remove these properties before running a script
+        System.getProperties().remove("polyglot.inspect");
+        System.getProperties().remove("polyglot.inspect.Path");
+        //System.getProperties().remove("polyglot.inspect.WaitAttached");
+        //System.getProperties().remove("polyglot.inspect.Suspend");
+        
+        String port = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_DEBUGGER_PORT);
+        
+        // If Debugger not enabled or port not set
+        if(!(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_DEBUGGER_ENABLED) && StringUtils.isSet(port))) {
+            return;
+        }
+        
+        MessageDialog dialog = new MessageDialog(null,
+                Messages.JSProvider_0,
+                null,
+                Messages.JSProvider_1,
+                MessageDialog.WARNING,
+                0,
+                Messages.JSProvider_2, Messages.JSProvider_3);
+        
+        if(dialog.open() != Window.OK) {
+            return;
+        }
+
+        // Mac/Linux needs time to close the dialog window
+        if(!PlatformUtils.isWindows()) {
+            while(Display.getCurrent().readAndDispatch());
+        }
+
+        // Create URL
+        String path = UUID.randomUUID().toString();
+        String url = "devtools://devtools/bundled/js_app.html?ws=127.0.0.1:" + port + "/" + path; //$NON-NLS-1$ //$NON-NLS-2$
+
+        // Copy URL to clipboard
+        Clipboard clipboard = new Clipboard(null);
+        clipboard.setContents(new Object[] {url}, new Transfer[] {TextTransfer.getInstance()});
+        clipboard.dispose();
+
+        // Setting these properties will set GraalVM to use Chrome Debug mode.
+        // The user has to paste the URL into a Chrome browser or else Archi will freeze.
+        System.setProperty("polyglot.inspect", port);
+        System.setProperty("polyglot.inspect.Path", path);
+        //System.setProperty("polyglot.inspect.WaitAttached", "true");
+        //System.setProperty("polyglot.inspect.Suspend", "false");
+
+        // The "polyglot.inspect.SuspensionTimeout" option is not present in the current version of chromeinspector
+        //System.setProperty("polyglot.inspect.SuspensionTimeout", "1m");
+
+        // Open Browser if it's set in preferences and exists
+        String browserPath = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_DEBUGGER_BROWSER);
+        if(new File(browserPath).exists()) {
+            String[] paths = null;
+
+            // Mac can open the devtools URL
+            if(PlatformUtils.isMac()) {
+                paths = new String[] { "open", "-a", browserPath, url }; //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            // Windows/Linux can't open the devtools URL so just open the browser
+            else {
+                paths = new String[] { browserPath };
+            }
+
+            try {
+                Runtime.getRuntime().exec(paths);
+            }
+            catch(IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
     
     @Override
