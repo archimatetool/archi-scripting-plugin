@@ -17,7 +17,7 @@ import com.archimatetool.editor.ui.ImageFactory;
  */
 public interface IArchiScriptImages {
     
-    ImageFactory ImageFactory = new ImageFactory(ArchiScriptPlugin.INSTANCE);
+    ImageFactory ImageFactory = new ImageFactory(ArchiScriptPlugin.getInstance());
 
     String IMGPATH = "img/"; //$NON-NLS-1$
     

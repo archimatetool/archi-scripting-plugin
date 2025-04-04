@@ -32,7 +32,7 @@ public class GroovyProvider implements IScriptEngineProvider {
     @Override
     public void run(File file, ScriptEngine engine) throws IOException, ScriptException {
         // Init script
-        URL initURL = GroovyPlugin.INSTANCE.getBundle().getEntry("groovy/init.groovy");
+        URL initURL = GroovyPlugin.getInstance().getBundle().getEntry("groovy/init.groovy");
         try(InputStreamReader initReader = new InputStreamReader(initURL.openStream())) {
             engine.eval(initReader);
         }
@@ -75,6 +75,6 @@ public class GroovyProvider implements IScriptEngineProvider {
 
     @Override
     public URL getNewFile() {
-        return GroovyPlugin.INSTANCE.getBundle().getEntry("templates/new.groovy");
+        return GroovyPlugin.getInstance().getBundle().getEntry("templates/new.groovy");
     }
 }

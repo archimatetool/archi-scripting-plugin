@@ -26,7 +26,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer impleme
 
     @Override
     public void initializeDefaultPreferences() {
-		IPreferenceStore store = ArchiScriptPlugin.INSTANCE.getPreferenceStore();
+		IPreferenceStore store = ArchiScriptPlugin.getInstance().getPreferenceStore();
         
 		if(PlatformUtils.isWindows()) {
 	        store.setDefault(PREFS_EDITOR, "notepad.exe");

@@ -10,7 +10,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 
 /**
- * Activitor
+ * Activator
  * 
  * @author Phillip Beauvoir
  */
@@ -22,10 +22,16 @@ public class GroovyPlugin extends AbstractUIPlugin {
     /**
      * The shared instance
      */
-    public static GroovyPlugin INSTANCE;
+    private static GroovyPlugin instance;
 
-    public GroovyPlugin() {
-        INSTANCE = this;
+    /**
+     * @return the shared instance
+     */
+    public static GroovyPlugin getInstance() {
+        return instance;
     }
 
+    public GroovyPlugin() {
+        instance = this;
+    }
 }

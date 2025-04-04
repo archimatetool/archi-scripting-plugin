@@ -51,7 +51,7 @@ public class DomExtensionFactory {
                     }
                 }
                 catch(CoreException ex) {
-                    ArchiScriptPlugin.INSTANCE.getLog().error("Could not load extension", ex);
+                    ArchiScriptPlugin.getInstance().getLog().error("Could not load extension", ex);
                 }
             }
         }

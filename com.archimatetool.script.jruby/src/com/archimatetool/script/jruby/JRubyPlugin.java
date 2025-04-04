@@ -10,7 +10,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 
 /**
- * Activitor
+ * Activator
  * 
  * @author Phillip Beauvoir
  */
@@ -19,13 +19,17 @@ public class JRubyPlugin extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "com.archimatetool.script.jruby";
     
-    /**
-     * The shared instance
-     */
-    public static JRubyPlugin INSTANCE;
+    // The shared instance
+    private static JRubyPlugin instance;
 
-    public JRubyPlugin() {
-        INSTANCE = this;
+    /**
+     * @return the shared instance
+     */
+    public static JRubyPlugin getInstance() {
+        return instance;
     }
 
+    public JRubyPlugin() {
+        instance = this;
+    }
 }

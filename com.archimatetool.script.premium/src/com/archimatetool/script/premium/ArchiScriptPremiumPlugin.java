@@ -8,7 +8,6 @@ package com.archimatetool.script.premium;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 
-
 /**
  * Activitor
  * 
@@ -18,13 +17,17 @@ public class ArchiScriptPremiumPlugin extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "com.archimatetool.script.premium"; //$NON-NLS-1$
     
-    /**
-     * The shared instance
-     */
-    public static ArchiScriptPremiumPlugin INSTANCE;
+    // The shared instance
+    private static ArchiScriptPremiumPlugin instance;
 
-    public ArchiScriptPremiumPlugin() {
-        INSTANCE = this;
+    /**
+     * @return the shared instance
+     */
+    public static ArchiScriptPremiumPlugin getInstance() {
+        return instance;
     }
 
+    public ArchiScriptPremiumPlugin() {
+        instance = this;
+    }
 }

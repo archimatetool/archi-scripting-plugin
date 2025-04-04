@@ -35,7 +35,7 @@ public class JSProviderTests {
         assertEquals("latest", System.getProperty("polyglot.js.ecmascript-version"));
         
         assertEquals("true", System.getProperty("polyglot.js.commonjs-require"));
-        assertEquals(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER), System.getProperty("polyglot.js.commonjs-require-cwd"));
+        assertEquals(ArchiScriptPlugin.getInstance().getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER), System.getProperty("polyglot.js.commonjs-require-cwd"));
     }
 
 }

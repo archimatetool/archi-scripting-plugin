@@ -67,7 +67,7 @@ public class JSProvider implements IScriptEngineProvider {
     @Override
     public void run(File file, ScriptEngine engine) throws IOException, ScriptException {
         // Initialize jArchi using the provided init.js script
-        URL initURL = ArchiScriptPlugin.INSTANCE.getBundle().getEntry("js/init.js");
+        URL initURL = ArchiScriptPlugin.getInstance().getBundle().getEntry("js/init.js");
         try(InputStreamReader initReader = new InputStreamReader(initURL.openStream())) {
             engine.eval(initReader);
         }
@@ -90,7 +90,7 @@ public class JSProvider implements IScriptEngineProvider {
         
         // If Nashorn is installed use the engine as set in user preferences
         if(clazz != null) {
-            switch(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE)) {
+            switch(ArchiScriptPlugin.getInstance().getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE)) {
                 case 0:
                     engine = new ScriptEngineManager(clazz.getClassLoader()).getEngineByName("nashorn");
                     break;
@@ -134,10 +134,10 @@ public class JSProvider implements IScriptEngineProvider {
 
         // Enable loading Node.js modules
         // See https://www.graalvm.org/latest/reference-manual/js/Modules/
-        boolean commonJSEnabled = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_COMMONJS_ENABLED);
+        boolean commonJSEnabled = ArchiScriptPlugin.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_COMMONJS_ENABLED);
         if(commonJSEnabled) {
             System.setProperty("polyglot.js.commonjs-require", "true");
-            System.setProperty("polyglot.js.commonjs-require-cwd", ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER));
+            System.setProperty("polyglot.js.commonjs-require-cwd", ArchiScriptPlugin.getInstance().getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER));
         }
         else {
             System.clearProperty("polyglot.js.commonjs-require");
@@ -181,10 +181,10 @@ public class JSProvider implements IScriptEngineProvider {
         //System.getProperties().remove("polyglot.inspect.WaitAttached");
         //System.getProperties().remove("polyglot.inspect.Suspend");
         
-        String port = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_DEBUGGER_PORT);
+        String port = ArchiScriptPlugin.getInstance().getPreferenceStore().getString(IPreferenceConstants.PREFS_DEBUGGER_PORT);
         
         // If Debugger not enabled or port not set
-        if(!(ArchiScriptPlugin.INSTANCE.getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_DEBUGGER_ENABLED) && StringUtils.isSet(port))) {
+        if(!(ArchiScriptPlugin.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_DEBUGGER_ENABLED) && StringUtils.isSet(port))) {
             return;
         }
         
@@ -225,7 +225,7 @@ public class JSProvider implements IScriptEngineProvider {
         //System.setProperty("polyglot.inspect.SuspensionTimeout", "1m");
 
         // Open Browser if it's set in preferences and exists
-        String browserPath = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_DEBUGGER_BROWSER);
+        String browserPath = ArchiScriptPlugin.getInstance().getPreferenceStore().getString(IPreferenceConstants.PREFS_DEBUGGER_BROWSER);
         if(new File(browserPath).exists()) {
             String[] paths = null;
 
@@ -274,6 +274,6 @@ public class JSProvider implements IScriptEngineProvider {
 
     @Override
     public URL getNewFile() {
-        return ArchiScriptPlugin.INSTANCE.getBundle().getEntry("templates/new.ajs");
+        return ArchiScriptPlugin.getInstance().getBundle().getEntry("templates/new.ajs");
     }
 }

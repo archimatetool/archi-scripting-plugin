@@ -18,7 +18,7 @@ import com.archimatetool.editor.ui.ImageFactory;
 @SuppressWarnings("nls")
 public interface IGroovyImages {
     
-    ImageFactory ImageFactory = new ImageFactory(GroovyPlugin.INSTANCE);
+    ImageFactory ImageFactory = new ImageFactory(GroovyPlugin.getInstance());
 
     String IMGPATH = "img/";
     String ICON_GROOVY = IMGPATH + "groovy.png";

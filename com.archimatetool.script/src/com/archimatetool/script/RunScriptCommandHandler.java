@@ -77,7 +77,7 @@ public class RunScriptCommandHandler extends AbstractHandler implements IParamet
     }
 
     public static File getScriptFileForParameterValue(String parameterValue) {
-        IPreferenceStore store = ArchiScriptPlugin.INSTANCE.getPreferenceStore();
+        IPreferenceStore store = ArchiScriptPlugin.getInstance().getPreferenceStore();
         String scriptPath = store.getString(PREFS_PREFIX + parameterValue);
         
         if(StringUtils.isSet(scriptPath)) {

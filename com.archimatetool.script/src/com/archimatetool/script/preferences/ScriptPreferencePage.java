@@ -81,7 +81,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     };
     
 	public ScriptPreferencePage() {
-		setPreferenceStore(ArchiScriptPlugin.INSTANCE.getPreferenceStore());
+		setPreferenceStore(ArchiScriptPlugin.getInstance().getPreferenceStore());
 	}
 	
     @Override

@@ -57,7 +57,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
         
         menuManager = new MenuManager();
         
-        fillItems(menuManager, ArchiScriptPlugin.INSTANCE.getUserScriptsFolder().listFiles());
+        fillItems(menuManager, ArchiScriptPlugin.getInstance().getUserScriptsFolder().listFiles());
         
         for(IContributionItem item : menuManager.getItems()) {
             item.fill(menu, index++);

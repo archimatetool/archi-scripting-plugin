@@ -18,7 +18,7 @@ import com.archimatetool.editor.ui.ImageFactory;
 @SuppressWarnings("nls")
 public interface IJRubyImages {
     
-    ImageFactory ImageFactory = new ImageFactory(JRubyPlugin.INSTANCE);
+    ImageFactory ImageFactory = new ImageFactory(JRubyPlugin.getInstance());
 
     String IMGPATH = "img/";
     String ICON_JRUBY = IMGPATH + "jruby.png";

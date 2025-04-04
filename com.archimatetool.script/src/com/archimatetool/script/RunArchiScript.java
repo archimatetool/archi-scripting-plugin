@@ -110,7 +110,7 @@ public class RunArchiScript {
         }
 
         // directory of user scripts folder
-        engine.put("__SCRIPTS_DIR__", ArchiScriptPlugin.INSTANCE.getUserScriptsFolder().getAbsolutePath() + File.separator);
+        engine.put("__SCRIPTS_DIR__", ArchiScriptPlugin.getInstance().getUserScriptsFolder().getAbsolutePath() + File.separator);
     }
     
     /**

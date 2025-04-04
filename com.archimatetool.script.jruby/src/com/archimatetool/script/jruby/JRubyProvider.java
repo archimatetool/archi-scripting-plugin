@@ -32,7 +32,7 @@ public class JRubyProvider implements IScriptEngineProvider {
     @Override
     public void run(File file, ScriptEngine engine) throws IOException, ScriptException {
         // Init script
-        URL initURL = JRubyPlugin.INSTANCE.getBundle().getEntry("jruby/init.rb");
+        URL initURL = JRubyPlugin.getInstance().getBundle().getEntry("jruby/init.rb");
         try(InputStreamReader initReader = new InputStreamReader(initURL.openStream())) {
             engine.eval(initReader);
         }
@@ -75,6 +75,6 @@ public class JRubyProvider implements IScriptEngineProvider {
 
     @Override
     public URL getNewFile() {
-        return JRubyPlugin.INSTANCE.getBundle().getEntry("templates/new.rb");
+        return JRubyPlugin.getInstance().getBundle().getEntry("templates/new.rb");
     }
 }

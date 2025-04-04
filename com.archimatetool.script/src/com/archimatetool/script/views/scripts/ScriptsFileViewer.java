@@ -102,7 +102,7 @@ extends AbstractFileView  {
         super.createPartControl(parent);
         
         // Listen to Prefs
-        ArchiScriptPlugin.INSTANCE.getPreferenceStore().addPropertyChangeListener(prefsListener);
+        ArchiScriptPlugin.getInstance().getPreferenceStore().addPropertyChangeListener(prefsListener);
         
         // Register Help Context
         PlatformUI.getWorkbench().getHelpSystem().setHelp(getViewer().getControl(), HELP_ID);
@@ -110,7 +110,7 @@ extends AbstractFileView  {
     
     @Override
     public File getRootFolder() {
-        return ArchiScriptPlugin.INSTANCE.getUserScriptsFolder();
+        return ArchiScriptPlugin.getInstance().getUserScriptsFolder();
     }
     
     @Override
@@ -266,7 +266,7 @@ extends AbstractFileView  {
                 manager.add(bindingsMenu);
                 
                 File file = (File)selection.getFirstElement();
-                IPreferenceStore store = ArchiScriptPlugin.INSTANCE.getPreferenceStore();
+                IPreferenceStore store = ArchiScriptPlugin.getInstance().getPreferenceStore();
                 
                 // Show the key binding slots
                 for(String paramValue : RunScriptCommandHandler.getParameters().values()) {
@@ -359,7 +359,7 @@ extends AbstractFileView  {
     
     @Override
     protected void handleDoubleClickAction() {
-        int option = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.PREFS_DOUBLE_CLICK_BEHAVIOUR);
+        int option = ArchiScriptPlugin.getInstance().getPreferenceStore().getInt(IPreferenceConstants.PREFS_DOUBLE_CLICK_BEHAVIOUR);
         switch(option) {
             case 0:
                 fActionRun.run();
@@ -388,7 +388,7 @@ extends AbstractFileView  {
                 }
             }
             
-            String editor = ArchiScriptPlugin.INSTANCE.getPreferenceStore().getString(IPreferenceConstants.PREFS_EDITOR);
+            String editor = ArchiScriptPlugin.getInstance().getPreferenceStore().getString(IPreferenceConstants.PREFS_EDITOR);
             if(StringUtils.isSet(editor)) {
                 try {
                     // Windows / Linux
@@ -473,7 +473,7 @@ extends AbstractFileView  {
         super.dispose();
         
         // Unregister to Prefs
-        ArchiScriptPlugin.INSTANCE.getPreferenceStore().removePropertyChangeListener(prefsListener);
+        ArchiScriptPlugin.getInstance().getPreferenceStore().removePropertyChangeListener(prefsListener);
     }
 
     // =================================================================================

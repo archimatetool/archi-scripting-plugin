@@ -8,7 +8,6 @@ package com.archimatetool.script;
 import java.io.File;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.BundleContext;
 
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.preferences.IPreferenceConstants;
@@ -24,21 +23,20 @@ public class ArchiScriptPlugin extends AbstractUIPlugin {
 
     public static final String PLUGIN_ID = "com.archimatetool.script"; //$NON-NLS-1$
     
+    // The shared instance
+    private static ArchiScriptPlugin instance;
+
     /**
-     * The shared instance
+     * @return the shared instance
      */
-    public static ArchiScriptPlugin INSTANCE;
+    public static ArchiScriptPlugin getInstance() {
+        return instance;
+    }
 
     public ArchiScriptPlugin() {
+        instance = this;
     }
     
-    @Override
-    public void start(BundleContext context) throws Exception {
-        super.start(context);
-        
-        INSTANCE = this;
-    }
-
     /**
      * @return The folder where we store user scripts
      */

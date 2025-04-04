@@ -34,7 +34,7 @@ public class RestoreExampleScriptsHandler extends AbstractHandler {
 
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        File targetExamplesFolder = new File(ArchiScriptPlugin.INSTANCE.getUserScriptsFolder(), "examples"); //$NON-NLS-1$
+        File targetExamplesFolder = new File(ArchiScriptPlugin.getInstance().getUserScriptsFolder(), "examples"); //$NON-NLS-1$
         if(targetExamplesFolder.exists() && targetExamplesFolder.list().length > 0) {
             boolean confirm = MessageDialog.openConfirm(HandlerUtil.getActiveShell(event), "Archi", //$NON-NLS-1$
                     Messages.RestoreExampleScriptsHandler_0);
@@ -62,7 +62,7 @@ public class RestoreExampleScriptsHandler extends AbstractHandler {
 
     private void copyFiles(String filePattern) throws IOException {
         // Note - if a directory has a "." in it, it is treated as a file!
-        Enumeration<URL> enm = ArchiScriptPremiumPlugin.INSTANCE.getBundle().findEntries("examples", filePattern, true); //$NON-NLS-1$
+        Enumeration<URL> enm = ArchiScriptPremiumPlugin.getInstance().getBundle().findEntries("examples", filePattern, true); //$NON-NLS-1$
         if(enm == null) {
             return;
         }
@@ -70,11 +70,11 @@ public class RestoreExampleScriptsHandler extends AbstractHandler {
         while(enm.hasMoreElements()) {
             URL url = enm.nextElement();
             
-            File file = new File(ArchiScriptPlugin.INSTANCE.getUserScriptsFolder(), url.getPath());
+            File file = new File(ArchiScriptPlugin.getInstance().getUserScriptsFolder(), url.getPath());
             file.getParentFile().mkdirs();
             
             try(InputStream in = url.openStream()) {
-                Files.copy(in, new File(ArchiScriptPlugin.INSTANCE.getUserScriptsFolder(), url.getFile()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(in, new File(ArchiScriptPlugin.getInstance().getUserScriptsFolder(), url.getFile()).toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }
