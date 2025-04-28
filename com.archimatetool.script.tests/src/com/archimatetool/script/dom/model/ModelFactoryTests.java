@@ -293,7 +293,7 @@ public class ModelFactoryTests {
         IArchimateElement element = (IArchimateElement)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "528");
         
         // Put it inside the "Pay" object
-        DiagramModelObjectProxy proxy = ModelFactory.addArchimateDiagramObject(view, element, 400, 390, 10, 10, true);
+        DiagramModelObjectProxy proxy = ModelFactory.addArchimateDiagramObject(view, element, 400, 408, 10, 10, true);
         assertTrue(proxy.getEObject() instanceof IDiagramModelArchimateObject);
         assertEquals("4093", ((IIdentifier)proxy.getEObject().eContainer()).getId());
         

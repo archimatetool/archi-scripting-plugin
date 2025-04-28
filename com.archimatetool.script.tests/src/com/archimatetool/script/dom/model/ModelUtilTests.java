@@ -114,7 +114,7 @@ public class ModelUtilTests {
         // Business Role
         IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
         assertTrue(ModelUtil.isAllowedSetType(concept, "business-actor"));
-        assertFalse(ModelUtil.isAllowedSetType(concept, "business-interface"));
+        assertFalse(ModelUtil.isAllowedSetType(concept, "business-process"));
         assertTrue(ModelUtil.isAllowedSetType(concept, "business-role"));
         assertFalse(ModelUtil.isAllowedSetType(concept, "business-function"));
         assertFalse(ModelUtil.isAllowedSetType(concept, "node"));

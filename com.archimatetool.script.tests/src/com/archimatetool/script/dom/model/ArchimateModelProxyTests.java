@@ -104,7 +104,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         ArchimateModelProxy testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         
         EObjectProxyCollection collection = testModelProxy.find();
-        assertEquals(788, collection.size());
+        assertEquals(787, collection.size());
 
         for(EObjectProxy eObjectProxy : collection) {
             assertNotNull(eObjectProxy.getEObject());
@@ -125,19 +125,19 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals(0, collection.size());
 
         collection = testModelProxy.find("*");
-        assertEquals(340, collection.size());
+        assertEquals(339, collection.size());
         
         collection = testModelProxy.find("concept");
-        assertEquals(298, collection.size());
+        assertEquals(296, collection.size());
 
         collection = testModelProxy.find("element");
         assertEquals(120, collection.size());
 
         collection = testModelProxy.find("relation");
-        assertEquals(178, collection.size());
+        assertEquals(176, collection.size());
 
         collection = testModelProxy.find("folder");
-        assertEquals(25, collection.size());
+        assertEquals(26, collection.size());
 
         collection = testModelProxy.find("view");
         assertEquals(17, collection.size());

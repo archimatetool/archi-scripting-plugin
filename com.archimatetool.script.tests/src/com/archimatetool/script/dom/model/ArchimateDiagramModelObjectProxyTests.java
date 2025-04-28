@@ -129,7 +129,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     public void getBounds() {
         Map<String, Object> bounds = testProxy.getBounds();
         assertEquals(20, bounds.get("x"));
-        assertEquals(25, bounds.get("y"));
+        assertEquals(43, bounds.get("y"));
         assertEquals(101, bounds.get("width"));
         assertEquals(60, bounds.get("height"));
     }

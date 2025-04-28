@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Merge Test Relationships" id="id-db87d0a3b2e3411daa68f97a82601111" version="4.6.0">
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Merge Test Relationships" id="id-db87d0a3b2e3411daa68f97a82601111" version="5.0.0">
   <folder name="Strategy" id="id-57d09fb88e6a4ad78a05c713c164e716" type="strategy">
     <element xsi:type="archimate:Resource" name="Resource" id="id-53a91f744f93471dab69ffab3d216eb0"/>
   </folder>
