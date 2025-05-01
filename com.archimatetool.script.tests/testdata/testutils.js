@@ -2,6 +2,8 @@
 // Assertions
 // =========================================================================
 
+const Objects = Java.type("java.util.Objects");
+
 function assertNull(obj) {
     if(obj != null) {
         throw new Error("expected <null> but was " + obj);
@@ -15,14 +17,26 @@ function assertNotNull(obj) {
 }
 
 function assertEquals(expected, actual) {
-    if(expected !== actual) {
+    if(!Objects.equals(expected, actual)) {
         throw new Error("expected: <" + expected + "> but was <" + actual + ">");
     }
 }
 
 function assertNotEquals(expected, actual) {
-    if(expected == actual) {
+    if(Objects.equals(expected, actual)) {
         throw new Error("expected: not equal but was <" + actual + ">");
+    }
+}
+
+function assertSame(expected, actual) {
+    if(expected !== actual) {
+        throw new Error("expected: <" + expected + "> but was <" + actual + ">");
+    }
+}
+
+function assertNotSame(expected, actual) {
+    if(expected === actual) {
+        throw new Error("expected: not same but was <" + actual + ">");
     }
 }
 
