@@ -71,7 +71,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             return ModelFactory.createDiagramObject(parent, type, x, y, width, height, false);
         }
         
-        throw new ArchiScriptException(Messages.DiagramModelObjectProxy_1);
+        throw new ArchiScriptException(Messages.DiagramModelObjectProxy_0);
     }
     
     /**
@@ -82,7 +82,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
             return ModelFactory.createViewReference(parent, dmRef.getEObject(), x, y, width, height, false);
         }
         
-        throw new ArchiScriptException(Messages.DiagramModelObjectProxy_1);
+        throw new ArchiScriptException(Messages.DiagramModelObjectProxy_0);
     }
 
     @Override

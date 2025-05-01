@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.osgi.util.NLS;
+
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
@@ -117,7 +119,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
      */
     public DiagramModelConnectionProxy addRelativeBendpoint(Map<?, ?> map, int index) {
         if(index < 0 || index > getEObject().getBendpoints().size()) {
-            throw new ArchiScriptException(Messages.DiagramModelConnectionProxy_0 + index);
+            throw new ArchiScriptException(NLS.bind(Messages.DiagramModelConnectionProxy_0, index));
         }
         
         IDiagramModelBendpoint bp = createBendpointFromMap(map);
@@ -139,7 +141,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
     
     public DiagramModelConnectionProxy setRelativeBendpoint(Map<?, ?> map, int index) {
         if(index < 0 || index >= getEObject().getBendpoints().size()) {
-            throw new ArchiScriptException(Messages.DiagramModelConnectionProxy_0 + index);
+            throw new ArchiScriptException(NLS.bind(Messages.DiagramModelConnectionProxy_0, index));
         }
         
         IDiagramModelBendpoint bp = createBendpointFromMap(map);
@@ -179,7 +181,7 @@ public class DiagramModelConnectionProxy extends DiagramModelComponentProxy impl
     
     public DiagramModelConnectionProxy deleteBendpoint(int index) {
         if(index < 0 || index > getEObject().getBendpoints().size()) {
-            throw new ArchiScriptException(Messages.DiagramModelConnectionProxy_2 + index);
+            throw new ArchiScriptException(NLS.bind(Messages.DiagramModelConnectionProxy_0, index));
         }
         
         CommandHandler.executeCommand(new ScriptCommand(Messages.DiagramModelConnectionProxy_3, getEObject()) {
