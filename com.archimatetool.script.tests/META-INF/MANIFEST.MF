@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0
 Fragment-Host: com.archimatetool.script
 Import-Package: org.junit.jupiter.api,
  org.junit.jupiter.api.function,
- org.junit.platform.suite.api
+ org.junit.platform.suite.api,
+ org.opentest4j
 Bundle-Vendor: Archi
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Eclipse-BundleShape: dir
