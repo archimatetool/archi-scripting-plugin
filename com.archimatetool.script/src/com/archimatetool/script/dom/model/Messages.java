@@ -92,6 +92,12 @@ public class Messages extends NLS {
 
     public static String ModelFactory_15;
 
+    public static String ModelFactory_16;
+
+    public static String ModelFactory_17;
+
+    public static String ModelFactory_18;
+
     public static String ModelFactory_2;
 
     public static String ModelFactory_3;

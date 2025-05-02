@@ -22,9 +22,11 @@ import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IBusinessService;
+import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelGroup;
+import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
@@ -60,6 +62,53 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         testProxy = (DiagramModelObjectProxy)EObjectProxy.get(testEObject);
     }
 
+    @Test
+    public void addDiagramObject() {
+        // Get parent View
+        IDiagramModel dm = (IDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4165");
+        // Get Object in a View
+        IDiagramModelObject objectToMove = (IDiagramModelObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4197");
+        // Get target parent object
+        IDiagramModelObject targetParentObject = (IDiagramModelObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4174");
+        
+        // Object's parent is View
+        assertTrue(objectToMove.getDiagramModel() == dm);
+
+        // Create Proxies
+        DiagramModelObjectProxy objectToMoveProxy = (DiagramModelObjectProxy)EObjectProxy.get(objectToMove);
+        DiagramModelObjectProxy targetParentObjectProxy = (DiagramModelObjectProxy)EObjectProxy.get(targetParentObject);
+        
+        // Must be in a container
+        assertThrows(ArchiScriptException.class, () -> {
+            IDiagramModelNote note = IArchimateFactory.eINSTANCE.createDiagramModelNote();
+            DiagramModelObjectProxy dmoProxy = (DiagramModelObjectProxy)EObjectProxy.get(note);
+            dmoProxy.add(objectToMoveProxy, 10, 10);
+        });
+
+        // Must be in same diagram model
+        assertThrows(ArchiScriptException.class, () -> {
+            IDiagramModelObject dmo = (IDiagramModelObject)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4288");
+            DiagramModelObjectProxy dmoProxy = (DiagramModelObjectProxy)EObjectProxy.get(dmo);
+            targetParentObjectProxy.add(dmoProxy, 10, 10);
+        });
+        
+        // Can't add to self
+        assertThrows(ArchiScriptException.class, () -> {
+            objectToMoveProxy.add(objectToMoveProxy, 10, 10);
+        });
+
+        // Add it
+        targetParentObjectProxy.add(objectToMoveProxy, 10, 10);
+        assertEquals(targetParentObjectProxy, objectToMoveProxy.parent());
+        assertEquals(10, objectToMoveProxy.getBounds().get("x"));
+        assertEquals(10, objectToMoveProxy.getBounds().get("y"));
+
+        // Can't add again as it's already a child
+        assertThrows(ArchiScriptException.class, () -> {
+            targetParentObjectProxy.add(objectToMoveProxy, 10, 10);
+        });
+    }
+    
     @Override
     @Test
     public void parent() {

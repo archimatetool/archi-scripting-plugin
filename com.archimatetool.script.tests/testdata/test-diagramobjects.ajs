@@ -26,3 +26,30 @@ assertEquals(LINE_STYLE.DOTTED, object.lineStyle);
 object.lineStyle = LINE_STYLE.NONE;
 assertEquals(LINE_STYLE.NONE, object.lineStyle);
 
+
+// =========================================================================
+// Move Objects
+// =========================================================================
+
+// Load the test model again (if required)
+// loadTestModel("Archisurance.archimate", true);
+// assertNotNull(model);
+
+// Move an object from the View to another object...
+
+// Object is in a View
+var view = $("#4165").first();
+var object = $("#4197").first();
+assertNotNull(object);
+assertEquals(view, $(object).parent().first()); // Parent is view
+
+var targetObject = $("#4174").first();
+assertNotNull(targetObject);
+
+targetObject.add(object, 10, 10);
+assertEquals(targetObject, $(object).parent().first());
+
+// Move the object back to the parent View...
+
+view.add(object, 10, 10);
+assertEquals(view, $(object).parent().first());

@@ -28,6 +28,7 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelComponent;
+import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.util.ArchimateModelUtils;
@@ -63,6 +64,36 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
         testProxy = (ArchimateDiagramModelProxy)EObjectProxy.get(testEObject);
     }
 
+    @Test
+    public void addDiagramObject() {
+        // Get Object to move
+        IDiagramModelObject objectToMove = (IDiagramModelObject)ArchimateModelUtils.getObjectByID(testEObject.getArchimateModel(), "4103");
+
+        // Object's parent is an object
+        assertTrue(objectToMove.eContainer() instanceof IDiagramModelObject);
+
+        // Create Proxy
+        DiagramModelObjectProxy objectToMoveProxy = (DiagramModelObjectProxy)EObjectProxy.get(objectToMove);
+
+        // Must be in same diagram model
+        assertThrows(ArchiScriptException.class, () -> {
+            IDiagramModelObject dmo = (IDiagramModelObject)ArchimateModelUtils.getObjectByID(testEObject.getArchimateModel(), "4288");
+            DiagramModelObjectProxy dmoProxy = (DiagramModelObjectProxy)EObjectProxy.get(dmo);
+            testProxy.add(dmoProxy, 10, 10);
+        });
+
+        // Add it
+        testProxy.add(objectToMoveProxy, 10, 10);
+        assertEquals(testProxy, objectToMoveProxy.parent());
+        assertEquals(10, objectToMoveProxy.getBounds().get("x"));
+        assertEquals(10, objectToMoveProxy.getBounds().get("y"));
+
+        // Can't add again as it's already a child
+        assertThrows(ArchiScriptException.class, () -> {
+            testProxy.add(objectToMoveProxy, 10, 10);
+        });
+    }
+    
     @Test
     public void get_ReturnsCorrectProxy() {
         EObjectProxy proxy = EObjectProxy.get(testEObject);

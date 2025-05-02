@@ -47,6 +47,7 @@ import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.AddElementCommand;
 import com.archimatetool.script.commands.AddRelationshipCommand;
 import com.archimatetool.script.commands.CommandHandler;
+import com.archimatetool.script.commands.MoveDiagramObjectCommand;
 import com.archimatetool.script.commands.ScriptCommand;
 import com.archimatetool.script.commands.ScriptCommandWrapper;
 
@@ -296,6 +297,29 @@ class ModelFactory implements IModelConstants {
         
         IDiagramModelArchimateObject dmo = ArchimateDiagramModelFactory.createDiagramModelArchimateObject(element);
         return createDiagramObject(parent, dmo, x, y, width, height, autoNest);
+    }
+    
+    /**
+     * Move dmo to new parent
+     */
+    static void moveDiagramModelObject(IDiagramModelContainer parent, IDiagramModelObject dmo) {
+        // Must be in same diagram model
+        if(parent.getDiagramModel() != dmo.getDiagramModel()) {
+            throw new ArchiScriptException(Messages.ModelFactory_16);
+        }
+        
+        // Can't add to self
+        if(parent == dmo) {
+            throw new ArchiScriptException(Messages.ModelFactory_17);
+        }
+        
+        // Already a child
+        if(parent.getChildren().contains(dmo)) {
+            throw new ArchiScriptException(Messages.ModelFactory_18);
+        }
+        
+        // Move it
+        CommandHandler.executeCommand(new MoveDiagramObjectCommand(parent, dmo));
     }
     
     /**

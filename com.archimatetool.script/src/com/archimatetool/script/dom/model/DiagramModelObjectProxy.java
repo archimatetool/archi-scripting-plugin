@@ -53,7 +53,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     }
     
     /**
-     * Add an Archimate element to this diagram object and return the new diagram object
+     * Add an Archimate element to this diagram object and return the diagram object proxy
      */
     public DiagramModelObjectProxy add(ArchimateElementProxy elementProxy, int x, int y, int width, int height) {
         if(getEObject() instanceof IDiagramModelContainer parent) {
@@ -63,6 +63,18 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         throw new ArchiScriptException(Messages.DiagramModelObjectProxy_0);
     }
     
+    /**
+     * Add (move) an existing diagram object to this object at x, y and return the diagram object proxy
+     */
+    public DiagramModelObjectProxy add(DiagramModelObjectProxy dmProxy, int x, int y) {
+        if(getEObject() instanceof IDiagramModelContainer parent) {
+            ModelFactory.moveDiagramModelObject(parent, dmProxy.getEObject());
+            return dmProxy.setBounds(Map.of("x", x, "y", y)); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        
+        throw new ArchiScriptException(Messages.DiagramModelObjectProxy_0);
+    }
+
     /**
      * Create and add a diagram object and return the diagram object proxy
      */

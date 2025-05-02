@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.ui.PlatformUI;
@@ -33,6 +34,14 @@ public abstract class DiagramModelProxy extends EObjectProxy {
         super(dm);
     }
     
+    /**
+     * Add (move) an existing diagram object to this diagram at x, y and return the diagram object proxy
+     */
+    public DiagramModelObjectProxy add(DiagramModelObjectProxy dmProxy, int x, int y) {
+        ModelFactory.moveDiagramModelObject(getEObject(), dmProxy.getEObject());
+        return dmProxy.setBounds(Map.of("x", x, "y", y)); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
     /**
      * Create and add a diagram object and return the diagram object proxy
      */
@@ -77,9 +86,7 @@ public abstract class DiagramModelProxy extends EObjectProxy {
     }
     
     /**
-     * Open a View in the UI
-     * If Archi is not running has no effect
-     * @return this
+     * Open a View in the UI. If Archi is not running it has no effect.
      */
     public DiagramModelProxy openInUI() {
         ModelUtil.openDiagramModelInUI(getEObject());
