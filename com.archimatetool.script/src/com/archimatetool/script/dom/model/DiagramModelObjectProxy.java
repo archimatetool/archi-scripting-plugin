@@ -12,17 +12,14 @@ import java.util.Map;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.osgi.util.NLS;
 
-import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectLineStyleCommand;
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
 import com.archimatetool.editor.model.commands.AddListMemberCommand;
 import com.archimatetool.editor.model.commands.RemoveListMemberCommand;
-import com.archimatetool.editor.preferences.IPreferenceConstants;
 import com.archimatetool.editor.ui.factory.IArchimateElementUIProvider;
 import com.archimatetool.editor.ui.factory.IGraphicalObjectUIProvider;
 import com.archimatetool.editor.ui.factory.IObjectUIProvider;
 import com.archimatetool.editor.ui.factory.ObjectUIFactory;
-import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IBounds;
@@ -125,19 +122,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         int width = ModelUtil.getIntValueFromMap(map, "width", getEObject().getBounds().getWidth()); //$NON-NLS-1$
         int height = ModelUtil.getIntValueFromMap(map, "height", getEObject().getBounds().getHeight()); //$NON-NLS-1$
         
-        if(width == -1) {
-            width = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH);
-        }
-        
-        if(height == -1) {
-            height = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT);
-        }
-
-        if(width <= 0 || height <= 0) {
-            throw new ArchiScriptException(Messages.DiagramModelObjectProxy_3);
-        }
-        
-        IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
+        IBounds bounds = ModelFactory.createBounds(getEObject(), x, y, width, height);
         CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__BOUNDS, bounds));
         
         return this;

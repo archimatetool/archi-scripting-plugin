@@ -13,12 +13,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EClass;
 import org.junit.jupiter.api.Test;
 
 import com.archimatetool.canvas.model.ICanvasPackage;
 import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.preferences.IPreferenceConstants;
+import com.archimatetool.editor.ui.factory.IGraphicalObjectUIProvider;
+import com.archimatetool.editor.ui.factory.ObjectUIFactory;
 import com.archimatetool.model.FolderType;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateDiagramModel;
@@ -34,6 +37,7 @@ import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IDiagramModelNote;
+import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.util.ArchimateModelUtils;
@@ -488,4 +492,48 @@ public class ModelFactoryTests {
         });
     }
 
+    @Test
+    public void createBounds() {
+        IBounds bounds = ModelFactory.createBounds(IArchimateFactory.eINSTANCE.createDiagramModelNote(), 20, 20, 10, 10);
+        assertEquals(20, bounds.getX());
+        assertEquals(20, bounds.getY());
+        assertEquals(10, bounds.getWidth());
+        assertEquals(10, bounds.getHeight());
+        
+        checkDefaultBounds(IArchimateFactory.eINSTANCE.createDiagramModelNote());
+        checkDefaultBounds(IArchimateFactory.eINSTANCE.createDiagramModelGroup());
+        checkDefaultBounds(IArchimateFactory.eINSTANCE.createDiagramModelImage());
+        checkDefaultBounds(IArchimateFactory.eINSTANCE.createDiagramModelReference());
+        
+        IDiagramModelArchimateObject dmao = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
+        dmao.setArchimateConcept(IArchimateFactory.eINSTANCE.createBusinessActor());
+        checkDefaultBounds(dmao);
+        
+        dmao.setArchimateConcept(IArchimateFactory.eINSTANCE.createGrouping());
+        checkDefaultBounds(dmao);
+    }
+    
+    @Test
+    public void createBounds_Exception() {
+        IDiagramModelObject dmo = IArchimateFactory.eINSTANCE.createDiagramModelNote();
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createBounds(dmo, 20, 20, 0, 10);
+        });
+        
+        assertThrows(ArchiScriptException.class, () -> {
+            ModelFactory.createBounds(dmo, 20, 20, 10, 0);
+        });
+    }
+    
+    private void checkDefaultBounds(IDiagramModelObject dmo) {
+        IGraphicalObjectUIProvider provider = (IGraphicalObjectUIProvider)ObjectUIFactory.INSTANCE.getProvider(dmo);
+        Dimension defaultSize = provider.getDefaultSize();
+
+        IBounds bounds = ModelFactory.createBounds(dmo, 0, 0, -1, -1);
+        assertEquals(0, bounds.getX());
+        assertEquals(0, bounds.getY());
+        assertEquals(defaultSize.width, bounds.getWidth());
+        assertEquals(defaultSize.height, bounds.getHeight());
+    }
 }

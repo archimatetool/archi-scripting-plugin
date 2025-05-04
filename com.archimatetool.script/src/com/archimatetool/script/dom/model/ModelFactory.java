@@ -8,6 +8,7 @@ package com.archimatetool.script.dom.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.ImageData;
@@ -15,10 +16,10 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.canvas.model.ICanvasFactory;
 import com.archimatetool.canvas.model.ICanvasModel;
-import com.archimatetool.editor.ArchiPlugin;
 import com.archimatetool.editor.diagram.ArchimateDiagramModelFactory;
 import com.archimatetool.editor.model.commands.AddListMemberCommand;
-import com.archimatetool.editor.preferences.IPreferenceConstants;
+import com.archimatetool.editor.ui.factory.IGraphicalObjectUIProvider;
+import com.archimatetool.editor.ui.factory.ObjectUIFactory;
 import com.archimatetool.editor.ui.services.EditorManager;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.model.FolderType;
@@ -233,53 +234,53 @@ class ModelFactory implements IModelConstants {
         // Ensure all components share the same model
         ModelUtil.checkComponentsInSameModel(model, parentFolder);
 
-        final IDiagramModel[] view = new IDiagramModel[1];
-        final IFolder[] parent = new IFolder[1];
-        
-        switch(type) {
-            case VIEW_ARCHIMATE:
-                view[0] = IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
-                break;
+        final IDiagramModel view = switch(type) {
+            case VIEW_ARCHIMATE -> {
+                yield IArchimateFactory.eINSTANCE.createArchimateDiagramModel();
+            }
 
-            case VIEW_SKETCH:
-                view[0] = IArchimateFactory.eINSTANCE.createSketchModel();
-                break;
+            case VIEW_SKETCH -> {
+                yield IArchimateFactory.eINSTANCE.createSketchModel();
+            }
 
-            case VIEW_CANVAS:
-                view[0] = ICanvasFactory.eINSTANCE.createCanvasModel();
-                break;
+            case VIEW_CANVAS -> {
+                yield ICanvasFactory.eINSTANCE.createCanvasModel();
+            }
 
-            default:
+            default -> {
                 throw new ArchiScriptException("Wrong view type: " + type); //$NON-NLS-1$
-        }
+            }
+        };
+
+        view.setName(StringUtils.safeString(name));
         
-        view[0].setName(StringUtils.safeString(name));
+        final IFolder parent;
         
         // Check folder is correct for type, if not use default folder
-        if(parentFolder == null || !ModelUtil.isCorrectFolderForObject(parentFolder, view[0])) {
-            parent[0] = model.getDefaultFolderForObject(view[0]);
+        if(parentFolder == null || !ModelUtil.isCorrectFolderForObject(parentFolder, view)) {
+            parent = model.getDefaultFolderForObject(view);
         }
         else {
-            parent[0] = parentFolder;
+            parent = parentFolder;
         }
         
         CommandHandler.executeCommand(new ScriptCommand("Create", model) { //$NON-NLS-1$
             @Override
             public void perform() {
-                parent[0].getElements().add(view[0]);
+                parent.getElements().add(view);
             }
 
             @Override
             public void undo() {
                 if(PlatformUI.isWorkbenchRunning()) {
-                    EditorManager.closeDiagramEditor(view[0]);
+                    EditorManager.closeDiagramEditor(view);
                 }
                 
-                parent[0].getElements().remove(view[0]);
+                parent.getElements().remove(view);
             }
         });
         
-        return (DiagramModelProxy)EObjectProxy.get(view[0]);
+        return (DiagramModelProxy)EObjectProxy.get(view);
     }
     
     /**
@@ -348,30 +349,29 @@ class ModelFactory implements IModelConstants {
     static DiagramModelObjectProxy createDiagramObject(IDiagramModelContainer parent, String type,
             int x, int y, int width, int height, boolean autoNest) {
         
-        IDiagramModelObject dmo = null;
-        
-        switch(type) {
-            case DIAGRAM_MODEL_NOTE:
-            case "note": //Backward compatibility  //$NON-NLS-1$
+        IDiagramModelObject dmo = switch(type) {
+            case DIAGRAM_MODEL_NOTE, "note" -> { //Backward compatibility  //$NON-NLS-1$
                 if(!(parent.getDiagramModel() instanceof IArchimateDiagramModel)) {
                     throw new ArchiScriptException(Messages.ModelFactory_2);
                 }
+                
                 // Use Factory for defaults
-                dmo = (IDiagramModelObject)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelNote()).getNewObject();
-                break;
+                yield (IDiagramModelObject)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelNote()).getNewObject();
+            }
 
-            case DIAGRAM_MODEL_GROUP:
-            case "group": //Backward compatibility //$NON-NLS-1$
+            case DIAGRAM_MODEL_GROUP, "group" -> { //Backward compatibility //$NON-NLS-1$
                 if(parent.getDiagramModel() instanceof ICanvasModel) {
                     throw new ArchiScriptException(Messages.ModelFactory_3);
                 }
+                
                 // Use Factory for defaults
-                dmo = (IDiagramModelObject)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelGroup()).getNewObject();
-                break;
+                yield (IDiagramModelObject)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelGroup()).getNewObject();
+            }
 
-            default:
+            default -> {
                 throw new ArchiScriptException("Unsupported type"); //$NON-NLS-1$
-        }
+            }
+        };
         
         return createDiagramObject(parent, dmo, x, y, width, height, autoNest);
     }
@@ -382,40 +382,29 @@ class ModelFactory implements IModelConstants {
     private static DiagramModelObjectProxy createDiagramObject(IDiagramModelContainer parent, IDiagramModelObject dmo,
             int x, int y, int width, int height, boolean autoNest) {
         
-        if(width == -1) {
-            width = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH);
-        }
-        
-        if(height == -1) {
-            height = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT);
-        }
-        
-        if(width <= 0 || height <= 0) {
-            throw new ArchiScriptException(Messages.ModelFactory_15);
-        }
-        
         // Create new bounds for object
-        IBounds bounds = IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
-        
-        IDiagramModelContainer[] newParent = new IDiagramModelContainer[1];
-        newParent[0] = parent;
-        
-        // If this is true add the diagram model object nested inside of the topmost diagram model object that occupies that space
-        if(autoNest) {
-            newParent[0] = ModelUtil.getNestedParentAndBounds(parent, bounds);
-        }
-
+        IBounds bounds = createBounds(dmo, x, y, width, height);
         dmo.setBounds(bounds);
         
-        CommandHandler.executeCommand(new ScriptCommand("Add", parent.getDiagramModel().getArchimateModel()) { //$NON-NLS-1$
+        final IDiagramModelContainer container;
+        
+        // If autoNest is true add the diagram model object nested inside of the topmost diagram model object that occupies that space
+        if(autoNest) {
+            container = ModelUtil.getNestedParentAndBounds(parent, bounds);
+        }
+        else {
+            container = parent;
+        }
+
+        CommandHandler.executeCommand(new ScriptCommand("Add", container.getDiagramModel().getArchimateModel()) { //$NON-NLS-1$
             @Override
             public void perform() {
-                newParent[0].getChildren().add(dmo);
+                container.getChildren().add(dmo);
             }
 
             @Override
             public void undo() {
-                newParent[0].getChildren().remove(dmo);
+                container.getChildren().remove(dmo);
             }
         });
         
@@ -577,5 +566,26 @@ class ModelFactory implements IModelConstants {
         }
         
         return map;
+    }
+    
+    /**
+     * Create a bounds for the given dmo checking for default and invalid values
+     */
+    static IBounds createBounds(IDiagramModelObject dmo, int x, int y, int width, int height) {
+        // -1 means use figure width or height from preferences
+        if(width == -1 || height == -1) {
+            IGraphicalObjectUIProvider provider = (IGraphicalObjectUIProvider)ObjectUIFactory.INSTANCE.getProvider(dmo);
+            Dimension defaultSize = provider != null ? provider.getDefaultSize() : IGraphicalObjectUIProvider.defaultSize();
+            
+            width = width == -1 ? defaultSize.width : width;
+            height = height == -1 ? defaultSize.height : height;
+        }
+        
+        // Can't have zero or negative width/height
+        if(width <= 0 || height <= 0) {
+            throw new ArchiScriptException(Messages.ModelFactory_15);
+        }
+        
+        return IArchimateFactory.eINSTANCE.createBounds(x, y, width, height);
     }
 }
