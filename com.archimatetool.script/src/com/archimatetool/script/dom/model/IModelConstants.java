@@ -39,6 +39,11 @@ interface IModelConstants {
     String END_Y = "endY";
     
     String BOUNDS = "bounds";
+    String BOUNDS_X = "x";
+    String BOUNDS_Y = "y";
+    String BOUNDS_WIDTH = "width";
+    String BOUNDS_HEIGHT = "height";
+    
     String INDEX = "index";
     
     String FILL_COLOR = "fillColor"; 

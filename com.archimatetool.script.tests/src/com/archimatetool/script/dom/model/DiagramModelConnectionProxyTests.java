@@ -158,16 +158,16 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     
     @Test
     public void attr_LabelVisible() {
-        assertTrue((boolean)testProxy.attr(IModelConstants.LABEL_VISIBLE));
-        testProxy.attr(IModelConstants.LABEL_VISIBLE, false);
-        assertFalse((boolean)testProxy.attr(IModelConstants.LABEL_VISIBLE));
+        assertTrue((boolean)testProxy.attr(LABEL_VISIBLE));
+        testProxy.attr(LABEL_VISIBLE, false);
+        assertFalse((boolean)testProxy.attr(LABEL_VISIBLE));
     }
     
     @Test
     public void attr_TextPosition() {
-        assertEquals(IDiagramModelConnection.CONNECTION_TEXT_POSITION_MIDDLE, testProxy.attr(IModelConstants.TEXT_POSITION));
-        testProxy.attr(IModelConstants.TEXT_POSITION, 0);
-        assertEquals(0, testProxy.attr(IModelConstants.TEXT_POSITION));
+        assertEquals(IDiagramModelConnection.CONNECTION_TEXT_POSITION_MIDDLE, testProxy.attr(TEXT_POSITION));
+        testProxy.attr(TEXT_POSITION, 0);
+        assertEquals(0, testProxy.attr(TEXT_POSITION));
     }
 
     @Test
@@ -186,35 +186,35 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
         dmc.connect(group1, group2);
         DiagramModelConnectionProxy proxy = (DiagramModelConnectionProxy)EObjectProxy.get(dmc);
         
-        assertEquals(0, proxy.attr(IModelConstants.STYLE));
-        proxy.attr(IModelConstants.STYLE, 4);
-        assertEquals(4, proxy.attr(IModelConstants.STYLE));
+        assertEquals(0, proxy.attr(STYLE));
+        proxy.attr(STYLE, 4);
+        assertEquals(4, proxy.attr(STYLE));
     }
     
     @Test
     public void attr_Style_NotArchiMateConnection( ) {
-        assertEquals(0, testProxy.attr(IModelConstants.STYLE));
+        assertEquals(0, testProxy.attr(STYLE));
         
         assertThrows(ArchiScriptException.class, () -> {
-            testProxy.attr(IModelConstants.STYLE, 4);
+            testProxy.attr(STYLE, 4);
         });
     }
     
     @Test
     public void attr_TextAlignment() {
-        assertEquals(2, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
-        testProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
-        assertEquals(4, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        assertEquals(2, testProxy.attr(TEXT_ALIGNMENT));
+        testProxy.attr(TEXT_ALIGNMENT, 4);
+        assertEquals(4, testProxy.attr(TEXT_ALIGNMENT));
     }
     
     @Test
     public void attr_Source() {
-        assertEquals("3831", ((EObjectProxy)testProxy.attr(IModelConstants.SOURCE)).getId());
+        assertEquals("3831", ((EObjectProxy)testProxy.attr(SOURCE)).getId());
     }
 
     @Test
     public void attr_Target() {
-        assertEquals("3835", ((EObjectProxy)testProxy.attr(IModelConstants.TARGET)).getId());
+        assertEquals("3835", ((EObjectProxy)testProxy.attr(TARGET)).getId());
     }
 
     @Override
@@ -354,18 +354,18 @@ public class DiagramModelConnectionProxyTests extends DiagramModelComponentProxy
     private Map<String, Object> createBendpoint(int startX, int endX, int startY, int endY) {
         Map<String, Object> map = new HashMap<String, Object>();
         
-        map.put(IModelConstants.START_X, startX);
-        map.put(IModelConstants.END_X, endX);
-        map.put(IModelConstants.START_Y, startY);
-        map.put(IModelConstants.END_Y, endY);
+        map.put(START_X, startX);
+        map.put(END_X, endX);
+        map.put(START_Y, startY);
+        map.put(END_Y, endY);
         
         return map;
     }
     
     private void checkBendpoint(Map<String, Object> expected, Map<String, Object> actual) {
-        assertEquals(expected.get(IModelConstants.START_X), actual.get(IModelConstants.START_X));
-        assertEquals(expected.get(IModelConstants.END_X), actual.get(IModelConstants.END_X));
-        assertEquals(expected.get(IModelConstants.START_Y), actual.get(IModelConstants.START_Y));
-        assertEquals(expected.get(IModelConstants.END_Y), actual.get(IModelConstants.END_Y));
+        assertEquals(expected.get(START_X), actual.get(START_X));
+        assertEquals(expected.get(END_X), actual.get(END_X));
+        assertEquals(expected.get(START_Y), actual.get(START_Y));
+        assertEquals(expected.get(END_Y), actual.get(END_Y));
     }
 }

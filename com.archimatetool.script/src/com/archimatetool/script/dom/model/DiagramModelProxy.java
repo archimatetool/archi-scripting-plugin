@@ -39,7 +39,7 @@ public abstract class DiagramModelProxy extends EObjectProxy {
      */
     public DiagramModelObjectProxy add(DiagramModelObjectProxy dmProxy, int x, int y) {
         ModelFactory.moveDiagramModelObject(getEObject(), dmProxy.getEObject());
-        return dmProxy.setBounds(Map.of("x", x, "y", y)); //$NON-NLS-1$ //$NON-NLS-2$
+        return dmProxy.setBounds(Map.of(BOUNDS_X, x, BOUNDS_Y, y));
     }
 
     /**

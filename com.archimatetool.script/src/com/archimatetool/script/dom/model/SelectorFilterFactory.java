@@ -22,7 +22,7 @@ import com.archimatetool.model.INameable;
  * @author Phillip Beauvoir
  */
 @SuppressWarnings("nls")
-class SelectorFilterFactory {
+class SelectorFilterFactory implements IModelConstants {
     
     public static interface ISelectorFilter {
         boolean accept(EObject object);
@@ -53,7 +53,7 @@ class SelectorFilterFactory {
         }
         
         // All concepts
-        else if(selector.equals(IModelConstants.CONCEPT)) {
+        else if(selector.equals(CONCEPT)) {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
@@ -64,7 +64,7 @@ class SelectorFilterFactory {
         }
         
         // All elements
-        else if(selector.equals(IModelConstants.ELEMENT)) {
+        else if(selector.equals(ELEMENT)) {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
@@ -75,7 +75,7 @@ class SelectorFilterFactory {
         }
         
         // All relationships
-        else if(selector.equals(IModelConstants.RELATION) || selector.equals(IModelConstants.RELATIONSHIP)) {
+        else if(selector.equals(RELATION) || selector.equals(RELATIONSHIP)) {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {
@@ -86,7 +86,7 @@ class SelectorFilterFactory {
         }
 
         // All views
-        else if(selector.equals(IModelConstants.VIEW)) {
+        else if(selector.equals(VIEW)) {
             return new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject object) {

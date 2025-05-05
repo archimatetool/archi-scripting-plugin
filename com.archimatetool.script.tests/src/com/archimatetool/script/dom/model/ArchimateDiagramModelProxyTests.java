@@ -85,8 +85,8 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
         // Add it
         testProxy.add(objectToMoveProxy, 10, 10);
         assertEquals(testProxy, objectToMoveProxy.parent());
-        assertEquals(10, objectToMoveProxy.getBounds().get("x"));
-        assertEquals(10, objectToMoveProxy.getBounds().get("y"));
+        assertEquals(10, objectToMoveProxy.getBounds().get(BOUNDS_X));
+        assertEquals(10, objectToMoveProxy.getBounds().get(BOUNDS_Y));
 
         // Can't add again as it's already a child
         assertThrows(ArchiScriptException.class, () -> {

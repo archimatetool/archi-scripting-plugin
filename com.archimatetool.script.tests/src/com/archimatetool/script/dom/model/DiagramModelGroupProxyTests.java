@@ -42,7 +42,7 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     public void runOnceBeforeEachTest() {
         ArchimateModelProxy modelProxy = TestsHelper.createTestArchimateModelProxy();
         viewProxy = modelProxy.createArchimateView("test");
-        testProxy = (DiagramModelGroupProxy)viewProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 0, 0, 100, 100);
+        testProxy = (DiagramModelGroupProxy)viewProxy.createObject(DIAGRAM_MODEL_GROUP, 0, 0, 100, 100);
         testEObject = testProxy.getEObject();
     }
 
@@ -64,7 +64,7 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     public void children() {
         assertTrue(testProxy.children().isEmpty());
         
-        DiagramModelObjectProxy noteProxy = testProxy.createObject(IModelConstants.DIAGRAM_MODEL_NOTE, 0, 0, 20, 20);
+        DiagramModelObjectProxy noteProxy = testProxy.createObject(DIAGRAM_MODEL_NOTE, 0, 0, 20, 20);
         assertEquals(1, testProxy.children().size());
         assertEquals(noteProxy, testProxy.children().first());
     }
@@ -81,9 +81,9 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
     public void deleteKeepChildren() {
         testProxy.getEObject().setBounds(100, 100, 100, 100);
         
-        DiagramModelObjectProxy childProxy1 = testProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 10, 20, 100, 100);
-        DiagramModelObjectProxy childProxy2 = testProxy.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 30, 40, 100, 100);
-        DiagramModelObjectProxy childProxy3 = childProxy2.createObject(IModelConstants.DIAGRAM_MODEL_GROUP, 10, 20, 100, 100);
+        DiagramModelObjectProxy childProxy1 = testProxy.createObject(DIAGRAM_MODEL_GROUP, 10, 20, 100, 100);
+        DiagramModelObjectProxy childProxy2 = testProxy.createObject(DIAGRAM_MODEL_GROUP, 30, 40, 100, 100);
+        DiagramModelObjectProxy childProxy3 = childProxy2.createObject(DIAGRAM_MODEL_GROUP, 10, 20, 100, 100);
         
         testProxy.delete(false);
         
@@ -116,17 +116,17 @@ public class DiagramModelGroupProxyTests extends DiagramModelObjectProxyTests {
 
     @Test
     public void attr_BorderType() {
-        assertEquals(0, testProxy.attr(IModelConstants.BORDER_TYPE));
-        testProxy.attr(IModelConstants.BORDER_TYPE, 1);
-        assertEquals(1, testProxy.attr(IModelConstants.BORDER_TYPE));
+        assertEquals(0, testProxy.attr(BORDER_TYPE));
+        testProxy.attr(BORDER_TYPE, 1);
+        assertEquals(1, testProxy.attr(BORDER_TYPE));
     }
 
     @Override
     @Test
     public void attr_TextAlignment() {
-        assertEquals(1, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
-        testProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
-        assertEquals(4, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        assertEquals(1, testProxy.attr(TEXT_ALIGNMENT));
+        testProxy.attr(TEXT_ALIGNMENT, 4);
+        assertEquals(4, testProxy.attr(TEXT_ALIGNMENT));
     }
 
 }

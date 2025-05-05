@@ -222,8 +222,8 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         assertEquals("readwrite", proxy.getAccessType());
         assertEquals(IAccessRelationship.READ_WRITE_ACCESS, relationship.getAccessType());
         
-        proxy.attr(IModelConstants.ACCESS_TYPE, "READ");
-        assertEquals("read", proxy.attr(IModelConstants.ACCESS_TYPE));
+        proxy.attr(ACCESS_TYPE, "READ");
+        assertEquals("read", proxy.attr(ACCESS_TYPE));
     }
 
     @Test
@@ -237,8 +237,8 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         assertEquals("+++", relationship.getStrength());
         assertEquals("+++", proxy.getInfluenceStrength());
         
-        proxy.attr(IModelConstants.INFLUENCE_STRENGTH, "---");
-        assertEquals("---", proxy.attr(IModelConstants.INFLUENCE_STRENGTH));
+        proxy.attr(INFLUENCE_STRENGTH, "---");
+        assertEquals("---", proxy.attr(INFLUENCE_STRENGTH));
     }
     
     @Test
@@ -255,8 +255,8 @@ public class ArchimateRelationshipProxyTests extends ArchimateConceptProxyTests 
         assertTrue(relationship.isDirected());
         assertTrue(proxy.isAssociationDirected());
         
-        proxy.attr(IModelConstants.ASSOCIATION_DIRECTED, false);
-        assertFalse((Boolean)proxy.attr(IModelConstants.ASSOCIATION_DIRECTED));
+        proxy.attr(ASSOCIATION_DIRECTED, false);
+        assertFalse((Boolean)proxy.attr(ASSOCIATION_DIRECTED));
     }
     
     @Test

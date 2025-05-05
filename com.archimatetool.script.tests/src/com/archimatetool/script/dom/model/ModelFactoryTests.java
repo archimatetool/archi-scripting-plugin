@@ -51,7 +51,7 @@ import com.archimatetool.script.TestFiles;
  * @author Phillip Beauvoir
  */
 @SuppressWarnings("nls")
-public class ModelFactoryTests {
+public class ModelFactoryTests implements IModelConstants {
     
     private ArchimateModelProxy testModelProxy;
     
@@ -222,17 +222,17 @@ public class ModelFactoryTests {
         
         IFolder parent = testModelProxy.getEObject().getFolder(FolderType.DIAGRAMS);
 
-        DiagramModelProxy viewProxy = ModelFactory.createView(testModelProxy.getEObject(), IModelConstants.VIEW_ARCHIMATE, "test", parent);
+        DiagramModelProxy viewProxy = ModelFactory.createView(testModelProxy.getEObject(), VIEW_ARCHIMATE, "test", parent);
         assertEquals("test", viewProxy.getName());
         assertEquals(IArchimatePackage.eINSTANCE.getArchimateDiagramModel(), viewProxy.getEObject().eClass());
         assertSame(parent, viewProxy.getEObject().eContainer());
 
-        viewProxy = ModelFactory.createView(testModelProxy.getEObject(), IModelConstants.VIEW_SKETCH, "test", parent);
+        viewProxy = ModelFactory.createView(testModelProxy.getEObject(), VIEW_SKETCH, "test", parent);
         assertEquals("test", viewProxy.getName());
         assertEquals(IArchimatePackage.eINSTANCE.getSketchModel(), viewProxy.getEObject().eClass());
         assertSame(parent, viewProxy.getEObject().eContainer());
 
-        viewProxy = ModelFactory.createView(testModelProxy.getEObject(), IModelConstants.VIEW_CANVAS, "test", parent);
+        viewProxy = ModelFactory.createView(testModelProxy.getEObject(), VIEW_CANVAS, "test", parent);
         assertEquals("test", viewProxy.getName());
         assertEquals(ICanvasPackage.eINSTANCE.getCanvasModel(), viewProxy.getEObject().eClass());
         assertSame(parent, viewProxy.getEObject().eContainer());
@@ -314,7 +314,7 @@ public class ModelFactoryTests {
         
         IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
         
-        String[] types = {IModelConstants.DIAGRAM_MODEL_NOTE, IModelConstants.DIAGRAM_MODEL_GROUP};
+        String[] types = {DIAGRAM_MODEL_NOTE, DIAGRAM_MODEL_GROUP};
         EClass[] classes = { IArchimatePackage.eINSTANCE.getDiagramModelNote(), IArchimatePackage.eINSTANCE.getDiagramModelGroup() };
         
         for(int i = 0; i < types.length; i++) {
@@ -345,7 +345,7 @@ public class ModelFactoryTests {
         
         IArchimateDiagramModel view = (IArchimateDiagramModel)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "3965");
         assertThrows(ArchiScriptException.class, () -> {
-            ModelFactory.createDiagramObject(view, IModelConstants.DIAGRAM_MODEL_NOTE, 10, 15, 0, 200, false);
+            ModelFactory.createDiagramObject(view, DIAGRAM_MODEL_NOTE, 10, 15, 0, 200, false);
         });
     }
     

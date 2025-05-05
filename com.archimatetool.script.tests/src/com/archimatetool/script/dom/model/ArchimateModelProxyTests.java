@@ -170,9 +170,9 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
 
     @Test
     public void attr_Purpose() {
-        assertEquals("", testProxy.attr(IModelConstants.PURPOSE));
-        testProxy.attr(IModelConstants.PURPOSE, "p");
-        assertEquals("p", testProxy.attr(IModelConstants.PURPOSE));
+        assertEquals("", testProxy.attr(PURPOSE));
+        testProxy.attr(PURPOSE, "p");
+        assertEquals("p", testProxy.attr(PURPOSE));
     }
 
     @Test

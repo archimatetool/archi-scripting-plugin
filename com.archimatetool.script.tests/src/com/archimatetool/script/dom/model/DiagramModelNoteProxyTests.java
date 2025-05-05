@@ -42,7 +42,7 @@ public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
     public void runOnceBeforeEachTest() {
         ArchimateModelProxy modelProxy = TestsHelper.createTestArchimateModelProxy();
         viewProxy = modelProxy.createArchimateView("test");
-        testProxy = (DiagramModelNoteProxy)viewProxy.createObject(IModelConstants.DIAGRAM_MODEL_NOTE, 0, 0, 100, 100);
+        testProxy = (DiagramModelNoteProxy)viewProxy.createObject(DIAGRAM_MODEL_NOTE, 0, 0, 100, 100);
         testEObject = testProxy.getEObject();
     }
 
@@ -88,8 +88,8 @@ public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
 
     @Test
     public void attr_Text() {
-        testProxy.attr(IModelConstants.TEXT, "Hello");
-        assertEquals("Hello", testProxy.attr(IModelConstants.TEXT));
+        testProxy.attr(TEXT, "Hello");
+        assertEquals("Hello", testProxy.attr(TEXT));
     }
 
     @Test
@@ -100,17 +100,17 @@ public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
     
     @Test
     public void attr_BorderType() {
-        assertEquals(0, testProxy.attr(IModelConstants.BORDER_TYPE));
-        testProxy.attr(IModelConstants.BORDER_TYPE, 1);
-        assertEquals(1, testProxy.attr(IModelConstants.BORDER_TYPE));
+        assertEquals(0, testProxy.attr(BORDER_TYPE));
+        testProxy.attr(BORDER_TYPE, 1);
+        assertEquals(1, testProxy.attr(BORDER_TYPE));
     }
 
     @Override
     @Test
     public void attr_TextAlignment() {
-        assertEquals(1, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
-        testProxy.attr(IModelConstants.TEXT_ALIGNMENT, 4);
-        assertEquals(4, testProxy.attr(IModelConstants.TEXT_ALIGNMENT));
+        assertEquals(1, testProxy.attr(TEXT_ALIGNMENT));
+        testProxy.attr(TEXT_ALIGNMENT, 4);
+        assertEquals(4, testProxy.attr(TEXT_ALIGNMENT));
     }
 
 }

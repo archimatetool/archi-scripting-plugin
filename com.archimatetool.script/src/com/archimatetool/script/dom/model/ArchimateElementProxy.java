@@ -164,7 +164,7 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
     public ArchimateElementProxy setJunctionType(String type) {
         if(getEObject() instanceof IJunction && type != null) {
             type = type.toLowerCase();
-            if(IModelConstants.JUNCTION_TYPES_LIST.contains(type)) {
+            if(JUNCTION_TYPES_LIST.contains(type)) {
                 if("and".equals(type)) { //$NON-NLS-1$
                     type = IJunction.AND_JUNCTION_TYPE; // Internal Junction type "and" is the empty string ""
                 }

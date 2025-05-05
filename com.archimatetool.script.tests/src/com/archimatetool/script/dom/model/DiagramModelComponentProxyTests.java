@@ -37,12 +37,12 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
     
     @Test
     public void attr_View() {
-        assertEquals(getTestProxy().getView(), getTestProxy().attr(IModelConstants.VIEW));
+        assertEquals(getTestProxy().getView(), getTestProxy().attr(VIEW));
     }
     
     @Test
     public void attr_ArchimateConcept() {
-        assertEquals(getTestProxy().getConcept(), getTestProxy().attr(IModelConstants.CONCEPT));
+        assertEquals(getTestProxy().getConcept(), getTestProxy().attr(CONCEPT));
     }
     
     @Test
@@ -53,71 +53,71 @@ public abstract class DiagramModelComponentProxyTests extends EObjectProxyTests 
     @Test
     public void attr_Set_FontColorThrowsException() {
         assertThrows(ArchiScriptException.class, () -> {
-            getTestProxy().attr(IModelConstants.FONT_COLOR, "123456");
+            getTestProxy().attr(FONT_COLOR, "123456");
         });
     }
     
     @Test
     public void attr_FontColor() {
-        assertEquals("#000000", getTestProxy().attr(IModelConstants.FONT_COLOR));
-        getTestProxy().attr(IModelConstants.FONT_COLOR, "#121212");
-        assertEquals("#121212", getTestProxy().attr(IModelConstants.FONT_COLOR));
+        assertEquals("#000000", getTestProxy().attr(FONT_COLOR));
+        getTestProxy().attr(FONT_COLOR, "#121212");
+        assertEquals("#121212", getTestProxy().attr(FONT_COLOR));
     }
 
     @Test
     public void attr_FontColorNull() {
-        assertEquals("#000000", getTestProxy().attr(IModelConstants.FONT_COLOR));
-        getTestProxy().attr(IModelConstants.FONT_COLOR, null);
-        assertEquals("#000000", getTestProxy().attr(IModelConstants.FONT_COLOR));
+        assertEquals("#000000", getTestProxy().attr(FONT_COLOR));
+        getTestProxy().attr(FONT_COLOR, null);
+        assertEquals("#000000", getTestProxy().attr(FONT_COLOR));
     }
 
     @Test
     public void attr_FontName() {
-        assertEquals(FontFactory.getDefaultUserViewFontData().getName(), getTestProxy().attr(IModelConstants.FONT_NAME));
-        getTestProxy().attr(IModelConstants.FONT_NAME, "Comic Sans");
-        assertEquals("Comic Sans", getTestProxy().attr(IModelConstants.FONT_NAME));
+        assertEquals(FontFactory.getDefaultUserViewFontData().getName(), getTestProxy().attr(FONT_NAME));
+        getTestProxy().attr(FONT_NAME, "Comic Sans");
+        assertEquals("Comic Sans", getTestProxy().attr(FONT_NAME));
     }
 
     @Test
     public void attr_FontSize() {
-        assertEquals(FontFactory.getDefaultUserViewFontData().getHeight(), getTestProxy().attr(IModelConstants.FONT_SIZE));
-        getTestProxy().attr(IModelConstants.FONT_SIZE, 34);
-        assertEquals(34, getTestProxy().attr(IModelConstants.FONT_SIZE));
+        assertEquals(FontFactory.getDefaultUserViewFontData().getHeight(), getTestProxy().attr(FONT_SIZE));
+        getTestProxy().attr(FONT_SIZE, 34);
+        assertEquals(34, getTestProxy().attr(FONT_SIZE));
     }
 
     @Test
     public void attr_FontStyle() {
-        assertEquals("normal", getTestProxy().attr(IModelConstants.FONT_STYLE));
-        getTestProxy().attr(IModelConstants.FONT_STYLE, "bold");
-        assertEquals("bold", getTestProxy().attr(IModelConstants.FONT_STYLE));
-        getTestProxy().attr(IModelConstants.FONT_STYLE, "italic");
-        assertEquals("italic", getTestProxy().attr(IModelConstants.FONT_STYLE));
-        getTestProxy().attr(IModelConstants.FONT_STYLE, "bolditalic");
-        assertEquals("bolditalic", getTestProxy().attr(IModelConstants.FONT_STYLE));
+        assertEquals("normal", getTestProxy().attr(FONT_STYLE));
+        getTestProxy().attr(FONT_STYLE, "bold");
+        assertEquals("bold", getTestProxy().attr(FONT_STYLE));
+        getTestProxy().attr(FONT_STYLE, "italic");
+        assertEquals("italic", getTestProxy().attr(FONT_STYLE));
+        getTestProxy().attr(FONT_STYLE, "bolditalic");
+        assertEquals("bolditalic", getTestProxy().attr(FONT_STYLE));
     }
 
     @Test
     public void attr_LineColor() {
         assertEquals(ColorFactory.convertRGBToString(ColorFactory.getDefaultLineColor(getTestProxy().getEObject()).getRGB()),
-                getTestProxy().attr(IModelConstants.LINE_COLOR));
-        getTestProxy().attr(IModelConstants.LINE_COLOR, "#232398");
-        assertEquals("#232398", getTestProxy().attr(IModelConstants.LINE_COLOR));
+                getTestProxy().attr(LINE_COLOR));
+        getTestProxy().attr(LINE_COLOR, "#232398");
+        assertEquals("#232398", getTestProxy().attr(LINE_COLOR));
     }
     
     @Test
     public void attr_LineColorNull() {
         String defaultLineColor = ColorFactory.convertRGBToString(ColorFactory.getDefaultLineColor(getTestProxy().getEObject()).getRGB());
         
-        assertEquals(defaultLineColor, getTestProxy().attr(IModelConstants.LINE_COLOR));
-        getTestProxy().attr(IModelConstants.LINE_COLOR, null);
-        assertEquals(defaultLineColor, getTestProxy().attr(IModelConstants.LINE_COLOR));
+        assertEquals(defaultLineColor, getTestProxy().attr(LINE_COLOR));
+        getTestProxy().attr(LINE_COLOR, null);
+        assertEquals(defaultLineColor, getTestProxy().attr(LINE_COLOR));
     }
 
     @Test
     public void attr_LineWidth() {
-        assertEquals(1, getTestProxy().attr(IModelConstants.LINE_WIDTH));
-        getTestProxy().attr(IModelConstants.LINE_WIDTH, 4);
-        assertEquals(3, getTestProxy().attr(IModelConstants.LINE_WIDTH));
+        assertEquals(1, getTestProxy().attr(LINE_WIDTH));
+        getTestProxy().attr(LINE_WIDTH, 4);
+        assertEquals(3, getTestProxy().attr(LINE_WIDTH));
     }
     
 

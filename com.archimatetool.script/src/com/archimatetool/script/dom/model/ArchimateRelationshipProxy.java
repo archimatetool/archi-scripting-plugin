@@ -323,7 +323,7 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
     
     public String getAccessType() {
         if(getEObject() instanceof IAccessRelationship) {
-            return IModelConstants.ACCESS_TYPES_LIST.get(((IAccessRelationship)getEObject()).getAccessType());
+            return ACCESS_TYPES_LIST.get(((IAccessRelationship)getEObject()).getAccessType());
         }
         return null;
     }
@@ -332,8 +332,8 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         if(getEObject() instanceof IAccessRelationship && type != null) {
             type = type.toLowerCase();
             
-            if(IModelConstants.ACCESS_TYPES_LIST.contains(type)) {
-                int index = IModelConstants.ACCESS_TYPES_LIST.indexOf(type);
+            if(ACCESS_TYPES_LIST.contains(type)) {
+                int index = ACCESS_TYPES_LIST.indexOf(type);
                 if(index != -1) {
                     CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.ACCESS_RELATIONSHIP__ACCESS_TYPE, index));
                 }

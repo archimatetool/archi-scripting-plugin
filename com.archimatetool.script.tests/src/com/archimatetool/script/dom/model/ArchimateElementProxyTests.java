@@ -265,11 +265,11 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
         proxy.setJunctionType(null);
         assertEquals("and", proxy.getJunctionType());
         
-        proxy.attr(IModelConstants.JUNCTION_TYPE, "AND");
-        assertEquals("and", proxy.attr(IModelConstants.JUNCTION_TYPE));
+        proxy.attr(JUNCTION_TYPE, "AND");
+        assertEquals("and", proxy.attr(JUNCTION_TYPE));
         
-        proxy.attr(IModelConstants.JUNCTION_TYPE, "OR");
-        assertEquals(IJunction.OR_JUNCTION_TYPE, proxy.attr(IModelConstants.JUNCTION_TYPE));
+        proxy.attr(JUNCTION_TYPE, "OR");
+        assertEquals(IJunction.OR_JUNCTION_TYPE, proxy.attr(JUNCTION_TYPE));
     }
     
     @Test

@@ -66,7 +66,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     public DiagramModelObjectProxy add(DiagramModelObjectProxy dmProxy, int x, int y) {
         if(getEObject() instanceof IDiagramModelContainer parent) {
             ModelFactory.moveDiagramModelObject(parent, dmProxy.getEObject());
-            return dmProxy.setBounds(Map.of("x", x, "y", y)); //$NON-NLS-1$ //$NON-NLS-2$
+            return dmProxy.setBounds(Map.of(BOUNDS_X, x, BOUNDS_Y, y));
         }
         
         throw new ArchiScriptException(Messages.DiagramModelObjectProxy_0);
@@ -108,19 +108,19 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
         IBounds b = getEObject().getBounds();
         
         Map<String, Object> map = new HashMap<>();
-        map.put("x", b.getX()); //$NON-NLS-1$
-        map.put("y", b.getY()); //$NON-NLS-1$
-        map.put("width", b.getWidth()); //$NON-NLS-1$
-        map.put("height", b.getHeight()); //$NON-NLS-1$
+        map.put(BOUNDS_X, b.getX());
+        map.put(BOUNDS_Y, b.getY());
+        map.put(BOUNDS_WIDTH, b.getWidth());
+        map.put(BOUNDS_HEIGHT, b.getHeight());
         
         return map;
     }
     
     public DiagramModelObjectProxy setBounds(Map<?, ?> map) {
-        int x = ModelUtil.getIntValueFromMap(map, "x", getEObject().getBounds().getX()); //$NON-NLS-1$
-        int y = ModelUtil.getIntValueFromMap(map, "y", getEObject().getBounds().getY()); //$NON-NLS-1$
-        int width = ModelUtil.getIntValueFromMap(map, "width", getEObject().getBounds().getWidth()); //$NON-NLS-1$
-        int height = ModelUtil.getIntValueFromMap(map, "height", getEObject().getBounds().getHeight()); //$NON-NLS-1$
+        int x = ModelUtil.getIntValueFromMap(map, BOUNDS_X, getEObject().getBounds().getX());
+        int y = ModelUtil.getIntValueFromMap(map, BOUNDS_Y, getEObject().getBounds().getY());
+        int width = ModelUtil.getIntValueFromMap(map, BOUNDS_WIDTH, getEObject().getBounds().getWidth());
+        int height = ModelUtil.getIntValueFromMap(map, BOUNDS_HEIGHT, getEObject().getBounds().getHeight());
         
         IBounds bounds = ModelFactory.createBounds(getEObject(), x, y, width, height);
         CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_OBJECT__BOUNDS, bounds));
@@ -211,7 +211,7 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     protected EObjectProxyCollection find() {
         // We don't include relationships
         EObjectProxyCollection all = super.find();
-        return all.filter(IModelConstants.ELEMENT);
+        return all.filter(ELEMENT);
     }
     
     public String getFillColor() {

@@ -53,17 +53,17 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
 
     @Test
     public void attr_Bounds() {
-        Map<?, ?> bounds = (Map<?, ?>)getTestProxy().attr(IModelConstants.BOUNDS);
-        assertEquals(0, bounds.get("x"));
-        assertEquals(0, bounds.get("y"));
-        assertEquals(100, bounds.get("width"));
-        assertEquals(100, bounds.get("height"));
+        Map<?, ?> bounds = (Map<?, ?>)getTestProxy().attr(BOUNDS);
+        assertEquals(0, bounds.get(BOUNDS_X));
+        assertEquals(0, bounds.get(BOUNDS_Y));
+        assertEquals(100, bounds.get(BOUNDS_WIDTH));
+        assertEquals(100, bounds.get(BOUNDS_HEIGHT));
     }
     
     @Test
     public void index() {
         assertEquals(0, getTestProxy().getIndex());
-        assertEquals(0, getTestProxy().attr(IModelConstants.INDEX));
+        assertEquals(0, getTestProxy().attr(INDEX));
     }
 
     @Override
@@ -86,69 +86,69 @@ public abstract class DiagramModelObjectProxyTests extends DiagramModelComponent
     
     @Test
     public void attr_Opacity() {
-        assertEquals(255, getTestProxy().attr(IModelConstants.OPACITY));
-        getTestProxy().attr(IModelConstants.OPACITY, 40);
-        assertEquals(40, getTestProxy().attr(IModelConstants.OPACITY));
+        assertEquals(255, getTestProxy().attr(OPACITY));
+        getTestProxy().attr(OPACITY, 40);
+        assertEquals(40, getTestProxy().attr(OPACITY));
     }
 
     @Test
     public void attr_OutlineOpacity() {
-        assertEquals(255, getTestProxy().attr(IModelConstants.OUTLINE_OPACITY));
-        getTestProxy().attr(IModelConstants.OUTLINE_OPACITY, 40);
-        assertEquals(40, getTestProxy().attr(IModelConstants.OUTLINE_OPACITY));
+        assertEquals(255, getTestProxy().attr(OUTLINE_OPACITY));
+        getTestProxy().attr(OUTLINE_OPACITY, 40);
+        assertEquals(40, getTestProxy().attr(OUTLINE_OPACITY));
     }
     
     @Test
     public void attr_Gradient() {
-        assertEquals(-1, getTestProxy().attr(IModelConstants.GRADIENT));
-        getTestProxy().attr(IModelConstants.GRADIENT, 3);
-        assertEquals(3, getTestProxy().attr(IModelConstants.GRADIENT));
+        assertEquals(-1, getTestProxy().attr(GRADIENT));
+        getTestProxy().attr(GRADIENT, 3);
+        assertEquals(3, getTestProxy().attr(GRADIENT));
     }
 
     @Test
     public void attr_TextAlignment() {
-        assertEquals(2, getTestProxy().attr(IModelConstants.TEXT_ALIGNMENT));
-        getTestProxy().attr(IModelConstants.TEXT_ALIGNMENT, 4);
-        assertEquals(4, getTestProxy().attr(IModelConstants.TEXT_ALIGNMENT));
+        assertEquals(2, getTestProxy().attr(TEXT_ALIGNMENT));
+        getTestProxy().attr(TEXT_ALIGNMENT, 4);
+        assertEquals(4, getTestProxy().attr(TEXT_ALIGNMENT));
     }
     
     @Test
     public void attr_TextPosition() {
-        assertEquals(0, getTestProxy().attr(IModelConstants.TEXT_POSITION));
-        getTestProxy().attr(IModelConstants.TEXT_POSITION, 2);
-        assertEquals(2, getTestProxy().attr(IModelConstants.TEXT_POSITION));
+        assertEquals(0, getTestProxy().attr(TEXT_POSITION));
+        getTestProxy().attr(TEXT_POSITION, 2);
+        assertEquals(2, getTestProxy().attr(TEXT_POSITION));
     }
 
     @Test
     public void attr_ImagePosition() {
-        assertEquals(2, getTestProxy().attr(IModelConstants.IMAGE_POSITION));
-        getTestProxy().attr(IModelConstants.IMAGE_POSITION, 1);
-        assertEquals(1, getTestProxy().attr(IModelConstants.IMAGE_POSITION));
+        assertEquals(2, getTestProxy().attr(IMAGE_POSITION));
+        getTestProxy().attr(IMAGE_POSITION, 1);
+        assertEquals(1, getTestProxy().attr(IMAGE_POSITION));
     }
 
     @Test
     public void attr_Image() {
-        assertEquals(null, getTestProxy().attr(IModelConstants.IMAGE));
+        assertEquals(null, getTestProxy().attr(IMAGE));
         
         // Should throw an exception if image path references non existing image
         assertThrows(ArchiScriptException.class, () -> {
             Map<String, Object> map = new HashMap<>();
             map.put("path", "imgpath");
-            getTestProxy().attr(IModelConstants.IMAGE, map);
+            getTestProxy().attr(IMAGE, map);
         });
     }
     
     @Test
     public void attr_DeriveLineColor() {
-        assertEquals(true, getTestProxy().attr(IModelConstants.DERIVE_LINE_COLOR));
-        getTestProxy().attr(IModelConstants.DERIVE_LINE_COLOR, false);
-        assertEquals(false, getTestProxy().attr(IModelConstants.DERIVE_LINE_COLOR));
+        assertEquals(true, getTestProxy().attr(DERIVE_LINE_COLOR));
+        getTestProxy().attr(DERIVE_LINE_COLOR, false);
+        assertEquals(false, getTestProxy().attr(DERIVE_LINE_COLOR));
     }
 
     @Test
     public void attr_LineStyle() {
-        assertEquals(IDiagramModelObject.LINE_STYLE_SOLID, getTestProxy().attr(IModelConstants.LINE_STYLE));
-        getTestProxy().attr(IModelConstants.LINE_STYLE, IDiagramModelObject.LINE_STYLE_DOTTED);
-        assertEquals(IDiagramModelObject.LINE_STYLE_DOTTED, getTestProxy().attr(IModelConstants.LINE_STYLE));
+        assertEquals(IDiagramModelObject.LINE_STYLE_SOLID, getTestProxy().attr(LINE_STYLE));
+        getTestProxy().attr(LINE_STYLE, IDiagramModelObject.LINE_STYLE_DOTTED);
+        assertEquals(IDiagramModelObject.LINE_STYLE_DOTTED, getTestProxy().attr(LINE_STYLE));
     }
 }

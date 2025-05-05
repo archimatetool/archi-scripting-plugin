@@ -35,7 +35,7 @@ import com.archimatetool.script.ArchiScriptException;
  * @author Phillip Beauvoir
  */
 @SuppressWarnings("nls")
-public abstract class EObjectProxyTests {
+public abstract class EObjectProxyTests implements IModelConstants {
     
     protected abstract IArchimateModelObject getTestEObject();
     protected abstract EObjectProxy getTestProxy();
@@ -289,8 +289,8 @@ public abstract class EObjectProxyTests {
             getTestProxy().setLabelExpression("${name}");
             assertEquals("${name}", getTestProxy().getLabelExpression());
             
-            getTestProxy().attr(IModelConstants.LABEL_EXPRESSION, "${documentation}");
-            assertEquals("${documentation}", getTestProxy().attr(IModelConstants.LABEL_EXPRESSION));
+            getTestProxy().attr(LABEL_EXPRESSION, "${documentation}");
+            assertEquals("${documentation}", getTestProxy().attr(LABEL_EXPRESSION));
         }
         // Will throw exception if this object doesn't support setLabelExpression()
         catch(ArchiScriptException ex) {
@@ -305,7 +305,7 @@ public abstract class EObjectProxyTests {
         try {
             getTestProxy().setLabelExpression("${name}"); 
             assertEquals(getTestProxy().getName(), getTestProxy().getLabelValue());
-            assertEquals(getTestProxy().getName(), getTestProxy().attr(IModelConstants.LABEL_VALUE));
+            assertEquals(getTestProxy().getName(), getTestProxy().attr(LABEL_VALUE));
         }
         // Will throw exception if this object doesn't support setLabelExpression()
         catch(ArchiScriptException ex) {
@@ -315,26 +315,26 @@ public abstract class EObjectProxyTests {
 
     @Test
     public void attr_ID() {
-        assertEquals(((IIdentifier)getTestProxy().getEObject()).getId(), getTestProxy().attr(IModelConstants.ID));
+        assertEquals(((IIdentifier)getTestProxy().getEObject()).getId(), getTestProxy().attr(ID));
     }
  
     @Test
     public void attr_Type() {
-        assertEquals(ModelUtil.getKebabCase(getTestProxy().getReferencedEObject().eClass().getName()), getTestProxy().attr(IModelConstants.TYPE));
+        assertEquals(ModelUtil.getKebabCase(getTestProxy().getReferencedEObject().eClass().getName()), getTestProxy().attr(TYPE));
     }
 
     @Test
     public void attr_Name() {
-        getTestProxy().attr(IModelConstants.NAME, "foo");
-        assertEquals("foo", getTestProxy().attr(IModelConstants.NAME));
+        getTestProxy().attr(NAME, "foo");
+        assertEquals("foo", getTestProxy().attr(NAME));
     }
 
     @Test
     public void attr_Documentation() {
         assumeTrue(getTestProxy().getReferencedEObject() instanceof IDocumentable);
         
-        getTestProxy().attr(IModelConstants.DOCUMENTATION, "doc");
-        assertEquals("doc", getTestProxy().attr(IModelConstants.DOCUMENTATION));
+        getTestProxy().attr(DOCUMENTATION, "doc");
+        assertEquals("doc", getTestProxy().attr(DOCUMENTATION));
     }
 
     @Test

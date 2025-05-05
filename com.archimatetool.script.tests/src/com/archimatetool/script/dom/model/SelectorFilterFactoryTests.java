@@ -26,7 +26,7 @@ import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
  * @author Phillip Beauvoir
  */
 @SuppressWarnings("nls")
-public class SelectorFilterFactoryTests {
+public class SelectorFilterFactoryTests implements IModelConstants {
     
     @Test
     public void accept_All() {
@@ -56,7 +56,7 @@ public class SelectorFilterFactoryTests {
     
     @Test
     public void accept_Concept() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(IModelConstants.CONCEPT);
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(CONCEPT);
         assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
@@ -81,7 +81,7 @@ public class SelectorFilterFactoryTests {
     
     @Test
     public void accept_Element() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(IModelConstants.ELEMENT);
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(ELEMENT);
         assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
@@ -106,7 +106,7 @@ public class SelectorFilterFactoryTests {
     
     @Test
     public void accept_Relation() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(IModelConstants.RELATION);
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(RELATION);
         assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
@@ -131,7 +131,7 @@ public class SelectorFilterFactoryTests {
 
     @Test
     public void accept_View() {
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(IModelConstants.VIEW);
+        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(VIEW);
         assertNotNull(filter);
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createSketchModel()));
