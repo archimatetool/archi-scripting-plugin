@@ -16,6 +16,7 @@ import com.archimatetool.editor.diagram.commands.DiagramModelObjectLineStyleComm
 import com.archimatetool.editor.diagram.commands.DiagramModelObjectOutlineAlphaCommand;
 import com.archimatetool.editor.model.commands.AddListMemberCommand;
 import com.archimatetool.editor.model.commands.RemoveListMemberCommand;
+import com.archimatetool.editor.ui.ColorFactory;
 import com.archimatetool.editor.ui.factory.IArchimateElementUIProvider;
 import com.archimatetool.editor.ui.factory.IGraphicalObjectUIProvider;
 import com.archimatetool.editor.ui.factory.IObjectUIProvider;
@@ -215,7 +216,8 @@ public class DiagramModelObjectProxy extends DiagramModelComponentProxy {
     }
     
     public String getFillColor() {
-        return getEObject().getFillColor();
+        String fillColor = getEObject().getFillColor();
+        return fillColor != null ? fillColor : ColorFactory.convertColorToString(ColorFactory.getDefaultFillColor(getEObject()));
     }
     
     public DiagramModelObjectProxy setFillColor(String value) {
