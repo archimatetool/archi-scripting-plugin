@@ -1,0 +1,20 @@
+// =========================================================================
+// Test Views
+// =========================================================================
+
+load("testutils.js");
+
+// =========================================================================
+// Connection Router
+// =========================================================================
+
+// Create a new model and set it as the current model
+$.model.create("Test Model").setAsCurrent();
+
+// Add an ArchiMate view to the default "Views" folder
+var view = model.createArchimateView("View");
+
+// Set connection router
+assertEquals(CONNECTION_ROUTER.BENDPOINT, view.connectionRouter);
+view.connectionRouter = CONNECTION_ROUTER.MANHATTAN;
+assertEquals(CONNECTION_ROUTER.MANHATTAN, view.connectionRouter);

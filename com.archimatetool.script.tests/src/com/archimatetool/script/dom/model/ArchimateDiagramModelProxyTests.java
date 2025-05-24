@@ -250,26 +250,26 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
    @Test
     public void getViewpoint() {
         Map<String, Object> map = testProxy.getViewpoint();
-        assertEquals("layered", map.get("id"));
-        assertEquals("Layered", map.get("name"));
+        assertEquals("layered", map.get(ID));
+        assertEquals("Layered", map.get(NAME));
         
         testProxy.setViewpoint("implementation_migration");
         map = testProxy.getViewpoint();
-        assertEquals("implementation_migration", map.get("id"));
-        assertEquals("Implementation and Migration", map.get("name"));
+        assertEquals("implementation_migration", map.get(ID));
+        assertEquals("Implementation and Migration", map.get(NAME));
     }
     
     @Test
     @SuppressWarnings("unchecked")
     public void attr_getViewpoint() {
-        Map<String, Object> map = (Map<String, Object>)testProxy.attr("viewpoint");
-        assertEquals("layered", map.get("id"));
-        assertEquals("Layered", map.get("name"));
+        Map<String, Object> map = (Map<String, Object>)testProxy.attr(VIEWPOINT);
+        assertEquals("layered", map.get(ID));
+        assertEquals("Layered", map.get(NAME));
         
         testProxy.attr("viewpoint", "implementation_migration");
-        map = (Map<String, Object>)testProxy.attr("viewpoint");
-        assertEquals("implementation_migration", map.get("id"));
-        assertEquals("Implementation and Migration", map.get("name"));
+        map = (Map<String, Object>)testProxy.attr(VIEWPOINT);
+        assertEquals("implementation_migration", map.get(ID));
+        assertEquals("Implementation and Migration", map.get(NAME));
     }
 
     @Test
@@ -280,5 +280,19 @@ public class ArchimateDiagramModelProxyTests extends DiagramModelProxyTests {
         assertFalse(testProxy.isAllowedConceptForViewpoint("location"));
         assertTrue(testProxy.isAllowedConceptForViewpoint("resource"));
         assertTrue(testProxy.isAllowedConceptForViewpoint("outcome"));
+    }
+    
+    @Test
+    public void attr_ConnectionRouter() {
+        int val = (int)testProxy.attr(VIEW_CONNECTION_ROUTER);
+        assertEquals(IDiagramModel.CONNECTION_ROUTER_BENDPOINT, val);
+        
+        testProxy.attr(VIEW_CONNECTION_ROUTER, 1);
+        val = (int)testProxy.attr(VIEW_CONNECTION_ROUTER);
+        assertEquals(1, val);
+        
+        testProxy.attr(VIEW_CONNECTION_ROUTER, 2);
+        val = (int)testProxy.attr(VIEW_CONNECTION_ROUTER);
+        assertEquals(IDiagramModel.CONNECTION_ROUTER_BENDPOINT, val);
     }
 }
