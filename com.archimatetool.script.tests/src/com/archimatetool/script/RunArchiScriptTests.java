@@ -35,6 +35,11 @@ public class RunArchiScriptTests {
         runScript("test-diagramobjects.ajs");
     }
 
+    @Test
+    public void testViewsScript() {
+        runScript("test-views.ajs");
+    }
+
     private void runScript(String scriptFile) {
         RunArchiScript rs = new RunArchiScript(TestFiles.getTestFile(scriptFile));
         rs.throwExceptions = true;

@@ -13,6 +13,7 @@ import org.eclipse.ui.PlatformUI;
 
 import com.archimatetool.editor.model.DiagramModelUtils;
 import com.archimatetool.editor.ui.services.EditorManager;
+import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelConnection;
@@ -22,6 +23,7 @@ import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.commands.DeleteFolderObjectCommand;
 import com.archimatetool.script.commands.DuplicateDiagramModelCommand;
+import com.archimatetool.script.commands.SetCommand;
 
 /**
  * DiagramModel wrapper proxy
@@ -93,6 +95,16 @@ public abstract class DiagramModelProxy extends EObjectProxy {
         return this;
     }
     
+    public int getConnectionRouter() {
+        int val = getEObject().getConnectionRouterType();
+        return val == IDiagramModel.CONNECTION_ROUTER_BENDPOINT ? 0 : 1;
+    }
+    
+    public DiagramModelProxy setConnectionRouter(int val) {
+        val = val == 1 ? IDiagramModel.CONNECTION_ROUTER_MANHATTAN : IDiagramModel.CONNECTION_ROUTER_BENDPOINT;
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL__CONNECTION_ROUTER_TYPE, val));
+        return this;
+    }
     
     @Override
     protected IDiagramModel getEObject() {
@@ -200,6 +212,28 @@ public abstract class DiagramModelProxy extends EObjectProxy {
         return (DiagramModelProxy)EObjectProxy.get(command.getDuplicate());
     }
     
+    @Override
+    protected Object attr(String attribute) {
+        switch(attribute) {
+            case VIEW_CONNECTION_ROUTER:
+                return getConnectionRouter();
+        }
+        
+        return super.attr(attribute);
+    }
+    
+    @Override
+    protected EObjectProxy attr(String attribute, Object value) {
+        switch(attribute) {
+            case VIEW_CONNECTION_ROUTER:
+                if(value instanceof Integer val) {
+                    setConnectionRouter(val);
+                }
+        }
+        
+        return super.attr(attribute, value);
+    }
+
     @Override
     protected Object getInternal() {
         return new IReferencedProxy() {

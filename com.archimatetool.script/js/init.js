@@ -212,3 +212,9 @@ IMAGE_POSITION = {
     FILL : 9
 };
 Object.freeze(IMAGE_POSITION);
+
+CONNECTION_ROUTER = {
+    BENDPOINT : 0,
+    MANHATTAN : 1
+};
+Object.freeze(CONNECTION_ROUTER);

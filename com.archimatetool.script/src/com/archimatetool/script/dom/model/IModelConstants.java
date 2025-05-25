@@ -5,7 +5,6 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -79,27 +78,30 @@ interface IModelConstants {
     String STYLE = "style";
     
     String ACCESS_TYPE = "access-type"; 
-    List<String> ACCESS_TYPES_LIST = Arrays.asList(new String[] {
+    List<String> ACCESS_TYPES_LIST = List.of(
             "write",
             "read",
             "access",
             "readwrite"
-    });
+    );
     
     String INFLUENCE_STRENGTH = "influence-strength";
     
     String ASSOCIATION_DIRECTED = "association-directed";
     
     String JUNCTION_TYPE = "junction-type";
-    List<String> JUNCTION_TYPES_LIST = Arrays.asList(new String[] {
+    List<String> JUNCTION_TYPES_LIST = List.of(
             "and",
             "or"
-    });
+    );
 
     // View types
     String VIEW_ARCHIMATE = "archimate";
     String VIEW_SKETCH = "sketch";
     String VIEW_CANVAS = "canvas";
+    
+    // View Connection Router
+    String VIEW_CONNECTION_ROUTER = "connectionRouter";
     
     // Object types
     String DIAGRAM_MODEL_GROUP = "diagram-model-group";
