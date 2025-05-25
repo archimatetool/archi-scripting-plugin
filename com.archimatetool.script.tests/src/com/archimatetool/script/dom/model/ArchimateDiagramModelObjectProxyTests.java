@@ -287,10 +287,11 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     }
     
     @Test
-    public void attr_FillColorNull() {
+    public void attr_FillColorNullShouldBeDefault() {
+        // Null fill color should return default fill color
         assertEquals("#0080c0", testProxy.attr(FILL_COLOR));
         testProxy.attr(FILL_COLOR, null);
-        assertEquals(null, testProxy.attr(FILL_COLOR));
+        assertEquals("#ffffb5", testProxy.attr(FILL_COLOR));
     }
 
     @Override
