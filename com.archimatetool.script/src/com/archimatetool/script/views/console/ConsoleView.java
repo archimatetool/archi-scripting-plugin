@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IContributedContentsView;
 import org.eclipse.ui.part.ViewPart;
 
@@ -104,6 +105,9 @@ extends ViewPart implements IContributedContentsView {
         makeLocalToolBarActions();
         
         ArchiScriptPlugin.getInstance().getPreferenceStore().addPropertyChangeListener(prefsListener);
+        
+        // Register Help Context
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, HELP_ID);
     }
     
     public void setTextColor(Color color) {

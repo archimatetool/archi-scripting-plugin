@@ -6,5 +6,13 @@
         <description>Scripts Manager</description>
         <topic label="Introduction" href="help/manager.html"/>
     </context>
+    <context id="consoleViewHelp" title="Scripts Console">
+       <description>Scripts Console</description>
+       <topic href="help/api.html" label="Introduction"/>
+    </context>
+    <context id="scriptPrefsHelp" title="Scripting Preferences">
+       <description>Preferences</description>
+       <topic href="help/api.html" label="Introduction"/>
+    </context>
     
 </contexts>

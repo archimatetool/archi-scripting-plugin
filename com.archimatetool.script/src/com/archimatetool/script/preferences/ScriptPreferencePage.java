@@ -48,7 +48,7 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     
     public static final String ID = "com.archimatetool.script.preferences.ScriptPreferencePage";  //$NON-NLS-1$
     
-    private static final String HELP_ID = "com.archimatetool.script.prefs"; //$NON-NLS-1$
+    public static String HELP_ID = ArchiScriptPlugin.PLUGIN_ID + ".scriptPrefsHelp"; //$NON-NLS-1$
     
     private Text fScriptsFolderTextField;
     private Text fEditorPathTextField;
