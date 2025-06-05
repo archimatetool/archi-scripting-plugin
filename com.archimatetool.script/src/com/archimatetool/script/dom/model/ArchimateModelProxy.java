@@ -129,7 +129,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     public ArchimateModelProxy merge(ArchimateModelProxy modelProxy, boolean update, boolean updateAll, List<StatusMessage> messages) throws IOException, ImportException {
         ModelImporter importer = new ModelImporter();
-        importer.setUpdate(updateAll);
+        importer.setUpdate(update);
         importer.setUpdateAll(updateAll);
         CommandHandler.executeCommand(new ScriptCommandWrapper(importer.getCommand(modelProxy.getEObject(), getEObject()), getEObject()));
         
