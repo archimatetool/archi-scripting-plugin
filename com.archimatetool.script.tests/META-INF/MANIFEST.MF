@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: JUnit Tests for Script Plug-in
 Bundle-SymbolicName: com.archimatetool.script.tests
-Bundle-Version: 1.0.0
+Bundle-Version: 1.10.0.qualifier
 Fragment-Host: com.archimatetool.script
 Import-Package: org.junit.jupiter.api,
  org.junit.jupiter.api.function,
