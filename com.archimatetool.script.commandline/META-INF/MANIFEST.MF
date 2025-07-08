@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: jArchi Command Line
 Bundle-SymbolicName: com.archimatetool.script.commandline;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 1.10.0.qualifier
+Bundle-Version: 1.11.0.qualifier
 Bundle-Vendor: Archi
 Require-Bundle: com.archimatetool.commandline;bundle-version="5.5.0",
- com.archimatetool.script;bundle-version="1.10.0"
+ com.archimatetool.script;bundle-version="1.11.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Automatic-Module-Name: com.archimatetool.script.commandline

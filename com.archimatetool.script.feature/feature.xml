@@ -2,7 +2,7 @@
 <feature
       id="com.archimatetool.script.feature"
       label="jArchi"
-      version="1.10.0.qualifier"
+      version="1.11.0.qualifier"
       provider-name="Archi">
 
    <description>
@@ -10,7 +10,7 @@
    </description>
 
    <copyright>
-      Copyright (c) 2017
+      Copyright (c) 2017 - 2025
    </copyright>
 
    <license url="LICENSE.txt">
