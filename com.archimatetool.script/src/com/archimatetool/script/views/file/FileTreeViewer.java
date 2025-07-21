@@ -63,6 +63,8 @@ public abstract class FileTreeViewer extends TreeViewer {
         
         ColumnViewerToolTipSupport.enableFor(this);
         
+        setUseHashlookup(true);
+        
         setInput(fRootFolder);
         //expandToLevel(ALL_LEVELS);
     }
