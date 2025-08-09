@@ -119,7 +119,7 @@ public class ArchimateModelProxy extends EObjectProxy {
     }
     
     public ArchimateModelProxy merge(String filePath, boolean update, boolean updateAll, List<StatusMessage> messages) throws IOException, ImportException {
-        IArchimateModel model = IEditorModelManager.INSTANCE.loadModel(new File(filePath));
+        IArchimateModel model = IEditorModelManager.INSTANCE.load(new File(filePath));
         return merge(new ArchimateModelProxy(model), update, updateAll, messages);
     }
     
