@@ -16,7 +16,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 import org.graalvm.polyglot.PolyglotException;
 
-import com.archimatetool.editor.utils.FileUtils;
 import com.archimatetool.script.commands.CommandHandler;
 import com.archimatetool.script.dom.DomExtensionFactory;
 import com.archimatetool.script.dom.IArchiScriptBinding;
@@ -62,7 +61,7 @@ public class RunArchiScript {
         ConsoleOutput.start();
 
         // Initialise CommandHandler
-        CommandHandler.init(FileUtils.getFileNameWithoutExtension(file));
+        CommandHandler.init();
 
         // Initialise RefreshUIHandler
         RefreshUIHandler.init();

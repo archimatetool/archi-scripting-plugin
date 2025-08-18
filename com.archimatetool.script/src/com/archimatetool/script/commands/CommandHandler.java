@@ -11,10 +11,8 @@ import java.util.Map.Entry;
 
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.commands.CompoundCommand;
-import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.editor.model.commands.NonNotifyingCompoundCommand;
-import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.script.RefreshUIHandler;
 
 /**
@@ -26,12 +24,8 @@ public class CommandHandler {
     
     private static Map<CommandStack, CompoundCommand> compoundcommands;
     
-    // The name of the script to display in Undo/Redo command
-    private static String name;
-    
-    public static void init(String scriptName) {
-        compoundcommands = new HashMap<CommandStack, CompoundCommand>();
-        name = NLS.bind(Messages.CommandHandler_1, scriptName);
+    public static void init() {
+        compoundcommands = new HashMap<>();
     }
 
     public static void executeCommand(ScriptCommand cmd) {
@@ -39,35 +33,15 @@ public class CommandHandler {
             return;
         }
         
-        IArchimateModel model = cmd.getModel();
-        CommandStack stack = (CommandStack)model.getAdapter(CommandStack.class);
-        
+        // Get the CommandStack
+        CommandStack stack = (CommandStack)cmd.getModel().getAdapter(CommandStack.class);
+        // Get the Compound Command for this stack and add the command to it
         if(stack != null) {
-            CompoundCommand compound = compoundcommands.get(stack);
-            if(compound == null) {
-                compound = new NonNotifyingCompoundCommand(name) {
-                    // Always return true for these so that all commands do their dummy execute() command
-                    // and undo/redo always runs
-                    @Override
-                    public boolean canExecute() {
-                        return true;
-                    }
-                    
-                    @Override
-                    public boolean canUndo() {
-                        return true;
-                    }
-                    
-                    @Override
-                    public boolean canRedo() {
-                        return true;
-                    }
-                };
-                compoundcommands.put(stack, compound);
-            }
+            CompoundCommand compound = compoundcommands.computeIfAbsent(stack, commandStack -> new ScriptNonNotifyingCompoundCommand());
             compound.add(cmd);
         }
         
+        // Perform the command
         cmd.perform();
         
         // Take this opportunity to update the UI if set
@@ -87,5 +61,28 @@ public class CommandHandler {
         
         // Set this to null so that it can be garbage collected, otherwise we will have a memory leak
         compoundcommands = null;
+    }
+    
+    // Always return true for these so that all commands do their dummy execute() command and undo/redo always runs
+    private static class ScriptNonNotifyingCompoundCommand extends NonNotifyingCompoundCommand {
+        
+        private ScriptNonNotifyingCompoundCommand() {
+            super(Messages.CommandHandler_0);
+        }
+        
+        @Override
+        public boolean canExecute() {
+            return true;
+        }
+
+        @Override
+        public boolean canUndo() {
+            return true;
+        }
+
+        @Override
+        public boolean canRedo() {
+            return true;
+        }
     }
 }
