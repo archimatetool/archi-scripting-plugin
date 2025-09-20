@@ -1,2 +1,0 @@
-load(__DIR__ + "/../ConvertConcept.lib.js");
-convert(__FILE__);
