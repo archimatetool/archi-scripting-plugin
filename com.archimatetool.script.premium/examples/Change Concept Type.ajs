@@ -17,7 +17,38 @@
  
 // Get all Business Actors in the current selection and change the type to Business Role
 // If changing the type breaks any relationship rules an exception is thrown
-selection.filter("business-actor").each(function(e) {
-    e.concept.type = "business-role";
-    e.name += " (changed)";
+
+// The type to convert from
+const convertFromType = "business-actor";
+
+// The type to convert to
+const convertToType = "business-role";
+
+// Get all concepts that match in the current selection and convert...
+selection.filter(convertFromType).each(function(element) {
+    // If outgoing relationships would break rules, convert to Association relationship
+    $(element.concept).outRels().each(function(relationship) {
+        if(!$.model.isAllowedRelationship(relationship.type, convertToType, relationship.target.type)) {
+            convertRelationship(relationship);
+        }
+    });
+
+    // If incoming relationships would break rules, convert to Association relationship
+    $(element.concept).inRels().each(function(relationship) {
+        if(!$.model.isAllowedRelationship(relationship.type, relationship.source.type, convertToType)) {
+            convertRelationship(relationship);
+        }
+    });
+
+    // Change concept type and set name
+    console.log("Changed: " + element);
+    element.concept.type = convertToType;
+    element.name += " (changed)";
 });
+
+// Convert relationship to Association and add note in documentation
+function convertRelationship(relationship) {
+    console.log("Changed: " + relationship);
+    relationship.documentation = 'This relationship has been converted from "' + relationship.type.replace(/-relationship$/, '') + '" to "association"\n' + relationship.documentation;
+    relationship.type = "association-relationship";
+}
