@@ -28,16 +28,17 @@ public class DiagramModelNoteProxy extends DiagramModelObjectProxy {
         return (IDiagramModelNote)super.getEObject();
     }
     
-    public void setText(String text) {
+    public DiagramModelNoteProxy setText(String text) {
         CommandHandler.executeCommand(new SetCommand(getEObject(),
                 IArchimatePackage.Literals.TEXT_CONTENT__CONTENT, StringUtils.safeString(text)));
+        return this;
     }
     
     public String getText() {
         return getEObject().getContent();
     }
     
-    public DiagramModelObjectProxy setBorderType(int type) {
+    public DiagramModelNoteProxy setBorderType(int type) {
         if(type != IDiagramModelNote.BORDER_DOGEAR
                 && type != IDiagramModelNote.BORDER_RECTANGLE
                 && type != IDiagramModelNote.BORDER_NONE) {
@@ -69,12 +70,12 @@ public class DiagramModelNoteProxy extends DiagramModelObjectProxy {
         switch(attribute) {
             case TEXT:
                 if(value instanceof String val) {
-                    setText(val);
+                    return setText(val);
                 }
                 break;
             case BORDER_TYPE:
                 if(value instanceof Integer val) {
-                    setBorderType(val);
+                    return setBorderType(val);
                 }
                 break;
         }
