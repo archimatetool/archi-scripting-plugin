@@ -87,30 +87,25 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     public EObjectProxyCollection filter(String selector) {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
+        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter(selector);
         if(filter == null) {
             return list;
         }
         
-        // Single value filter
-        if(filter.isSingle()) {
-            for(EObjectProxy object : this) {
-                if(filter.accept(object.getEObject())) {
+        // Use a LinkedHashSet for uniqueness and speed
+        Set<EObjectProxy> set = new LinkedHashSet<>();
+        
+        for(EObjectProxy object : this) {
+            if(filter.accept(object.getEObject())) {
+                if(filter.isUnique()) { // is unique so only one object is added
                     list.add(object);
                     return list;
                 }
+                set.add(object);
             }
         }
-        else {
-            // Use a temp LinkedHashSet for uniqueness and speed
-            Set<EObjectProxy> set = new LinkedHashSet<>();
-            for(EObjectProxy object : this) {
-                if(filter.accept(object.getEObject())) {
-                    set.add(object);
-                }
-            }
-            list.addAll(set);
-        }
+        
+        list.addAll(set);
         
         return list;
     }
@@ -162,7 +157,7 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     public EObjectProxyCollection not(String selector) {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        ISelectorFilter filter = SelectorFilterFactory.INSTANCE.getFilter(selector);
+        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter(selector);
         if(filter == null) {
             return list;
         }

@@ -166,6 +166,12 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
                 assertEquals(id, collection.get(0).getId());
             }
         }
+        
+        // Test an empty collection for a non-existing Id
+        assertTrue(testModelProxy.find("#bogusId").isEmpty());
+        
+        // Test an empty Id
+        assertTrue(testModelProxy.find("#").isEmpty());
     }
 
     @Test

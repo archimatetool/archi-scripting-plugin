@@ -342,8 +342,8 @@ public class ArchimateModelProxy extends EObjectProxy {
     
     @Override
     public EObjectProxyCollection find(String selector) {
-        // If selector is id (#) then filter on all the model's objects
-        if(selector.startsWith("#") && selector.length() > 1) { //$NON-NLS-1$
+        // If selector is id (#) or concepts, views and folders (*) then filter on all the model's objects
+        if(selector != null && (selector.startsWith("#") || selector.equals("*"))) { //$NON-NLS-1$ //$NON-NLS-2$
             return super.find(selector);
         }
         

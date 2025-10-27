@@ -5,6 +5,8 @@
  */
 package com.archimatetool.script.dom.model;
 
+import java.util.Objects;
+
 import org.eclipse.emf.ecore.EObject;
 
 import com.archimatetool.model.IArchimateConcept;
@@ -24,103 +26,85 @@ import com.archimatetool.model.INameable;
 @SuppressWarnings("nls")
 class SelectorFilterFactory implements IModelConstants {
     
-    public static interface ISelectorFilter {
-        boolean accept(EObject object);
+    @FunctionalInterface
+    interface ISelectorFilter {
+        boolean accept(EObject eObject);
         
-        default boolean isSingle() {
+        default boolean isUnique() {
             return false;
         }
     }
     
-    private SelectorFilterFactory() {}
+    private static SelectorFilterFactory instance = new SelectorFilterFactory();
     
-    static SelectorFilterFactory INSTANCE = new SelectorFilterFactory();
+    static SelectorFilterFactory getInstance() {
+        return instance;
+    }
+    
+    private SelectorFilterFactory() {}
 
+    /**
+     * @return a ISelectorFilter for the given selector, or null
+     */
     public ISelectorFilter getFilter(String selector) {
-        if(selector == null || "".equals(selector)) {
+        if(selector == null || selector.length() == 0) {
             return null;
         }
         
         // All model concepts, diagram models, and folders
         if(selector.equals("*")) {
-            return new ISelectorFilter() {
-                @Override
-                public boolean accept(EObject object) {
-                    return (object instanceof IArchimateConcept || object instanceof IDiagramModel
-                            || object instanceof IFolder);
-                }
+            return eObject -> {
+                return eObject instanceof IArchimateConcept || eObject instanceof IDiagramModel || eObject instanceof IFolder;
             };
         }
         
         // All concepts
         else if(selector.equals(CONCEPT)) {
-            return new ISelectorFilter() {
-                @Override
-                public boolean accept(EObject object) {
-                    object = getReferencedObject(object);
-                    return object instanceof IArchimateConcept;
-                }
+            return eObject -> {
+                return getReferencedObject(eObject) instanceof IArchimateConcept;
             };
         }
         
         // All elements
         else if(selector.equals(ELEMENT)) {
-            return new ISelectorFilter() {
-                @Override
-                public boolean accept(EObject object) {
-                    object = getReferencedObject(object);
-                    return object instanceof IArchimateElement;
-                }
+            return eObject -> {
+                return getReferencedObject(eObject) instanceof IArchimateElement;
             };
         }
         
         // All relationships
         else if(selector.equals(RELATION) || selector.equals(RELATIONSHIP)) {
-            return new ISelectorFilter() {
-                @Override
-                public boolean accept(EObject object) {
-                    object = getReferencedObject(object);
-                    return object instanceof IArchimateRelationship;
-                }
+            return eObject -> {
+                return getReferencedObject(eObject) instanceof IArchimateRelationship;
             };
         }
 
         // All views
         else if(selector.equals(VIEW)) {
-            return new ISelectorFilter() {
-                @Override
-                public boolean accept(EObject object) {
-                    return object instanceof IDiagramModel;
-                }
+            return eObject -> {
+                return eObject instanceof IDiagramModel;
             };
         }
 
-        // Find single unique object by its ID
-        else if(selector.startsWith("#") && selector.length() > 1) {
-            String id = selector.substring(1);
-            
+        // Find single unique object by its Id (example - #1234)
+        else if(selector.startsWith("#")) {
             return new ISelectorFilter() {
                 @Override
-                public boolean accept(EObject object) {
-                    return object instanceof IIdentifier identifier && id.equals(identifier.getId());
+                public boolean accept(EObject eObject) {
+                    return eObject instanceof IIdentifier identifier && selector.substring(1).equals(identifier.getId());
                 }
                 
                 @Override
-                public boolean isSingle() {
+                public boolean isUnique() {
                     return true;
                 }
             };
         }
         
         // Find all objects with given name
-        else if(selector.startsWith(".") & selector.length() > 1) {
-            String name = selector.substring(1);
-            
-            return new ISelectorFilter() {
-                @Override
-                public boolean accept(EObject object) {
-                    return object instanceof INameable nameable && name.equals(nameable.getName());
-                }
+        else if(selector.startsWith(".")) {
+            return eObject -> {
+                return eObject instanceof INameable nameable && selector.substring(1).equals(nameable.getName());
             };
         }
         
@@ -132,38 +116,23 @@ class SelectorFilterFactory implements IModelConstants {
                 return null;
             }
             
-            String type = ModelUtil.getCamelCase(s[0]);
-            String name = s[1];
-            
-            return new ISelectorFilter() {
-                @Override
-                public boolean accept(EObject object) {
-                    object = getReferencedObject(object);
-                    return object instanceof INameable nameable &&
-                            nameable.getName().equals(name) &&
-                            nameable.eClass().getName().equals(type);
-                }
+            return eObject -> {
+                String type = ModelUtil.getCamelCase(s[0]);
+                String name = s[1];
+                
+                return getReferencedObject(eObject) instanceof INameable nameable &&
+                        Objects.equals(nameable.getName(), name) && Objects.equals(nameable.eClass().getName(), type);
             };
         }
 
         // Class type of object
-        else {
-            String type = ModelUtil.getCamelCase(selector);
-            return new ISelectorFilter() {
-                @Override
-                public boolean accept(EObject object) {
-                    object = getReferencedObject(object);
-                    return object != null && object.eClass().getName().equals(type);
-                }
-            };
-        }
+        return eObject -> {
+            EObject resolved = getReferencedObject(eObject);
+            return resolved != null && resolved.eClass().getName().equals(ModelUtil.getCamelCase(selector));
+        };
     }
     
-    private EObject getReferencedObject(EObject object) {
-        if(object instanceof IDiagramModelArchimateComponent dmac) {
-            return dmac.getArchimateConcept();
-        }
-        
-        return object;
+    private EObject getReferencedObject(EObject eObject) {
+        return eObject instanceof IDiagramModelArchimateComponent dmac ? dmac.getArchimateConcept() : eObject;
     }
 }
