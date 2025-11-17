@@ -179,56 +179,50 @@ public class ScriptsTreeViewerDragDropHandler {
             return;
         }
         
-        boolean hasScriptFile = false;
         boolean doLink = false;
         
-        // Do we have a script file?
-        for(String path : paths) {
-            File file = new File(path);
-            if(ScriptFiles.isScriptFile(file)) {
-                hasScriptFile = true;
-                break;
-            }
-        }
-        
-        // If we do, offer to link as well as copy files
-        if(hasScriptFile) {
-            MessageDialog dialog = new MessageDialog(Display.getCurrent().getActiveShell(),
-                    Messages.ScriptsTreeViewerDragDropHandler_0,
-                    null,
-                    Messages.ScriptsTreeViewerDragDropHandler_1,
-                    MessageDialog.QUESTION,
-                    new String[] {
+        // Offer to link to files or copy files
+        MessageDialog dialog = new MessageDialog(Display.getCurrent().getActiveShell(),
+                Messages.ScriptsTreeViewerDragDropHandler_0,
+                null,
+                Messages.ScriptsTreeViewerDragDropHandler_1,
+                MessageDialog.QUESTION,
+                new String[] {
                         Messages.ScriptsTreeViewerDragDropHandler_2,
                         Messages.ScriptsTreeViewerDragDropHandler_3,
                         Messages.ScriptsTreeViewerDragDropHandler_4 },
-                    0);
-            
-            int result = dialog.open();
-            
-            // cancel
-            if(result == 2) {
-                return;
-            }
-            
-            // link
-            if(result == 1) {
-                doLink = true;
-            }
+                0);
+
+        int result = dialog.open();
+
+        // cancel
+        if(result == 2) {
+            return;
+        }
+
+        // link
+        if(result == 1) {
+            doLink = true;
         }
         
         for(String path : paths) {
             File file = new File(path);
             
             if(file.isFile()) {
-                if(doLink && ScriptFiles.isScriptFile(file)) {
+                // Link to files
+                if(doLink) {
                     try {
-                        ScriptFiles.writeLinkFile(new File(parent, FileUtils.getFileNameWithoutExtension(file) + ScriptFiles.LINK_EXTENSION), file);
+                        // If the file is a script file use file name with extenesion removed and ".link"
+                        // Else use the file name with extension and ".link"
+                        String fileName = ScriptFiles.isScriptFile(file) ? FileUtils.getFileNameWithoutExtension(file) + ScriptFiles.LINK_EXTENSION
+                                : file.getName() + ScriptFiles.LINK_EXTENSION;
+                        ScriptFiles.writeLinkFile(new File(parent, fileName), file);
                     }
                     catch(IOException ex) {
                         ex.printStackTrace();
                     }
                 }
+                // Copy files
                 else {
                     File target = new File(parent, file.getName());
                     if(!target.exists()) {

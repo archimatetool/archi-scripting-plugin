@@ -80,7 +80,8 @@ public class ScriptsTreeViewer extends FileTreeViewer {
         
         @Override
         public String getText(File file) {
-            if(ScriptFiles.isScriptFile(file)) {
+            // If this is a script file or a linked file get file name without extension
+            if(ScriptFiles.isScriptFile(file) || ScriptFiles.isLinkedFile(file)) {
                 return FileUtils.getFileNameWithoutExtension(file);
             }
             
