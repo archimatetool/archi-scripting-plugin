@@ -274,5 +274,37 @@
             plugin="com.archimatetool.script">
       </contexts>
    </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+      <propertyContributor
+            contributorId="com.archimatetool.script"
+            labelProvider="com.archimatetool.script.views.FileLabelProvider">
+         <propertyCategory
+               category="com.archimatetool.script.category"></propertyCategory>
+      </propertyContributor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs
+            contributorId="com.archimatetool.script">
+         <propertyTab
+               category="com.archimatetool.script.category"
+               id="main.tab"
+               label="Main">
+         </propertyTab>
+      </propertyTabs>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="com.archimatetool.script">
+         <propertySection
+               class="com.archimatetool.script.propertysections.MainSection"
+               filter="com.archimatetool.script.propertysections.MainSection$Filter"
+               id="mainSection"
+               tab="main.tab">
+         </propertySection>
+      </propertySections>
+   </extension>
 
 </plugin>

@@ -33,6 +33,8 @@ public class Messages extends NLS {
 
     public static String AbstractFileView_4;
 
+    public static String AbstractFileView_5;
+
     public static String AbstractFileView_7;
 
     public static String AbstractFileView_8;

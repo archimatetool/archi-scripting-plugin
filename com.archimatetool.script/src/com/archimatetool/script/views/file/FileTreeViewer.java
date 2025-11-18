@@ -6,7 +6,6 @@
 package com.archimatetool.script.views.file;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.text.Collator;
@@ -72,7 +71,6 @@ public abstract class FileTreeViewer extends TreeViewer {
     public void setRootFolder(File rootFolder) {
         fRootFolder = rootFolder;
         fRootFolder.mkdirs();
-        
         setInput(fRootFolder);
     }
 
@@ -81,23 +79,22 @@ public abstract class FileTreeViewer extends TreeViewer {
      */
     protected void setup() {
         // Sort folders first, files second, alphabetical
-        setComparator(new ViewerComparator(Collator.getInstance()) {
+        setComparator(new ViewerComparator() {
+            private final Collator collator = Collator.getInstance();
+            {
+                collator.setStrength(Collator.SECONDARY); // case-insensitive, accent-sensitive
+            }
+
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
-                File f1 = (File)e1;
-                File f2 = (File)e2;
-                if(f1.isDirectory() && !f2.isDirectory()) {
-                    // Directory before non-directory
-                    return -1;
+                File f1 = (File) e1;
+                File f2 = (File) e2;
+
+                if(f1.isDirectory() != f2.isDirectory()) {
+                    return f1.isDirectory() ? -1 : 1;
                 }
-                else if(!f1.isDirectory() && f2.isDirectory()) {
-                    // Non-directory after directory
-                    return 1;
-                }
-                else {
-                    // Alphabetic order otherwise
-                    return getComparator().compare(f1.getName(), f2.getName());
-                }
+
+                return collator.compare(f1.getName(), f2.getName());
             }
         });
         
@@ -107,7 +104,7 @@ public abstract class FileTreeViewer extends TreeViewer {
         setCellEditors(new CellEditor[]{ cellEditor });
         
         // Edit cell programmatically, not on mouse click
-        TreeViewerEditor.create(this, new ColumnViewerEditorActivationStrategy(this){
+        TreeViewerEditor.create(this, new ColumnViewerEditorActivationStrategy(this) {
             @Override
             protected boolean isEditorActivationEvent(ColumnViewerEditorActivationEvent event) {
                 return event.eventType == ColumnViewerEditorActivationEvent.PROGRAMMATIC;
@@ -120,8 +117,7 @@ public abstract class FileTreeViewer extends TreeViewer {
             public void modify(Object element, String property, Object value) {
                 if(element instanceof TreeItem treeItem && treeItem.getData() instanceof File file && value instanceof String newValue) {
                     File renamedFile = new File(file.getParent(), newValue);
-                    boolean ok = file.renameTo(renamedFile);
-                    if(ok) {
+                    if(file.renameTo(renamedFile)) {
                         refresh();
                         setSelection(new StructuredSelection(renamedFile));
                     }
@@ -133,10 +129,7 @@ public abstract class FileTreeViewer extends TreeViewer {
             
             @Override
             public Object getValue(Object element, String property) {
-                if(element instanceof File file) {
-                    return file.getName();
-                }
-                return null;
+                return element instanceof File file ? file.getName() : null;
             }
             
             @Override
@@ -150,12 +143,6 @@ public abstract class FileTreeViewer extends TreeViewer {
         return new FileTreeLabelProvider(); 
     }
     
-    /**
-     * Dispose of stuff
-     */
-    public void dispose() {
-    }
-    
     // ===============================================================================================
 	// ===================================== Content Provider ========================================
 	// ===============================================================================================
@@ -164,15 +151,6 @@ public abstract class FileTreeViewer extends TreeViewer {
      * The Tree Model for the Tree.
      */
     protected class FileTreeContentProvider implements ITreeContentProvider {
-        
-        @Override
-        public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-        }
-        
-        @Override
-        public void dispose() {
-        }
-        
         @Override
         public Object[] getElements(Object parent) {
             return getChildren(parent);
@@ -180,24 +158,18 @@ public abstract class FileTreeViewer extends TreeViewer {
         
         @Override
         public Object getParent(Object child) {
-            if(child instanceof File file) {
-                return file.getParentFile();
-            }
-            return null;
+            return child instanceof File file ? file.getParentFile() : null;
         }
         
         @Override
         public Object[] getChildren(Object parent) {
             if(parent instanceof File file) {
-                File[] files = file.listFiles(new FileFilter() {
-                    @Override
-                    public boolean accept(File pathname) {
-                        try {
-                            return !Files.isHidden(pathname.toPath());
-                        }
-                        catch(IOException ex) {
-                            ex.printStackTrace();
-                        }
+                File[] files = file.listFiles(pathname -> {
+                    try {
+                        return !Files.isHidden(pathname.toPath());
+                    }
+                    catch(IOException ex) {
+                        ex.printStackTrace();
                         return false;
                     }
                 });
@@ -212,10 +184,7 @@ public abstract class FileTreeViewer extends TreeViewer {
         
         @Override
         public boolean hasChildren(Object parent) {
-            if(parent instanceof File file) {
-                return file.isDirectory() && file.listFiles().length > 0;
-            }
-            return false;
+            return parent instanceof File file && file.isDirectory() && file.listFiles().length > 0;
         }
     }
     
@@ -223,7 +192,7 @@ public abstract class FileTreeViewer extends TreeViewer {
 	// ===================================== Label Provider ==========================================
 	// ===============================================================================================
 
-    protected class FileTreeLabelProvider extends CellLabelProvider {
+    protected static class FileTreeLabelProvider extends CellLabelProvider {
         
         @Override
         public void update(ViewerCell cell) {
@@ -236,11 +205,11 @@ public abstract class FileTreeViewer extends TreeViewer {
             }
         }
         
-        public String getText(File file) {
+        protected String getText(File file) {
         	return file.getName();
         }
         
-        public Image getImage(File file) {
+        protected Image getImage(File file) {
             if(file.isDirectory()) {
                 return IArchiScriptImages.ImageFactory.getImage(IArchiScriptImages.ICON_FOLDER);
             }

@@ -26,8 +26,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
@@ -42,6 +40,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.menus.CommandContributionItem;
 import org.eclipse.ui.menus.CommandContributionItemParameter;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 
 import com.archimatetool.editor.actions.AbstractDropDownAction;
 import com.archimatetool.editor.utils.FileUtils;
@@ -67,7 +68,7 @@ import com.archimatetool.script.views.file.PathEditorInput;
  * File Viewer ViewPart for viewing files in a given system folder.
  */
 public class ScriptsFileViewer
-extends AbstractFileView  {
+extends AbstractFileView implements ITabbedPropertySheetPageContributor {
     
     /*
      * Ensure part tracker is activated so that we can get active part that is not this part when this gains focus
@@ -82,17 +83,13 @@ extends AbstractFileView  {
     private RunScriptAction fActionRun;
     private IAction fActionShowConsole;
     private MarkFolderHiddenAction fActionHideFolder;
-
     
     /**
      * Application Preferences Listener
      */
-    private IPropertyChangeListener prefsListener = new IPropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent event) {
-            if(IPreferenceConstants.PREFS_SCRIPTS_FOLDER.equals(event.getProperty())) {
-                handleRefreshAction();
-            }
+    private IPropertyChangeListener prefsListener = event -> {
+        if(IPreferenceConstants.PREFS_SCRIPTS_FOLDER.equals(event.getProperty())) {
+            handleRefreshAction();
         }
     };
 
@@ -217,18 +214,15 @@ extends AbstractFileView  {
     }
     
     @Override
-    public void updateActions(ISelection s) {
-        super.updateActions(s);
-        
-        IStructuredSelection selection = (IStructuredSelection)s;
-        
+    public void updateActions(IStructuredSelection selection) {
+        super.updateActions(selection);
         fActionRun.setFile((File)selection.getFirstElement());        
         fActionHideFolder.setSelection(selection.toArray());
     }
     
     @Override
     protected void fillContextMenu(IMenuManager manager) {
-        IStructuredSelection selection = (IStructuredSelection)getViewer().getSelection();
+        IStructuredSelection selection = getViewer().getStructuredSelection();
 
         IMenuManager newMenu = new MenuManager(Messages.ScriptsFileViewer_4, "new"); //$NON-NLS-1$
         manager.add(newMenu);
@@ -260,12 +254,11 @@ extends AbstractFileView  {
             }
             
             // If selection is a script file show key bindings sub-menu
-            if(selection.getFirstElement() instanceof File && ScriptFiles.isScriptFile((File)selection.getFirstElement())) {
+            if(selection.getFirstElement() instanceof File file && ScriptFiles.isScriptFile(file)) {
                 manager.add(new Separator());
                 IMenuManager bindingsMenu = new MenuManager(Messages.ScriptsFileViewer_7, "bindings"); //$NON-NLS-1$
                 manager.add(bindingsMenu);
                 
-                File file = (File)selection.getFirstElement();
                 IPreferenceStore store = ArchiScriptPlugin.getInstance().getPreferenceStore();
                 
                 // Show the key binding slots
@@ -346,12 +339,16 @@ extends AbstractFileView  {
                     }
                 };
                 bindingsMenu.add(action);
-                
-                manager.add(new Separator());
             }
         }
         
+        manager.add(new Separator());
         manager.add(fActionRefresh);
+        
+        if(!selection.isEmpty()) {
+            manager.add(new Separator());
+            manager.add(fActionProperties);
+        }
         
         // Other plug-ins can contribute their actions here
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -376,7 +373,7 @@ extends AbstractFileView  {
     
     @Override
     protected void handleEditAction() {
-        File file = (File)((IStructuredSelection)getViewer().getSelection()).getFirstElement();
+        File file = (File)getViewer().getStructuredSelection().getFirstElement();
 
         if(file != null && file.isFile()) {
             if(ScriptFiles.isLinkedFile(file)) {
@@ -426,7 +423,7 @@ extends AbstractFileView  {
      * New Script
      */
     protected void handleNewScriptAction(IScriptEngineProvider provider) {
-        File parent = (File)((IStructuredSelection)getViewer().getSelection()).getFirstElement();
+        File parent = (File)getViewer().getStructuredSelection().getFirstElement();
 
         if(parent == null) {
             parent = getRootFolder();
@@ -468,6 +465,23 @@ extends AbstractFileView  {
         }
     }
     
+    @Override
+    public String getContributorId() {
+        return ArchiScriptPlugin.PLUGIN_ID;
+    }
+    
+    @Override
+    public <T> T getAdapter(Class<T> adapter) {
+        /*
+         * Return the PropertySheet Page
+         */
+        if(adapter == IPropertySheetPage.class) {
+            return adapter.cast(new TabbedPropertySheetPage(this));
+        }
+        
+        return super.getAdapter(adapter);
+    }
+
     @Override
     public void dispose() {
         super.dispose();

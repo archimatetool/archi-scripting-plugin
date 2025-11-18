@@ -11,29 +11,21 @@ import java.io.IOException;
 import org.eclipse.help.IContextProvider;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.commands.ActionHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.eclipse.ui.part.IContributedContentsView;
 import org.eclipse.ui.part.ViewPart;
 
+import com.archimatetool.editor.ui.services.ViewManager;
 import com.archimatetool.editor.utils.FileUtils;
 import com.archimatetool.script.IArchiScriptImages;
 
@@ -43,7 +35,7 @@ import com.archimatetool.script.IArchiScriptImages;
  */
 public abstract class AbstractFileView
 extends ViewPart
-implements IContextProvider, IContributedContentsView {
+implements IContextProvider {
     /**
      * The Tree Viewer
      */
@@ -59,7 +51,7 @@ implements IContextProvider, IContributedContentsView {
     protected IAction fActionRefresh;
     protected IAction fActionNewFile;
     protected IAction fActionNewFolder;
-    
+    protected IAction fActionProperties;
     
 
     /**
@@ -79,7 +71,6 @@ implements IContextProvider, IContributedContentsView {
         fTreeViewer = createTreeViewer(parent);
         
         makeActions();
-        registerGlobalActions();
         hookContextMenu();
         makeLocalMenuActions();
         makeLocalToolBarActions();
@@ -90,21 +81,15 @@ implements IContextProvider, IContributedContentsView {
         /*
          * Listen to Selections to update local Actions
          */
-        getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                updateActions(event.getSelection());
-            }
+        getViewer().addSelectionChangedListener(event -> {
+            updateActions(event.getStructuredSelection());
         });
         
         /*
          * Listen to Double-click Action
          */
-        getViewer().addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                handleDoubleClickAction();
-            }
+        getViewer().addDoubleClickListener(event -> {
+            handleDoubleClickAction();
         });
     }
     
@@ -218,22 +203,28 @@ implements IContextProvider, IContributedContentsView {
                 getViewer().getTree().selectAll();
             }
         };
+        
+        
+        // Properties
+        fActionProperties = new Action(Messages.AbstractFileView_5) {
+            @Override
+            public void run() {
+                ViewManager.showViewPart(ViewManager.PROPERTIES_VIEW, false);
+            }
+            
+            @Override
+            public String getActionDefinitionId() {
+                return IWorkbenchCommandConstants.FILE_PROPERTIES; // Ensures key binding is displayed
+            }
+        };
 
-        // Register the Keybinding for actions
+        // Register the Keybindings for these actions
         IHandlerService service = getViewSite().getService(IHandlerService.class);
         service.activateHandler(fActionRefresh.getActionDefinitionId(), new ActionHandler(fActionRefresh));
-    }
-
-    /**
-     * Register Global Action Handlers
-     */
-    protected void registerGlobalActions() {
-        IActionBars actionBars = getViewSite().getActionBars();
-        
-        // Register our interest in the global menu actions
-        actionBars.setGlobalActionHandler(ActionFactory.RENAME.getId(), fActionRename);
-        actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), fActionDelete);
-        actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), fActionSelectAll);
+        service.activateHandler(fActionRename.getActionDefinitionId(), new ActionHandler(fActionRename));
+        service.activateHandler(fActionDelete.getActionDefinitionId(), new ActionHandler(fActionDelete));
+        service.activateHandler(fActionSelectAll.getActionDefinitionId(), new ActionHandler(fActionSelectAll));
+        service.activateHandler(fActionProperties.getActionDefinitionId(), new ActionHandler(fActionProperties));
     }
 
     /**
@@ -243,16 +234,12 @@ implements IContextProvider, IContributedContentsView {
         MenuManager menuMgr = new MenuManager("#FileViewerPopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
         
-        menuMgr.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow(IMenuManager manager) {
-                fillContextMenu(manager);
-            }
+        menuMgr.addMenuListener(manager -> {
+            fillContextMenu(manager);
         });
         
         Menu menu = menuMgr.createContextMenu(getViewer().getControl());
         getViewer().getControl().setMenu(menu);
-        
         getSite().registerContextMenu(menuMgr, getViewer());
     }
     
@@ -278,13 +265,14 @@ implements IContextProvider, IContributedContentsView {
      * Update the Local Actions depending on the selection 
      * @param selection
      */
-    public void updateActions(ISelection selection) {
-        File file = (File)((IStructuredSelection)selection).getFirstElement();
+    public void updateActions(IStructuredSelection selection) {
+        File file = (File)selection.getFirstElement();
         boolean isEmpty = selection.isEmpty();
         
         fActionDelete.setEnabled(!isEmpty);
         fActionRename.setEnabled(!isEmpty);
         fActionEdit.setEnabled(!isEmpty && !file.isDirectory() && file.exists());
+        fActionProperties.setEnabled(!isEmpty);
     }
     
     /**
@@ -305,7 +293,7 @@ implements IContextProvider, IContributedContentsView {
      * New Folder event happened
      */
     protected void handleNewFolderAction() {
-        File parent = (File)((IStructuredSelection)getViewer().getSelection()).getFirstElement();
+        File parent = (File)getViewer().getStructuredSelection().getFirstElement();
 
         if(parent == null) {
             parent = getRootFolder();
@@ -339,7 +327,7 @@ implements IContextProvider, IContributedContentsView {
      * Delete event happened
      */
     protected void handleDeleteAction() {
-        StructuredSelection selection = (StructuredSelection)getViewer().getSelection();
+        IStructuredSelection selection = getViewer().getStructuredSelection();
         Object[] objects = selection.toArray();
         
         // Make sure we didn't get the empty selection
@@ -403,13 +391,5 @@ implements IContextProvider, IContributedContentsView {
      * New File event happened
      */
     protected void handleNewFileAction() {
-    }
-    
-    /**
-     * Return null so that the Properties View displays "The active part does not provide properties" instead of a table
-     */
-    @Override
-    public IWorkbenchPart getContributingPart() {
-        return null;
     }
 }
