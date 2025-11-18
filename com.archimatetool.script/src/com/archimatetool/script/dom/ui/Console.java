@@ -38,7 +38,7 @@ public class Console {
      */
     public void show() {
         if(PlatformUI.isWorkbenchRunning()) {
-            ViewManager.showViewPart(ConsoleView.ID, true);
+            ViewManager.showViewPart(ConsoleView.ID, false); // Don't set focus
             ConsoleOutput.start(); // Ensure Console is re-directing output
         }
     }
