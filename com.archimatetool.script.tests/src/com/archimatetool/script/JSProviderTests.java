@@ -6,10 +6,9 @@
 package com.archimatetool.script;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import javax.script.ScriptEngine;
-
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
 import com.archimatetool.script.preferences.IPreferenceConstants;
@@ -22,13 +21,24 @@ import com.archimatetool.script.preferences.IPreferenceConstants;
 @SuppressWarnings("nls")
 public class JSProviderTests {
     
+    @AfterAll
+    public static void resetPrefs( ) {
+        // Reset to default Graal engine
+        ArchiScriptPlugin.getInstance().getPreferenceStore().setToDefault(IPreferenceConstants.PREFS_JS_ENGINE);
+    }
+    
     @Test
-    public void engineIsValid() throws Exception {
-        JSProvider provider = new JSProvider();
-        ScriptEngine engine = provider.createScriptEngine().orElse(null);
-        assertNotNull(engine);
+    public void graalEngine() throws Exception {
+        // Set to Graal engine
+        ArchiScriptPlugin.getInstance().getPreferenceStore().setValue(IPreferenceConstants.PREFS_JS_ENGINE, 2);
         
-        assertEquals("com.oracle.truffle.js.scriptengine.GraalJSScriptEngine", engine.getClass().getName());
+        JSProvider provider = new JSProvider();
+        
+        provider.createScriptEngine().ifPresentOrElse(engine -> {
+            assertEquals("com.oracle.truffle.js.scriptengine.GraalJSScriptEngine", engine.getClass().getName());
+        }, () -> {
+            fail("Graal engine not found");
+        });
         
         assertEquals("true", System.getProperty("polyglot.js.nashorn-compat"));
         assertEquals("false", System.getProperty("polyglot.engine.WarnInterpreterOnly"));
@@ -36,6 +46,34 @@ public class JSProviderTests {
         
         assertEquals("true", System.getProperty("polyglot.js.commonjs-require"));
         assertEquals(ArchiScriptPlugin.getInstance().getPreferenceStore().getString(IPreferenceConstants.PREFS_SCRIPTS_FOLDER), System.getProperty("polyglot.js.commonjs-require-cwd"));
+    }
+    
+    @Test
+    public void nashornES5Engine() throws Exception {
+        // Set to Nashorn ES5 engine
+        ArchiScriptPlugin.getInstance().getPreferenceStore().setValue(IPreferenceConstants.PREFS_JS_ENGINE, 0);
+        
+        JSProvider provider = new JSProvider();
+        
+        provider.createScriptEngine().ifPresentOrElse(engine -> {
+            assertEquals("org.openjdk.nashorn.api.scripting.NashornScriptEngine", engine.getClass().getName());
+        }, () -> {
+            fail("Nashorn ES5 engine not found");
+        });
+    }
+
+    @Test
+    public void nashornES6Engine() throws Exception {
+        // Set to Nashorn ES6 engine
+        ArchiScriptPlugin.getInstance().getPreferenceStore().setValue(IPreferenceConstants.PREFS_JS_ENGINE, 1);
+        
+        JSProvider provider = new JSProvider();
+        
+        provider.createScriptEngine().ifPresentOrElse(engine -> {
+            assertEquals("org.openjdk.nashorn.api.scripting.NashornScriptEngine", engine.getClass().getName());
+        }, () -> {
+            fail("Nashorn ES6 engine not found");
+        });
     }
 
 }
