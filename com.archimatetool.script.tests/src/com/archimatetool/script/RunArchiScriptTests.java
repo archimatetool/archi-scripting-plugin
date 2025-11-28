@@ -5,6 +5,7 @@
  */
 package com.archimatetool.script;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,6 +15,12 @@ import org.junit.jupiter.api.Test;
  */
 @SuppressWarnings("nls")
 public class RunArchiScriptTests {
+    
+    @BeforeAll
+    public static void runOnce() {
+        // Eclipse PDE JUnit workaround
+        AllTests.setClassLoaderForPDETests();
+    }
     
     @Test
     public void testModelScript() {

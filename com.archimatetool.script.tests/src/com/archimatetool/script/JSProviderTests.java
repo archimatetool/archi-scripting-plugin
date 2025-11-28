@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.archimatetool.script.preferences.IPreferenceConstants;
@@ -26,7 +27,13 @@ public class JSProviderTests {
         // Reset to default Graal engine
         ArchiScriptPlugin.getInstance().getPreferenceStore().setToDefault(IPreferenceConstants.PREFS_JS_ENGINE);
     }
-    
+
+    @BeforeAll
+    public static void runOnce() {
+        // Eclipse PDE JUnit workaround
+        AllTests.setClassLoaderForPDETests();
+    }
+
     @Test
     public void graalEngine() throws Exception {
         // Set to Graal engine
