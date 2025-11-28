@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Optional;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -44,8 +45,8 @@ public class JRubyProvider implements IScriptEngineProvider {
     }
 
     @Override
-    public ScriptEngine createScriptEngine() {
-        return new ScriptEngineManager().getEngineByName("jruby");
+    public Optional<ScriptEngine> createScriptEngine() {
+        return Optional.ofNullable(new ScriptEngineManager().getEngineByName("jruby"));
     }
     
     @Override

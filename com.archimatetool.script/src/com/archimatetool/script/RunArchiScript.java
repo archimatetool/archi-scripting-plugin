@@ -39,17 +39,11 @@ public class RunArchiScript {
 	
 	public void run() {
         // Get the provider for this file type
-	    IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
-        
-	    if(provider == null) {
-	        throw new RuntimeException(NLS.bind("Script Provider not found for file: {0}", file));
-	    }
+	    IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file)
+                .orElseThrow(() -> new RuntimeException(NLS.bind("Script Provider not found for file: {0}", file)));
 	    
-	    ScriptEngine engine = provider.createScriptEngine();
-	    
-	    if(engine == null) {
-            throw new RuntimeException(NLS.bind("Script Engine not found for file: {0}", file));
-        }
+        ScriptEngine engine = provider.createScriptEngine()
+                .orElseThrow(() -> new RuntimeException(NLS.bind("Script engine not found for file: {0}", file)));
 	    
 	    // Set the script engine class name in a System Property in case we need to know what the engine is elsewhere
         System.getProperties().put("script.engine", engine.getClass().getName());
@@ -65,11 +59,13 @@ public class RunArchiScript {
 
         // Initialise RefreshUIHandler
         RefreshUIHandler.init();
+        
+        // Check for linked file
+        if(ScriptFiles.isLinkedFile(file)) {
+            file = ScriptFiles.resolveLinkFile(file);
+        }
 
         try {
-            if(ScriptFiles.isLinkedFile(file)) {
-                file = ScriptFiles.resolveLinkFile(file);
-            }
             provider.run(file, engine);
         }
         catch(Throwable ex) {

@@ -64,24 +64,17 @@ public class MainSection extends AbstractArchiPropertySection {
         }
         
         if(selection.getFirstElement() instanceof File file) {
-            File actualFile = file;
-            
             if(ScriptFiles.isLinkedFile(file)) {
-                try {
-                    actualFile = ScriptFiles.resolveLinkFile(file);
-                }
-                catch(IOException ex) {
-                    ex.printStackTrace();
-                }
+                file = ScriptFiles.resolveLinkFile(file);
             }
             
-            textFile.setText(actualFile.getAbsolutePath());
+            textFile.setText(file.getAbsolutePath());
             
-            if(actualFile.isFile()) {
+            if(file.isFile()) {
                 labelPreview.setVisible(true);
                 textPreview.setVisible(true);
                 try {
-                    String content = Files.readString(actualFile.toPath());
+                    String content = Files.readString(file.toPath());
                     textPreview.setText(content);
                 }
                 catch(IOException ex) {

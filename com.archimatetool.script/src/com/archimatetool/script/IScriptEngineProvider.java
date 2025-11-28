@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -58,7 +59,7 @@ public interface IScriptEngineProvider {
     /**
      * @return the script engine to use
      */
-    ScriptEngine createScriptEngine();
+    Optional<ScriptEngine> createScriptEngine();
     
     /**
      * @return The supported file extensions (with leading ".").
@@ -105,23 +106,21 @@ public interface IScriptEngineProvider {
             }
         }
         
-        public static IScriptEngineProvider getProviderByID(String providerID) {
-            IScriptEngineProvider provider = idMap.get(providerID);
-            return provider == null ? idMap.get(JSProvider.ID) : provider;
+        public static Optional<IScriptEngineProvider> getProviderByID(String providerID) {
+            return Optional.ofNullable(idMap.get(providerID));
         }
         
-        public static IScriptEngineProvider getProviderForFile(File file) {
+        public static Optional<IScriptEngineProvider> getProviderForFile(File file) {
             if(ScriptFiles.isLinkedFile(file)) {
-                try {
-                    file = ScriptFiles.resolveLinkFile(file);
-                }
-                catch(IOException ex) {
-                    ex.printStackTrace();
-                }
+                file = ScriptFiles.resolveLinkFile(file);
             }
             
             String ext = FileUtils.getFileExtension(file).toLowerCase();
-            return extMap.get(ext);
+            return Optional.ofNullable(extMap.get(ext));
+        }
+        
+        public static boolean hasProviderForFile(File file) {
+            return getProviderForFile(file).isPresent();
         }
         
         public static List<IScriptEngineProvider> getInstalledProviders() {

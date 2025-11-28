@@ -6,7 +6,6 @@
 package com.archimatetool.script.views;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -40,30 +39,18 @@ public class FileLabelProvider implements ILabelProvider {
         if(file.isDirectory()) {
             return IArchiScriptImages.ImageFactory.getImage(IArchiScriptImages.ICON_FOLDER);
         }
-            
-        Image image = null;
 
-        // If we have a provider get the provider's image
-        IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
-        if(provider != null) {
-            image = provider.getImage();
-        }
-        // Default file image
-        else {
-            image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
-        }
+        // If we have a provider get the provider's image or use default file image
+        Image image = IScriptEngineProvider.INSTANCE.getProviderForFile(file)
+                                                    .map(IScriptEngineProvider::getImage)
+                                                    .orElse(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE));
 
         // If it's a linked file...
         if(ScriptFiles.isLinkedFile(file)) {
             // If the linked file exists add the link overlay
-            try {
-                if(ScriptFiles.resolveLinkFile(file).exists()) {
-                    return IArchiScriptImages.ImageFactory.getOverlayImage(image,
-                            IArchiScriptImages.ICON_LINK_OVERLAY, IDecoration.BOTTOM_RIGHT);
-                }
-            }
-            catch(IOException ex) {
-                ex.printStackTrace();
+            if(ScriptFiles.resolveLinkFile(file).exists()) {
+                return IArchiScriptImages.ImageFactory.getOverlayImage(image,
+                        IArchiScriptImages.ICON_LINK_OVERLAY, IDecoration.BOTTOM_RIGHT);
             }
 
             // Else add the warning overlay
@@ -96,12 +83,7 @@ public class FileLabelProvider implements ILabelProvider {
         }
         
         if(ScriptFiles.isLinkedFile(file)) {
-            try {
-                return ScriptFiles.resolveLinkFile(file).getAbsolutePath();
-            }
-            catch(IOException ex) {
-                ex.printStackTrace();
-            }
+            file = ScriptFiles.resolveLinkFile(file);
         }
         
         return file.getAbsolutePath();

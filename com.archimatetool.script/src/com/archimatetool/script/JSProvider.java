@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.script.ScriptEngine;
@@ -49,19 +50,14 @@ public class JSProvider implements IScriptEngineProvider {
      * @return The class used for the Nashorn engine if it is installed, or null.
      */
     private static Class<?> getNashornScriptEngineFactoryClass() {
-        Class<?> clazz = null;
-        
         try {
             // Standalone Nashorn bundle
             Bundle bundle = Platform.getBundle("com.archimatetool.script.nashorn");
-            if(bundle != null) {
-                clazz = bundle.loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory");
-            }
+            return bundle != null ? bundle.loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory") : null;
         }
-        catch(ClassNotFoundException ex1) {
+        catch(ClassNotFoundException ex) {
+            return null;
         }
-        
-        return clazz;
     }
     
     @Override
@@ -83,42 +79,39 @@ public class JSProvider implements IScriptEngineProvider {
 	}
 
     @Override
-    public ScriptEngine createScriptEngine() {
+    public Optional<ScriptEngine> createScriptEngine() {
         ScriptEngine engine = null;
         
+        // If Nashorn is installed use the engine as set in user preferences
         Class<?> clazz = getNashornScriptEngineFactoryClass();
         
-        // If Nashorn is installed use the engine as set in user preferences
         if(clazz != null) {
-            switch(ArchiScriptPlugin.getInstance().getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE)) {
-                case 0:
-                    engine = new ScriptEngineManager(clazz.getClassLoader()).getEngineByName("nashorn");
-                    break;
-
-                case 1:
+            engine = switch(ArchiScriptPlugin.getInstance().getPreferenceStore().getInt(IPreferenceConstants.PREFS_JS_ENGINE)) {
+                // Nashorn ES5
+                case 0 -> new ScriptEngineManager(clazz.getClassLoader()).getEngineByName("nashorn");
+                // Nashorn ES6
+                case 1 -> {
                     try {
                         // Get the NashornScriptEngineFactory by reflection
                         // This is the equivalent of: engine = new NashornScriptEngineFactory().getScriptEngine("--language=es6");
                         Object nashornScriptEngineFactory = clazz.getConstructor().newInstance();
                         Method getScriptEngineMethod = clazz.getMethod("getScriptEngine", String[].class);
-                        engine = (ScriptEngine)getScriptEngineMethod.invoke(nashornScriptEngineFactory, new Object[] {new String[] {"--language=es6"}});
+                        yield (ScriptEngine)getScriptEngineMethod.invoke(nashornScriptEngineFactory, new Object[] {new String[] {"--language=es6"}});
                     }
                     catch(Exception ex) {
                         ex.printStackTrace();
+                        yield null;
                     }
-                    break;
-
-                default:
-                    engine = getGraalScriptEngine();
-                    break;
-            }
+                }
+                // Graal
+                default -> getGraalScriptEngine();
+            };
         }
-        // Just use Graal
         else {
             engine = getGraalScriptEngine();
         }
         
-        return engine;
+        return Optional.ofNullable(engine);
     }
     
     private ScriptEngine getGraalScriptEngine() {

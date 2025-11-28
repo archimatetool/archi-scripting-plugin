@@ -96,8 +96,10 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
                     fillItems(subMenu, file.listFiles());
                 }
                 else {
-                    IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderForFile(file);
-                    ImageDescriptor imageDescriptor = provider.getImageDescriptor();
+                    ImageDescriptor imageDescriptor = IScriptEngineProvider.INSTANCE.getProviderForFile(file)
+                                                                                    .map(IScriptEngineProvider::getImageDescriptor)
+                                                                                    .orElse(null);
+                    
                     String label = StringUtils.escapeAmpersandsInText(FileUtils.getFileNameWithoutExtension(file));
                     
                     // If there is a key binding then use a CommandContributionItem to show the key mnemonic and run the Command
@@ -148,7 +150,7 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
             return false;
         }
         
-        return IScriptEngineProvider.INSTANCE.getProviderForFile(file) != null;
+        return IScriptEngineProvider.INSTANCE.hasProviderForFile(file);
     }
     
     @Override

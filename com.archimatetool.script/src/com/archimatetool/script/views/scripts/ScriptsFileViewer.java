@@ -134,8 +134,9 @@ extends AbstractFileView implements ITabbedPropertySheetPageContributor {
         fActionHideFolder = new MarkFolderHiddenAction();
         
         // Icon
-        IScriptEngineProvider provider = IScriptEngineProvider.INSTANCE.getProviderByID(JSProvider.ID);
-        fActionNewFile.setImageDescriptor(provider.getImageDescriptor());
+        fActionNewFile.setImageDescriptor(IScriptEngineProvider.INSTANCE.getProviderByID(JSProvider.ID)
+                                                                                    .map(IScriptEngineProvider::getImageDescriptor)
+                                                                                    .orElse(null));
     }
     
     @Override
@@ -377,12 +378,11 @@ extends AbstractFileView implements ITabbedPropertySheetPageContributor {
 
         if(file != null && file.isFile()) {
             if(ScriptFiles.isLinkedFile(file)) {
-                try {
-                    file = ScriptFiles.resolveLinkFile(file);
-                }
-                catch(IOException ex) {
-                    ex.printStackTrace();
-                }
+                file = ScriptFiles.resolveLinkFile(file);
+            }
+            
+            if(!file.exists()) {
+                return;
             }
             
             String editor = ArchiScriptPlugin.getInstance().getPreferenceStore().getString(IPreferenceConstants.PREFS_EDITOR);

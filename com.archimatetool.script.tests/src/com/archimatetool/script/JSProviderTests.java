@@ -25,7 +25,7 @@ public class JSProviderTests {
     @Test
     public void engineIsValid() throws Exception {
         JSProvider provider = new JSProvider();
-        ScriptEngine engine = provider.createScriptEngine();
+        ScriptEngine engine = provider.createScriptEngine().orElse(null);
         assertNotNull(engine);
         
         assertEquals("com.oracle.truffle.js.scriptengine.GraalJSScriptEngine", engine.getClass().getName());
