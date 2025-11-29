@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: jArchi JUnit Tests
 Bundle-SymbolicName: com.archimatetool.script.tests
-Bundle-Version: 1.11.0.qualifier
+Bundle-Version: 1.12.0.qualifier
 Fragment-Host: com.archimatetool.script
 Import-Package: org.junit.jupiter.api;version="[5.10.0,6.0.0)",
  org.junit.jupiter.api.function;version="[5.10.0,6.0.0)",
@@ -10,6 +10,6 @@ Import-Package: org.junit.jupiter.api;version="[5.10.0,6.0.0)",
  org.opentest4j;version="[1.3.0,2.0.0)"
 Require-Bundle: com.archimatetool.script.nashorn;bundle-version="1.11.0"
 Bundle-Vendor: Archi
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Eclipse-BundleShape: dir
 Automatic-Module-Name: com.archimatetool.script.tests

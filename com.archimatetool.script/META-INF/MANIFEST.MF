@@ -3,15 +3,15 @@ Bundle-ManifestVersion: 2
 Bundle-Name: jArchi
 Bundle-SymbolicName: com.archimatetool.script;singleton:=true
 Bundle-Localization: plugin
-Bundle-Version: 1.11.0.qualifier
+Bundle-Version: 1.12.0.qualifier
 Bundle-Vendor: Archi
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.help.ui,
- com.archimatetool.editor;bundle-version="5.5.0",
- com.archimatetool.commandline;bundle-version="5.5.0"
+ com.archimatetool.editor;bundle-version="5.6.0",
+ com.archimatetool.commandline;bundle-version="5.6.0"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Eclipse-BundleShape: dir
 Bundle-Activator: com.archimatetool.script.ArchiScriptPlugin
 Export-Package: com.archimatetool.script,
