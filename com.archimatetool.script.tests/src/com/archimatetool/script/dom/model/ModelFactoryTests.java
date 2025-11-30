@@ -270,8 +270,8 @@ public class ModelFactoryTests implements IModelConstants {
         IBounds bounds = proxy.getEObject().getBounds();
         assertEquals(10, bounds.getX());
         assertEquals(15, bounds.getY());
-        assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.getWidth());
-        assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.getHeight());
+        assertEquals(ArchiPlugin.getInstance().getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.getWidth());
+        assertEquals(ArchiPlugin.getInstance().getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.getHeight());
     }
 
     @Test

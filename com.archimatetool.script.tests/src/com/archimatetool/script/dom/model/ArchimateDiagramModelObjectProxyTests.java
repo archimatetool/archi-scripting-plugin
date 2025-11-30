@@ -191,8 +191,8 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         bounds = testProxy.getBounds();
         assertEquals(10, bounds.get(BOUNDS_X));
         assertEquals(20, bounds.get(BOUNDS_Y));
-        assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.get(BOUNDS_WIDTH));
-        assertEquals(ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.get(BOUNDS_HEIGHT));
+        assertEquals(ArchiPlugin.getInstance().getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_WIDTH), bounds.get(BOUNDS_WIDTH));
+        assertEquals(ArchiPlugin.getInstance().getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_ARCHIMATE_FIGURE_HEIGHT), bounds.get(BOUNDS_HEIGHT));
     }
     
     @Test

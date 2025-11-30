@@ -43,7 +43,7 @@ public class SetElementOnDiagramModelObjectCommand extends ScriptCommand {
         
         this.setDefaultFigureType = setDefaultFigureType;
         oldType = dmo.getType();
-        newType = ArchiPlugin.INSTANCE.getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_FIGURE_PREFIX + element.eClass().getName());
+        newType = ArchiPlugin.getInstance().getPreferenceStore().getInt(IPreferenceConstants.DEFAULT_FIGURE_PREFIX + element.eClass().getName());
         
         // Store current state
         parent = (IDiagramModelContainer)dmo.eContainer();
