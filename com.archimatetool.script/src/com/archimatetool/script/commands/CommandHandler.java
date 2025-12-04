@@ -33,16 +33,18 @@ public class CommandHandler {
             return;
         }
         
+        // Perform the command *before* putting it on the CommandStack in case an exception is thrown.
+        // We don't want to undo/redo a broken command.
+        cmd.perform();
+        
         // Get the CommandStack
         CommandStack stack = (CommandStack)cmd.getModel().getAdapter(CommandStack.class);
-        // Get the Compound Command for this stack and add the command to it
+        
+        // Get the CompoundCommand for the model's CommandStack and add the command to it
         if(stack != null) {
             CompoundCommand compound = compoundcommands.computeIfAbsent(stack, commandStack -> new ScriptNonNotifyingCompoundCommand());
             compound.add(cmd);
         }
-        
-        // Perform the command
-        cmd.perform();
         
         // Take this opportunity to update the UI if set
         RefreshUIHandler.refresh();
