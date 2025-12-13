@@ -51,7 +51,7 @@ public class MainSection extends AbstractArchiPropertySection {
         textFile = createSingleTextControl(parent, SWT.READ_ONLY);
         
         labelPreview = createLabel(parent, Messages.MainSection_1, STANDARD_LABEL_WIDTH, SWT.NONE);
-        textPreview = new StyledText(parent, SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL | SWT.WRAP);
+        textPreview = new StyledText(parent, SWT.READ_ONLY | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL); // Don't use SWT.WRAP as it can be too slow on large files
         textPreview.setTabs(4);
         textPreview.setFont(JFaceResources.getTextFont());
         GridDataFactory.create(GridData.FILL_BOTH).hint(100, 100).applyTo(textPreview); // hint(100, 100) stops excess size if the control contains a lot of text
