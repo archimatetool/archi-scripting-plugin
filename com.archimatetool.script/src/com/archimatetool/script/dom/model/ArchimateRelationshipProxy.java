@@ -5,7 +5,6 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -21,7 +20,6 @@ import com.archimatetool.model.IConnectable;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
-import com.archimatetool.model.IFeature;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IInfluenceRelationship;
 import com.archimatetool.model.IProperty;
@@ -217,12 +215,10 @@ public class ArchimateRelationshipProxy extends ArchimateConceptProxy implements
         IArchimateRelationship newRelationship = newRelationshipProxy.getEObject();
 
         // Copy all properties
-        Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
-        newRelationship.getProperties().addAll(props);
+        newRelationship.getProperties().addAll(EcoreUtil.copyAll(getEObject().getProperties()));
 
         // Copy all features
-        Collection<IFeature> features = EcoreUtil.copyAll(getEObject().getFeatures());
-        newRelationship.getFeatures().addAll(features);
+        newRelationship.getFeatures().addAll(EcoreUtil.copyAll(getEObject().getFeatures()));
 
         // Copy Documentation
         newRelationship.setDocumentation(getEObject().getDocumentation());

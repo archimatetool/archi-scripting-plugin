@@ -5,15 +5,12 @@
  */
 package com.archimatetool.script.dom.model;
 
-import java.util.Collection;
-
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.osgi.util.NLS;
 
 import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimatePackage;
 import com.archimatetool.model.IDiagramModelArchimateObject;
-import com.archimatetool.model.IFeature;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IJunction;
 import com.archimatetool.model.IProperty;
@@ -61,12 +58,10 @@ public class ArchimateElementProxy extends ArchimateConceptProxy {
         IArchimateElement newElement = newElementProxy.getEObject();
 
         // Copy Properties to new element
-        Collection<IProperty> props = EcoreUtil.copyAll(getEObject().getProperties());
-        newElement.getProperties().addAll(props);
+        newElement.getProperties().addAll(EcoreUtil.copyAll(getEObject().getProperties()));
         
         // Copy Features to new element
-        Collection<IFeature> features = EcoreUtil.copyAll(getEObject().getFeatures());
-        newElement.getFeatures().addAll(features);
+        newElement.getFeatures().addAll(EcoreUtil.copyAll(getEObject().getFeatures()));
 
         // Copy Documentation to new element
         newElement.setDocumentation(getEObject().getDocumentation());
