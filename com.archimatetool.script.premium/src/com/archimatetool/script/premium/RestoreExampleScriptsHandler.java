@@ -35,7 +35,7 @@ public class RestoreExampleScriptsHandler extends AbstractHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         File targetExamplesFolder = new File(ArchiScriptPlugin.getInstance().getUserScriptsFolder(), "examples"); //$NON-NLS-1$
-        if(targetExamplesFolder.exists() && targetExamplesFolder.list().length > 0) {
+        if(targetExamplesFolder.exists() && targetExamplesFolder.isDirectory() && targetExamplesFolder.list().length > 0) {
             boolean confirm = MessageDialog.openConfirm(HandlerUtil.getActiveShell(event), "Archi", //$NON-NLS-1$
                     Messages.RestoreExampleScriptsHandler_0);
             if(!confirm) {

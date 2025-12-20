@@ -137,16 +137,20 @@ public class ScriptsContextMenuContributionItem extends ContributionItem impleme
     
     private boolean doShowFile(File file) {
         if(file.isDirectory()) {
-            for(File f : file.listFiles()) {
-                // Don't show folder if marked as hidden
-                if(ScriptFiles.HIDDEN_MARKER_FILE.equals(f.getName())) {
-                    return false;
-                }
+            File[] files = file.listFiles();
+            if(files != null) {
+                for(File f : files) {
+                    // Don't show folder if marked as hidden
+                    if(ScriptFiles.HIDDEN_MARKER_FILE.equals(f.getName())) {
+                        return false;
+                    }
 
-                if(doShowFile(f)) {
-                    return true;
+                    if(doShowFile(f)) {
+                        return true;
+                    }
                 }
             }
+            
             return false;
         }
         
