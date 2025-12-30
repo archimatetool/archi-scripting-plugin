@@ -9,13 +9,13 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPart;
@@ -40,12 +40,12 @@ extends ViewPart implements IContributedContentsView {
     public static String ID = ArchiScriptPlugin.PLUGIN_ID + ".consoleView"; //$NON-NLS-1$
     public static String HELP_ID = ArchiScriptPlugin.PLUGIN_ID + ".consoleViewHelp"; //$NON-NLS-1$
 
-    public static Font DEFAULT_FONT = JFaceResources.getFontRegistry().get(JFaceResources.TEXT_FONT);
-    
     private IAction fActionClear, fActionWordWrap, fActionScrollLock;
     
     private StyledText fTextPane;
     private Color fTextColor;
+    
+    private IPreferenceStore prefsStore = ArchiScriptPlugin.getInstance().getPreferenceStore();
     
     private IPropertyChangeListener prefsListener = (event) -> {
         if(IPreferenceConstants.PREFS_CONSOLE_FONT == event.getProperty()) {
@@ -58,7 +58,7 @@ extends ViewPart implements IContributedContentsView {
         fTextPane = new StyledText(parent, SWT.H_SCROLL | SWT.V_SCROLL);
         fTextPane.setEditable(false);
         fTextPane.setTabs(4);
-        fTextPane.setWordWrap(ArchiScriptPlugin.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP));
+        fTextPane.setWordWrap(prefsStore.getBoolean(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP));
 
         setFontFromPreferences();
         
@@ -76,7 +76,7 @@ extends ViewPart implements IContributedContentsView {
         
         fActionWordWrap = new Action(Messages.ConsoleView_1, IAction.AS_CHECK_BOX) {
             {
-                setChecked(ArchiScriptPlugin.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP));
+                setChecked(prefsStore.getBoolean(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP));
                 setToolTipText(getText());
                 setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_CONSOLE_WRAP));
             }
@@ -84,27 +84,27 @@ extends ViewPart implements IContributedContentsView {
             @Override
             public void run() {
                 fTextPane.setWordWrap(isChecked());
-                ArchiScriptPlugin.getInstance().getPreferenceStore().setValue(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP, isChecked());
+                prefsStore.setValue(IPreferenceConstants.PREFS_CONSOLE_WORD_WRAP, isChecked());
             }
         };
         
         fActionScrollLock = new Action(Messages.ConsoleView_2, IAction.AS_CHECK_BOX) {
             {
-                setChecked(ArchiScriptPlugin.getInstance().getPreferenceStore().getBoolean(IPreferenceConstants.PREFS_CONSOLE_SCROLL_LOCK));
+                setChecked(prefsStore.getBoolean(IPreferenceConstants.PREFS_CONSOLE_SCROLL_LOCK));
                 setToolTipText(getText());
                 setImageDescriptor(IArchiScriptImages.ImageFactory.getImageDescriptor(IArchiScriptImages.ICON_CONSOLE_SCROLL_LOCK));
             }
             
             @Override
             public void run() {
-                ArchiScriptPlugin.getInstance().getPreferenceStore().setValue(IPreferenceConstants.PREFS_CONSOLE_SCROLL_LOCK, isChecked());
+                prefsStore.setValue(IPreferenceConstants.PREFS_CONSOLE_SCROLL_LOCK, isChecked());
             }
         };
         
         makeLocalMenuActions();
         makeLocalToolBarActions();
         
-        ArchiScriptPlugin.getInstance().getPreferenceStore().addPropertyChangeListener(prefsListener);
+        prefsStore.addPropertyChangeListener(prefsListener);
         
         // Register Help Context
         PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, HELP_ID);
@@ -185,13 +185,8 @@ extends ViewPart implements IContributedContentsView {
     }
     
     private void setFontFromPreferences() {
-        String fontName = ArchiScriptPlugin.getInstance().getPreferenceStore().getString(IPreferenceConstants.PREFS_CONSOLE_FONT);
-        if(!StringUtils.isSet(fontName)) {
-            fTextPane.setFont(DEFAULT_FONT);
-        }
-        else {
-            fTextPane.setFont(FontFactory.get(fontName));
-        }
+        String fontName = prefsStore.getString(IPreferenceConstants.PREFS_CONSOLE_FONT);
+        fTextPane.setFont(StringUtils.isSet(fontName) ? FontFactory.get(fontName) : JFaceResources.getTextFont());
     }
     
     /**
@@ -205,6 +200,6 @@ extends ViewPart implements IContributedContentsView {
     @Override
     public void dispose() {
         super.dispose();
-        ArchiScriptPlugin.getInstance().getPreferenceStore().removePropertyChangeListener(prefsListener);
+        prefsStore.removePropertyChangeListener(prefsListener);
     }
 }

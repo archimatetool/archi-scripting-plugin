@@ -10,7 +10,9 @@ import static org.eclipse.swt.events.SelectionListener.widgetSelectedAdapter;
 import java.io.File;
 
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
@@ -34,7 +36,6 @@ import com.archimatetool.editor.utils.PlatformUtils;
 import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.JSProvider;
-import com.archimatetool.script.views.console.ConsoleView;
 
 
 /**
@@ -55,9 +56,10 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     
     private Combo fDoubleClickBehaviourCombo;
     
+    private FontData fDefaultFontData = JFaceResources.getTextFont().getFontData()[0];
+
     private Label fConsoleFontLabel;
-    private FontData fDefaultConsoleFontData = ConsoleView.DEFAULT_FONT.getFontData()[0];
-    private FontData fConsoleFontData = fDefaultConsoleFontData;
+    private FontData fConsoleFontData = fDefaultFontData;
     
     private String[] DOUBLE_CLICK_BEHAVIOURS = {
             Messages.ScriptPreferencePage_4,
@@ -65,8 +67,11 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
             Messages.ScriptPreferencePage_6
     };
     
-    private Combo fJSCombo;
+    private Button fShowPreviewButton;
+    private Label fPreviewFontLabel;
+    private FontData fPreviewFontData = fDefaultFontData;
     
+    private Combo fJSCombo;
     private Button fCommonJSButton;
     
     private boolean debuggerOptionsEnabled = !PlatformUtils.isLinux(); // Not working on Linux
@@ -88,18 +93,15 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
     protected Control createContents(Composite parent) {
         // Help
         PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, HELP_ID);
-
-        Composite client = new Composite(parent, SWT.NULL);
-        GridLayout layout = new GridLayout();
-        layout.marginWidth = layout.marginHeight = 0;
-        client.setLayout(layout);
         
+        Composite client = new Composite(parent, SWT.NONE);
+        GridLayoutFactory.fillDefaults().applyTo(client);
+        
+        // Settings Group
         Group settingsGroup = new Group(client, SWT.NULL);
         settingsGroup.setText(Messages.ScriptPreferencePage_0);
-        settingsGroup.setLayout(new GridLayout(3, false));
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.widthHint = 500;
-        settingsGroup.setLayoutData(gd);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(settingsGroup);
+        GridDataFactory.create(GridData.FILL_HORIZONTAL).hint(500, SWT.DEFAULT).applyTo(settingsGroup);
         
         // Scripts folder location
         Label label = new Label(settingsGroup, SWT.NULL);
@@ -138,47 +140,73 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         label.setText(Messages.ScriptPreferencePage_7);
         fDoubleClickBehaviourCombo = new Combo(settingsGroup, SWT.READ_ONLY);
         fDoubleClickBehaviourCombo.setItems(DOUBLE_CLICK_BEHAVIOURS);
-        gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.horizontalSpan = 2;
-        fDoubleClickBehaviourCombo.setLayoutData(gd);
+        GridDataFactory.create(GridData.FILL_HORIZONTAL).span(2, 1).applyTo(fDoubleClickBehaviourCombo);
         
-        // JS Versions - only if Nashorn is installed
-        if(JSProvider.isNashornInstalled()) {
-            label = new Label(settingsGroup, SWT.NULL);
-            label.setText(Messages.ScriptPreferencePage_12);
-            fJSCombo = new Combo(settingsGroup, SWT.READ_ONLY);
-            fJSCombo.setItems(JS_VERSIONS);
-            gd = new GridData(GridData.FILL_HORIZONTAL);
-            gd.horizontalSpan = 2;
-            fJSCombo.setLayoutData(gd);
-        }
+        // Display Group
+        Group displayGroup = new Group(client, SWT.NULL);
+        displayGroup.setText(Messages.ScriptPreferencePage_23);
+        GridLayoutFactory.fillDefaults().numColumns(3).applyTo(displayGroup);
+        GridDataFactory.create(GridData.FILL_HORIZONTAL).applyTo(displayGroup);        
         
         // Console font
-        label = new Label(settingsGroup, SWT.NULL);
+        label = new Label(displayGroup, SWT.NULL);
         label.setText(Messages.ScriptPreferencePage_13);
-        fConsoleFontLabel = new Label(settingsGroup, SWT.NULL);
-        fConsoleFontLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         
-        Button button = new Button(settingsGroup, SWT.PUSH);
-        button.setLayoutData(new GridData(SWT.RIGHT));
-        button.setText(Messages.ScriptPreferencePage_2);
-        button.addSelectionListener(widgetSelectedAdapter(event -> {
-            FontDialog dialog = new FontDialog(getShell());
-            dialog.setEffectsVisible(false);
-            dialog.setFontList(new FontData[] { fConsoleFontData });
-
-            FontData fd = dialog.open();
+        Button consoleFontButton = new Button(displayGroup, SWT.PUSH);
+        consoleFontButton.setText(Messages.ScriptPreferencePage_2);
+        consoleFontButton.addSelectionListener(widgetSelectedAdapter(event -> {
+            FontData fd = openFontDialog(fConsoleFontData);
             if(fd != null) {
                 fConsoleFontData = fd;
-                updateFontLabel();
+                updateFontLabel(fConsoleFontLabel, fConsoleFontData);
             }
         }));
         
+        fConsoleFontLabel = new Label(displayGroup, SWT.NULL);
+        GridDataFactory.create(GridData.FILL_HORIZONTAL).applyTo(fConsoleFontLabel);        
+        
+        // Preview Font
+        label = new Label(displayGroup, SWT.NULL);
+        label.setText(Messages.ScriptPreferencePage_24);
+        
+        Button previewFontButton = new Button(displayGroup, SWT.PUSH);
+        previewFontButton.setText(Messages.ScriptPreferencePage_2);
+        previewFontButton.addSelectionListener(widgetSelectedAdapter(event -> {
+            FontData fd = openFontDialog(fPreviewFontData);
+            if(fd != null) {
+                fPreviewFontData = fd;
+                updateFontLabel(fPreviewFontLabel, fPreviewFontData);
+            }
+        }));
+        
+        fPreviewFontLabel = new Label(displayGroup, SWT.NULL);
+        GridDataFactory.create(GridData.FILL_HORIZONTAL).applyTo(fPreviewFontLabel);
+
+        // Show Preview
+        fShowPreviewButton = new Button(displayGroup, SWT.CHECK);
+        fShowPreviewButton.setText(Messages.ScriptPreferencePage_25);
+        GridDataFactory.create(GridData.FILL_HORIZONTAL).span(3, 1).applyTo(fShowPreviewButton);
+        
+        // JavaScript Group
+        Group jsGroup = new Group(client, SWT.NULL);
+        jsGroup.setText(Messages.ScriptPreferencePage_27);
+        jsGroup.setLayout(new GridLayout(2, false));
+        GridDataFactory.create(GridData.FILL_HORIZONTAL).span(2, 1).applyTo(jsGroup);
+        
+        // JS Versions - only if Nashorn is installed
+        if(JSProvider.isNashornInstalled()) {
+            label = new Label(jsGroup, SWT.NULL);
+            label.setText(Messages.ScriptPreferencePage_12);
+            fJSCombo = new Combo(jsGroup, SWT.READ_ONLY);
+            fJSCombo.setItems(JS_VERSIONS);
+            GridDataFactory.create(GridData.FILL_HORIZONTAL).applyTo(fJSCombo);
+        }
+        
         // Enable CommonJS Support
-        fCommonJSButton = new Button(settingsGroup, SWT.CHECK);
+        fCommonJSButton = new Button(jsGroup, SWT.CHECK);
         fCommonJSButton.setText(Messages.ScriptPreferencePage_15);
         fCommonJSButton.setToolTipText(Messages.ScriptPreferencePage_16);
-        GridDataFactory.create(GridData.FILL_HORIZONTAL).span(3, 1).applyTo(fCommonJSButton);
+        GridDataFactory.create(GridData.FILL_HORIZONTAL).span(2, 1).applyTo(fCommonJSButton);
         
         // Chrome Debugger
         if(debuggerOptionsEnabled) {
@@ -263,16 +291,23 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         fScriptsFolderTextField.setText(getPreferenceStore().getString(PREFS_SCRIPTS_FOLDER));
         fEditorPathTextField.setText(getPreferenceStore().getString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
+        fShowPreviewButton.setSelection(getPreferenceStore().getBoolean(PREFS_SHOW_PREVIEW));
+        
+        String consoleFontName = getPreferenceStore().getString(PREFS_CONSOLE_FONT);
+        if(StringUtils.isSet(consoleFontName)) {
+            fConsoleFontData = new FontData(consoleFontName);
+        }
+        updateFontLabel(fConsoleFontLabel, fConsoleFontData);
+        
+        String previewFontName = getPreferenceStore().getString(PREFS_PREVIEW_FONT);
+        if(StringUtils.isSet(previewFontName)) {
+            fPreviewFontData = new FontData(previewFontName);
+        }
+        updateFontLabel(fPreviewFontLabel, fPreviewFontData);
         
         if(fJSCombo != null) {
             fJSCombo.select(getPreferenceStore().getInt(PREFS_JS_ENGINE));
         }
-        
-        String fontName = getPreferenceStore().getString(PREFS_CONSOLE_FONT);
-        if(StringUtils.isSet(fontName)) {
-            fConsoleFontData = new FontData(fontName);
-        }
-        updateFontLabel();
         
         fCommonJSButton.setSelection(getPreferenceStore().getBoolean(PREFS_COMMONJS_ENABLED));
         
@@ -288,12 +323,14 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         getPreferenceStore().setValue(PREFS_SCRIPTS_FOLDER, fScriptsFolderTextField.getText());
         getPreferenceStore().setValue(PREFS_EDITOR, fEditorPathTextField.getText());
         getPreferenceStore().setValue(PREFS_DOUBLE_CLICK_BEHAVIOUR, fDoubleClickBehaviourCombo.getSelectionIndex());
+        getPreferenceStore().setValue(PREFS_SHOW_PREVIEW, fShowPreviewButton.getSelection());
+        
+        getPreferenceStore().setValue(PREFS_CONSOLE_FONT, fDefaultFontData.equals(fConsoleFontData) ? "" : fConsoleFontData.toString()); //$NON-NLS-1$
+        getPreferenceStore().setValue(PREFS_PREVIEW_FONT, fDefaultFontData.equals(fPreviewFontData) ? "" : fPreviewFontData.toString()); //$NON-NLS-1$
         
         if(fJSCombo != null) {
             getPreferenceStore().setValue(PREFS_JS_ENGINE, fJSCombo.getSelectionIndex());
         }
-        
-        getPreferenceStore().setValue(PREFS_CONSOLE_FONT, fDefaultConsoleFontData.equals(fConsoleFontData) ? "" : fConsoleFontData.toString()); //$NON-NLS-1$
         
         getPreferenceStore().setValue(PREFS_COMMONJS_ENABLED, fCommonJSButton.getSelection());
         
@@ -311,13 +348,17 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         fScriptsFolderTextField.setText(getPreferenceStore().getDefaultString(PREFS_SCRIPTS_FOLDER));
         fEditorPathTextField.setText(getPreferenceStore().getDefaultString(PREFS_EDITOR));
         fDoubleClickBehaviourCombo.select(getPreferenceStore().getDefaultInt(PREFS_DOUBLE_CLICK_BEHAVIOUR));
+        fShowPreviewButton.setSelection(getPreferenceStore().getDefaultBoolean(PREFS_SHOW_PREVIEW));
+        
+        fConsoleFontData = fDefaultFontData;
+        updateFontLabel(fConsoleFontLabel, fConsoleFontData);
+        
+        fPreviewFontData = fDefaultFontData;
+        updateFontLabel(fPreviewFontLabel, fPreviewFontData);
         
         if(fJSCombo != null) {
             fJSCombo.select(getPreferenceStore().getDefaultInt(PREFS_JS_ENGINE));
         }
-        
-        fConsoleFontData = fDefaultConsoleFontData;
-        updateFontLabel();
         
         fCommonJSButton.setSelection(getPreferenceStore().getDefaultBoolean(PREFS_COMMONJS_ENABLED));
         
@@ -330,8 +371,15 @@ implements IWorkbenchPreferencePage, IPreferenceConstants {
         super.performDefaults();
     }
     
-    private void updateFontLabel() {
-        fConsoleFontLabel.setText(fConsoleFontData.getName() + " " + fConsoleFontData.getHeight()); //$NON-NLS-1$
+    private void updateFontLabel(Label label, FontData fd) {
+        label.setText(fd.getName() + " " + fd.getHeight()); //$NON-NLS-1$
+    }
+    
+    private FontData openFontDialog(FontData initialFontData) {
+        FontDialog dialog = new FontDialog(getShell());
+        dialog.setEffectsVisible(false);
+        dialog.setFontList(new FontData[] { initialFontData });
+        return dialog.open();
     }
     
     @Override

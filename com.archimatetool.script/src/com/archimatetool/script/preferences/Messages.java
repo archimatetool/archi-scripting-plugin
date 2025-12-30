@@ -38,6 +38,14 @@ public class Messages extends NLS {
 
     public static String ScriptPreferencePage_22;
 
+    public static String ScriptPreferencePage_23;
+
+    public static String ScriptPreferencePage_24;
+
+    public static String ScriptPreferencePage_25;
+
+    public static String ScriptPreferencePage_27;
+
     public static String ScriptPreferencePage_3;
 
     public static String ScriptPreferencePage_4;

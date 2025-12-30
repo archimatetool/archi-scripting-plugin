@@ -31,4 +31,7 @@ public interface IPreferenceConstants {
     String PREFS_DEBUGGER_ENABLED = "debuggerEnabled";
     String PREFS_DEBUGGER_PORT = "debuggerPort";
     String PREFS_DEBUGGER_BROWSER = "debuggerBrowser";
+    
+    String PREFS_SHOW_PREVIEW = "showPreview";
+    String PREFS_PREVIEW_FONT = "previewFont";
 }
