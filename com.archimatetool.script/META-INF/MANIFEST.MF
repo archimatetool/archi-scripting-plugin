@@ -8,6 +8,7 @@ Bundle-Vendor: Archi
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.help.ui,
+ org.eclipse.ui.views.properties.tabbed,
  com.archimatetool.editor;bundle-version="5.6.0",
  com.archimatetool.commandline;bundle-version="5.6.0"
 Bundle-ActivationPolicy: lazy
