@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.Text;
 
 import com.archimatetool.editor.propertysections.AbstractArchiPropertySection;
 import com.archimatetool.editor.ui.FontFactory;
-import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.ScriptFiles;
 import com.archimatetool.script.preferences.IPreferenceConstants;
@@ -125,7 +124,7 @@ public class MainSection extends AbstractArchiPropertySection {
         textPreview.setVisible(showPreview);
         
         String fontName = prefsStore.getString(IPreferenceConstants.PREFS_PREVIEW_FONT);
-        textPreview.setFont(StringUtils.isSet(fontName) ? FontFactory.get(fontName) : JFaceResources.getTextFont());
+        textPreview.setFont(FontFactory.get(fontName, JFaceResources.getTextFont()));
     }
     
     @Override

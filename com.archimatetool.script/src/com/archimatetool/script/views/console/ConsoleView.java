@@ -24,7 +24,6 @@ import org.eclipse.ui.part.IContributedContentsView;
 import org.eclipse.ui.part.ViewPart;
 
 import com.archimatetool.editor.ui.FontFactory;
-import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.script.ArchiScriptPlugin;
 import com.archimatetool.script.IArchiScriptImages;
 import com.archimatetool.script.RefreshUIHandler;
@@ -186,7 +185,7 @@ extends ViewPart implements IContributedContentsView {
     
     private void setFontFromPreferences() {
         String fontName = prefsStore.getString(IPreferenceConstants.PREFS_CONSOLE_FONT);
-        fTextPane.setFont(StringUtils.isSet(fontName) ? FontFactory.get(fontName) : JFaceResources.getTextFont());
+        fTextPane.setFont(FontFactory.get(fontName, JFaceResources.getTextFont()));
     }
     
     /**
