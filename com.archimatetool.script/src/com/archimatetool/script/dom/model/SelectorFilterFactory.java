@@ -14,6 +14,7 @@ import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateRelationship;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateComponent;
+import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
@@ -127,6 +128,11 @@ class SelectorFilterFactory implements IModelConstants {
 
         // Class type of object
         return eObject -> {
+            // Special case for legend
+            if(eObject instanceof IDiagramModelNote note && note.isLegend()) {
+                return DIAGRAM_MODEL_LEGEND.equals(selector);
+            }
+
             EObject resolved = getReferencedObject(eObject);
             return resolved != null && resolved.eClass().getName().equals(ModelUtil.getCamelCase(selector));
         };

@@ -16,6 +16,7 @@ import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
+import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
@@ -256,5 +257,30 @@ public class SelectorFilterFactoryTests implements IModelConstants {
         ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("diagram-model-archimate-object");
         assertNotNull(filter);
         assertFalse(filter.accept(dmao));
+    }
+    
+    @Test
+    public void getLegend() {
+        // Create a Note
+        IDiagramModelNote note = IArchimateFactory.eINSTANCE.createDiagramModelNote();
+        
+        // This will be accepted
+        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter(DIAGRAM_MODEL_NOTE);
+        assertNotNull(filter);
+        assertTrue(filter.accept(note));
+        
+        // Set Note to Legend
+        note.setIsLegend(true);
+        note.setName("Legend");
+        
+        // Should not return note selector
+        filter = SelectorFilterFactory.getInstance().getFilter(DIAGRAM_MODEL_NOTE);
+        assertNotNull(filter);
+        assertFalse(filter.accept(note));
+        
+        // Should return legend selector
+        filter = SelectorFilterFactory.getInstance().getFilter(DIAGRAM_MODEL_LEGEND);
+        assertNotNull(filter);
+        assertTrue(filter.accept(note));
     }
 }

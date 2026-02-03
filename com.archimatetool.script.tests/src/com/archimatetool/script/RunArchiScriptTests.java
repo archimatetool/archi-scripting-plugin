@@ -40,6 +40,11 @@ public class RunArchiScriptTests {
         runScript("test-views.ajs");
     }
 
+    @Test
+    public void testLegendScript() {
+        runScript("test-legend.ajs");
+    }
+
     private void runScript(String scriptFile) {
         RunArchiScript rs = new RunArchiScript(TestFiles.getTestFile(scriptFile));
         rs.throwExceptions = true;

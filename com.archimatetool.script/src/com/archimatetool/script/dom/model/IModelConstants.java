@@ -105,6 +105,7 @@ interface IModelConstants {
     
     // Object types
     String DIAGRAM_MODEL_GROUP = "diagram-model-group";
+    String DIAGRAM_MODEL_LEGEND = "diagram-model-legend";
     String DIAGRAM_MODEL_NOTE = "diagram-model-note";
     
     // Label Expressions
@@ -117,4 +118,15 @@ interface IModelConstants {
     String SHOW_ICON = "showIcon";
     String IMAGE_SOURCE = "imageSource";
     String IMAGE_POSITION = "imagePosition";
+    
+    // Legend attributes
+    String LEGEND_OPTIONS = "legendOptions";
+    String LEGEND_DISPLAY_ELEMENTS = "showElements";
+    String LEGEND_DISPLAY_RELATIONS = "showRelations";
+    String LEGEND_DISPLAY_SPECIALIZATION_ELEMENTS = "showSpecializationElements";
+    String LEGEND_DISPLAY_SPECIALIZATION_RELATIONS = "showSpecializationRelations";
+    String LEGEND_COLOR_SCHEME = "color";
+    String LEGEND_SORT_METHOD = "sort";
+    String LEGEND_ROWS_PER_COLUMN = "rows";
+    String LEGEND_WIDTH_OFFSET = "offset";
 }

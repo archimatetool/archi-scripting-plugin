@@ -39,6 +39,7 @@ import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelContainer;
+import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IDiagramModelObject;
 import com.archimatetool.model.IDiagramModelReference;
 import com.archimatetool.model.IFolder;
@@ -357,6 +358,15 @@ class ModelFactory implements IModelConstants {
                 
                 // Use Factory for defaults
                 yield (IDiagramModelObject)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelNote()).getNewObject();
+            }
+
+            case DIAGRAM_MODEL_LEGEND -> {
+                if(!(parent.getDiagramModel() instanceof IArchimateDiagramModel)) {
+                    throw new ArchiScriptException(Messages.ModelFactory_2);
+                }
+                
+                // Use Factory for defaults
+                yield (IDiagramModelObject)new ArchimateDiagramModelFactory(IArchimatePackage.eINSTANCE.getDiagramModelNote(), IDiagramModelNote.LEGEND_MODEL_NAME).getNewObject();
             }
 
             case DIAGRAM_MODEL_GROUP, "group" -> { //Backward compatibility //$NON-NLS-1$

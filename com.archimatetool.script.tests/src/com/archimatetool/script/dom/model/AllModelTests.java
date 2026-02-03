@@ -21,6 +21,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
     CurrentModelTests.class,
     DiagramModelConnectionProxyTests.class,
     DiagramModelGroupProxyTests.class,
+    DiagramModelLegendProxyTests.class,
     DiagramModelNoteProxyTests.class,
     DiagramModelReferenceProxyTests.class,
     EObjectProxyCollectionTests.class,

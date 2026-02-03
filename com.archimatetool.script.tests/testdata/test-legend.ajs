@@ -1,0 +1,41 @@
+// =========================================================================
+// Test Diagram Objects
+// =========================================================================
+
+load("testutils.js");
+
+// =========================================================================
+// Add a Legend to a View
+// =========================================================================
+
+// Load the test model
+loadTestModel("Archisurance.archimate", true);
+assertNotNull(model);
+
+// Get a View
+var view = $("#4165").first();
+
+// Add a legend
+var legend = view.createObject("diagram-model-legend", 10, 200, -1, -1);
+assertNotNull(legend);
+assertEquals("Legend", legend.name);
+
+// Check bounds
+var bounds = legend.bounds;
+assertEquals(10, bounds.x);
+assertEquals(200, bounds.y);
+
+// Set some options
+legend.options = {showElements: false, rows: 10, offset: -20, color: 2, sort: 1};
+
+// Check them
+var options = legend.options;
+assertFalse(options.showElements);
+assertEquals(10, options.rows);
+assertEquals(-20, options.offset);
+assertEquals(2, options.color);
+assertEquals(1, options.sort);
+
+// Find it with a selector
+var found = $(view).find("diagram-model-legend").first();
+assertEquals(legend, found);

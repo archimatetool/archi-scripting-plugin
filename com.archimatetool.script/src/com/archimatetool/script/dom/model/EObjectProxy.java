@@ -55,55 +55,26 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
      * @return EObjectProxy type or null if not found
      */
     static EObjectProxy get(EObject eObject) {
-        if(eObject instanceof IArchimateModel model) {
-            return new ArchimateModelProxy(model);
+        if(eObject == null) { // Check for null!
+            return null;
         }
         
-        if(eObject instanceof IArchimateElement element) {
-            return new ArchimateElementProxy(element);
-        }
-        
-        if(eObject instanceof IArchimateRelationship relation) {
-            return new ArchimateRelationshipProxy(relation);
-        }
-        
-        if(eObject instanceof IArchimateDiagramModel dm) {
-            return new ArchimateDiagramModelProxy(dm);
-        }
-        
-        if(eObject instanceof ISketchModel sm) {
-            return new SketchDiagramModelProxy(sm);
-        }
-        
-        if(eObject instanceof ICanvasModel cm) {
-            return new CanvasDiagramModelProxy(cm);
-        }
-        
-        if(eObject instanceof IDiagramModelNote note) {
-            return new DiagramModelNoteProxy(note);
-        }
-        
-        if(eObject instanceof IDiagramModelGroup group) {
-            return new DiagramModelGroupProxy(group);
-        }
-
-        if(eObject instanceof IDiagramModelReference ref) {
-            return new DiagramModelReferenceProxy(ref);
-        }
-
-        if(eObject instanceof IDiagramModelObject dmo) {
-            return new DiagramModelObjectProxy(dmo);
-        }
-        
-        if(eObject instanceof IDiagramModelConnection dmc) {
-            return new DiagramModelConnectionProxy(dmc);
-        }
-
-        if(eObject instanceof IFolder folder) {
-            return new FolderProxy(folder);
-        }
-
-        return null;
+        return switch(eObject) {
+            case IArchimateModel model                         -> new ArchimateModelProxy(model);
+            case IArchimateElement element                     -> new ArchimateElementProxy(element);
+            case IArchimateRelationship relation               -> new ArchimateRelationshipProxy(relation);
+            case IArchimateDiagramModel dm                     -> new ArchimateDiagramModelProxy(dm);
+            case ISketchModel sm                               -> new SketchDiagramModelProxy(sm);
+            case ICanvasModel cm                               -> new CanvasDiagramModelProxy(cm);
+            case IDiagramModelNote note when note.isLegend()   -> new DiagramModelLegendProxy(note);            
+            case IDiagramModelNote note                        -> new DiagramModelNoteProxy(note);
+            case IDiagramModelGroup group                      -> new DiagramModelGroupProxy(group);
+            case IDiagramModelReference ref                    -> new DiagramModelReferenceProxy(ref);
+            case IDiagramModelObject dmo                       -> new DiagramModelObjectProxy(dmo);
+            case IDiagramModelConnection dmc                   -> new DiagramModelConnectionProxy(dmc);
+            case IFolder folder                                -> new FolderProxy(folder);
+            default                                            -> null;
+        };
     }
     
     EObjectProxy(EObject eObject) {

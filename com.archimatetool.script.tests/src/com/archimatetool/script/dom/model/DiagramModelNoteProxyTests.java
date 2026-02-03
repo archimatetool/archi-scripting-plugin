@@ -24,13 +24,12 @@ import com.archimatetool.model.IDiagramModelNote;
 @SuppressWarnings("nls")
 public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
     
-    private ArchimateDiagramModelProxy viewProxy;
-    private IDiagramModelNote testEObject;
-    private DiagramModelNoteProxy testProxy;
+    protected ArchimateDiagramModelProxy viewProxy;
+    protected DiagramModelNoteProxy testProxy;
     
     @Override
     protected IDiagramModelNote getTestEObject() {
-        return testEObject;
+        return testProxy.getEObject();
     }
     
     @Override
@@ -43,13 +42,12 @@ public class DiagramModelNoteProxyTests extends DiagramModelObjectProxyTests {
         ArchimateModelProxy modelProxy = TestsHelper.createTestArchimateModelProxy();
         viewProxy = modelProxy.createArchimateView("test");
         testProxy = (DiagramModelNoteProxy)viewProxy.createObject(DIAGRAM_MODEL_NOTE, 0, 0, 100, 100);
-        testEObject = testProxy.getEObject();
     }
 
     @Override
     @Test
     public void get_ReturnsCorrectProxy() {
-        EObjectProxy proxy = EObjectProxy.get(testEObject);
+        EObjectProxy proxy = EObjectProxy.get(getTestEObject());
         assertTrue(proxy instanceof DiagramModelNoteProxy);
     }
 
