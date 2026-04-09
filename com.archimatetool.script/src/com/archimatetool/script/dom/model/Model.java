@@ -8,6 +8,8 @@ package com.archimatetool.script.dom.model;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
@@ -26,11 +28,14 @@ import com.archimatetool.editor.diagram.util.DiagramUtils;
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
 import com.archimatetool.editor.ui.ImageFactory;
+import com.archimatetool.editor.utils.StringUtils;
 import com.archimatetool.export.svg.PDFExportProvider;
 import com.archimatetool.export.svg.SVGExportProvider;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IArchimatePackage;
+import com.archimatetool.model.IDiagramModelImageProvider;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 
@@ -305,6 +310,45 @@ public class Model {
         provider.export(dmProxy.getEObject(), new File(path));
     }
 
+    /**
+     * Get the image data of an object as a Base64 String
+     * @param object An EObjectProxy or ProfileProxy
+     * @return a string encoded in Base64
+     */
+    public String saveImageToBase64(Object object) {
+        IDiagramModelImageProvider provider = getImageProvider(object);
+        byte[] bytes = getImageBytes(provider);
+        if(bytes == null) {
+            throw new ArchiScriptException(object + " does not have an image."); //$NON-NLS-1$
+        }
+        return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    /**
+     * Get the image of an object and save it to file
+     * @param object An EObjectProxy or ProfileProxy
+     * @param folderPath the folder to save to
+     * @return the full file name
+     * @throws IOException
+     */
+    public String saveImageToFile(Object object, String folderPath) throws IOException {
+        File folder = new File(folderPath);
+        if(!folder.isDirectory()) {
+            throw new ArchiScriptException(folder + " is not a folder."); //$NON-NLS-1$
+        }
+        
+        IDiagramModelImageProvider provider = getImageProvider(object);
+        byte[] bytes = getImageBytes(provider);
+        if(bytes == null) {
+            throw new ArchiScriptException(object + " does not have an image."); //$NON-NLS-1$
+        }
+        
+        String imageName = provider.getImagePath().replace("images/", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        File file = new File(folder, imageName);
+        Files.write(file.toPath(), bytes, StandardOpenOption.CREATE);
+        return file.getAbsolutePath();
+    }
+    
     private ImageLoader getImageLoader(DiagramModelProxy dmProxy, String format, Map<?, ?> options) {
         if(dmProxy == null) {
             throw new ArchiScriptException("getImageLoader - View is null"); //$NON-NLS-1$
@@ -354,5 +398,28 @@ public class Model {
     private boolean createParentFolder(File file) {
         File parent = file.getParentFile();
         return parent != null ? parent.mkdirs() : false;
+    }
+    
+    /**
+     * Get the image provider if object is either an EObjectProxy or a ProfileProxy
+     */
+    private IDiagramModelImageProvider getImageProvider(Object object) {
+        if(object instanceof EObjectProxy eObjectProxy && eObjectProxy.getEObject() instanceof IDiagramModelImageProvider provider) {
+            return provider;
+        }
+        else if(object instanceof ProfileProxy profileProxy) {
+            return profileProxy.getProfile();
+        }
+        else {
+            throw new ArchiScriptException(object + " is not an image provider."); //$NON-NLS-1$
+        }
+    }
+    
+    /**
+     * Get image bytes from an image provider, or null
+     */
+    private byte[] getImageBytes(IDiagramModelImageProvider provider) {
+        String imagePath = provider.getImagePath();
+        return StringUtils.isSet(imagePath) ? ModelUtil.getArchiveManager(((IArchimateModelObject)provider).getArchimateModel()).getBytesFromEntry(imagePath) : null;
     }
 }
