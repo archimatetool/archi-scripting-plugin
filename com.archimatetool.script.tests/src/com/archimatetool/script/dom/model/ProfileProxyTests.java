@@ -20,6 +20,7 @@ import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.model.IArchimateConcept;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
+import com.archimatetool.model.IArchimateModelObject;
 import com.archimatetool.model.IBusinessActor;
 import com.archimatetool.model.IProfile;
 import com.archimatetool.script.ArchiScriptException;
@@ -31,7 +32,7 @@ import com.archimatetool.script.ArchiScriptException;
  * @author Phillip Beauvoir
  */
 @SuppressWarnings("nls")
-public class ProfileProxyTests {
+public class ProfileProxyTests extends EObjectProxyTests {
     
     private IProfile profile, profile2;
     private ProfileProxy proxy, proxy2;
@@ -60,11 +61,28 @@ public class ProfileProxyTests {
         proxy2 = new ProfileProxy(profile2);
     }
     
+    @Override
+    protected IArchimateModelObject getTestEObject() {
+        return profile;
+    }
+    
+    @Override
+    public EObjectProxy getTestProxy() {
+        return proxy;
+    }
+    
+    @Test
+    public void get_ReturnsCorrectProxy() {
+        EObjectProxy proxy = EObjectProxy.get(profile);
+        assertTrue(proxy instanceof ProfileProxy);
+    }
+
     @Test
     public void getName() {
         assertEquals("Profile", proxy.getName());
     }
     
+    @Override
     @Test
     public void setName() {
         // Empty string should throw exception
@@ -120,6 +138,19 @@ public class ProfileProxyTests {
         assertEquals("node", proxy2.getType());
     }
     
+    @Override
+    @Test
+    public void getType() {
+        proxy2.setType("business-service");
+        assertEquals("business-service", proxy2.getType());
+    }
+    
+    @Override
+    @Test
+    public void attr_Type() {
+        assertEquals("business-actor", getTestProxy().attr(IModelConstants.TYPE));
+    }
+    
     @Test
     public void getImage() {
         assertEquals("imgpath", proxy.getImage().get("path"));
@@ -139,6 +170,7 @@ public class ProfileProxyTests {
         assertNull(proxy.getImage());
     }
     
+    @Override
     @Test
     public void delete() {
         IArchimateModel model = IArchimateFactory.eINSTANCE.createArchimateModel();
@@ -154,16 +186,10 @@ public class ProfileProxyTests {
         assertEquals(0, model.getProfiles().size());
         assertEquals(0, concept.getProfiles().size());
     }
-
-    @Test
-    public void equals() {
-        ProfileProxy proxy2 = new ProfileProxy(profile);
-        assertTrue(proxy.equals(proxy2));
-    }
     
+    @Override
     @Test
-    public void hashCode_() {
-        ProfileProxy proxy2 = new ProfileProxy(profile);
-        assertTrue(proxy.hashCode() == proxy2.hashCode());
+    public void parent() {
+        assertTrue(proxy.parent() instanceof ArchimateModelProxy);
     }
 }

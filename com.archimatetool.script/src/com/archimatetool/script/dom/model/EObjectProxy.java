@@ -30,6 +30,7 @@ import com.archimatetool.model.IFeatures;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
+import com.archimatetool.model.IProfile;
 import com.archimatetool.model.IProperties;
 import com.archimatetool.model.IProperty;
 import com.archimatetool.model.ISketchModel;
@@ -73,6 +74,7 @@ public abstract class EObjectProxy implements IModelConstants, Comparable<EObjec
             case IDiagramModelObject dmo                       -> new DiagramModelObjectProxy(dmo);
             case IDiagramModelConnection dmc                   -> new DiagramModelConnectionProxy(dmc);
             case IFolder folder                                -> new FolderProxy(folder);
+            case IProfile profile                              -> new ProfileProxy(profile);
             default                                            -> null;
         };
     }

@@ -19,6 +19,7 @@ import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IIdentifier;
 import com.archimatetool.model.INameable;
+import com.archimatetool.model.IProfile;
 
 /**
  * Selector Filter Factory
@@ -53,10 +54,10 @@ class SelectorFilterFactory implements IModelConstants {
             return Optional.empty();
         }
         
-        // All model concepts, diagram models, and folders
+        // All model concepts, diagram models, folders, and profiles
         if(selector.equals("*")) {
             return Optional.of(eObject -> {
-                return eObject instanceof IArchimateConcept || eObject instanceof IDiagramModel || eObject instanceof IFolder;
+                return eObject instanceof IArchimateConcept || eObject instanceof IDiagramModel || eObject instanceof IFolder || eObject instanceof IProfile;
             });
         }
         
@@ -119,7 +120,7 @@ class SelectorFilterFactory implements IModelConstants {
             }
             
             return Optional.of(eObject -> {
-                String type = ModelUtil.getCamelCase(s[0]);
+                String type = ModelUtil.getCamelCase(getActualTypeName(s[0]));
                 String name = s[1];
                 
                 return getReferencedObject(eObject) instanceof INameable nameable &&
@@ -134,9 +135,21 @@ class SelectorFilterFactory implements IModelConstants {
                 return DIAGRAM_MODEL_LEGEND.equals(selector);
             }
 
+            String type = ModelUtil.getCamelCase(getActualTypeName(selector));
             EObject resolved = getReferencedObject(eObject);
-            return resolved != null && resolved.eClass().getName().equals(ModelUtil.getCamelCase(selector));
+            return resolved != null && resolved.eClass().getName().equals(type);
         });
+    }
+    
+    /**
+     * Map given type name to actual class name
+     */
+    private String getActualTypeName(String type) {
+        // "specialization" is an alias for "profile"
+        if(IModelConstants.SPECIALIZATION.equalsIgnoreCase(type)) {
+            return "profile"; //$NON-NLS-1$
+        }
+        return type;
     }
     
     private EObject getReferencedObject(EObject eObject) {

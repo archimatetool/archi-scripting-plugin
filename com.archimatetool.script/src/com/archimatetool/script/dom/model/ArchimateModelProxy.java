@@ -347,7 +347,7 @@ public class ArchimateModelProxy extends EObjectProxy {
             return super.find(selector);
         }
         
-        // Else, as this is the model we will additionally filter only on concepts, views and folders
+        // Else, as this is the model we will additionally filter only on concepts, views, folders, and profiles
         return super.find(selector).filter("*"); //$NON-NLS-1$
     }
     

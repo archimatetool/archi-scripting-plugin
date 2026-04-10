@@ -18,6 +18,7 @@ import com.archimatetool.model.IDiagramModelArchimateConnection;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.model.IProfile;
 import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
 
 
@@ -194,6 +195,26 @@ public class SelectorFilterFactoryTests implements IModelConstants {
     }
     
     @Test
+    public void accept_TypeName_Specialization() {
+        IProfile profile = IArchimateFactory.eINSTANCE.createProfile();
+        profile.setName("foo");
+        
+        // "specialization" is an alias for "profile"
+        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("specialization.foo").orElseThrow();
+        assertNotNull(filter);
+        assertTrue(filter.accept(profile));
+        
+        // Also "profile"
+        filter = SelectorFilterFactory.getInstance().getFilter("profile.foo").orElseThrow();
+        assertNotNull(filter);
+        assertTrue(filter.accept(profile));
+        
+        filter = SelectorFilterFactory.getInstance().getFilter("business-actor.foo").orElseThrow();
+        assertNotNull(filter);
+        assertFalse(filter.accept(profile));
+    }
+
+    @Test
     public void accept_TypeName_With_Dots() {
         IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
         concept.setName("foo.bar.pok");
@@ -227,6 +248,17 @@ public class SelectorFilterFactoryTests implements IModelConstants {
         IFolder folder = IArchimateFactory.eINSTANCE.createFolder();
         filter = SelectorFilterFactory.getInstance().getFilter("folder").orElseThrow();
         assertTrue(filter.accept(folder));
+        
+        IProfile profile = IArchimateFactory.eINSTANCE.createProfile();
+        // "specialization" is an alias for "profile"
+        filter = SelectorFilterFactory.getInstance().getFilter("specialization").orElseThrow();
+        assertNotNull(filter);
+        assertTrue(filter.accept(profile));
+        
+        // Also profile
+        filter = SelectorFilterFactory.getInstance().getFilter("profile").orElseThrow();
+        assertNotNull(filter);
+        assertTrue(filter.accept(profile));
     }
 
     @Test

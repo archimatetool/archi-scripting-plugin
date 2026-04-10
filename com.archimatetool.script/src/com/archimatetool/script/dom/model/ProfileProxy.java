@@ -25,44 +25,39 @@ import com.archimatetool.script.commands.SetCommand;
  * 
  * @author Phillip Beauvoir
  */
-public class ProfileProxy implements Comparable<ProfileProxy> {
+public class ProfileProxy extends EObjectProxy {
     
-    private IProfile profile;
-
     ProfileProxy(IProfile profile) {
-        this.profile = profile;
+        super(profile);
     }
     
-    IProfile getProfile() {
-        return profile;
+    @Override
+    protected IProfile getEObject() {
+        return (IProfile)super.getEObject();
     }
     
-    public String getName() {
-        return profile.getName();
-    }
-    
-    public ProfileProxy setName(String name) {
+    @Override
+    public EObjectProxy setName(String name) {
         if(!StringUtils.isSetAfterTrim(name)) {
             throw new ArchiScriptException(Messages.ProfileProxy_0);
         }
         
         // Same
-        if(profile.getName().equals(name)) {
+        if(getEObject().getName().equals(name)) {
             return this;
         }
         
         // Allowed to change case of this one, but check we don't already have one
-        if(!profile.getName().equalsIgnoreCase(name) && ArchimateModelUtils.hasProfileByNameAndType(profile.getArchimateModel(), name, profile.getConceptType())) {
+        if(!getEObject().getName().equalsIgnoreCase(name) && ArchimateModelUtils.hasProfileByNameAndType(getEObject().getArchimateModel(), name, getEObject().getConceptType())) {
             throw new ArchiScriptException(NLS.bind(Messages.ProfileProxy_1, name));
         }
         
-        CommandHandler.executeCommand(new SetCommand(profile, IArchimatePackage.Literals.NAMEABLE__NAME, name));
-        
-        return this;
+        return super.setName(name);
     }
     
+    @Override
     public String getType() {
-        return ModelUtil.getKebabCase(profile.getConceptType());
+        return ModelUtil.getKebabCase(getEObject().getConceptType());
     }
     
     public ProfileProxy setType(String conceptType) {
@@ -70,7 +65,7 @@ public class ProfileProxy implements Comparable<ProfileProxy> {
         conceptType = ModelUtil.getCamelCase(conceptType);
         
         // Same
-        if(profile.getConceptType().equals(conceptType)) {
+        if(getEObject().getConceptType().equals(conceptType)) {
             return this;
         }
         
@@ -80,89 +75,59 @@ public class ProfileProxy implements Comparable<ProfileProxy> {
         }
         
         // Check whether the profile is being used
-        if(!ArchimateModelUtils.findProfileUsage(profile).isEmpty()) {
-            throw new ArchiScriptException(NLS.bind(Messages.ProfileProxy_2, profile.getName()));
+        if(!ArchimateModelUtils.findProfileUsage(getEObject()).isEmpty()) {
+            throw new ArchiScriptException(NLS.bind(Messages.ProfileProxy_2, getEObject().getName()));
         }
         
         // Check we don't already have one
-        if(ArchimateModelUtils.hasProfileByNameAndType(profile.getArchimateModel(), profile.getName(), conceptType)) {
-            throw new ArchiScriptException(NLS.bind(Messages.ProfileProxy_1, profile.getName()));
+        if(ArchimateModelUtils.hasProfileByNameAndType(getEObject().getArchimateModel(), getEObject().getName(), conceptType)) {
+            throw new ArchiScriptException(NLS.bind(Messages.ProfileProxy_1, getEObject().getName()));
         }
         
-        CommandHandler.executeCommand(new SetCommand(profile, IArchimatePackage.Literals.PROFILE__CONCEPT_TYPE, conceptType));
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.PROFILE__CONCEPT_TYPE, conceptType));
         
         // If concept type is a relation or connector remove image if it has one
         if(!ModelUtil.canHaveImage(conceptType)) {
-            CommandHandler.executeCommand(new SetCommand(profile, IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH, null));
+            CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH, null));
         }
         
         return this;
     }
     
     public Map<String, Object> getImage() {
-        return ModelFactory.createImageObject(profile.getArchimateModel(), profile.getImagePath());
+        return ModelFactory.createImageObject(getEObject().getArchimateModel(), getEObject().getImagePath());
     }
     
     public ProfileProxy setImage(Map<String, Object> map) {
-        if(map != null && !ModelUtil.canHaveImage(profile.getConceptType())) {
-            throw new ArchiScriptException(NLS.bind(Messages.ProfileProxy_3, profile.getConceptType()));
+        if(map != null && !ModelUtil.canHaveImage(getEObject().getConceptType())) {
+            throw new ArchiScriptException(NLS.bind(Messages.ProfileProxy_3, getEObject().getConceptType()));
         }
         
         String imagePath = map != null ? ModelUtil.getStringValueFromMap(map, "path", null) : null; //$NON-NLS-1$
         
         // If imagePath is not null check that the ArchiveManager has this image
-        if(imagePath != null && !ModelUtil.hasImage(profile.getArchimateModel(), imagePath)) {
+        if(imagePath != null && !ModelUtil.hasImage(getEObject().getArchimateModel(), imagePath)) {
             throw new ArchiScriptException(NLS.bind(Messages.ModelFactory_12, imagePath));
         }
 
-        CommandHandler.executeCommand(new SetCommand(profile, IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH, imagePath));
+        CommandHandler.executeCommand(new SetCommand(getEObject(), IArchimatePackage.Literals.DIAGRAM_MODEL_IMAGE_PROVIDER__IMAGE_PATH, imagePath));
         
         return this;
     }
     
+    @Override
     public void delete() {
         // Delete Usages first
-        for(IProfiles owner : ArchimateModelUtils.findProfileUsage(getProfile())) {
-            CommandHandler.executeCommand(new ScriptCommandWrapper(new RemoveListMemberCommand<IProfile>(owner.getProfiles(), profile), profile));
+        for(IProfiles owner : ArchimateModelUtils.findProfileUsage(getEObject())) {
+            CommandHandler.executeCommand(new ScriptCommandWrapper(new RemoveListMemberCommand<IProfile>(owner.getProfiles(), getEObject()), getEObject()));
         }
 
         // Then delete the Profile from the Model
-        CommandHandler.executeCommand(new ScriptCommandWrapper(new RemoveListMemberCommand<IProfile>(profile.getArchimateModel().getProfiles(), profile), profile));
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if(this == obj) {
-            return true;
-        }
-        
-        if(!(obj instanceof ProfileProxy)) {
-            return false;
-        }
-        
-        if(getProfile() == null) {
-            return false;
-        }
-        
-        return getProfile() == ((ProfileProxy)obj).getProfile();
-    }
-    
-    // Need to use the hashCode of the underlying object because a Java Set will use it for contains()
-    @Override
-    public int hashCode() {
-        return getProfile() == null ? super.hashCode() : getProfile().hashCode();
+        CommandHandler.executeCommand(new ScriptCommandWrapper(new RemoveListMemberCommand<IProfile>(getEObject().getArchimateModel().getProfiles(), getEObject()), getEObject()));
     }
     
     @Override
     public String toString() {
         return getName() + ": " + getType(); //$NON-NLS-1$
-    }
-
-    @Override
-    public int compareTo(ProfileProxy p) {
-        if(p == null || p.getName() == null || getName() == null) {
-            return 0;
-        }
-        return getName().compareTo(p.getName());
     }
 }
