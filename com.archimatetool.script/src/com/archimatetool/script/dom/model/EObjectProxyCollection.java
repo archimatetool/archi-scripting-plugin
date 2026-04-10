@@ -12,8 +12,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-import com.archimatetool.script.dom.model.SelectorFilterFactory.ISelectorFilter;
-
 
 /**
  * Extended Collection of EObjectProxy objects
@@ -87,25 +85,21 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     public EObjectProxyCollection filter(String selector) {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter(selector);
-        if(filter == null) {
-            return list;
-        }
-        
-        // Use a LinkedHashSet for uniqueness and speed
-        Set<EObjectProxy> set = new LinkedHashSet<>();
-        
-        for(EObjectProxy object : this) {
-            if(filter.accept(object.getEObject())) {
-                if(filter.isUnique()) { // is unique so only one object is added
-                    list.add(object);
-                    return list;
+        SelectorFilterFactory.getInstance().getFilter(selector).ifPresent(filter -> {
+            // Use a LinkedHashSet for uniqueness and speed
+            Set<EObjectProxy> set = new LinkedHashSet<>();
+            
+            for(EObjectProxy object : this) {
+                if(filter.accept(object.getEObject())) {
+                    set.add(object);
+                    if(filter.isUnique()) { // is unique so only one object is added
+                        break;
+                    }
                 }
-                set.add(object);
             }
-        }
-        
-        list.addAll(set);
+            
+            list.addAll(set);
+        });
         
         return list;
     }
@@ -157,19 +151,14 @@ public class EObjectProxyCollection extends ArrayList<EObjectProxy> implements I
     public EObjectProxyCollection not(String selector) {
         EObjectProxyCollection list = new EObjectProxyCollection();
         
-        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter(selector);
-        if(filter == null) {
-            return list;
-        }
-        
-        // Iterate over the collection and filter objects into the list
-        for(EObjectProxy object : this) {
-            if(object != null) {
-	            if(!filter.accept(object.getEObject())) {
-	                list.add(object);
-	            }
+        SelectorFilterFactory.getInstance().getFilter(selector).ifPresent(filter -> {
+            // Iterate over the collection and filter objects into the list
+            for(EObjectProxy object : this) {
+                if(object != null && !filter.accept(object.getEObject())) {
+                    list.add(object);
+                }
             }
-        }
+        });
         
         return list;
     }

@@ -6,6 +6,7 @@
 package com.archimatetool.script.dom.model;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.eclipse.emf.ecore.EObject;
 
@@ -45,51 +46,51 @@ class SelectorFilterFactory implements IModelConstants {
     private SelectorFilterFactory() {}
 
     /**
-     * @return a ISelectorFilter for the given selector, or null
+     * @return a ISelectorFilter for the given selector
      */
-    public ISelectorFilter getFilter(String selector) {
+    public Optional<ISelectorFilter> getFilter(String selector) {
         if(selector == null || selector.length() == 0) {
-            return null;
+            return Optional.empty();
         }
         
         // All model concepts, diagram models, and folders
         if(selector.equals("*")) {
-            return eObject -> {
+            return Optional.of(eObject -> {
                 return eObject instanceof IArchimateConcept || eObject instanceof IDiagramModel || eObject instanceof IFolder;
-            };
+            });
         }
         
         // All concepts
         else if(selector.equals(CONCEPT)) {
-            return eObject -> {
+            return Optional.of(eObject -> {
                 return getReferencedObject(eObject) instanceof IArchimateConcept;
-            };
+            });
         }
         
         // All elements
         else if(selector.equals(ELEMENT)) {
-            return eObject -> {
+            return Optional.of(eObject -> {
                 return getReferencedObject(eObject) instanceof IArchimateElement;
-            };
+            });
         }
         
         // All relationships
         else if(selector.equals(RELATION) || selector.equals(RELATIONSHIP)) {
-            return eObject -> {
+            return Optional.of(eObject -> {
                 return getReferencedObject(eObject) instanceof IArchimateRelationship;
-            };
+            });
         }
 
         // All views
         else if(selector.equals(VIEW)) {
-            return eObject -> {
+            return Optional.of(eObject -> {
                 return eObject instanceof IDiagramModel;
-            };
+            });
         }
 
         // Find single unique object by its Id (example - #1234)
         else if(selector.startsWith("#")) {
-            return new ISelectorFilter() {
+            return Optional.of(new ISelectorFilter() {
                 @Override
                 public boolean accept(EObject eObject) {
                     return eObject instanceof IIdentifier identifier && selector.substring(1).equals(identifier.getId());
@@ -99,14 +100,14 @@ class SelectorFilterFactory implements IModelConstants {
                 public boolean isUnique() {
                     return true;
                 }
-            };
+            });
         }
         
         // Find all objects with given name
         else if(selector.startsWith(".")) {
-            return eObject -> {
+            return Optional.of(eObject -> {
                 return eObject instanceof INameable nameable && selector.substring(1).equals(nameable.getName());
-            };
+            });
         }
         
         // Find all objects with given type (class) and name
@@ -114,20 +115,20 @@ class SelectorFilterFactory implements IModelConstants {
             String[] s = selector.split("\\.", 2);
             
             if(s.length != 2) {
-                return null;
+                return Optional.empty();
             }
             
-            return eObject -> {
+            return Optional.of(eObject -> {
                 String type = ModelUtil.getCamelCase(s[0]);
                 String name = s[1];
                 
                 return getReferencedObject(eObject) instanceof INameable nameable &&
                         Objects.equals(nameable.getName(), name) && Objects.equals(nameable.eClass().getName(), type);
-            };
+            });
         }
 
         // Class type of object
-        return eObject -> {
+        return Optional.of(eObject -> {
             // Special case for legend
             if(eObject instanceof IDiagramModelNote note && note.isLegend()) {
                 return DIAGRAM_MODEL_LEGEND.equals(selector);
@@ -135,7 +136,7 @@ class SelectorFilterFactory implements IModelConstants {
 
             EObject resolved = getReferencedObject(eObject);
             return resolved != null && resolved.eClass().getName().equals(ModelUtil.getCamelCase(selector));
-        };
+        });
     }
     
     private EObject getReferencedObject(EObject eObject) {
