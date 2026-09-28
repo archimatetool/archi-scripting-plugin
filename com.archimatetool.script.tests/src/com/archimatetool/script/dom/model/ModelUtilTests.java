@@ -111,13 +111,13 @@ public class ModelUtilTests {
     public void isAllowedSetType() {
         loadTestModel();
         
-        // Business Role
+        // Role
         IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
         assertTrue(ModelUtil.isAllowedSetType(concept, "business-actor"));
-        assertFalse(ModelUtil.isAllowedSetType(concept, "business-process"));
-        assertTrue(ModelUtil.isAllowedSetType(concept, "business-role"));
-        assertFalse(ModelUtil.isAllowedSetType(concept, "business-function"));
-        assertFalse(ModelUtil.isAllowedSetType(concept, "node"));
+        assertFalse(ModelUtil.isAllowedSetType(concept, "process"));
+        assertTrue(ModelUtil.isAllowedSetType(concept, "role"));
+        assertFalse(ModelUtil.isAllowedSetType(concept, "function"));
+        assertTrue(ModelUtil.isAllowedSetType(concept, "node"));
         assertFalse(ModelUtil.isAllowedSetType(concept, "resource"));
         
         // serving relationship
@@ -201,7 +201,7 @@ public class ModelUtilTests {
         IArchimateModel model = createModel();
         IArchimateModelObject o1 = IArchimateFactory.eINSTANCE.createBusinessActor();
         model.getDefaultFolderForObject(o1).getElements().add(o1);
-        IArchimateModelObject o2 = IArchimateFactory.eINSTANCE.createBusinessEvent();
+        IArchimateModelObject o2 = IArchimateFactory.eINSTANCE.createEvent();
         model.getDefaultFolderForObject(o2).getElements().add(o2);
         
         // Should not throw an exception
@@ -214,7 +214,7 @@ public class ModelUtilTests {
         IArchimateModel model2 = createModel();
         IArchimateModelObject o1 = IArchimateFactory.eINSTANCE.createBusinessActor();
         model2.getDefaultFolderForObject(o1).getElements().add(o1);
-        IArchimateModelObject o2 = IArchimateFactory.eINSTANCE.createBusinessEvent();
+        IArchimateModelObject o2 = IArchimateFactory.eINSTANCE.createEvent();
         model2.getDefaultFolderForObject(o2).getElements().add(o2);
         
         assertThrows(ArchiScriptException.class, () -> {

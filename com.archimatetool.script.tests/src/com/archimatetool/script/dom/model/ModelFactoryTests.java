@@ -149,8 +149,8 @@ public class ModelFactoryTests implements IModelConstants {
     public void addObject_Concept() {
         loadTestModel();
         
-        IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "521");
-        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
+        IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "673");
+        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "c3cfb87f");
         ModelFactory.addObject(parent, concept);
         assertSame(parent, concept.eContainer());
     }
@@ -159,8 +159,8 @@ public class ModelFactoryTests implements IModelConstants {
     public void addObject_Concept_NoExistingParent() {
         loadTestModel();
         
-        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
-        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
+        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createRole();
+        IFolder parent = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "id-d3451c87c97043909aa15c05091f7b40");
         ModelFactory.addObject(parent, concept);
         assertSame(parent, concept.eContainer());
     }

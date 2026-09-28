@@ -21,13 +21,13 @@ import com.archimatetool.editor.preferences.IPreferenceConstants;
 import com.archimatetool.model.IArchimateDiagramModel;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
-import com.archimatetool.model.IBusinessService;
 import com.archimatetool.model.IDiagramModel;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelConnection;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IDiagramModelNote;
 import com.archimatetool.model.IDiagramModelObject;
+import com.archimatetool.model.IService;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.TestFiles;
@@ -137,7 +137,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
     @Override
     @Test
     public void getConcept() {
-        assertTrue(testProxy.getConcept().getEObject() instanceof IBusinessService);
+        assertTrue(testProxy.getConcept().getEObject() instanceof IService);
         IDiagramModelGroup group = (IDiagramModelGroup)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "4096");
         DiagramModelObjectProxy groupProxy = new DiagramModelObjectProxy(group);
         assertNull(groupProxy.getConcept());
@@ -291,7 +291,7 @@ public class ArchimateDiagramModelObjectProxyTests extends DiagramModelObjectPro
         // Null fill color should return default fill color
         assertEquals("#0080c0", testProxy.attr(FILL_COLOR));
         testProxy.attr(FILL_COLOR, null);
-        assertEquals("#ffffb5", testProxy.attr(FILL_COLOR));
+        assertEquals("#e4dfd5", testProxy.attr(FILL_COLOR));
     }
 
     @Override

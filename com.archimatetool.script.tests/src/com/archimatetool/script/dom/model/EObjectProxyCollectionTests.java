@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Test;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IAssociationRelationship;
 import com.archimatetool.model.IBusinessActor;
-import com.archimatetool.model.IBusinessRole;
 import com.archimatetool.model.IDiagramModelArchimateObject;
 import com.archimatetool.model.IDiagramModelGroup;
 import com.archimatetool.model.IFolder;
+import com.archimatetool.model.IRole;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.TestFiles;
 
@@ -40,8 +40,8 @@ public class EObjectProxyCollectionTests {
         assertNull(collection.first());
         
         // First
-        EObjectProxy proxy1 = EObjectProxy.get(IArchimateFactory.eINSTANCE.createBusinessRole());
-        EObjectProxy proxy2 = EObjectProxy.get(IArchimateFactory.eINSTANCE.createBusinessRole());
+        EObjectProxy proxy1 = EObjectProxy.get(IArchimateFactory.eINSTANCE.createRole());
+        EObjectProxy proxy2 = EObjectProxy.get(IArchimateFactory.eINSTANCE.createRole());
         collection.add(proxy1);
         collection.add(proxy2);
         assertSame(proxy1, collection.first());
@@ -58,10 +58,10 @@ public class EObjectProxyCollectionTests {
         assertFalse(collection.is("folder"));
         assertFalse(collection.is("#123"));
         assertFalse(collection.is(".fred"));
-        assertFalse(collection.is("business-role.fred"));
-        assertFalse(collection.is("business-role"));
+        assertFalse(collection.is("role.fred"));
+        assertFalse(collection.is("role"));
         
-        IBusinessRole element = IArchimateFactory.eINSTANCE.createBusinessRole();
+        IRole element = IArchimateFactory.eINSTANCE.createRole();
         element.setName("fred");
         element.setId("123");
         collection.add(EObjectProxy.get(element));
@@ -70,8 +70,8 @@ public class EObjectProxyCollectionTests {
         assertFalse(collection.is("relation"));
         assertTrue(collection.is("#123"));
         assertTrue(collection.is(".fred"));
-        assertTrue(collection.is("business-role.fred"));
-        assertTrue(collection.is("business-role"));
+        assertTrue(collection.is("role.fred"));
+        assertTrue(collection.is("role"));
 
         IAssociationRelationship relation = IArchimateFactory.eINSTANCE.createAssociationRelationship();
         relation.setName("freda");
@@ -144,7 +144,7 @@ public class EObjectProxyCollectionTests {
     @Test
     public void cloneTest() {
         EObjectProxyCollection collection = new EObjectProxyCollection();
-        collection.add(EObjectProxy.get(IArchimateFactory.eINSTANCE.createBusinessRole()));
+        collection.add(EObjectProxy.get(IArchimateFactory.eINSTANCE.createRole()));
         collection.add(EObjectProxy.get(IArchimateFactory.eINSTANCE.createAssignmentRelationship()));
         
         EObjectProxyCollection clone = (EObjectProxyCollection)collection.clone();

@@ -31,7 +31,7 @@ assertNotNull(newFolder);
 
 // Get the Business elements in the "Actors" sub-folder
 var elements = $("folder.Actors").children("element");
-assertEquals(30, elements.size());
+assertEquals(22, elements.size());
 
 // Duplicate each element into the new folder
 elements.forEach(e => {

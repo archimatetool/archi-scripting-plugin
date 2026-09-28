@@ -104,7 +104,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         ArchimateModelProxy testModelProxy = TestsHelper.loadTestArchimateModelProxy(TestFiles.TEST_MODEL_FILE_ARCHISURANCE);
         
         EObjectProxyCollection collection = testModelProxy.find();
-        assertEquals(787, collection.size());
+        assertEquals(785, collection.size());
 
         for(EObjectProxy eObjectProxy : collection) {
             assertNotNull(eObjectProxy.getEObject());
@@ -125,7 +125,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals(0, collection.size());
 
         collection = testModelProxy.find("*");
-        assertEquals(339, collection.size());
+        assertEquals(337, collection.size());
         
         collection = testModelProxy.find("concept");
         assertEquals(296, collection.size());
@@ -137,7 +137,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         assertEquals(176, collection.size());
 
         collection = testModelProxy.find("folder");
-        assertEquals(26, collection.size());
+        assertEquals(24, collection.size());
 
         collection = testModelProxy.find("view");
         assertEquals(17, collection.size());
@@ -148,7 +148,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
         collection = testModelProxy.find("folder.Business");
         assertEquals(2, collection.size());
         
-        collection = testModelProxy.find("business-role");
+        collection = testModelProxy.find("role");
         assertEquals(5, collection.size());
     }
     
@@ -237,7 +237,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Test
     public void createRelationship() {
         ArchimateElementProxy source = testProxy.createElement("business-actor", "Fido");
-        ArchimateElementProxy target = testProxy.createElement("business-role", "Role");
+        ArchimateElementProxy target = testProxy.createElement("role", "Role");
         
         ArchimateRelationshipProxy proxy = testProxy.createRelationship("assignment-relationship", "Fido", source, target);
         assertNotNull(proxy);
@@ -250,7 +250,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Test
     public void addRelationship_Bogus() {
         ArchimateElementProxy source = testProxy.createElement("business-actor", "Fido");
-        ArchimateElementProxy target = testProxy.createElement("business-role", "Role");
+        ArchimateElementProxy target = testProxy.createElement("role", "Role");
         assertThrows(ArchiScriptException.class, () -> {
             testProxy.createRelationship("BusinessActor", "Fido", source, target);
         });
@@ -259,7 +259,7 @@ public class ArchimateModelProxyTests extends EObjectProxyTests {
     @Test
     public void addRelationship_BogusType() {
         ArchimateElementProxy source = testProxy.createElement("business-actor", "Fido");
-        ArchimateElementProxy target = testProxy.createElement("business-role", "Role");
+        ArchimateElementProxy target = testProxy.createElement("role", "Role");
         assertThrows(ArchiScriptException.class, () -> {
             testProxy.createRelationship("access-relationship", "Fido", source, target);
         });

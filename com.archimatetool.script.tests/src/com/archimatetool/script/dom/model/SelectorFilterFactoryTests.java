@@ -33,7 +33,7 @@ public class SelectorFilterFactoryTests implements IModelConstants {
     public void accept_All() {
         ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("*").orElseThrow();
         
-        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
+        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createRole()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createSketchModel()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createArchimateDiagramModel()));
@@ -58,7 +58,7 @@ public class SelectorFilterFactoryTests implements IModelConstants {
     public void accept_Concept() {
         ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter(CONCEPT).orElseThrow();
         
-        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
+        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createRole()));
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
         
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createSketchModel()));
@@ -82,7 +82,7 @@ public class SelectorFilterFactoryTests implements IModelConstants {
     public void accept_Element() {
         ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter(ELEMENT).orElseThrow();
         
-        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
+        assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createRole()));
 
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createSketchModel()));
@@ -108,7 +108,7 @@ public class SelectorFilterFactoryTests implements IModelConstants {
         
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
 
-        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
+        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createRole()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createSketchModel()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createArchimateDiagramModel()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createFolder()));
@@ -134,7 +134,7 @@ public class SelectorFilterFactoryTests implements IModelConstants {
         assertTrue(filter.accept(IArchimateFactory.eINSTANCE.createArchimateDiagramModel()));
 
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createAssociationRelationship()));
-        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createBusinessRole()));
+        assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createRole()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createFolder()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelGroup()));
         assertFalse(filter.accept(IArchimateFactory.eINSTANCE.createDiagramModelNote()));
@@ -146,7 +146,7 @@ public class SelectorFilterFactoryTests implements IModelConstants {
     
     @Test
     public void accept_ID() {
-        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
+        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createRole();
         concept.setId("123");
         
         ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("#123").orElseThrow();
@@ -161,7 +161,7 @@ public class SelectorFilterFactoryTests implements IModelConstants {
     
     @Test
     public void accept_Name() {
-        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
+        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createRole();
         concept.setName("foo");
         
         IDiagramModelArchimateObject dmo = IArchimateFactory.eINSTANCE.createDiagramModelArchimateObject();
@@ -180,10 +180,10 @@ public class SelectorFilterFactoryTests implements IModelConstants {
     
     @Test
     public void accept_TypeName() {
-        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
+        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createRole();
         concept.setName("foo");
         
-        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("business-role.foo").orElseThrow();
+        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("role.foo").orElseThrow();
         assertTrue(filter.accept(concept));
         
         filter = SelectorFilterFactory.getInstance().getFilter("business-actor.foo").orElseThrow();
@@ -195,10 +195,10 @@ public class SelectorFilterFactoryTests implements IModelConstants {
     
     @Test
     public void accept_TypeName_With_Dots() {
-        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createBusinessRole();
+        IArchimateConcept concept = IArchimateFactory.eINSTANCE.createRole();
         concept.setName("foo.bar.pok");
         
-        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("business-role.foo.bar.pok").orElseThrow();
+        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("role.foo.bar.pok").orElseThrow();
         assertTrue(filter.accept(concept));
         
         filter = SelectorFilterFactory.getInstance().getFilter("business-actor.foo.bar.pok").orElseThrow();
@@ -207,8 +207,8 @@ public class SelectorFilterFactoryTests implements IModelConstants {
 
     @Test
     public void accept_Type() {
-        IArchimateConcept element = IArchimateFactory.eINSTANCE.createBusinessRole();
-        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("business-role").orElseThrow();
+        IArchimateConcept element = IArchimateFactory.eINSTANCE.createRole();
+        ISelectorFilter filter = SelectorFilterFactory.getInstance().getFilter("role").orElseThrow();
         assertTrue(filter.accept(element));
         filter = SelectorFilterFactory.getInstance().getFilter("business-actor").orElseThrow();
         assertFalse(filter.accept(element));
