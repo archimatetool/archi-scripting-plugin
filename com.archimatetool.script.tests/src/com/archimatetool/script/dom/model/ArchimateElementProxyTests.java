@@ -21,9 +21,9 @@ import com.archimatetool.model.IArchimateElement;
 import com.archimatetool.model.IArchimateFactory;
 import com.archimatetool.model.IArchimateModel;
 import com.archimatetool.model.IBusinessActor;
-import com.archimatetool.model.IBusinessRole;
 import com.archimatetool.model.IFolder;
 import com.archimatetool.model.IJunction;
+import com.archimatetool.model.IRole;
 import com.archimatetool.model.util.ArchimateModelUtils;
 import com.archimatetool.script.ArchiScriptException;
 import com.archimatetool.script.TestFiles;
@@ -113,10 +113,10 @@ public class ArchimateElementProxyTests extends ArchimateConceptProxyTests {
         assertEquals(6, testProxy.inRels().size());
         assertEquals(3, testProxy.objectRefs().size());
 
-        ArchimateElementProxy newElementProxy = testProxy.setType("business-role");
+        ArchimateElementProxy newElementProxy = testProxy.setType("role");
         
         assertSame(newElementProxy, testProxy);
-        assertTrue(newElementProxy.getEObject() instanceof IBusinessRole);
+        assertTrue(newElementProxy.getEObject() instanceof IRole);
         
         assertEquals("Type Test", newElementProxy.getName());
         assertEquals("Documentation", newElementProxy.getDocumentation());

@@ -107,7 +107,7 @@ public class ProfileProxyTests {
         
         // In use should throw exception
         assertThrows(ArchiScriptException.class, () -> {
-            proxy.setType("business-role");
+            proxy.setType("role");
         });
 
         // Already has profile of name and type should throw exception

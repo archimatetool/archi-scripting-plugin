@@ -20,13 +20,13 @@ var actor = model.createElement("business-actor", "Oscar");
 assertNotNull(actor);
 assertEquals("Oscar", actor.name);
 
-// Create a Business Role
-var role = model.createElement("business-role", "Cat");
+// Create a Role
+var role = model.createElement("role", "Cat");
 assertNotNull(role);
 assertEquals("Cat", role.name);
 
 // Check that a relationship is allowed
-var allowed = $.model.isAllowedRelationship("assignment-relationship", "business-actor", "business-role");
+var allowed = $.model.isAllowedRelationship("assignment-relationship", "business-actor", "role");
 assertTrue(allowed);
 
 // Create this relationship

@@ -1,22 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Archisurance" id="11f5304f" version="5.0.0">
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Archisurance" id="11f5304f" version="6.0.0">
   <folder name="Strategy" id="b93703cf-9575-4d9f-b27f-3423eba81f8a" type="strategy"/>
+  <folder name="Common" id="id-d3451c87c97043909aa15c05091f7b40" type="common">
+    <element xsi:type="archimate:Event" name="Request for Insurance" id="650"/>
+    <element xsi:type="archimate:Event" name="Damage Occured" id="651"/>
+    <element xsi:type="archimate:Process" name="Formalise Request" id="721"/>
+    <element xsi:type="archimate:Process" name="Check and  Sign Contract" id="722"/>
+    <element xsi:type="archimate:Process" name="Inform Customer" id="1302"/>
+    <element xsi:type="archimate:Process" name="Collect Premium" id="1311"/>
+    <element xsi:type="archimate:Process" name="Handle Claim" id="556"/>
+    <element xsi:type="archimate:Process" name="Register" id="564"/>
+    <element xsi:type="archimate:Process" name="Accept" id="572"/>
+    <element xsi:type="archimate:Process" name="Valuate" id="580"/>
+    <element xsi:type="archimate:Process" name="Pay" id="588"/>
+    <element xsi:type="archimate:Process" name="Close Contract" id="596"/>
+    <element xsi:type="archimate:Process" name="Create Contract" id="612"/>
+    <element xsi:type="archimate:Function" name="Maintaining Intermediary Relations" id="471"/>
+    <element xsi:type="archimate:Function" name="Maintaining Customer Relations" id="477"/>
+    <element xsi:type="archimate:Function" name="Contracting" id="483"/>
+    <element xsi:type="archimate:Function" name="Claims Handling" id="489"/>
+    <element xsi:type="archimate:Function" name="Asset Management" id="495"/>
+    <element xsi:type="archimate:Function" name="Financial Handling" id="501"/>
+    <element xsi:type="archimate:Service" name="Insurance Application Service" id="1196"/>
+    <element xsi:type="archimate:Service" name="Claim Registration Service" id="1202"/>
+    <element xsi:type="archimate:Service" name="Premium Payment Service" id="1208"/>
+    <element xsi:type="archimate:Service" name="Customer Information Service" id="1214"/>
+    <element xsi:type="archimate:Service" name="Customer data mutation Service" id="1220"/>
+    <element xsi:type="archimate:Service" name="Claims Payment Service" id="1226"/>
+    <element xsi:type="archimate:Collaboration" name="collaboration" id="1546"/>
+    <element xsi:type="archimate:Collaboration" name="Negotiation" id="733"/>
+    <element xsi:type="archimate:Collaboration" name="Contracting" id="740"/>
+    <element xsi:type="archimate:Role" name="Insurant" id="1368"/>
+    <element xsi:type="archimate:Role" name="Intermediary" id="507"/>
+    <element xsi:type="archimate:Role" name="Insurer" id="514"/>
+    <element xsi:type="archimate:Role" name="Customer" id="521"/>
+    <element xsi:type="archimate:Role" name="Customer's Bank" id="528"/>
+    <element xsi:type="archimate:Function" name="Policy Creation" id="885"/>
+    <element xsi:type="archimate:Function" name="Calculate Risk" id="891"/>
+    <element xsi:type="archimate:Function" name="Calculate Premium" id="897"/>
+    <element xsi:type="archimate:Function" name="Create Policy" id="903"/>
+    <element xsi:type="archimate:Function" name="Store Policy" id="909"/>
+    <element xsi:type="archimate:Service" name="CIS" id="1407">
+      <documentation>Customer Information Service</documentation>
+    </element>
+    <element xsi:type="archimate:Service" name="Claim InfoServ" id="1414"/>
+    <element xsi:type="archimate:Service" name="Policy Creation Service" id="935"/>
+    <element xsi:type="archimate:Service" name="File Service" id="1110"/>
+    <element xsi:type="archimate:Service" name="Network Service" id="1116"/>
+    <element xsi:type="archimate:Service" name="Database Service" id="1128"/>
+    <element xsi:type="archimate:Service" name="Claim Files Service" id="1455"/>
+    <element xsi:type="archimate:Service" name="Customer File Service" id="1462"/>
+  </folder>
   <folder name="Business" id="8c90fdfa" type="business">
-    <folder name="Processes" id="2966482c">
-      <element xsi:type="archimate:BusinessEvent" name="Request for Insurance" id="650"/>
-      <element xsi:type="archimate:BusinessEvent" name="Damage Occured" id="651"/>
-      <element xsi:type="archimate:BusinessInteraction" name="Formalise Request" id="721"/>
-      <element xsi:type="archimate:BusinessInteraction" name="Check and  Sign Contract" id="722"/>
-      <element xsi:type="archimate:BusinessProcess" name="Inform Customer" id="1302"/>
-      <element xsi:type="archimate:BusinessProcess" name="Collect Premium" id="1311"/>
-      <element xsi:type="archimate:BusinessProcess" name="Handle Claim" id="556"/>
-      <element xsi:type="archimate:BusinessProcess" name="Register" id="564"/>
-      <element xsi:type="archimate:BusinessProcess" name="Accept" id="572"/>
-      <element xsi:type="archimate:BusinessProcess" name="Valuate" id="580"/>
-      <element xsi:type="archimate:BusinessProcess" name="Pay" id="588"/>
-      <element xsi:type="archimate:BusinessProcess" name="Close Contract" id="596"/>
-      <element xsi:type="archimate:BusinessProcess" name="Create Contract" id="612"/>
-    </folder>
     <folder name="Information" id="3eb047a9">
       <element xsi:type="archimate:BusinessObject" name="Damage Claim" id="673"/>
       <element xsi:type="archimate:BusinessObject" name="Customer File" id="674"/>
@@ -28,24 +63,9 @@
       <element xsi:type="archimate:BusinessObject" name="Liability  Insurance Policy" id="795"/>
       <element xsi:type="archimate:BusinessObject" name="Legal aid  Insurance Policy" id="796"/>
       <element xsi:type="archimate:BusinessObject" name="Home Insurance Policy" id="803"/>
-      <element xsi:type="archimate:Representation" name="Claim Form" id="676"/>
-    </folder>
-    <folder name="Functions" id="403e5717">
-      <element xsi:type="archimate:BusinessFunction" name="Maintaining Intermediary Relations" id="471"/>
-      <element xsi:type="archimate:BusinessFunction" name="Maintaining Customer Relations" id="477"/>
-      <element xsi:type="archimate:BusinessFunction" name="Contracting" id="483"/>
-      <element xsi:type="archimate:BusinessFunction" name="Claims Handling" id="489"/>
-      <element xsi:type="archimate:BusinessFunction" name="Asset Management" id="495"/>
-      <element xsi:type="archimate:BusinessFunction" name="Financial Handling" id="501"/>
     </folder>
     <folder name="Products" id="c3cfb87f">
-      <element xsi:type="archimate:BusinessService" name="Insurance Application Service" id="1196"/>
-      <element xsi:type="archimate:BusinessService" name="Claim Registration Service" id="1202"/>
-      <element xsi:type="archimate:BusinessService" name="Premium Payment Service" id="1208"/>
-      <element xsi:type="archimate:BusinessService" name="Customer Information Service" id="1214"/>
-      <element xsi:type="archimate:BusinessService" name="Customer data mutation Service" id="1220"/>
-      <element xsi:type="archimate:BusinessService" name="Claims Payment Service" id="1226"/>
-      <element xsi:type="archimate:Contract" name="Travel Insurance Policy" id="1239"/>
+      <element xsi:type="archimate:BusinessObject" name="Travel Insurance Policy" id="1239"/>
     </folder>
     <folder name="Actors" id="fa63373b">
       <element xsi:type="archimate:BusinessActor" name="Client" id="1337"/>
@@ -65,19 +85,11 @@
       <element xsi:type="archimate:BusinessActor" name="Director of Sales" id="409"/>
       <element xsi:type="archimate:BusinessActor" name="Director of Operations" id="416"/>
       <element xsi:type="archimate:BusinessActor" name="Director of Finance" id="423"/>
-      <element xsi:type="archimate:BusinessCollaboration" name="collaboration" id="1546"/>
-      <element xsi:type="archimate:BusinessCollaboration" name="Negotiation" id="733"/>
-      <element xsi:type="archimate:BusinessCollaboration" name="Contracting" id="740"/>
       <element xsi:type="archimate:BusinessInterface" name="phone" id="1536"/>
       <element xsi:type="archimate:BusinessInterface" name="e-mail" id="1538"/>
       <element xsi:type="archimate:BusinessInterface" name="phone" id="1540"/>
       <element xsi:type="archimate:BusinessInterface" name="GIM" id="1542"/>
       <element xsi:type="archimate:BusinessInterface" name="mail" id="1544"/>
-      <element xsi:type="archimate:BusinessRole" name="Insurant" id="1368"/>
-      <element xsi:type="archimate:BusinessRole" name="Intermediary" id="507"/>
-      <element xsi:type="archimate:BusinessRole" name="Insurer" id="514"/>
-      <element xsi:type="archimate:BusinessRole" name="Customer" id="521"/>
-      <element xsi:type="archimate:BusinessRole" name="Customer's Bank" id="528"/>
     </folder>
   </folder>
   <folder name="Application" id="4a8e833a" type="application">
@@ -92,16 +104,6 @@
       <element xsi:type="archimate:ApplicationComponent" name="Customer Data  Access" id="855"/>
       <element xsi:type="archimate:ApplicationComponent" name="Policy Data Management" id="861"/>
       <element xsi:type="archimate:ApplicationComponent" name="Claim Data Management" id="867"/>
-      <element xsi:type="archimate:ApplicationFunction" name="Policy Creation" id="885"/>
-      <element xsi:type="archimate:ApplicationFunction" name="Calculate Risk" id="891"/>
-      <element xsi:type="archimate:ApplicationFunction" name="Calculate Premium" id="897"/>
-      <element xsi:type="archimate:ApplicationFunction" name="Create Policy" id="903"/>
-      <element xsi:type="archimate:ApplicationFunction" name="Store Policy" id="909"/>
-      <element xsi:type="archimate:ApplicationService" name="CIS" id="1407">
-        <documentation>Customer Information Service</documentation>
-      </element>
-      <element xsi:type="archimate:ApplicationService" name="Claim InfoServ" id="1414"/>
-      <element xsi:type="archimate:ApplicationService" name="Policy Creation Service" id="935"/>
     </folder>
     <folder name="Data" id="ecb5797e">
       <element xsi:type="archimate:DataObject" name="Customer File Data" id="837"/>
@@ -109,6 +111,7 @@
       <element xsi:type="archimate:DataObject" name="Damage Claim Data" id="839"/>
       <element xsi:type="archimate:DataObject" name="Insurance Request Data" id="946"/>
     </folder>
+    <element xsi:type="archimate:DataObject" name="Claim Form" id="676"/>
   </folder>
   <folder name="Technology &amp; Physical" id="197807fa" type="technology">
     <element xsi:type="archimate:CommunicationNetwork" name="LAN" id="1089"/>
@@ -127,11 +130,6 @@
     <element xsi:type="archimate:SystemSoftware" name="DBMS" id="1016"/>
     <element xsi:type="archimate:SystemSoftware" name="CICS" id="1022"/>
     <element xsi:type="archimate:SystemSoftware" name="Financial Software" id="1870"/>
-    <element xsi:type="archimate:TechnologyService" name="File Service" id="1110"/>
-    <element xsi:type="archimate:TechnologyService" name="Network Service" id="1116"/>
-    <element xsi:type="archimate:TechnologyService" name="Database Service" id="1128"/>
-    <element xsi:type="archimate:TechnologyService" name="Claim Files Service" id="1455"/>
-    <element xsi:type="archimate:TechnologyService" name="Customer File Service" id="1462"/>
   </folder>
   <folder name="Motivation" id="fc275161" type="motivation">
     <element xsi:type="archimate:Principle" name="Occupancy Principle" id="3764dcef"/>
@@ -146,7 +144,6 @@
     <element xsi:type="archimate:Value" name="Be Insured" id="1250"/>
   </folder>
   <folder name="Implementation &amp; Migration" id="0e121c60" type="implementation_migration"/>
-  <folder name="Other" id="a6bcb2c7-3510-43ac-97da-0bea4f36ddf5" type="other"/>
   <folder name="Relations" id="408ff6d3" type="relations">
     <folder name="Business" id="10ad9578">
       <folder name="Functions" id="3de37d5c">
@@ -460,7 +457,7 @@
         </child>
       </child>
     </element>
-    <element xsi:type="archimate:ArchimateDiagramModel" name="Business Function View" id="3722" viewpoint="business_process_cooperation">
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Business Function View" id="3722" viewpoint="process_cooperation">
       <child xsi:type="archimate:DiagramObject" id="3732" targetConnections="3756" archimateElement="528">
         <bounds x="610" y="360" width="150" height="120"/>
         <sourceConnection xsi:type="archimate:Connection" id="3757" source="3732" target="3738" archimateRelationship="1778">
@@ -543,7 +540,7 @@
         </sourceConnection>
       </child>
     </element>
-    <element xsi:type="archimate:ArchimateDiagramModel" name="Business Process View" id="3761" viewpoint="business_process_cooperation">
+    <element xsi:type="archimate:ArchimateDiagramModel" name="Business Process View" id="3761" viewpoint="process_cooperation">
       <child xsi:type="archimate:DiagramObject" id="3788" targetConnections="3811 3806" archimateElement="521">
         <bounds x="200" y="663" width="120" height="60"/>
         <sourceConnection xsi:type="archimate:Connection" id="d8a3a65d" source="3788" target="3783" archimateRelationship="95f13189">

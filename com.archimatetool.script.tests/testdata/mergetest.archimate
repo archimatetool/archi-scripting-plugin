@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Merge Test" id="4424321e-707d-4b3f-a90d-14d1c954b86a" version="5.0.0">
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Merge Test" id="4424321e-707d-4b3f-a90d-14d1c954b86a" version="6.0.0">
   <folder name="Strategy" id="f76fcd1e-df4d-4d4c-90e0-adf8e2bc33a3" type="strategy"/>
+  <folder name="Common" id="id-941264714f6e4b28a615d5c78f3c894f" type="common">
+    <element xsi:type="archimate:Process" name="Business Process" id="a3a16448-0760-4d5c-860e-d9f8826340a6"/>
+  </folder>
   <folder name="Business" id="db8f044c-43fe-4f5f-a8b3-ca57c97e2124" type="business">
     <element xsi:type="archimate:BusinessActor" name="BA1" id="76aa9eb3-8cdd-471c-81e4-965d94e12dd9">
       <documentation>Doc1</documentation>
@@ -16,7 +19,6 @@
       <property key="ba3" value="hello1"/>
       <property key="ba3a" value="ss"/>
     </element>
-    <element xsi:type="archimate:BusinessProcess" name="Business Process" id="a3a16448-0760-4d5c-860e-d9f8826340a6"/>
   </folder>
   <folder name="Application" id="710d5ab3-32dc-4033-b470-144841cd7b5b" type="application">
     <element xsi:type="archimate:ApplicationComponent" name="Application Component" id="06201a05-c6cc-424a-857b-66a5912bfb3e"/>
@@ -26,13 +28,12 @@
   </folder>
   <folder name="Motivation" id="9e0a3812-df03-40f6-837b-6533e171c872" type="motivation"/>
   <folder name="Implementation &amp; Migration" id="1e038310-8e80-44d4-935e-9244b35ea7e3" type="implementation_migration"/>
-  <folder name="Other" id="5651c1fe-f592-4511-bc25-ce3f4912ce98" type="other"/>
   <folder name="Relations" id="89fd8ba9-5b20-43c1-838e-a8394f932464" type="relations">
     <element xsi:type="archimate:ServingRelationship" id="c87ba47c-db33-405a-854e-c8f77a34a861" source="ad78af0a-24ce-44b2-b512-35f6f77204e3" target="06201a05-c6cc-424a-857b-66a5912bfb3e"/>
     <element xsi:type="archimate:ServingRelationship" id="4cfc48f1-254e-4f59-8da1-184a151d33cf" source="4c7c6ab3-5e12-4f93-a52a-3a4f8a64ad40" target="8ca8c4c6-8fe1-4649-86dd-762f0b03aab0"/>
     <element xsi:type="archimate:FlowRelationship" id="87885d0d-ba43-4721-8bdd-bc33df5e7269" source="a3a16448-0760-4d5c-860e-d9f8826340a6" target="4c7c6ab3-5e12-4f93-a52a-3a4f8a64ad40"/>
-    <element xsi:type="archimate:AssignmentRelationship" id="id-7ed1541647b84e6d87ab445c70a90fa5" source="8ca8c4c6-8fe1-4649-86dd-762f0b03aab0" target="76aa9eb3-8cdd-471c-81e4-965d94e12dd9"/>
-    <element xsi:type="archimate:AssignmentRelationship" id="id-cfde22c35bad43be8263dcdcde6bb961" source="8ca8c4c6-8fe1-4649-86dd-762f0b03aab0" target="ad78af0a-24ce-44b2-b512-35f6f77204e3"/>
+    <element xsi:type="archimate:AssociationRelationship" id="id-7ed1541647b84e6d87ab445c70a90fa5" source="8ca8c4c6-8fe1-4649-86dd-762f0b03aab0" target="76aa9eb3-8cdd-471c-81e4-965d94e12dd9"/>
+    <element xsi:type="archimate:AssociationRelationship" id="id-cfde22c35bad43be8263dcdcde6bb961" source="8ca8c4c6-8fe1-4649-86dd-762f0b03aab0" target="ad78af0a-24ce-44b2-b512-35f6f77204e3"/>
   </folder>
   <folder name="Views" id="5e43481c-2c4a-4c19-a3ce-aa7a205ebc8a" type="diagrams">
     <element xsi:type="archimate:ArchimateDiagramModel" name="View 1" id="05571421-a62a-4cf9-8b64-ac45a4365e7f">

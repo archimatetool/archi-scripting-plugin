@@ -166,7 +166,7 @@ public class FolderProxyTests extends EObjectProxyTests {
         IArchimateConcept concept = (IArchimateConcept)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "1544"); // BusinessInterface
         ArchimateConceptProxy conceptProxy = (ArchimateConceptProxy)EObjectProxy.get(concept);
         
-        IFolder folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "403e5717");
+        IFolder folder = (IFolder)ArchimateModelUtils.getObjectByID(testModelProxy.getEObject(), "c3cfb87f");
         FolderProxy folderProxy = (FolderProxy)EObjectProxy.get(folder);
         
         folderProxy.add(conceptProxy);

@@ -86,14 +86,14 @@ public class ModelTests {
     
     @Test
     public void isAllowedRelationship() {
-        assertFalse(model.isAllowedRelationship("influence-relationship", "business-actor", "business-role"));
-        assertTrue(model.isAllowedRelationship("association-relationship", "business-actor", "business-role"));
+        assertFalse(model.isAllowedRelationship("influence-relationship", "business-actor", "role"));
+        assertTrue(model.isAllowedRelationship("association-relationship", "business-actor", "role"));
     }
 
     @Test
     public void isAllowedRelationship_Exception() {
         assertThrows(ArchiScriptException.class, () -> {
-            model.isAllowedRelationship("bogus", "business-actor", "business-role");
+            model.isAllowedRelationship("bogus", "business-actor", "role");
         });
     }
 }

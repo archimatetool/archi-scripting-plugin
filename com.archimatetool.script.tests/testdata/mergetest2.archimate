@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Merge Test Relationships" id="id-db87d0a3b2e3411daa68f97a82601111" version="5.0.0">
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="Merge Test Relationships" id="id-db87d0a3b2e3411daa68f97a82601111" version="6.0.0">
   <folder name="Strategy" id="id-57d09fb88e6a4ad78a05c713c164e716" type="strategy">
     <element xsi:type="archimate:Resource" name="Resource" id="id-53a91f744f93471dab69ffab3d216eb0"/>
   </folder>
+  <folder name="Common" id="id-67a139cd7be44c8fb621620cecf6d24f" type="common">
+    <element xsi:type="archimate:Role" name="BR1" id="id-d245054ed8da4d8fb7557ad34e9b14b7"/>
+    <element xsi:type="archimate:Role" name="BR2" id="id-fad92c485fb74613af20cee3a2ed0986"/>
+  </folder>
   <folder name="Business" id="id-909338ad02af47e78635d1d4ade64ade" type="business">
     <element xsi:type="archimate:BusinessActor" name="Business Actor" id="id-de922d134aba456d9efff7e861966255"/>
-    <element xsi:type="archimate:BusinessRole" name="BR1" id="id-d245054ed8da4d8fb7557ad34e9b14b7"/>
-    <element xsi:type="archimate:BusinessRole" name="BR2" id="id-fad92c485fb74613af20cee3a2ed0986"/>
   </folder>
   <folder name="Application" id="id-054f7e978c8d49c0906a49963e3e0ec6" type="application"/>
   <folder name="Technology &amp; Physical" id="id-f05253d96a8e45889577b9ae7e820eb0" type="technology"/>
   <folder name="Motivation" id="id-6ee4d8dcf06e47fbae7af61b4bc84f83" type="motivation"/>
   <folder name="Implementation &amp; Migration" id="id-0e001642286a45d499429d18520dc2be" type="implementation_migration"/>
-  <folder name="Other" id="id-4cbb85705c384fa58a850dc263ab8ce3" type="other"/>
   <folder name="Relations" id="id-fb7c7ae516b84428a72697891052dd0e" type="relations">
     <element xsi:type="archimate:AssignmentRelationship" name="2" id="id-e86cad423768451e88d8ca43bec75138" source="id-de922d134aba456d9efff7e861966255" target="id-d245054ed8da4d8fb7557ad34e9b14b7">
       <documentation>Document 2</documentation>
