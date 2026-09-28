@@ -15,14 +15,14 @@
  * 
  */
  
-// Get all Business Actors in the current selection and change the type to Business Role
+// Get all Business Actors in the current selection and change the type to Business Object
 // If changing the type breaks any relationship rules an exception is thrown
 
 // The type to convert from
 const convertFromType = "business-actor";
 
 // The type to convert to
-const convertToType = "business-role";
+const convertToType = "business-object";
 
 // Get all concepts that match in the current selection and convert...
 selection.filter(convertFromType).each(function(element) {

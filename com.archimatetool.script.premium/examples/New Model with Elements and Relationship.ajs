@@ -23,19 +23,19 @@ console.log("Created model: " + model.name);
 console.log("ID is: ", model.id);
 
 // Create a Business Actor
-var actor = model.createElement("business-actor", "Oscar");
+var actor = model.createElement("business-actor", "Actor");
 console.log("Created new element: ", actor.name);
 
-// Create a Business Role
-var role = model.createElement("business-role", "Cat");
-console.log("Created new element: ", role.name);
+// Create a Business Object
+var businessObject = model.createElement("business-object", "Business Object");
+console.log("Created new element: ", businessObject.name);
 
 // Create a relationship
 
 // We can check that the relationship is allowed by calling $.model.isAllowedRelationship()
-var allowed = $.model.isAllowedRelationship("assignment-relationship", "business-actor", "business-role");
+var allowed = $.model.isAllowedRelationship("access-relationship", "business-actor", "business-object");
 if(allowed) {
-    var relationship = model.createRelationship("assignment-relationship", "Assigned to", actor, role);
+    var relationship = model.createRelationship("access-relationship", "Accesses", actor, businessObject);
     console.log("Created new relationship: ", relationship.type);
 }
 else {

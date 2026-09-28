@@ -24,13 +24,13 @@ $.model.create("Test Model").setAsCurrent();
 console.log("Created model: ", model.name);
 
 // Add some ArchiMate elements to the Model
-var actor = model.createElement("business-actor", "Oscar");
+var actor = model.createElement("business-actor", "Actor");
 console.log("Added - ", actor);
-var role = model.createElement("business-role", "Cat");
-console.log("Added - ", role);
+var businessObject = model.createElement("business-object", "Business Object");
+console.log("Added - ", businessObject);
 
 // Add an ArchiMate relationship to the Model
-var relationship = model.createRelationship("assignment-relationship", "", actor, role);
+var relationship = model.createRelationship("access-relationship", "", actor, businessObject);
 
 // Add an ArchiMate view to the default "Views" folder
 var archimateView = model.createArchimateView("View 1");
@@ -42,7 +42,7 @@ console.log("Set viewpoint to - ", archimateView.viewpoint.name);
 
 // Add some objects to the ArchiMate view containing the elements (-1 = default width and height)
 var object1 = archimateView.add(actor, 10, 10, -1, -1);
-var object2 = archimateView.add(role, 200, 10, -1, -1);
+var object2 = archimateView.add(businessObject, 200, 10, -1, -1);
 
 // Add a visual connection containing the relationship
 var connection = archimateView.add(relationship, object1, object2);
