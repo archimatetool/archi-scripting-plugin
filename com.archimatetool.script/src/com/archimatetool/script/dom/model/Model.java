@@ -305,6 +305,7 @@ public class Model {
         provider.export(dmProxy.getEObject(), new File(path));
     }
 
+    @SuppressWarnings("deprecation")
     private ImageLoader getImageLoader(DiagramModelProxy dmProxy, String format, Map<?, ?> options) {
         if(dmProxy == null) {
             throw new ArchiScriptException("getImageLoader - View is null"); //$NON-NLS-1$
