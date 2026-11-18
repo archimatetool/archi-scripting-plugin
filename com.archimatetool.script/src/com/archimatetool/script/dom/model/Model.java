@@ -22,10 +22,9 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.ui.PlatformUI;
 
-import com.archimatetool.editor.diagram.util.DiagramUtils;
+import com.archimatetool.editor.diagram.util.DiagramImageFactory;
 import com.archimatetool.editor.model.IArchiveManager;
 import com.archimatetool.editor.model.IEditorModelManager;
-import com.archimatetool.editor.ui.ImageFactory;
 import com.archimatetool.export.svg.PDFExportProvider;
 import com.archimatetool.export.svg.SVGExportProvider;
 import com.archimatetool.model.IArchimateFactory;
@@ -305,7 +304,6 @@ public class Model {
         provider.export(dmProxy.getEObject(), new File(path));
     }
 
-    @SuppressWarnings("deprecation")
     private ImageLoader getImageLoader(DiagramModelProxy dmProxy, String format, Map<?, ?> options) {
         if(dmProxy == null) {
             throw new ArchiScriptException("getImageLoader - View is null"); //$NON-NLS-1$
@@ -319,15 +317,18 @@ public class Model {
         int scale = ModelUtil.getIntValueFromMap(options, "scale", 1); //$NON-NLS-1$
         int margin = ModelUtil.getIntValueFromMap(options, "margin", 10); //$NON-NLS-1$
         
-        Image image = DiagramUtils.createImage(dmProxy.getEObject(), scale, margin);
+        Image image = null;
         
-        try {
+        try(DiagramImageFactory imageFactory = DiagramImageFactory.withShell()) {
+            image = imageFactory.createImage(dmProxy.getEObject(), scale, margin);
             ImageLoader loader = new ImageLoader();
-            loader.data = new ImageData[] { image.getImageData(ImageFactory.getImageDeviceZoom()) };
+            loader.data = new ImageData[] { image.getImageData(imageFactory.getImageDeviceZoom()) };
             return loader;
         }
         finally {
-            image.dispose();
+            if(image != null) {
+                image.dispose();
+            }
         }
     }
     
